@@ -973,7 +973,7 @@ function showResult() {
     document.getElementById("result").style.display = "block";
     document.getElementById("nextButton").style.display = "none";
     document.getElementById("finalScore").textContent = "Score: " + score + " / " + activeQuizQuestions.length;
-    var pct = Number(((score / activeQuizQuestions.length) * 100).toFixed(2));
+    var pct = activeQuizQuestions.length > 0 ? Number(((score / activeQuizQuestions.length) * 100).toFixed(2)) : 0;
     document.getElementById("percentage").textContent = "Percentage: " + pct + "%";
     var timeSpent = quizTimeLimit - timeLeft;
     var tm = Math.floor(timeSpent / 60);
@@ -987,40 +987,91 @@ function showResult() {
     else if (pct >= 50) fb = "Keep practicing. You're getting there!";
     else fb = "Don't give up! Review the topic and try again.";
     document.getElementById("feedback").textContent = fb;
-    var attempt = { attemptId: "attempt-" + Date.now(), timestamp: new Date().toISOString(), studentId: currentUser ? currentUser.id : "unknown", subject: activeQuizQuestions[0] ? activeQuizQuestions[0].subject : "General", grade: activeQuizQuestions[0] ? activeQuizQuestions[0].grade : 9, score: score, total: activeQuizQuestions.length, percentage: pct, timeSpent: quizTimeLimit - timeLeft, questions: [], topicPerformance: {} };
+    var attempt = {
+        attemptId: "attempt-" + Date.now(),
+        timestamp: new Date().toISOString(),
+        studentId: currentUser ? currentUser.id : "unknown",
+        subject: activeQuizQuestions[0] ? activeQuizQuestions[0].subject : "General",
+        grade: activeQuizQuestions[0] ? activeQuizQuestions[0].grade : 9,
+        score: score,
+        total: activeQuizQuestions.length,
+        percentage: pct,
+        timeSpent: timeSpent,
+        questions: [],
+        topicPerformance: {}
+    };
     for (var i = 0; i < studentAnswers.length; i++) {
         var sa = studentAnswers[i];
-        attempt.questions.push({ questionId: sa.questionId, selectedAnswer: sa.selected, correctAnswer: sa.answer, correct: sa.correct, timeUsed: sa.timeUsed });
+        attempt.questions.push({
+            questionId: sa.questionId,
+            selectedAnswer: sa.selected,
+            correctAnswer: sa.answer,
+            correctAnswerText: sa.correctAnswerText || sa.answer,
+            correct: sa.correct,
+            timeUsed: sa.timeUsed
+        });
     }
-    for (var i = 0; i < activeQuizQuestions.length; i++) {
-        var t = activeQuizQuestions[i].topic || "General";
-        if (!attempt.topicPerformance[t]) attempt.topicPerformance[t] = { correct: 0, total: 0 };
-        attempt.topicPerformance[t].total++;
-        if (studentAnswers[i] && studentAnswers[i].correct) attempt.topicPerformance[t].correct++;
+    for (var i = 0; i < studentAnswers.length; i++) {
+        var sa = studentAnswers[i];
+        var originalQuestion = null;
+        for (var j = 0; j < activeQuizQuestions.length; j++) {
+            if (activeQuizQuestions[j].id === sa.questionId) {
+                originalQuestion = activeQuizQuestions[j];
+                break;
+            }
+        }
+        if (!originalQuestion) continue;
+        var topic = originalQuestion.topic || "General";
+        if (!attempt.topicPerformance[topic]) attempt.topicPerformance[topic] = { correct: 0, total: 0 };
+        attempt.topicPerformance[topic].total++;
+        if (sa.correct) attempt.topicPerformance[topic].correct++;
     }
     for (var t in attempt.topicPerformance) {
         var tp = attempt.topicPerformance[t];
-        tp.percentage = Number(((tp.correct / tp.total) * 100).toFixed(2));
+        tp.percentage = tp.total > 0 ? Number(((tp.correct / tp.total) * 100).toFixed(2)) : 0;
     }
     allAttempts.push(attempt);
     var uid = currentUser ? currentUser.id : "unknown";
-    for (var i = 0; i < activeQuizQuestions.length; i++) {
-        var t = activeQuizQuestions[i].topic || "General";
-        var key = uid + "_" + t;
-        if (!conceptStats[key]) conceptStats[key] = { correct: 0, total: 0, topic: t, subject: activeQuizQuestions[i].subject };
+    for (var i = 0; i < studentAnswers.length; i++) {
+        var sa = studentAnswers[i];
+        var originalQuestion = null;
+        for (var j = 0; j < activeQuizQuestions.length; j++) {
+            if (activeQuizQuestions[j].id === sa.questionId) {
+                originalQuestion = activeQuizQuestions[j];
+                break;
+            }
+        }
+        if (!originalQuestion) continue;
+        var topic = originalQuestion.topic || "General";
+        var key = uid + "_" + topic;
+        if (!conceptStats[key]) conceptStats[key] = { correct: 0, total: 0, topic: topic, subject: originalQuestion.subject };
         conceptStats[key].total++;
-        if (studentAnswers[i] && studentAnswers[i].correct) conceptStats[key].correct++;
+        if (sa.correct) conceptStats[key].correct++;
     }
     saveAll();
-    var ts = document.createElement("div");
-    ts.className = "topic-summary";
-    var ct = activeQuizQuestions[0] ? (activeQuizQuestions[0].topic || "General") : "General";
-    var tst = attempt.topicPerformance[ct] || { correct: 0, total: 0, percentage: 0 };
-    ts.innerHTML = "<h3>Topic Performance</h3><p>This topic: <strong>" + tst.correct + "/" + tst.total + "</strong> (" + tst.percentage + "%)</p>";
+    var tsDiv = document.createElement("div");
+    tsDiv.className = "topic-summary";
+    var topicNames = Object.keys(attempt.topicPerformance);
+    if (topicNames.length > 0) {
+        var topicHTML = "<h3>Topic Performance</h3>";
+        for (var i = 0; i < topicNames.length; i++) {
+            var topic = topicNames[i];
+            var tst = attempt.topicPerformance[topic];
+            topicHTML += "<p>" + topic + ": <strong>" + tst.correct + "/" + tst.total + "</strong> (" + tst.percentage + "%)</p>";
+        }
+        tsDiv.innerHTML = topicHTML;
+    }
     var rc = document.querySelector(".result-card");
-    var es = rc.querySelector(".topic-summary");
-    if (es) es.remove();
-    rc.insertBefore(ts, document.getElementById("feedback").nextSibling);
+    if (rc) {
+        var es = rc.querySelector(".topic-summary");
+        if (es) es.remove();
+        var feedbackEl = document.getElementById("feedback");
+        if (feedbackEl && feedbackEl.nextSibling) {
+            rc.insertBefore(tsDiv, feedbackEl.nextSibling);
+        } else {
+            rc.appendChild(tsDiv);
+        }
+    }
 }
 
 function startTimer() {
@@ -1053,7 +1104,17 @@ function showReview() {
         var sa = studentAnswers[i];
         var d = document.createElement("div");
         d.className = "review-item";
-        d.innerHTML = "<h3>Question " + (i + 1) + "</h3><p><strong>ID:</strong> " + (sa.questionId || "?") + "</p><p>" + sa.text + "</p><p><strong>Your answer:</strong> " + sa.selected + "</p><p><strong>Correct answer:</strong> " + sa.answer + "</p><p><strong>Time spent:</strong> " + sa.timeUsed + "s</p>" + (sa.explanation ? "<p><strong>Explanation:</strong> " + sa.explanation + "</p>" : "") + "<p>" + (sa.correct ? "Correct" : "Incorrect") + "</p>";
+        var correctAnswer = sa.correctAnswerText || sa.answer || "Not available";
+        var resultText = sa.correct ? "Correct" : "Incorrect";
+        d.innerHTML =
+            "<h3>Question " + (i + 1) + "</h3>" +
+            "<p><strong>ID:</strong> " + (sa.questionId || "?") + "</p>" +
+            "<p>" + sa.text + "</p>" +
+            "<p><strong>Your answer:</strong> " + sa.selected + "</p>" +
+            "<p><strong>Correct answer:</strong> " + correctAnswer + "</p>" +
+            "<p><strong>Time spent:</strong> " + sa.timeUsed + "s</p>" +
+            (sa.explanation ? "<p><strong>Explanation:</strong> " + sa.explanation + "</p>" : "") +
+            "<p><strong>" + resultText + "</strong></p>";
         rc.appendChild(d);
     }
 }
