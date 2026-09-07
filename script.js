@@ -495,11 +495,10 @@ function getWeakQuestions() {
     var wrongIds = {};
     for (var i = 0; i < attempts.length; i++) {
         var a = attempts[i];
-        if (a.studentAnswers) {
-            for (var j = 0; j < a.studentAnswers.length; j++) {
-                if (!a.studentAnswers[j].correct) {
-                    wrongIds[a.studentAnswers[j].questionId] = true;
-                }
+        var answerList = a.questions || a.studentAnswers || [];
+        for (var j = 0; j < answerList.length; j++) {
+            if (!answerList[j].correct) {
+                wrongIds[answerList[j].questionId] = true;
             }
         }
     }
