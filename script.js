@@ -19,6 +19,7 @@ var ASSIGNMENTS_KEY = "learningHub_assignments";
 var TEACHERS_KEY = "learningHub_teachers";
 var ATTENDANCE_KEY = "learningHub_attendance";
 var CONCEPTS_KEY = "learningHub_concepts";
+var STUDENTS_KEY = "learningHub_students";
 
 var questions = [];
 var classes = [];
@@ -26,6 +27,7 @@ var assignments = [];
 var teachers = [];
 var conceptStats = {};
 var attendance = [];
+var studentAccounts = [];
 
 var subjectsData = {
     "Computer Science": {
@@ -189,6 +191,17 @@ function loadData() {
     attendance = JSON.parse(localStorage.getItem(ATTENDANCE_KEY)) || [];
     allAttempts = JSON.parse(localStorage.getItem(ATTEMPTS_KEY)) || [];
     conceptStats = JSON.parse(localStorage.getItem(CONCEPTS_KEY)) || {};
+    studentAccounts = JSON.parse(localStorage.getItem(STUDENTS_KEY)) || [];
+    if (studentAccounts.length === 0) {
+        studentAccounts = [
+            { id: "9A-001", name: "Ahmed Ali", classId: "CLASS-9A", grade: 9, password: "123" },
+            { id: "9A-002", name: "Sara Khan", classId: "CLASS-9A", grade: 9, password: "123" },
+            { id: "9A-003", name: "Usman Tariq", classId: "CLASS-9A", grade: 9, password: "123" },
+            { id: "9B-001", name: "Fatima Noor", classId: "CLASS-9B", grade: 9, password: "123" },
+            { id: "9B-002", name: "Bilal Ahmed", classId: "CLASS-9B", grade: 9, password: "123" },
+            { id: "9B-003", name: "Ayesha Siddiqui", classId: "CLASS-9B", grade: 9, password: "123" }
+        ];
+    }
     if (classes.length === 0) {
         classes = [
             { id: "CLASS-9A", name: "9A", grade: 9, section: "A", students: ["9A-001", "9A-002", "9A-003"] },
@@ -205,6 +218,7 @@ function saveAll() {
     localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(attendance));
     localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
     localStorage.setItem(CONCEPTS_KEY, JSON.stringify(conceptStats));
+    localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
 }
 
 function dashboardsHide() {
@@ -229,11 +243,30 @@ function handleLogin(e) {
     e.preventDefault();
     var role = document.getElementById("roleSelect").value;
     var name = "", id = "", subject = null, childId = null, password = "";
-    var defaultPasswords = { student: "123", teacher: "123", classteacher: "123", parent: "123", principal: "admin" };
+    var defaultPasswords = { teacher: "123", classteacher: "123", parent: "123", principal: "admin" };
     if (role === "student") {
-        id = document.getElementById("studentId").value || "9A-001";
-        name = document.getElementById("studentName").value || "Student";
+        id = document.getElementById("studentId").value.trim();
+        name = document.getElementById("studentName").value.trim();
         password = document.getElementById("studentPassword").value;
+        if (!id || !password) { alert("Please enter Student ID and Password."); return; }
+        var found = null;
+        for (var i = 0; i < studentAccounts.length; i++) {
+            if (studentAccounts[i].id === id) { found = studentAccounts[i]; break; }
+        }
+        if (!found) { alert("Student ID not found. Contact admin to create your account."); return; }
+        if (found.password !== password) { alert("Incorrect password."); return; }
+        name = name || found.name;
+        currentUser = { id: found.id, name: found.name, role: "student", subject: null, childId: null, classId: found.classId, grade: found.grade };
+        currentRole = "student";
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("logoutBar").style.display = "flex";
+        document.getElementById("homeBtn").style.display = "inline-block";
+        document.getElementById("loggedUser").textContent = found.name + " (Student)";
+        dashboardsHide();
+        document.getElementById("studentDashboard").style.display = "block";
+        document.getElementById("studentDisplayName").textContent = found.name;
+        showStudentTab("practice");
+        return;
     } else if (role === "teacher") {
         id = document.getElementById("teacherId").value || "T-001";
         name = document.getElementById("teacherName").value || "Teacher";
@@ -1705,16 +1738,95 @@ function saveTeacher(e) {
 
 function renderPrincipalStudents() {
     var c = document.getElementById("principalStudentsContent");
-    var h = '<table><thead><tr><th>Student</th><th>Class</th><th>Attempts</th><th>Average</th></tr></thead><tbody>';
-    for (var i = 0; i < classes.length; i++) {
-        for (var j = 0; j < classes[i].students.length; j++) {
-            var sid = classes[i].students[j], sa = [];
-            for (var k = 0; k < allAttempts.length; k++) { if (allAttempts[k].studentId === sid) sa.push(allAttempts[k]); }
-            var avg = sa.length > 0 ? sa.reduce(function(s, a) { return s + a.percentage; }, 0) / sa.length : 0;
-            h += '<tr><td>' + sid + '</td><td>' + classes[i].name + '</td><td>' + sa.length + '</td><td>' + avg.toFixed(1) + '%</td></tr>';
+    if (studentAccounts.length === 0) { c.innerHTML = "<p>No students yet. Click 'Add Student' to create accounts.</p>"; return; }
+    var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Grade</th><th>Password</th><th>Actions</th></tr></thead><tbody>';
+    for (var i = 0; i < studentAccounts.length; i++) {
+        var s = studentAccounts[i];
+        var className = "N/A";
+        for (var j = 0; j < classes.length; j++) {
+            if (classes[j].id === s.classId) { className = classes[j].name; break; }
         }
+        h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + className + '</td><td>' + s.grade + '</td><td>' + s.password + '</td>' +
+            '<td><button onclick="editStudentAccount(\'' + s.id + '\')" class="action-btn">Edit</button> ' +
+            '<button onclick="deleteStudentAccount(\'' + s.id + '\')" class="action-btn danger">Delete</button></td></tr>';
     }
     c.innerHTML = h + '</tbody></table>';
+}
+
+function showCreateStudentModal() {
+    document.getElementById("studentForm").reset();
+    document.getElementById("smStudentId").value = "";
+    document.getElementById("studentModalTitle").textContent = "\uD83D\uDC64 Add Student";
+    var sel = document.getElementById("smClassId");
+    sel.innerHTML = "";
+    for (var i = 0; i < classes.length; i++) {
+        sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + ' (Grade ' + classes[i].grade + ')</option>';
+    }
+    document.getElementById("studentModal").classList.add("active");
+    document.getElementById("modalOverlay").classList.add("active");
+}
+
+function editStudentAccount(sid) {
+    var s = null;
+    for (var i = 0; i < studentAccounts.length; i++) {
+        if (studentAccounts[i].id === sid) { s = studentAccounts[i]; break; }
+    }
+    if (!s) return;
+    document.getElementById("smStudentId").value = s.id;
+    document.getElementById("smId").value = s.id;
+    document.getElementById("smId").disabled = true;
+    document.getElementById("smName").value = s.name;
+    document.getElementById("smGrade").value = s.grade;
+    document.getElementById("smPassword").value = s.password;
+    document.getElementById("studentModalTitle").textContent = "\uD83D\uDC64 Edit Student";
+    var sel = document.getElementById("smClassId");
+    sel.innerHTML = "";
+    for (var i = 0; i < classes.length; i++) {
+        var selected = classes[i].id === s.classId ? " selected" : "";
+        sel.innerHTML += '<option value="' + classes[i].id + '"' + selected + '>' + classes[i].name + ' (Grade ' + classes[i].grade + ')</option>';
+    }
+    document.getElementById("studentModal").classList.add("active");
+    document.getElementById("modalOverlay").classList.add("active");
+}
+
+function saveStudentAccount(e) {
+    e.preventDefault();
+    var editId = document.getElementById("smStudentId").value;
+    var id = document.getElementById("smId").value.trim();
+    var name = document.getElementById("smName").value.trim();
+    var classId = document.getElementById("smClassId").value;
+    var grade = parseInt(document.getElementById("smGrade").value);
+    var password = document.getElementById("smPassword").value || "123";
+    if (!id || !name) { alert("Please fill in Student ID and Name."); return; }
+    if (editId) {
+        for (var i = 0; i < studentAccounts.length; i++) {
+            if (studentAccounts[i].id === editId) {
+                studentAccounts[i].name = name;
+                studentAccounts[i].classId = classId;
+                studentAccounts[i].grade = grade;
+                studentAccounts[i].password = password;
+                break;
+            }
+        }
+    } else {
+        for (var i = 0; i < studentAccounts.length; i++) {
+            if (studentAccounts[i].id === id) { alert("Student ID already exists!"); return; }
+        }
+        studentAccounts.push({ id: id, name: name, classId: classId, grade: grade, password: password });
+    }
+    saveAll();
+    closeModal();
+    renderPrincipalStudents();
+    document.getElementById("smId").disabled = false;
+}
+
+function deleteStudentAccount(sid) {
+    if (!confirm("Delete student account " + sid + "?")) return;
+    for (var i = 0; i < studentAccounts.length; i++) {
+        if (studentAccounts[i].id === sid) { studentAccounts.splice(i, 1); break; }
+    }
+    saveAll();
+    renderPrincipalStudents();
 }
 
 function renderPrincipalAnalytics() {
@@ -1828,9 +1940,10 @@ function confirmImport() {
 }
 
 function closeModal() {
-    var ids = ["questionModal", "classModal", "assignmentModal", "excelModal", "teacherModal", "attendanceModal"];
+    var ids = ["questionModal", "classModal", "assignmentModal", "excelModal", "teacherModal", "attendanceModal", "studentModal"];
     for (var i = 0; i < ids.length; i++) document.getElementById(ids[i]).classList.remove("active");
     document.getElementById("modalOverlay").classList.remove("active");
+    document.getElementById("smId").disabled = false;
 }
 
 window.onload = function() {

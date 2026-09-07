@@ -77,7 +77,7 @@
                     </div>
                     <button type="submit" class="login-button">&#9654; Sign In</button>
                 </form>
-                <p class="demo-note">Demo passwords: Students/Teachers/Parents = <b>123</b>, Principal = <b>admin</b></p>
+                <p class="demo-note">Students: Use your ID (e.g. <b>9A-001</b>) and password <b>123</b><br>Teachers/Parents = <b>123</b>, Principal = <b>admin</b></p>
             </div>
         </div>
 
@@ -270,6 +270,9 @@
             </div>
             <div id="principalStudentsTab" class="tab-content" style="display:none;">
                 <h3>&#128100; Student Management</h3>
+                <div class="question-bank-toolbar">
+                    <button class="action-btn" onclick="showCreateStudentModal()">&#43; Add Student</button>
+                </div>
                 <div id="principalStudentsContent"></div>
             </div>
             <div id="principalAnalyticsTab" class="tab-content" style="display:none;">
@@ -543,6 +546,40 @@
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
                     <button type="submit" class="btn-save">Save Attendance</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="studentModal" class="modal">
+            <h3 id="studentModalTitle">&#128100; Add Student</h3>
+            <form id="studentForm" onsubmit="saveStudentAccount(event)">
+                <input type="hidden" id="smStudentId">
+                <div class="form-row">
+                    <label>Student ID (e.g., 9A-004)</label>
+                    <input type="text" id="smId" placeholder="e.g., 9A-004" required>
+                </div>
+                <div class="form-row">
+                    <label>Full Name</label>
+                    <input type="text" id="smName" placeholder="e.g., Ahmed Ali" required>
+                </div>
+                <div class="form-row">
+                    <label>Class</label>
+                    <select id="smClassId" required></select>
+                </div>
+                <div class="form-row">
+                    <label>Grade</label>
+                    <select id="smGrade">
+                        <option value="9">Grade 9</option>
+                        <option value="10">Grade 10</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Password</label>
+                    <input type="text" id="smPassword" placeholder="Default: 123" value="123">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Student</button>
                 </div>
             </form>
         </div>
