@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMSG Learning Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>&#127891; IMSG I-14/3 Learning Hub</h1>
+        <p>Learn &bull; Practice &bull; Improve &bull; Succeed</p>
+    </header>
+
+    <main>
+        <!-- LOGIN PAGE -->
+        <div id="loginPage" class="login-container">
+            <div class="login-card">
+                <h2>Welcome to IMSG I-14/3 Learning Hub</h2>
+                <p class="login-subtitle">Please select your role and enter your credentials</p>
+                <div class="role-selector">
+                    <label for="roleSelect">I am a:</label>
+                    <select id="roleSelect" onchange="updateLoginFields()">
+                        <option value="student">Student</option>
+                        <option value="teacher">Subject Teacher</option>
+                        <option value="classteacher">Class Teacher</option>
+                        <option value="parent">Parent</option>
+                        <option value="principal">Principal / Admin</option>
+                    </select>
+                </div>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group" id="studentFields">
+                        <label for="studentId">Student ID / Roll Number:</label>
+                        <input type="text" id="studentId" placeholder="e.g., 9A-001">
+                        <label for="studentName">Name:</label>
+                        <input type="text" id="studentName" placeholder="Your full name">
+                        <label for="studentPassword">Password:</label>
+                        <input type="password" id="studentPassword" placeholder="Enter password">
+                    </div>
+                    <div class="form-group" id="teacherFields" style="display:none;">
+                        <label for="teacherId">Teacher ID:</label>
+                        <input type="text" id="teacherId" placeholder="e.g., T-CS-001">
+                        <label for="teacherName">Name:</label>
+                        <input type="text" id="teacherName" placeholder="Your full name">
+                        <label for="teacherSubject">Subject:</label>
+                        <select id="teacherSubject">
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Biology">Biology</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="English">English</option>
+                            <option value="Urdu">Urdu</option>
+                            <option value="Islamiyat">Islamiyat</option>
+                            <option value="Pakistan Studies">Pakistan Studies</option>
+                        </select>
+                        <label for="teacherPassword">Password:</label>
+                        <input type="password" id="teacherPassword" placeholder="Enter password">
+                    </div>
+                    <div class="form-group" id="parentFields" style="display:none;">
+                        <label for="parentId">Parent ID:</label>
+                        <input type="text" id="parentId" placeholder="e.g., P-9A-001">
+                        <label for="parentName">Your Name:</label>
+                        <input type="text" id="parentName" placeholder="Your full name">
+                        <label for="childId">Child's Student ID:</label>
+                        <input type="text" id="childId" placeholder="e.g., 9A-001">
+                        <label for="parentPassword">Password:</label>
+                        <input type="password" id="parentPassword" placeholder="Enter password">
+                    </div>
+                    <div class="form-group" id="principalFields" style="display:none;">
+                        <label for="principalId">Admin ID:</label>
+                        <input type="text" id="principalId" placeholder="e.g., ADMIN-001">
+                        <label for="principalName">Name:</label>
+                        <input type="text" id="principalName" placeholder="Your full name">
+                        <label for="principalPassword">Password:</label>
+                        <input type="password" id="principalPassword" placeholder="Enter password">
+                    </div>
+                    <button type="submit" class="login-button">&#9654; Sign In</button>
+                </form>
+                <p class="demo-note">Demo passwords: Students/Teachers/Parents = <b>123</b>, Principal = <b>admin</b></p>
+            </div>
+        </div>
+
+        <!-- LOGOUT BUTTON (shown on all dashboards) -->
+        <div id="logoutBar" style="display:none;" class="logout-bar">
+            <div class="logout-left">
+                <button id="homeBtn" class="home-btn" onclick="backToDashboard()" style="display:none;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                </button>
+                <span id="loggedUser"></span>
+            </div>
+                <button class="logout-btn" onclick="handleLogout()">&#10140; Sign Out</button>
+        </div>
+
+        <!-- STUDENT DASHBOARD -->
+        <div id="studentDashboard" style="display:none;">
+            <h2>&#127891; Welcome, <span id="studentDisplayName">Student</span>!</h2>
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="showStudentTab('practice')">&#128218; Practice</button>
+                <button class="tab-btn" onclick="showStudentTab('assignments')">&#128220; My Assignments</button>
+                <button class="tab-btn" onclick="showStudentTab('results')">&#127942; My Results</button>
+                <button class="tab-btn" onclick="showStudentTab('progress')">&#128200; My Progress</button>
+            </div>
+            <div id="studentPracticeTab" class="tab-content active">
+                <h3>&#128218; Practice MCQs</h3>
+                <p>Choose how you want to practice today.</p>
+                <div class="quiz-mode-grid">
+                    <div class="quiz-mode-card" onclick="showModeDetail('quick')">
+                        <div class="quiz-mode-icon">&#9889;</div>
+                        <h4>Quick Practice</h4>
+                        <p>10 questions &bull; 15 min<br>Fast revision of any subject</p>
+                    </div>
+                    <div class="quiz-mode-card" onclick="showModeDetail('chapter')">
+                        <div class="quiz-mode-icon">&#128218;</div>
+                        <h4>Chapter Test</h4>
+                        <p>30 questions &bull; 40 min<br>Full chapter assessment</p>
+                    </div>
+                    <div class="quiz-mode-card" onclick="showModeDetail('fullbook')">
+                        <div class="quiz-mode-icon">&#127891;</div>
+                        <h4>Full Book Test</h4>
+                        <p>50 questions &bull; 60 min<br>Exam simulation</p>
+                    </div>
+                    <div class="quiz-mode-card" onclick="showModeDetail('weak')">
+                        <div class="quiz-mode-icon">&#128200;</div>
+                        <h4>Weak Areas</h4>
+                        <p>10 questions &bull; 15 min<br>Fix your mistakes</p>
+                    </div>
+                </div>
+                <div id="modeDetailPanel" style="display:none;margin-top:20px;"></div>
+            </div>
+            <div id="studentAssignmentsTab" class="tab-content" style="display:none;">
+                <h3>&#128220; My Assignments</h3>
+                <div id="studentAssignmentsList"></div>
+            </div>
+            <div id="studentResultsTab" class="tab-content" style="display:none;">
+                <h3>&#127942; My Results</h3>
+                <div id="studentResultsList"></div>
+            </div>
+            <div id="studentProgressTab" class="tab-content" style="display:none;">
+                <h3>&#128200; My Progress</h3>
+                <div id="studentProgressContent"></div>
+            </div>
+        </div>
+
+        <!-- TEACHER DASHBOARD -->
+        <div id="teacherDashboard" style="display:none;">
+            <h2>&#128218; Teacher Dashboard - <span id="teacherDisplayName">Teacher</span></h2>
+            <p class="teacher-subject">Subject: <span id="teacherSubjectDisplay">Computer Science</span></p>
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="showTeacherTab('classes')">&#127979; My Classes</button>
+                <button class="tab-btn" onclick="showTeacherTab('questionbank')">&#128218; Question Bank</button>
+                <button class="tab-btn" onclick="showTeacherTab('assignments')">&#128220; Assignments</button>
+                <button class="tab-btn" onclick="showTeacherTab('analytics')">&#128200; Class Analytics</button>
+            </div>
+            <div id="teacherClassesTab" class="tab-content active">
+                <h3>&#127979; My Classes</h3>
+                <div id="classesList"></div>
+                <button class="action-btn" onclick="showCreateClassModal()">&#43; Create New Class</button>
+            </div>
+            <div id="teacherQuestionBankTab" class="tab-content" style="display:none;">
+                <h3>&#128218; Question Bank</h3>
+                <div class="question-bank-toolbar">
+                    <input type="text" id="qbSearch" placeholder="Search questions..." oninput="filterQuestions()">
+                    <select id="qbFilterSubject" onchange="filterQuestions()">
+                        <option value="">All Subjects</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology">Biology</option>
+                        <option value="Mathematics">Mathematics</option>
+                    </select>
+                    <select id="qbFilterGrade" onchange="filterQuestions()">
+                        <option value="">All Grades</option>
+                        <option value="9">Grade 9</option>
+                        <option value="10">Grade 10</option>
+                    </select>
+                    <button class="action-btn" onclick="showAddQuestionModal()">&#43; Add Question</button>
+                    <button class="action-btn secondary" onclick="showExcelImportModal()">&#128229; Import Excel</button>
+                </div>
+                <div id="questionsTable"></div>
+            </div>
+            <div id="teacherAssignmentsTab" class="tab-content" style="display:none;">
+                <h3>&#128220; Assignments</h3>
+                <div class="assignments-toolbar">
+                    <button class="action-btn" onclick="showCreateAssignmentModal()">&#43; Create Assignment</button>
+                </div>
+                <div id="assignmentsList"></div>
+            </div>
+            <div id="teacherAnalyticsTab" class="tab-content" style="display:none;">
+                <h3>&#128200; Class Analytics</h3>
+                <select id="analyticsClassSelect" onchange="loadClassAnalytics()">
+                    <option value="">Select a class</option>
+                </select>
+                <div id="classAnalyticsContent"></div>
+            </div>
+        </div>
+
+        <!-- CLASS TEACHER DASHBOARD -->
+        <div id="classTeacherDashboard" style="display:none;">
+            <h2>&#127979; Class Teacher Dashboard - <span id="ctDisplayName">Class Teacher</span></h2>
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="showCTTab('overview')">&#128202; Class Overview</button>
+                <button class="tab-btn" onclick="showCTTab('students')">&#128100; Students</button>
+                <button class="tab-btn" onclick="showCTTab('cross-subject')">&#128200; Cross-Subject Analytics</button>
+                <button class="tab-btn" onclick="showCTTab('attendance')">&#9851; Attendance</button>
+            </div>
+            <div id="ctOverviewTab" class="tab-content active">
+                <h3>&#128202; Class Overview</h3>
+                <div id="ctOverviewContent"></div>
+            </div>
+            <div id="ctStudentsTab" class="tab-content" style="display:none;">
+                <h3>&#128100; Student Management</h3>
+                <div id="ctStudentsList"></div>
+            </div>
+            <div id="ctCrossSubjectTab" class="tab-content" style="display:none;">
+                <h3>&#128200; Cross-Subject Performance</h3>
+                <div id="ctCrossSubjectContent"></div>
+            </div>
+            <div id="ctAttendanceTab" class="tab-content" style="display:none;">
+                <h3>&#9851; Attendance</h3>
+                <div class="attendance-toolbar">
+                    <select id="ctAttendanceDate" onchange="renderCTAttendance()">
+                        <option value="">Select Date</option>
+                    </select>
+                    <button class="action-btn" onclick="markAttendance()">&#9851; Mark Attendance</button>
+                </div>
+                <div id="ctAttendanceContent"></div>
+            </div>
+        </div>
+
+        <!-- PARENT DASHBOARD -->
+        <div id="parentDashboard" style="display:none;">
+            <h2>&#128100; Parent Portal - <span id="parentDisplayName">Parent</span></h2>
+            <p>Child: <span id="childDisplayName">Loading...</span> (ID: <span id="childIdDisplay"></span>)</p>
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="showParentTab('progress')">&#128200; Progress</button>
+                <button class="tab-btn" onclick="showParentTab('assignments')">&#128220; Assignments</button>
+                <button class="tab-btn" onclick="showParentTab('results')">&#127942; Test Results</button>
+                <button class="tab-btn" onclick="showParentTab('attendance')">&#9851; Attendance</button>
+            </div>
+            <div id="parentProgressTab" class="tab-content active">
+                <h3>&#128200; Academic Progress</h3>
+                <div id="parentProgressContent"></div>
+            </div>
+            <div id="parentAssignmentsTab" class="tab-content" style="display:none;">
+                <h3>&#128220; Assignments</h3>
+                <div id="parentAssignmentsContent"></div>
+            </div>
+            <div id="parentResultsTab" class="tab-content" style="display:none;">
+                <h3>&#127942; Test Results</h3>
+                <div id="parentResultsContent"></div>
+            </div>
+            <div id="parentAttendanceTab" class="tab-content" style="display:none;">
+                <h3>&#9851; Attendance</h3>
+                <div id="parentAttendanceContent"></div>
+            </div>
+        </div>
+
+        <!-- PRINCIPAL DASHBOARD -->
+        <div id="principalDashboard" style="display:none;">
+            <h2>&#127963; Principal / Admin Dashboard - <span id="principalDisplayName">Principal</span></h2>
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="showPrincipalTab('school')">&#127963; School Overview</button>
+                <button class="tab-btn" onclick="showPrincipalTab('classes')">&#127979; Classes</button>
+                <button class="tab-btn" onclick="showPrincipalTab('teachers')">&#128105;&#8205;&#127979; Teachers</button>
+                <button class="tab-btn" onclick="showPrincipalTab('students')">&#128100; Students</button>
+                <button class="tab-btn" onclick="showPrincipalTab('analytics')">&#128200; Analytics</button>
+            </div>
+            <div id="principalSchoolTab" class="tab-content active">
+                <h3>&#127963; School Overview</h3>
+                <div id="principalSchoolContent"></div>
+            </div>
+            <div id="principalClassesTab" class="tab-content" style="display:none;">
+                <h3>&#127979; Class Management</h3>
+                <div id="principalClassesContent"></div>
+            </div>
+            <div id="principalTeachersTab" class="tab-content" style="display:none;">
+                <h3>&#128105;&#8205;&#127979; Teacher Management</h3>
+                <div class="assignments-toolbar">
+                    <button class="action-btn" onclick="showAddTeacherModal()">&#43; Add Teacher</button>
+                </div>
+                <div id="principalTeachersContent"></div>
+            </div>
+            <div id="principalStudentsTab" class="tab-content" style="display:none;">
+                <h3>&#128100; Student Management</h3>
+                <div id="principalStudentsContent"></div>
+            </div>
+            <div id="principalAnalyticsTab" class="tab-content" style="display:none;">
+                <h3>&#128200; School Analytics</h3>
+                <div id="principalAnalyticsContent"></div>
+            </div>
+        </div>
+
+        <!-- QUIZ VIEW -->
+        <div id="quiz" class="quiz-card" style="display:none;">
+            <div class="quiz-header">
+                <p id="score">Score: 0</p>
+                <p id="timer">Time: 60</p>
+            </div>
+            <p id="questionNumber"></p>
+            <div id="progressContainer"><div id="progressBar"></div></div>
+            <h2 id="question">Your question will appear here</h2>
+            <div id="quizMedia"></div>
+            <div id="quizOptions">
+                <button class="option"></button>
+                <button class="option"></button>
+                <button class="option"></button>
+                <button class="option"></button>
+            </div>
+            <div id="quizNav" style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
+                <button id="prevButton" onclick="prevQuestion()" style="display:none;">&#8592; Previous</button>
+                <button id="skipButton" onclick="skipQuestion()">Skip &#8594;</button>
+                <button id="nextButton" onclick="nextQuestion()" style="display:none;">Next &#8594;</button>
+            </div>
+            <div id="questionPalette" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:16px;"></div>
+        </div>
+
+        <div id="result" class="result-card" style="display:none;">
+            <h2>&#127881; Quiz Completed!</h2>
+            <p id="finalScore"></p>
+            <p id="percentage"></p>
+            <p id="timeTaken" style="font-size:14px;color:var(--text-light);margin-bottom:10px;"></p>
+            <p id="feedback"></p>
+            <button class="review-button" onclick="showReview()">&#128270; Review Answers</button>
+            <button class="retry-button" onclick="startPractice()">&#128260; Try Again</button>
+            <button class="back-dashboard" onclick="backToDashboard()">&#127968; Back to Dashboard</button>
+        </div>
+
+        <div id="review" style="display:none;">
+            <h2>&#128270; Review Answers</h2>
+            <div id="reviewContent"></div>
+            <button class="back-dashboard" onclick="backToDashboard()">&#127968; Back to Dashboard</button>
+        </div>
+
+        <!-- MODALS -->
+        <div id="modalOverlay" class="modal-overlay" onclick="closeModal()"></div>
+
+        <!-- ADD/EDIT QUESTION MODAL -->
+        <div id="questionModal" class="modal">
+            <h3 id="qmModalTitle">&#128218; Add Question</h3>
+            <form id="questionForm" onsubmit="saveQuestion(event)">
+                <input type="hidden" id="qmQuestionId">
+                <div class="form-row">
+                    <label>Subject</label>
+                    <select id="qmSubject" required>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology">Biology</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="English">English</option>
+                        <option value="Urdu">Urdu</option>
+                        <option value="Islamiyat">Islamiyat</option>
+                        <option value="Pakistan Studies">Pakistan Studies</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Grade</label>
+                    <select id="qmGrade" required>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Chapter</label>
+                    <input type="text" id="qmChapter" placeholder="e.g., Networking" required>
+                </div>
+                <div class="form-row">
+                    <label>Topic</label>
+                    <input type="text" id="qmTopic" placeholder="e.g., Network Topologies" required>
+                </div>
+                <div class="form-row">
+                    <label>Difficulty</label>
+                    <select id="qmDifficulty" required>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <div class="form-row full">
+                    <label>Question Text</label>
+                    <textarea id="qmText" placeholder="Enter question..." required></textarea>
+                </div>
+                <div class="form-row full">
+                    <label>Explanation</label>
+                    <textarea id="qmExplanation" placeholder="Why is this answer correct?"></textarea>
+                </div>
+                <div class="form-row"><label>Option A</label><input type="text" id="qmOptionA" required></div>
+                <div class="form-row"><label>Option B</label><input type="text" id="qmOptionB" required></div>
+                <div class="form-row"><label>Option C</label><input type="text" id="qmOptionC" required></div>
+                <div class="form-row"><label>Option D</label><input type="text" id="qmOptionD" required></div>
+                <div class="form-row">
+                    <label>Correct Answer</label>
+                    <select id="qmAnswer" required>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                </div>
+                <div class="form-row full">
+                    <label>Media URL (optional)</label>
+                    <input type="text" id="qmMedia" placeholder="media/image.png">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Question</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- CREATE CLASS MODAL -->
+        <div id="classModal" class="modal">
+            <h3 id="classModalTitle">&#127979; Create New Class</h3>
+            <form id="classForm" onsubmit="saveClass(event)">
+                <input type="hidden" id="cmClassId">
+                <div class="form-row">
+                    <label>Class Name</label>
+                    <input type="text" id="cmName" placeholder="e.g., 9A" required>
+                </div>
+                <div class="form-row">
+                    <label>Grade</label>
+                    <select id="cmGrade" required>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Section</label>
+                    <input type="text" id="cmSection" placeholder="e.g., A" required>
+                </div>
+                <div class="form-row full">
+                    <label>Students (one per line: ID,Name)</label>
+                    <textarea id="cmStudents" placeholder="9A-001,Ahmed Khan&#10;9A-002,Fatima Ali"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Class</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- CREATE ASSIGNMENT MODAL -->
+        <div id="assignmentModal" class="modal">
+            <h3 id="amModalTitle">&#128220; Create Assignment</h3>
+            <form id="assignmentForm" onsubmit="saveAssignment(event)">
+                <input type="hidden" id="amAssignmentId">
+                <div class="form-row">
+                    <label>Title</label>
+                    <input type="text" id="amTitleInput" placeholder="e.g., Chapter 1 Quiz" required>
+                </div>
+                <div class="form-row">
+                    <label>Subject</label>
+                    <select id="amSubject" onchange="updateAssignmentQuestionList()" required>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology">Biology</option>
+                        <option value="Mathematics">Mathematics</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Class</label>
+                    <select id="amClass" required></select>
+                </div>
+                <div class="form-row">
+                    <label>Due Date</label>
+                    <input type="date" id="amDueDate" required>
+                </div>
+                <div class="form-row full">
+                    <label>Select Questions from Bank</label>
+                    <div class="question-selector-search">
+                        <input type="text" id="amQSearch" placeholder="Search questions..." oninput="updateAssignmentQuestionList()">
+                    </div>
+                    <div id="amQuestionSelector" class="question-selector"></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Assignment</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- EXCEL IMPORT MODAL -->
+        <div id="excelModal" class="modal">
+            <h3>&#128229; Import Questions from Excel</h3>
+            <p class="login-subtitle">Upload an Excel (.xlsx) or CSV file with these columns:</p>
+            <p class="login-subtitle" style="font-size:11px;color:#666;">id | chapter | topic | type | mode | difficulty | question | optionA | optionB | optionC | optionD | answer | explanation | bloom | source</p>
+            <form id="excelForm" onsubmit="importExcel(event)">
+                <div class="form-row full">
+                    <label>Excel/CSV File</label>
+                    <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Import</button>
+                </div>
+            </form>
+            <div id="importPreview" style="display:none;">
+                <h4>Preview (first 5 rows)</h4>
+                <div id="importPreviewTable" style="overflow-x:auto;max-height:300px;overflow-y:auto;margin:10px 0;"></div>
+                <div id="importStats" style="margin:10px 0;"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="button" class="btn-save" onclick="confirmImport()">Confirm Import</button>
+                </div>
+            </div>
+            <div id="importResult" style="display:none;"></div>
+        </div>
+
+        <!-- ADD TEACHER MODAL (Principal) -->
+        <div id="teacherModal" class="modal">
+            <h3 id="teacherModalTitle">&#128105;&#8205;&#127979; Add Teacher</h3>
+            <form id="teacherForm" onsubmit="saveTeacher(event)">
+                <input type="hidden" id="tmTeacherId">
+                <div class="form-row">
+                    <label>Teacher ID</label>
+                    <input type="text" id="tmId" placeholder="e.g., T-CS-001" required>
+                </div>
+                <div class="form-row">
+                    <label>Name</label>
+                    <input type="text" id="tmName" placeholder="Full name" required>
+                </div>
+                <div class="form-row">
+                    <label>Subject</label>
+                    <select id="tmSubject" required>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology">Biology</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="English">English</option>
+                        <option value="Urdu">Urdu</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Password</label>
+                    <input type="password" id="tmPassword" placeholder="Login password" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Teacher</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- MARK ATTENDANCE MODAL -->
+        <div id="attendanceModal" class="modal">
+            <h3>&#9851; Mark Attendance</h3>
+            <form id="attendanceForm" onsubmit="saveAttendance(event)">
+                <div class="form-row">
+                    <label>Date</label>
+                    <input type="date" id="attDate" required>
+                </div>
+                <div id="attendanceStudentList" class="attendance-list"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Attendance</button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+    <footer><p>&#127891; IMSG I-14/3 Islamabad &bull; Learning Hub</p></footer>
+    <script src="xlsx.full.min.js"></script>
+    <script src="questionLoader.js"></script>
+    <script src="script.js?v=5"></script>
+</body>
+</html>

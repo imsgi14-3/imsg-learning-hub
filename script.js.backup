@@ -1,0 +1,409 @@
+
+let score = 0;
+let answered = false;
+let currentQuestion = 0;
+
+let timeLeft = 60;
+let timer;
+
+let studentAnswers = [];
+
+let questionStartTime = 0;
+
+let currentAttempt = null;
+
+
+const questions = [
+
+    {
+
+        id: "CS9-NET-001",
+
+        subject: "Computer Science",
+
+        grade: 9,
+
+        chapter: "Networking",
+
+        topic: "Network Topologies",
+
+        type: "mcq",
+
+        text: "Which number system uses only 0 and 1?",
+
+        options: [
+            "Decimal",
+            "Binary",
+            "Octal",
+            "Hexadecimal"
+        ],
+
+        answer: "Binary",
+
+        explanation: "The binary number system uses only two digits: 0 and 1.",
+
+        difficulty: "easy"
+    },
+
+    {
+
+        id: "CS9-NET-002",
+
+        subject: "Computer Science",
+
+        grade: 9,
+
+        chapter: "Networking",
+
+        topic: "Network Topologies",
+
+        type: "mcq",
+
+        text: "Which topology connects all devices to a central device?",
+
+        options: [
+            "Bus",
+            "Star",
+            "Ring",
+            "Mesh"
+        ],
+
+        answer: "Star",
+
+        explanation: "A star topology connects all devices to a central device, such as a hub or switch.",
+
+        difficulty: "easy"
+    },
+
+
+    {
+
+        id: "CS9-OUT-001",
+
+        subject: "Computer Science",
+
+        grade: 9,
+
+        chapter: "Output Devices",
+
+        topic: "Output Devices",
+
+        type: "mcq",
+
+        text: "Which of the following is an output device?",
+
+        options: [
+            "Keyboard",
+            "Mouse",
+            "Monitor",
+            "Scanner"
+        ],
+
+        answer: "Monitor",
+
+        explanation: "A monitor is an output device that displays visual information to the user.",
+
+        difficulty: "easy"
+    }
+];
+
+function startPractice() {
+
+    score = 0;
+
+    answered = false;
+
+    currentQuestion = 0;
+
+    studentAnswers = [];
+
+    startTimer();
+
+    document.getElementById("home").style.display = "none";
+
+    document.getElementById("result").style.display = "none";
+
+    document.getElementById("quiz").style.display = "block";
+
+
+    document.getElementById("score").textContent =
+        "Score: " + score;
+
+
+    displayQuestion();
+
+}
+
+function displayQuestion() {
+
+    questionStartTime = Date.now();
+
+    const question = questions[currentQuestion];
+
+    document.getElementById("questionNumber").textContent =
+    "Question " + (currentQuestion + 1) +
+    " of " + questions.length;
+
+    const progress =
+    ((currentQuestion + 1) / questions.length) * 100;
+
+    document.getElementById("progressBar").style.width =
+    progress + "%";
+
+    document.getElementById("question").textContent =
+        question.text;
+
+
+    const options = document.querySelectorAll(".option");
+
+
+    options.forEach(function(button, index) {
+
+        button.textContent = question.options[index];
+
+
+        button.onclick = function() {
+
+            checkAnswer(button.textContent);
+
+        };
+
+    });
+
+    const nextButton = document.getElementById("nextButton");
+
+    if (currentQuestion === questions.length - 1) {
+
+        nextButton.textContent = "Finish Quiz";
+
+    } else {
+
+        nextButton.textContent = "Next Question";
+
+    }
+
+}
+
+function checkAnswer(selectedAnswer) {
+
+    if (answered === true) {
+
+        return;
+
+    }
+
+
+    answered = true;
+
+
+    const question = questions[currentQuestion];
+
+
+    const isCorrect =
+        selectedAnswer === question.answer;
+
+
+    if (isCorrect) {
+
+        score = score + 1;
+
+    }
+
+
+    studentAnswers.push({
+
+        question: currentQuestion,
+
+        text: question.text,
+
+        options: question.options,
+
+        selected: selectedAnswer,
+
+        answer: question.answer,
+
+        correct: isCorrect,
+
+        timeUsed: Math.round((Date.now() - questionStartTime) / 1000)
+
+    });
+
+
+    document.getElementById("score").textContent =
+        "Score: " + score;
+
+
+    document.getElementById("nextButton").style.display =
+        "block";
+
+}
+
+
+function nextQuestion() {
+
+    if (currentQuestion === questions.length - 1) {
+
+        showResult();
+
+        return;
+
+    }
+
+
+    currentQuestion = currentQuestion + 1;
+
+    answered = false;
+
+
+    document.getElementById("nextButton").style.display =
+        "none";
+
+
+    displayQuestion();
+
+}
+
+
+function showResult() {
+
+    clearInterval(timer);
+
+    document.getElementById("quiz").style.display = "none";
+
+    document.getElementById("result").style.display = "block";
+
+    document.getElementById("nextButton").style.display = "none";
+
+
+    document.getElementById("finalScore").textContent =
+        "Score: " + score + " / " + questions.length;
+
+
+    const percentage =
+        Number(((score / questions.length) * 100).toFixed(2));
+
+
+    document.getElementById("percentage").textContent =
+        "Percentage: " + percentage + "%";
+    
+    let feedback;
+
+        if (percentage >= 90) {
+
+            feedback = "🌟 Excellent! You've mastered this topic!";
+
+        }
+        else if (percentage >= 70) {
+
+            feedback = "👍 Good job! A little more practice will make you stronger.";
+
+        }
+        else if (percentage >= 50) {
+
+            feedback = "📚 Keep practicing. You're getting there!";
+
+        }
+        else {
+
+            feedback = "💪 Don't give up! Review the topic and try again.";
+
+        }
+
+    document.getElementById("feedback").textContent = feedback;
+}
+
+
+function startTimer() {
+
+    clearInterval(timer);
+
+    document.getElementById("timer").classList.remove("warning");
+
+    timeLeft = 60;
+
+    document.getElementById("timer").textContent =
+        "Time: " + timeLeft;
+
+
+    timer = setInterval(function() {
+
+        timeLeft = timeLeft - 1;
+
+
+        document.getElementById("timer").textContent =
+            "Time: " + timeLeft;
+        
+        if (timeLeft <= 10) {
+            document.getElementById("timer").classList.add("warning");
+        }
+
+
+        if (timeLeft <= 0) {
+
+            clearInterval(timer);
+
+            showResult();
+
+        }
+
+    }, 1000);
+
+}
+
+function showReview() {
+
+    document.getElementById("result").style.display = "none";
+
+    document.getElementById("review").style.display = "block";
+
+
+    const reviewContent =
+        document.getElementById("reviewContent");
+
+
+    reviewContent.innerHTML = "";
+
+
+    studentAnswers.forEach(function(item, index) {
+
+        const reviewItem = document.createElement("div");
+
+        reviewItem.className = "review-item";
+
+
+        reviewItem.innerHTML = `
+
+            <h3>Question ${index + 1}</h3>
+
+            <p>${item.text}</p>
+
+            <p>
+                <strong>Your answer:</strong>
+                ${item.selected}
+            </p>
+
+            <p>
+                <strong>Correct answer:</strong>
+                ${item.answer}
+            </p>
+
+            <p>
+                ${item.correct ? "✅ Correct" : "❌ Incorrect"}
+            </p>
+
+        `;
+
+
+        reviewContent.appendChild(reviewItem);
+
+    });
+
+}
+
+
+function showMessage(section) {
+
+    alert(section + " section coming soon!");
+
+}
+
