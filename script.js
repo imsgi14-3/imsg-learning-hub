@@ -835,22 +835,37 @@ function checkAnswer(sel) {
     if (answered) return;
     answered = true;
     var q = activeQuizQuestions[currentQuestion];
-    var answerText = q.answer;
-    if (q.answer.length === 1 && "ABCD".indexOf(q.answer.toUpperCase()) >= 0) {
-        var idx = q.answer.toUpperCase().charCodeAt(0) - 65;
-        var opts = shuffledOptionsMap[q.id] || q.options;
-        if (opts[idx]) answerText = opts[idx];
+    var answerIndex = "ABCD".indexOf(String(q.answer).toUpperCase());
+    var correctAnswerText = "";
+    if (answerIndex >= 0 && q.options && q.options[answerIndex]) {
+        correctAnswerText = q.options[answerIndex];
+    } else {
+        correctAnswerText = q.answer;
     }
-    var correct = sel === answerText;
+    var correct = sel === correctAnswerText;
     if (correct) score++;
-    studentAnswers.push({ question: currentQuestion, text: q.text || q.question, options: q.options, selected: sel, answer: q.answer, correct: correct, timeUsed: Math.round((Date.now() - questionStartTime) / 1000), questionId: q.id, explanation: q.explanation });
+    studentAnswers.push({
+        question: currentQuestion,
+        questionId: q.id,
+        text: q.text || q.question,
+        options: q.options,
+        selected: sel,
+        answer: q.answer,
+        correctAnswerText: correctAnswerText,
+        correct: correct,
+        timeUsed: Math.round((Date.now() - questionStartTime) / 1000),
+        explanation: q.explanation
+    });
     document.getElementById("score").textContent = "Score: " + score;
     var btns = document.querySelectorAll("#quizOptions .option");
     for (var i = 0; i < btns.length; i++) {
         btns[i].onclick = null;
         var optText = btns[i].querySelector(".opt-text").textContent;
-        if (optText === answerText) btns[i].classList.add("correct");
-        else if (optText === sel && !correct) btns[i].classList.add("incorrect");
+        if (optText === correctAnswerText) {
+            btns[i].classList.add("correct");
+        } else if (optText === sel && !correct) {
+            btns[i].classList.add("incorrect");
+        }
     }
     document.getElementById("nextButton").style.display = "block";
     renderPalette();
