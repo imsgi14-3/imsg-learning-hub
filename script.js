@@ -586,7 +586,7 @@ function showChapterQuizOptions(chapterNum, subject) {
         '<div class="quiz-mode-card" onclick="showTopicPicker(' + chapterNum + ', \'' + subject + '\')">' +
         '<div class="quiz-mode-icon">&#9889;</div>' +
         '<h4>Quick Practice</h4>' +
-        '<p>10 questions &bull; 15 min<br>Pick a topic to revise</p>' +
+        '<p>15 questions &bull; 20 min<br>Pick a topic to revise</p>' +
         '</div>' +
         '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject + '\', \'test\')">' +
         '<div class="quiz-mode-icon">&#128218;</div>' +
@@ -652,9 +652,9 @@ function launchTopicPractice(chapterNum, subject, topic) {
         }
     }
     if (filtered.length === 0) { alert("No questions available for this topic."); return; }
-    var count = Math.min(10, filtered.length);
+    var count = Math.min(15, filtered.length);
     var selected = shuffleArray(filtered).slice(0, count);
-    launchQuiz(selected, 15, "practice");
+    launchQuiz(selected, 20, "practice");
 }
 
 function launchChapterMode(chapterNum, subject, mode) {
@@ -664,7 +664,7 @@ function launchChapterMode(chapterNum, subject, mode) {
     }
     if (filtered.length === 0) { alert("No questions available for this chapter."); return; }
     var count, time;
-    if (mode === "practice") { count = Math.min(10, filtered.length); time = 15; }
+    if (mode === "practice") { count = Math.min(15, filtered.length); time = 20; }
     else if (mode === "test") { count = Math.min(30, filtered.length); time = 40; }
     else if (mode === "full") { count = filtered.length; time = 60; }
     else if (mode === "weak") {
