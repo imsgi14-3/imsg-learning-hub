@@ -1157,18 +1157,19 @@ function backToDashboard() {
     if (mdp) mdp.style.display = "none";
     clearInterval(timer);
     if (document.getElementById("quiz").dataset.assignmentId) delete document.getElementById("quiz").dataset.assignmentId;
+    dashboardsHide();
     if (currentRole === "student") {
-        document.getElementById("studentPracticeTab").style.display = "block";
-        document.getElementById("studentAssignmentsTab").style.display = "none";
-        document.getElementById("studentResultsTab").style.display = "none";
-        document.getElementById("studentProgressTab").style.display = "none";
-        activateTab("#studentDashboard", 0);
+        document.getElementById("studentDashboard").style.display = "block";
+        showStudentTab("practice");
     } else if (currentRole === "teacher" || currentRole === "classteacher") {
         document.getElementById("teacherDashboard").style.display = "block";
+        showTeacherTab("classes");
     } else if (currentRole === "parent") {
         document.getElementById("parentDashboard").style.display = "block";
+        showParentTab("progress");
     } else if (currentRole === "principal") {
         document.getElementById("principalDashboard").style.display = "block";
+        showPrincipalTab("overview");
     }
 }
 
