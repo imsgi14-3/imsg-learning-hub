@@ -31,17 +31,15 @@ var subjectsData = {
     "Computer Science": {
         icon: "&#128187;",
         color: "#4f46e5",
-        description: "Hardware, Software, Networking & Programming",
+        description: "Hardware, Software, Programming & Problem Solving",
         chapters: [
             { num: 1, title: "Computer Systems", topics: ["Computer Generations", "Systems and Types", "Core Components", "Von Neumann Architecture", "Data Transmission", "Computer Memory"] },
-            { num: 2, title: "Networks & Internet", topics: ["Network Types", "Internet", "Network Devices", "Web Technologies"] },
-            { num: 3, title: "Data & Privacy", topics: ["Data Types", "Binary Operations", "Data Security", "Privacy"] },
-            { num: 4, title: "Programming Concepts", topics: ["Algorithms", "Flowcharts", "Problem Solving", "Pseudocode"] },
-            { num: 5, title: "HTML & Web Design", topics: ["HTML Basics", "Tags & Elements", "Forms", "CSS"] },
-            { num: 6, title: "Scratch Programming", topics: ["Scratch Interface", "Sprites", "Events", "Loops & Conditions"] },
-            { num: 7, title: "Python Basics", topics: ["Variables", "Data Types", "Input/Output", "Operators"] },
-            { num: 8, title: "Python Control Flow", topics: ["Conditions", "Loops", "Functions", "Lists"] },
-            { num: 9, title: "Impact of ICT", topics: ["ICT in Daily Life", "Digital Footprint", "Cyberbullying", "Career Paths"] }
+            { num: 2, title: "Computational Thinking & Algorithms", topics: ["Problem Solving", "Algorithms", "Flowcharts", "Pseudocode", "Decomposition", "Pattern Recognition"] },
+            { num: 3, title: "Programming Fundamentals", topics: ["Variables", "Data Types", "Input/Output", "Operators", "Conditions", "Loops", "Functions"] },
+            { num: 4, title: "Data and Analysis", topics: ["Data Types", "Binary Operations", "Data Representation", "File Handling", "Databases"] },
+            { num: 5, title: "Applications of Computer Science", topics: ["HTML & CSS", "Web Technologies", "Scratch", "Python", "App Development"] },
+            { num: 6, title: "Impacts of Computing", topics: ["ICT in Daily Life", "Digital Footprint", "Cyberbullying", "Data Privacy", "Environmental Impact"] },
+            { num: 7, title: "Entrepreneurship", topics: ["Digital Entrepreneurship", "E-Commerce", "Digital Marketing", "Business Models", "Career Paths"] }
         ]
     },
     "Physics": {
