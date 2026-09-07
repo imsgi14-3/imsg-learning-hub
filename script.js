@@ -266,6 +266,7 @@ function handleLogin(e) {
         document.getElementById("studentDashboard").style.display = "block";
         document.getElementById("studentDisplayName").textContent = found.name;
         showStudentTab("practice");
+        history.pushState({ page: "dashboard" }, "", "#dashboard");
         return;
     } else if (role === "teacher") {
         id = document.getElementById("teacherId").value || "T-001";
@@ -323,6 +324,7 @@ function handleLogin(e) {
         document.getElementById("principalDisplayName").textContent = name;
         showPrincipalTab("school");
     }
+    history.pushState({ page: "dashboard" }, "", "#dashboard");
 }
 
 function handleLogout() {
@@ -336,6 +338,7 @@ function handleLogout() {
     document.getElementById("review").style.display = "none";
     document.getElementById("homeBtn").style.display = "none";
     document.getElementById("loginPage").style.display = "block";
+    history.pushState({ page: "login" }, "", "#login");
 }
 
 function activateTab(containerSel, idx) {
@@ -830,6 +833,7 @@ function launchQuiz(questions, timeMinutes, mode) {
     document.getElementById("review").style.display = "none";
     document.getElementById("homeBtn").style.display = "inline-block";
     document.getElementById("studentPracticeTab").style.display = "none";
+    history.pushState({ page: "quiz" }, "", "#quiz");
     startTimer();
     document.getElementById("score").textContent = "Score: " + score;
     displayQuestion();
@@ -1002,6 +1006,7 @@ function showResult() {
     document.getElementById("quiz").style.display = "none";
     document.getElementById("result").style.display = "block";
     document.getElementById("nextButton").style.display = "none";
+    history.pushState({ page: "result" }, "", "#result");
     document.getElementById("finalScore").textContent = "Score: " + score + " / " + activeQuizQuestions.length;
     var pct = activeQuizQuestions.length > 0 ? Number(((score / activeQuizQuestions.length) * 100).toFixed(2)) : 0;
     document.getElementById("percentage").textContent = "Percentage: " + pct + "%";
@@ -1128,6 +1133,7 @@ function updateTimerDisplay() {
 function showReview() {
     document.getElementById("result").style.display = "none";
     document.getElementById("review").style.display = "block";
+    history.pushState({ page: "review" }, "", "#review");
     var rc = document.getElementById("reviewContent");
     rc.innerHTML = "";
     for (var i = 0; i < studentAnswers.length; i++) {
@@ -1171,6 +1177,7 @@ function backToDashboard() {
         document.getElementById("principalDashboard").style.display = "block";
         showPrincipalTab("overview");
     }
+    history.pushState({ page: "dashboard" }, "", "#dashboard");
 }
 
 function showTeacherTab(tab) {
@@ -1965,4 +1972,49 @@ window.onload = function() {
         document.getElementById("loginPage").style.display = "block";
         dashboardsHide();
     }
+    history.replaceState({ page: "login" }, "", location.href);
+    window.addEventListener("beforeunload", function(e) {
+        if (document.getElementById("quiz").style.display === "block") {
+            e.returnValue = "Quiz is in progress. Are you sure you want to leave?";
+            return "Quiz is in progress. Are you sure you want to leave?";
+        }
+    });
 };
+
+window.addEventListener("popstate", function(e) {
+    if (!e.state || !e.state.page) return;
+    var page = e.state.page;
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("quiz").style.display = "none";
+    document.getElementById("result").style.display = "none";
+    document.getElementById("review").style.display = "none";
+    var mdp = document.getElementById("modeDetailPanel");
+    if (mdp) mdp.style.display = "none";
+    if (page === "login") {
+        clearInterval(timer);
+        document.getElementById("logoutBar").style.display = "none";
+        document.getElementById("homeBtn").style.display = "none";
+        dashboardsHide();
+        document.getElementById("loginPage").style.display = "block";
+        currentUser = null;
+        currentRole = null;
+    } else if (page === "dashboard") {
+        clearInterval(timer);
+        dashboardsHide();
+        if (currentRole === "student") {
+            document.getElementById("studentDashboard").style.display = "block";
+        } else if (currentRole === "teacher" || currentRole === "classteacher") {
+            document.getElementById("teacherDashboard").style.display = "block";
+        } else if (currentRole === "parent") {
+            document.getElementById("parentDashboard").style.display = "block";
+        } else if (currentRole === "principal") {
+            document.getElementById("principalDashboard").style.display = "block";
+        }
+    } else if (page === "quiz") {
+        document.getElementById("quiz").style.display = "block";
+    } else if (page === "result") {
+        document.getElementById("result").style.display = "block";
+    } else if (page === "review") {
+        document.getElementById("review").style.display = "block";
+    }
+}, false);
