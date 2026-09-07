@@ -1627,6 +1627,126 @@ footer {
     line-height: 1.6;
 }
 
+.subject-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.subject-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.subject-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.subject-card:hover::before {
+    opacity: 1;
+}
+
+.subject-card .subject-icon {
+    font-size: 2.8rem;
+    margin-bottom: 12px;
+}
+
+.subject-card h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+}
+
+.subject-card p {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.subject-card[data-subject="Computer Science"]::before { background: linear-gradient(90deg, #4f46e5, #06b6d4); }
+.subject-card[data-subject="Physics"]::before { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+.subject-card[data-subject="Chemistry"]::before { background: linear-gradient(90deg, #10b981, #3b82f6); }
+.subject-card[data-subject="Biology"]::before { background: linear-gradient(90deg, #22c55e, #16a34a); }
+.subject-card[data-subject="Mathematics"]::before { background: linear-gradient(90deg, #8b5cf6, #ec4899); }
+.subject-card[data-subject="English"]::before { background: linear-gradient(90deg, #f97316, #eab308); }
+
+.chapter-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.chapter-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.chapter-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.chapter-card:hover::before {
+    opacity: 1;
+}
+
+.chapter-card h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.chapter-card .chapter-num {
+    font-size: 12px;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.chapter-card p {
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.chapter-card .chapter-count {
+    display: inline-block;
+    background: var(--bg-light);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 8px;
+}
+
 /* Mode Detail Panel */
 .mode-detail {
     background: white;

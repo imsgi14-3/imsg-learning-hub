@@ -102,29 +102,16 @@
                 <button class="tab-btn" onclick="showStudentTab('progress')">&#128200; My Progress</button>
             </div>
             <div id="studentPracticeTab" class="tab-content active">
-                <h3>&#128218; Practice MCQs</h3>
-                <p>Choose how you want to practice today.</p>
-                <div class="quiz-mode-grid">
-                    <div class="quiz-mode-card" onclick="showModeDetail('quick')">
-                        <div class="quiz-mode-icon">&#9889;</div>
-                        <h4>Quick Practice</h4>
-                        <p>10 questions &bull; 15 min<br>Fast revision of any subject</p>
-                    </div>
-                    <div class="quiz-mode-card" onclick="showModeDetail('chapter')">
-                        <div class="quiz-mode-icon">&#128218;</div>
-                        <h4>Chapter Test</h4>
-                        <p>30 questions &bull; 40 min<br>Full chapter assessment</p>
-                    </div>
-                    <div class="quiz-mode-card" onclick="showModeDetail('fullbook')">
-                        <div class="quiz-mode-icon">&#127891;</div>
-                        <h4>Full Book Test</h4>
-                        <p>50 questions &bull; 60 min<br>Exam simulation</p>
-                    </div>
-                    <div class="quiz-mode-card" onclick="showModeDetail('weak')">
-                        <div class="quiz-mode-icon">&#128200;</div>
-                        <h4>Weak Areas</h4>
-                        <p>10 questions &bull; 15 min<br>Fix your mistakes</p>
-                    </div>
+                <div id="subjectListView">
+                    <h3>&#128218; Choose a Subject</h3>
+                    <p>Select a subject to see available chapters and start practicing.</p>
+                    <div id="subjectGrid" class="quiz-mode-grid"></div>
+                </div>
+                <div id="chapterListView" style="display:none;">
+                    <button class="mode-back-btn" onclick="showSubjectList()">&#8592; Back to Subjects</button>
+                    <h3 id="chapterSubjectTitle"></h3>
+                    <div id="chapterGrid" class="quiz-mode-grid"></div>
+                    <div id="chapterQuizOptions" style="display:none;margin-top:20px;"></div>
                 </div>
                 <div id="modeDetailPanel" style="display:none;margin-top:20px;"></div>
             </div>

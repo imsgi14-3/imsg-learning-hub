@@ -27,6 +27,79 @@ var teachers = [];
 var conceptStats = {};
 var attendance = [];
 
+var subjectsData = {
+    "Computer Science": {
+        icon: "&#128187;",
+        color: "#4f46e5",
+        description: "Hardware, Software, Networking & Programming",
+        chapters: [
+            { num: 1, title: "Computer Systems", topics: ["Computer Generations", "Systems and Types", "Core Components", "Von Neumann Architecture", "Data Transmission", "Computer Memory"] },
+            { num: 2, title: "Networks & Internet", topics: ["Network Types", "Internet", "Network Devices", "Web Technologies"] },
+            { num: 3, title: "Data & Privacy", topics: ["Data Types", "Binary Operations", "Data Security", "Privacy"] },
+            { num: 4, title: "Programming Concepts", topics: ["Algorithms", "Flowcharts", "Problem Solving", "Pseudocode"] },
+            { num: 5, title: "HTML & Web Design", topics: ["HTML Basics", "Tags & Elements", "Forms", "CSS"] },
+            { num: 6, title: "Scratch Programming", topics: ["Scratch Interface", "Sprites", "Events", "Loops & Conditions"] },
+            { num: 7, title: "Python Basics", topics: ["Variables", "Data Types", "Input/Output", "Operators"] },
+            { num: 8, title: "Python Control Flow", topics: ["Conditions", "Loops", "Functions", "Lists"] },
+            { num: 9, title: "Impact of ICT", topics: ["ICT in Daily Life", "Digital Footprint", "Cyberbullying", "Career Paths"] }
+        ]
+    },
+    "Physics": {
+        icon: "&#9883;",
+        color: "#f59e0b",
+        description: "Forces, Energy, Waves & Electricity",
+        chapters: [
+            { num: 1, title: "Physical Quantities", topics: ["SI Units", "Measurement", "Errors"] },
+            { num: 2, title: "Kinematics", topics: ["Distance & Displacement", "Speed & Velocity", "Acceleration"] },
+            { num: 3, title: "Forces & Motion", topics: ["Newton's Laws", "Friction", "Momentum"] },
+            { num: 4, title: "Work & Energy", topics: ["Work", "Energy Types", "Power", "Efficiency"] },
+            { num: 5, title: "Simple Machines", topics: ["Levers", "Pulleys", "Mechanical Advantage"] },
+            { num: 6, title: "Sound", topics: ["Sound Waves", "Speed of Sound", "Echo"] },
+            { num: 7, title: "Light", topics: ["Reflection", "Refraction", "Lenses"] },
+            { num: 8, title: "Electricity", topics: ["Current", "Voltage", "Resistance", "Circuits"] }
+        ]
+    },
+    "Chemistry": {
+        icon: "&#128300;",
+        color: "#10b981",
+        description: "Elements, Reactions, Acids & Bases",
+        chapters: [
+            { num: 1, title: "States of Matter", topics: ["Solids", "Liquids", "Gases", "Changes of State"] },
+            { num: 2, title: "Atomic Structure", topics: ["Atoms", "Elements", "Periodic Table"] },
+            { num: 3, title: "Chemical Bonding", topics: ["Ionic Bond", "Covalent Bond", "Metallic Bond"] },
+            { num: 4, title: "Acids & Bases", topics: ["Properties", "pH Scale", "Neutralization"] },
+            { num: 5, title: "Salts", topics: ["Preparation", "Types", "Uses"] },
+            { num: 6, title: "Chemical Reactions", topics: ["Types of Reactions", "Equations", "Balancing"] }
+        ]
+    },
+    "Biology": {
+        icon: "&#129516;",
+        color: "#22c55e",
+        description: "Cells, Genetics, Ecology & Health",
+        chapters: [
+            { num: 1, title: "Cell Biology", topics: ["Cell Structure", "Organelles", "Cell Division"] },
+            { num: 2, title: "Cell Cycle", topics: ["Mitosis", "Meiosis", "Growth"] },
+            { num: 3, title: "Tissues", topics: ["Plant Tissues", "Animal Tissues", "Organ Systems"] },
+            { num: 4, title: "Biodiversity", topics: ["Classification", "Ecosystems", "Food Chains"] },
+            { num: 5, title: "Plant Biology", topics: ["Photosynthesis", "Transpiration", "Growth"] },
+            { num: 6, title: "Human Biology", topics: ["Digestive System", "Circulatory System", "Nervous System"] }
+        ]
+    },
+    "Mathematics": {
+        icon: "&#128290;",
+        color: "#8b5cf6",
+        description: "Algebra, Geometry, Statistics & Numbers",
+        chapters: [
+            { num: 1, title: "Number System", topics: ["Real Numbers", "Rational Numbers", "Surds"] },
+            { num: 2, title: "Algebra", topics: ["Polynomials", "Factorization", "Equations"] },
+            { num: 3, title: "Matrices", topics: ["Matrix Operations", "Types of Matrices", "Determinants"] },
+            { num: 4, title: "Geometry", topics: ["Lines & Angles", "Triangles", "Quadrilaterals"] },
+            { num: 5, title: "Trigonometry", topics: ["Ratios", "Identities", "Applications"] },
+            { num: 6, title: "Statistics", topics: ["Mean", "Median", "Mode", "Graphs"] }
+        ]
+    }
+};
+
 function shuffleArray(arr) {
     var a = arr.slice();
     for (var i = a.length - 1; i > 0; i--) {
@@ -247,7 +320,7 @@ function showStudentTab(tab) {
     var ids = ["studentPracticeTab", "studentAssignmentsTab", "studentResultsTab", "studentProgressTab"];
     for (var i = 0; i < ids.length; i++) document.getElementById(ids[i]).style.display = "none";
     activateTab("#studentDashboard", map[tab]);
-    if (tab === "practice") document.getElementById("studentPracticeTab").style.display = "block";
+    if (tab === "practice") { document.getElementById("studentPracticeTab").style.display = "block"; renderSubjects(); showSubjectList(); }
     else if (tab === "assignments") { document.getElementById("studentAssignmentsTab").style.display = "block"; renderStudentAssignments(); }
     else if (tab === "results") { document.getElementById("studentResultsTab").style.display = "block"; renderStudentResults(); }
     else if (tab === "progress") { document.getElementById("studentProgressTab").style.display = "block"; renderStudentProgress(); }
@@ -435,6 +508,107 @@ function getWeakQuestions() {
         if (wrongIds[questions[i].id]) weak.push(questions[i]);
     }
     return weak;
+}
+
+var currentSubject = null;
+
+function renderSubjects() {
+    var grid = document.getElementById("subjectGrid");
+    var html = "";
+    for (var name in subjectsData) {
+        var s = subjectsData[name];
+        var count = 0;
+        for (var i = 0; i < s.chapters.length; i++) {
+            for (var j = 0; j < questions.length; j++) {
+                if (questions[j].subject === name && questions[j].chapter === s.chapters[i].num) count++;
+            }
+        }
+        html += '<div class="subject-card" data-subject="' + name + '" onclick="showSubjectChapters(\'' + name + '\')">' +
+            '<div class="subject-icon">' + s.icon + '</div>' +
+            '<h4>' + name + '</h4>' +
+            '<p>' + s.description + '</p>' +
+            '<p style="margin-top:8px;font-size:12px;color:var(--primary);font-weight:600;">' + s.chapters.length + ' chapters &bull; ' + count + ' questions</p>' +
+            '</div>';
+    }
+    grid.innerHTML = html;
+}
+
+function showSubjectChapters(subject) {
+    currentSubject = subject;
+    var s = subjectsData[subject];
+    document.getElementById("subjectListView").style.display = "none";
+    document.getElementById("chapterListView").style.display = "block";
+    document.getElementById("chapterSubjectTitle").innerHTML = s.icon + " " + subject + " — Select Chapter";
+    var grid = document.getElementById("chapterGrid");
+    var html = "";
+    for (var i = 0; i < s.chapters.length; i++) {
+        var ch = s.chapters[i];
+        var qCount = 0;
+        for (var j = 0; j < questions.length; j++) {
+            if (questions[j].subject === subject && questions[j].chapter === ch.num) qCount++;
+        }
+        html += '<div class="chapter-card" onclick="showChapterQuizOptions(' + ch.num + ', \'' + subject + '\')">' +
+            '<div class="chapter-num">Chapter ' + ch.num + '</div>' +
+            '<h4>' + ch.title + '</h4>' +
+            '<p>' + ch.topics.slice(0, 3).join(", ") + (ch.topics.length > 3 ? "..." : "") + '</p>' +
+            '<span class="chapter-count">' + qCount + ' questions</span>' +
+            '</div>';
+    }
+    grid.innerHTML = html;
+    document.getElementById("chapterQuizOptions").style.display = "none";
+}
+
+function showSubjectList() {
+    document.getElementById("subjectListView").style.display = "block";
+    document.getElementById("chapterListView").style.display = "none";
+    document.getElementById("modeDetailPanel").style.display = "none";
+    currentSubject = null;
+}
+
+function showChapterQuizOptions(chapterNum, subject) {
+    var s = subjectsData[subject];
+    var ch = null;
+    for (var i = 0; i < s.chapters.length; i++) {
+        if (s.chapters[i].num === chapterNum) { ch = s.chapters[i]; break; }
+    }
+    if (!ch) return;
+    var qCount = 0;
+    for (var j = 0; j < questions.length; j++) {
+        if (questions[j].subject === subject && questions[j].chapter === chapterNum) qCount++;
+    }
+    var panel = document.getElementById("chapterQuizOptions");
+    panel.style.display = "block";
+    panel.innerHTML = '<div class="mode-detail">' +
+        '<h4>' + s.icon + ' ' + subject + ' — Chapter ' + chapterNum + ': ' + ch.title + '</h4>' +
+        '<div class="mode-info">' +
+        '<div class="mode-info-item"><strong>' + qCount + '</strong> questions available</div>' +
+        '<div class="mode-info-item">Topics: ' + ch.topics.join(", ") + '</div>' +
+        '</div>' +
+        '<div class="mode-subject-select">' +
+        '<label>Quiz Mode</label>' +
+        '<select id="chapterQuizMode">' +
+        '<option value="practice">Quick Practice (10 Q / 15 min)</option>' +
+        '<option value="test">Chapter Test (30 Q / 40 min)</option>' +
+        '<option value="full">Full Chapter (' + qCount + ' Q / 60 min)</option>' +
+        '</select></div>' +
+        '<button class="mode-start-btn" onclick="launchChapterQuiz(' + chapterNum + ', \'' + subject + '\')">Start Quiz</button>' +
+        '</div>';
+    panel.scrollIntoView({ behavior: "smooth" });
+}
+
+function launchChapterQuiz(chapterNum, subject) {
+    var mode = document.getElementById("chapterQuizMode").value;
+    var filtered = [];
+    for (var i = 0; i < questions.length; i++) {
+        if (questions[i].subject === subject && questions[i].chapter === chapterNum) filtered.push(questions[i]);
+    }
+    if (filtered.length === 0) { alert("No questions available for this chapter."); return; }
+    var count, time;
+    if (mode === "practice") { count = Math.min(10, filtered.length); time = 15; }
+    else if (mode === "test") { count = Math.min(30, filtered.length); time = 40; }
+    else { count = filtered.length; time = 60; }
+    var selected = shuffleArray(filtered).slice(0, count);
+    launchQuiz(selected, time, mode);
 }
 
 function showModeDetail(mode) {
