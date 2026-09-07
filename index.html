@@ -272,6 +272,7 @@
                 <h3>&#128100; Student Management</h3>
                 <div class="question-bank-toolbar">
                     <button class="action-btn" onclick="showCreateStudentModal()">&#43; Add Student</button>
+                    <button class="action-btn" onclick="showStudentExcelModal()">&#128202; Import Excel</button>
                 </div>
                 <div id="principalStudentsContent"></div>
             </div>
@@ -580,6 +581,41 @@
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
                     <button type="submit" class="btn-save">Save Student</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="studentExcelModal" class="modal">
+            <h3>&#128202; Import Students from Excel</h3>
+            <p>Expected columns: <b>ID, Name, Class, Grade, Password</b></p>
+            <p>Class should match an existing class name (e.g., 9A, 9B). Students with existing IDs will be skipped.</p>
+            <input type="file" id="studentExcelFile" accept=".xlsx,.xls,.csv" onchange="previewStudentExcel(event)">
+            <div id="studentExcelPreview"></div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button id="studentExcelConfirmBtn" class="btn-save" style="display:none;" onclick="confirmStudentExcelImport()">Import Students</button>
+            </div>
+        </div>
+
+        <div id="passwordChangeModal" class="modal">
+            <h3>&#128274; Change Your Password</h3>
+            <p>You must change your password before continuing.</p>
+            <form id="passwordChangeForm" onsubmit="changePassword(event)">
+                <div class="form-row">
+                    <label>Current Password</label>
+                    <input type="password" id="pcCurrent" required>
+                </div>
+                <div class="form-row">
+                    <label>New Password</label>
+                    <input type="password" id="pcNew" required minlength="3">
+                </div>
+                <div class="form-row">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="pcConfirm" required minlength="3">
+                </div>
+                <p id="pcError" style="color:#e74c3c;display:none;margin:0;"></p>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-save">Change Password</button>
                 </div>
             </form>
         </div>

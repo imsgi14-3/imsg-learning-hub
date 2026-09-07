@@ -194,12 +194,12 @@ function loadData() {
     studentAccounts = JSON.parse(localStorage.getItem(STUDENTS_KEY)) || [];
     if (studentAccounts.length === 0) {
         studentAccounts = [
-            { id: "9A-001", name: "Ahmed Ali", classId: "CLASS-9A", grade: 9, password: "123" },
-            { id: "9A-002", name: "Sara Khan", classId: "CLASS-9A", grade: 9, password: "123" },
-            { id: "9A-003", name: "Usman Tariq", classId: "CLASS-9A", grade: 9, password: "123" },
-            { id: "9B-001", name: "Fatima Noor", classId: "CLASS-9B", grade: 9, password: "123" },
-            { id: "9B-002", name: "Bilal Ahmed", classId: "CLASS-9B", grade: 9, password: "123" },
-            { id: "9B-003", name: "Ayesha Siddiqui", classId: "CLASS-9B", grade: 9, password: "123" }
+            { id: "9A-001", name: "Ahmed Ali", classId: "CLASS-9A", grade: 9, password: "123", forcePasswordChange: false },
+            { id: "9A-002", name: "Sara Khan", classId: "CLASS-9A", grade: 9, password: "123", forcePasswordChange: false },
+            { id: "9A-003", name: "Usman Tariq", classId: "CLASS-9A", grade: 9, password: "123", forcePasswordChange: false },
+            { id: "9B-001", name: "Fatima Noor", classId: "CLASS-9B", grade: 9, password: "123", forcePasswordChange: false },
+            { id: "9B-002", name: "Bilal Ahmed", classId: "CLASS-9B", grade: 9, password: "123", forcePasswordChange: false },
+            { id: "9B-003", name: "Ayesha Siddiqui", classId: "CLASS-9B", grade: 9, password: "123", forcePasswordChange: false }
         ];
     }
     if (classes.length === 0) {
@@ -263,6 +263,11 @@ function handleLogin(e) {
         document.getElementById("homeBtn").style.display = "inline-block";
         document.getElementById("loggedUser").textContent = found.name + " (Student)";
         dashboardsHide();
+        if (found.forcePasswordChange) {
+            document.getElementById("passwordChangeModal").classList.add("active");
+            document.getElementById("modalOverlay").classList.add("active");
+            return;
+        }
         document.getElementById("studentDashboard").style.display = "block";
         document.getElementById("studentDisplayName").textContent = found.name;
         showStudentTab("practice");
@@ -1820,7 +1825,7 @@ function saveStudentAccount(e) {
         for (var i = 0; i < studentAccounts.length; i++) {
             if (studentAccounts[i].id === id) { alert("Student ID already exists!"); return; }
         }
-        studentAccounts.push({ id: id, name: name, classId: classId, grade: grade, password: password });
+        studentAccounts.push({ id: id, name: name, classId: classId, grade: grade, password: password, forcePasswordChange: true });
     }
     saveAll();
     closeModal();
@@ -1947,8 +1952,129 @@ function confirmImport() {
     renderQuestions();
 }
 
+function validatePasswordChange() {
+    var cur = document.getElementById("pcCurrent").value;
+    var nw = document.getElementById("pcNew").value;
+    var cf = document.getElementById("pcConfirm").value;
+    var err = document.getElementById("pcError");
+    err.style.display = "none";
+    if (nw.length < 3) { err.textContent = "New password must be at least 3 characters."; err.style.display = "block"; return false; }
+    if (nw !== cf) { err.textContent = "New passwords do not match."; err.style.display = "block"; return false; }
+    return true;
+}
+
+function changePassword(e) {
+    e.preventDefault();
+    var cur = document.getElementById("pcCurrent").value;
+    var nw = document.getElementById("pcNew").value;
+    var err = document.getElementById("pcError");
+    err.style.display = "none";
+    if (!validatePasswordChange()) return;
+    var found = null;
+    for (var i = 0; i < studentAccounts.length; i++) {
+        if (studentAccounts[i].id === currentUser.id) { found = studentAccounts[i]; break; }
+    }
+    if (!found) { err.textContent = "Account not found."; err.style.display = "block"; return; }
+    if (found.password !== cur) { err.textContent = "Current password is incorrect."; err.style.display = "block"; return; }
+    found.password = nw;
+    found.forcePasswordChange = false;
+    saveAll();
+    document.getElementById("passwordChangeModal").classList.remove("active");
+    document.getElementById("modalOverlay").classList.remove("active");
+    document.getElementById("studentDashboard").style.display = "block";
+    document.getElementById("studentDisplayName").textContent = found.name;
+    showStudentTab("practice");
+    history.pushState({ page: "dashboard" }, "", "#dashboard");
+    alert("Password changed successfully!");
+}
+
+function showStudentExcelModal() {
+    document.getElementById("studentExcelFile").value = "";
+    document.getElementById("studentExcelPreview").innerHTML = "";
+    document.getElementById("studentExcelConfirmBtn").style.display = "none";
+    document.getElementById("studentExcelModal").classList.add("active");
+    document.getElementById("modalOverlay").classList.add("active");
+}
+
+var pendingStudentExcelData = [];
+
+function previewStudentExcel(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+        try {
+            var wb = XLSX.read(ev.target.result, { type: "binary" });
+            var ws = wb.Sheets[wb.SheetNames[0]];
+            var data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+            if (data.length < 2) { alert("Excel file is empty or has no data rows."); return; }
+            var headers = data[0].map(function(h) { return String(h).trim().toLowerCase(); });
+            var idIdx = headers.indexOf("id");
+            var nameIdx = headers.indexOf("name");
+            var classIdx = headers.indexOf("class");
+            var gradeIdx = headers.indexOf("grade");
+            var passIdx = headers.indexOf("password");
+            if (idIdx === -1 || nameIdx === -1 || classIdx === -1) {
+                alert("Excel must have columns: ID, Name, Class (and optionally Grade, Password).");
+                return;
+            }
+            pendingStudentExcelData = [];
+            var errors = [];
+            var existingIds = {};
+            for (var i = 0; i < studentAccounts.length; i++) existingIds[studentAccounts[i].id] = true;
+            for (var i = 1; i < data.length; i++) {
+                var row = data[i];
+                if (!row || !row[idIdx]) continue;
+                var sid = String(row[idIdx]).trim();
+                var sname = String(row[nameIdx]).trim();
+                var sclass = String(row[classIdx]).trim();
+                var sgrade = gradeIdx !== -1 ? parseInt(row[gradeIdx]) || 9 : 9;
+                var spass = passIdx !== -1 && row[passIdx] ? String(row[passIdx]).trim() : "123";
+                if (!sid || !sname) { errors.push("Row " + (i + 1) + ": Missing ID or Name."); continue; }
+                if (existingIds[sid]) { errors.push("Row " + (i + 1) + ": ID " + sid + " already exists (skipped)."); continue; }
+                var matchedClass = null;
+                for (var j = 0; j < classes.length; j++) {
+                    if (classes[j].name === sclass) { matchedClass = classes[j]; break; }
+                }
+                if (!matchedClass) { errors.push("Row " + (i + 1) + ": Class '" + sclass + "' not found."); continue; }
+                pendingStudentExcelData.push({ id: sid, name: sname, classId: matchedClass.id, grade: sgrade, password: spass, forcePasswordChange: true });
+                existingIds[sid] = true;
+            }
+            var h = '<p><b>' + pendingStudentExcelData.length + '</b> students ready to import.</p>';
+            if (errors.length > 0) h += '<p style="color:#e74c3c;">' + errors.join("<br>") + '</p>';
+            if (pendingStudentExcelData.length > 0) {
+                h += '<table><thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Grade</th><th>Password</th></tr></thead><tbody>';
+                for (var i = 0; i < pendingStudentExcelData.length; i++) {
+                    var s = pendingStudentExcelData[i];
+                    var cn = "N/A";
+                    for (var j = 0; j < classes.length; j++) { if (classes[j].id === s.classId) { cn = classes[j].name; break; } }
+                    h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + cn + '</td><td>' + s.grade + '</td><td>' + s.password + '</td></tr>';
+                }
+                h += '</tbody></table>';
+                document.getElementById("studentExcelConfirmBtn").style.display = "inline-block";
+            } else {
+                document.getElementById("studentExcelConfirmBtn").style.display = "none";
+            }
+            document.getElementById("studentExcelPreview").innerHTML = h;
+        } catch (ex) { alert("Error reading Excel file: " + ex.message); }
+    };
+    reader.readAsBinaryString(file);
+}
+
+function confirmStudentExcelImport() {
+    if (pendingStudentExcelData.length === 0) return;
+    for (var i = 0; i < pendingStudentExcelData.length; i++) {
+        studentAccounts.push(pendingStudentExcelData[i]);
+    }
+    saveAll();
+    pendingStudentExcelData = [];
+    closeModal();
+    renderPrincipalStudents();
+    alert("Students imported successfully!");
+}
+
 function closeModal() {
-    var ids = ["questionModal", "classModal", "assignmentModal", "excelModal", "teacherModal", "attendanceModal", "studentModal"];
+    var ids = ["questionModal", "classModal", "assignmentModal", "excelModal", "teacherModal", "attendanceModal", "studentModal", "studentExcelModal"];
     for (var i = 0; i < ids.length; i++) document.getElementById(ids[i]).classList.remove("active");
     document.getElementById("modalOverlay").classList.remove("active");
     document.getElementById("smId").disabled = false;
