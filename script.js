@@ -576,16 +576,17 @@ function showChapterQuizOptions(chapterNum, subject) {
     for (var j = 0; j < questions.length; j++) {
         if (questions[j].subject === subject && questions[j].chapter === chapterNum) qCount++;
     }
+    document.getElementById("chapterGrid").style.display = "none";
     var panel = document.getElementById("chapterQuizOptions");
     panel.style.display = "block";
-    panel.innerHTML = '<button class="mode-back-btn" onclick="document.getElementById(\'chapterQuizOptions\').style.display=\'none\';">&#8592; Back to Chapters</button>' +
+    panel.innerHTML = '<button class="mode-back-btn" onclick="backToChapters()">&#8592; Back to Chapters</button>' +
         '<h3>' + s.icon + ' ' + subject + ' — Chapter ' + chapterNum + ': ' + ch.title + '</h3>' +
-        '<p>' + qCount + ' questions available &bull; Topics: ' + ch.topics.join(", ") + '</p>' +
+        '<p>' + qCount + ' questions available</p>' +
         '<div class="quiz-mode-grid">' +
-        '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject + '\', \'practice\')">' +
+        '<div class="quiz-mode-card" onclick="showTopicPicker(' + chapterNum + ', \'' + subject + '\')">' +
         '<div class="quiz-mode-icon">&#9889;</div>' +
         '<h4>Quick Practice</h4>' +
-        '<p>10 questions &bull; 15 min<br>Fast revision of this chapter</p>' +
+        '<p>10 questions &bull; 15 min<br>Pick a topic to revise</p>' +
         '</div>' +
         '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject + '\', \'test\')">' +
         '<div class="quiz-mode-icon">&#128218;</div>' +
@@ -603,7 +604,57 @@ function showChapterQuizOptions(chapterNum, subject) {
         '<p>Mistakes from this chapter<br>Fix your weak points</p>' +
         '</div>' +
         '</div>';
-    panel.scrollIntoView({ behavior: "smooth" });
+}
+
+function backToChapters() {
+    document.getElementById("chapterGrid").style.display = "";
+    document.getElementById("chapterQuizOptions").style.display = "none";
+}
+
+function showTopicPicker(chapterNum, subject) {
+    var s = subjectsData[subject];
+    var ch = null;
+    for (var i = 0; i < s.chapters.length; i++) {
+        if (s.chapters[i].num === chapterNum) { ch = s.chapters[i]; break; }
+    }
+    if (!ch) return;
+    var panel = document.getElementById("chapterQuizOptions");
+    var html = '<button class="mode-back-btn" onclick="showChapterQuizOptions(' + chapterNum + ', \'' + subject + '\')">&#8592; Back to Modes</button>' +
+        '<h3>&#9889; Quick Practice — Pick a Topic</h3>' +
+        '<p>Choose a topic from Chapter ' + chapterNum + ': ' + ch.title + '</p>' +
+        '<div class="quiz-mode-grid">';
+    html += '<div class="quiz-mode-card" onclick="launchTopicPractice(' + chapterNum + ', \'' + subject + '\', \'all\')">' +
+        '<div class="quiz-mode-icon">&#128230;</div>' +
+        '<h4>All Topics</h4>' +
+        '<p>Mixed questions from entire chapter</p>' +
+        '</div>';
+    for (var i = 0; i < ch.topics.length; i++) {
+        var tCount = 0;
+        for (var j = 0; j < questions.length; j++) {
+            if (questions[j].subject === subject && questions[j].chapter === chapterNum && questions[j].topic === ch.topics[i]) tCount++;
+        }
+        html += '<div class="quiz-mode-card" onclick="launchTopicPractice(' + chapterNum + ', \'' + subject + '\', \'' + ch.topics[i].replace(/'/g, "\\'") + '\')">' +
+            '<div class="quiz-mode-icon">&#128196;</div>' +
+            '<h4>' + ch.topics[i] + '</h4>' +
+            '<p>' + tCount + ' questions</p>' +
+            '</div>';
+    }
+    html += '</div>';
+    panel.innerHTML = html;
+}
+
+function launchTopicPractice(chapterNum, subject, topic) {
+    var filtered = [];
+    for (var i = 0; i < questions.length; i++) {
+        var q = questions[i];
+        if (q.subject === subject && q.chapter === chapterNum) {
+            if (topic === "all" || q.topic === topic) filtered.push(q);
+        }
+    }
+    if (filtered.length === 0) { alert("No questions available for this topic."); return; }
+    var count = Math.min(10, filtered.length);
+    var selected = shuffleArray(filtered).slice(0, count);
+    launchQuiz(selected, 15, "practice");
 }
 
 function launchChapterMode(chapterNum, subject, mode) {
