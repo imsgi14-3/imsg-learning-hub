@@ -591,18 +591,12 @@ function showChapterQuizOptions(chapterNum, subject) {
         '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject + '\', \'test\')">' +
         '<div class="quiz-mode-icon">&#128218;</div>' +
         '<h4>Chapter Test</h4>' +
-        '<p>30 questions &bull; 40 min<br>Full chapter assessment</p>' +
-        '</div>' +
-        '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject + '\', \'full\')">' +
-        '<div class="quiz-mode-icon">&#127891;</div>' +
-        '<h4>Full Chapter</h4>' +
-        '<p>' + qCount + ' questions &bull; 60 min<br>Complete chapter review</p>' +
+        '<p>30 questions &bull; 40 min<br>67% straight + 33% scenario</p>' +
         '</div>' +
         '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject + '\', \'weak\')">' +
         '<div class="quiz-mode-icon">&#128200;</div>' +
         '<h4>Weak Areas</h4>' +
         '<p>Mistakes from this chapter<br>Fix your weak points</p>' +
-        '</div>' +
         '</div>';
 }
 
@@ -653,7 +647,7 @@ function launchTopicPractice(chapterNum, subject, topic) {
     }
     if (filtered.length === 0) { alert("No questions available for this topic."); return; }
     var count = Math.min(15, filtered.length);
-    var selected = shuffleArray(filtered).slice(0, count);
+    var selected = balancedSelect(filtered, count);
     launchQuiz(selected, 20, "practice");
 }
 
@@ -666,7 +660,6 @@ function launchChapterMode(chapterNum, subject, mode) {
     var count, time;
     if (mode === "practice") { count = Math.min(15, filtered.length); time = 20; }
     else if (mode === "test") { count = Math.min(30, filtered.length); time = 40; }
-    else if (mode === "full") { count = filtered.length; time = 60; }
     else if (mode === "weak") {
         var weak = getWeakQuestions();
         var chapterWeak = [];
@@ -674,11 +667,36 @@ function launchChapterMode(chapterNum, subject, mode) {
             if (weak[i].subject === subject && weak[i].chapter === chapterNum) chapterWeak.push(weak[i]);
         }
         if (chapterWeak.length === 0) { alert("No weak areas found for this chapter. Complete some quizzes first!"); return; }
-        count = Math.min(10, chapterWeak.length); time = 15;
+        count = Math.min(15, chapterWeak.length); time = 20;
         filtered = chapterWeak;
     }
-    var selected = shuffleArray(filtered).slice(0, count);
+    var selected = balancedSelect(filtered, count);
     launchQuiz(selected, time, mode);
+}
+
+function balancedSelect(pool, count) {
+    var straight = [];
+    var scenario = [];
+    for (var i = 0; i < pool.length; i++) {
+        if (pool[i].mode === "scenario") scenario.push(pool[i]);
+        else straight.push(pool[i]);
+    }
+    straight = shuffleArray(straight);
+    scenario = shuffleArray(scenario);
+    var straightCount = Math.round(count * 0.6667);
+    var scenarioCount = count - straightCount;
+    var result = [];
+    for (var i = 0; i < straightCount && i < straight.length; i++) result.push(straight[i]);
+    for (var i = 0; i < scenarioCount && i < scenario.length; i++) result.push(scenario[i]);
+    var remaining = count - result.length;
+    if (remaining > 0) {
+        var used = {};
+        for (var i = 0; i < result.length; i++) used[result[i].id] = true;
+        for (var i = 0; i < pool.length && remaining > 0; i++) {
+            if (!used[pool[i].id]) { result.push(pool[i]); remaining--; }
+        }
+    }
+    return shuffleArray(result);
 }
 
 function showModeDetail(mode) {
