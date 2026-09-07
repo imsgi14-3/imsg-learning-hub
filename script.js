@@ -578,26 +578,35 @@ function showChapterQuizOptions(chapterNum, subject) {
     }
     var panel = document.getElementById("chapterQuizOptions");
     panel.style.display = "block";
-    panel.innerHTML = '<div class="mode-detail">' +
-        '<h4>' + s.icon + ' ' + subject + ' — Chapter ' + chapterNum + ': ' + ch.title + '</h4>' +
-        '<div class="mode-info">' +
-        '<div class="mode-info-item"><strong>' + qCount + '</strong> questions available</div>' +
-        '<div class="mode-info-item">Topics: ' + ch.topics.join(", ") + '</div>' +
+    panel.innerHTML = '<button class="mode-back-btn" onclick="document.getElementById(\'chapterQuizOptions\').style.display=\'none\';">&#8592; Back to Chapters</button>' +
+        '<h3>' + s.icon + ' ' + subject + ' — Chapter ' + chapterNum + ': ' + ch.title + '</h3>' +
+        '<p>' + qCount + ' questions available &bull; Topics: ' + ch.topics.join(", ") + '</p>' +
+        '<div class="quiz-mode-grid">' +
+        '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject + '\', \'practice\')">' +
+        '<div class="quiz-mode-icon">&#9889;</div>' +
+        '<h4>Quick Practice</h4>' +
+        '<p>10 questions &bull; 15 min<br>Fast revision of this chapter</p>' +
         '</div>' +
-        '<div class="mode-subject-select">' +
-        '<label>Quiz Mode</label>' +
-        '<select id="chapterQuizMode">' +
-        '<option value="practice">Quick Practice (10 Q / 15 min)</option>' +
-        '<option value="test">Chapter Test (30 Q / 40 min)</option>' +
-        '<option value="full">Full Chapter (' + qCount + ' Q / 60 min)</option>' +
-        '</select></div>' +
-        '<button class="mode-start-btn" onclick="launchChapterQuiz(' + chapterNum + ', \'' + subject + '\')">Start Quiz</button>' +
+        '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject + '\', \'test\')">' +
+        '<div class="quiz-mode-icon">&#128218;</div>' +
+        '<h4>Chapter Test</h4>' +
+        '<p>30 questions &bull; 40 min<br>Full chapter assessment</p>' +
+        '</div>' +
+        '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject + '\', \'full\')">' +
+        '<div class="quiz-mode-icon">&#127891;</div>' +
+        '<h4>Full Chapter</h4>' +
+        '<p>' + qCount + ' questions &bull; 60 min<br>Complete chapter review</p>' +
+        '</div>' +
+        '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject + '\', \'weak\')">' +
+        '<div class="quiz-mode-icon">&#128200;</div>' +
+        '<h4>Weak Areas</h4>' +
+        '<p>Mistakes from this chapter<br>Fix your weak points</p>' +
+        '</div>' +
         '</div>';
     panel.scrollIntoView({ behavior: "smooth" });
 }
 
-function launchChapterQuiz(chapterNum, subject) {
-    var mode = document.getElementById("chapterQuizMode").value;
+function launchChapterMode(chapterNum, subject, mode) {
     var filtered = [];
     for (var i = 0; i < questions.length; i++) {
         if (questions[i].subject === subject && questions[i].chapter === chapterNum) filtered.push(questions[i]);
@@ -606,7 +615,17 @@ function launchChapterQuiz(chapterNum, subject) {
     var count, time;
     if (mode === "practice") { count = Math.min(10, filtered.length); time = 15; }
     else if (mode === "test") { count = Math.min(30, filtered.length); time = 40; }
-    else { count = filtered.length; time = 60; }
+    else if (mode === "full") { count = filtered.length; time = 60; }
+    else if (mode === "weak") {
+        var weak = getWeakQuestions();
+        var chapterWeak = [];
+        for (var i = 0; i < weak.length; i++) {
+            if (weak[i].subject === subject && weak[i].chapter === chapterNum) chapterWeak.push(weak[i]);
+        }
+        if (chapterWeak.length === 0) { alert("No weak areas found for this chapter. Complete some quizzes first!"); return; }
+        count = Math.min(10, chapterWeak.length); time = 15;
+        filtered = chapterWeak;
+    }
     var selected = shuffleArray(filtered).slice(0, count);
     launchQuiz(selected, time, mode);
 }
