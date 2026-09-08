@@ -468,7 +468,10 @@ function handleLogin(e) {
         document.getElementById("childIdDisplay").textContent = childId || "";
         var cc = null;
         for (var i = 0; i < classes.length; i++) {
-            if (classes[i].students.indexOf(childId) !== -1) { cc = classes[i]; break; }
+            for (var j = 0; j < studentAccounts.length; j++) {
+                if (studentAccounts[j].id === childId && studentAccounts[j].classId === classes[i].id) { cc = classes[i]; break; }
+            }
+            if (cc) break;
         }
         document.getElementById("childDisplayName").textContent = cc ? "Student " + childId : childId;
         showParentTab("progress");
@@ -518,7 +521,7 @@ function renderStudentAssignments() {
     var c = document.getElementById("studentAssignmentsList");
     var sc = null;
     for (var i = 0; i < classes.length; i++) {
-        if (classes[i].students.indexOf(currentUser.id) !== -1) { sc = classes[i]; break; }
+        if (currentUser.classId === classes[i].id) { sc = classes[i]; break; }
     }
     if (!sc) { c.innerHTML = "<p>No class assigned.</p>"; return; }
     var my = [];
@@ -1367,7 +1370,11 @@ function renderClasses() {
     var h = '<table><thead><tr><th>Class</th><th>Grade</th><th>Section</th><th>Students</th><th>Actions</th></tr></thead><tbody>';
     for (var i = 0; i < classes.length; i++) {
         var cl = classes[i];
-        h += '<tr><td>' + cl.name + '</td><td>' + cl.grade + '</td><td>' + cl.section + '</td><td>' + cl.students.length + '</td><td><button onclick="editClass(\'' + cl.id + '\')" class="action-btn">Edit</button> <button onclick="deleteClass(\'' + cl.id + '\')" class="action-btn danger">Delete</button></td></tr>';
+        var count = 0;
+        for (var j = 0; j < studentAccounts.length; j++) {
+            if (studentAccounts[j].classId === cl.id) count++;
+        }
+        h += '<tr><td>' + cl.name + '</td><td>' + cl.grade + '</td><td>' + cl.section + '</td><td>' + count + '</td><td><button onclick="editClass(\'' + cl.id + '\')" class="action-btn">Edit</button> <button onclick="deleteClass(\'' + cl.id + '\')" class="action-btn danger">Delete</button></td></tr>';
     }
     c.innerHTML = h + '</tbody></table>';
 }
@@ -1628,8 +1635,8 @@ function renderCTOverview() {
     for (var i = 0; i < allAttempts.length; i++) {
         if (ctClassId) {
             var isClass = false;
-            for (var j = 0; j < classes.length; j++) {
-                if (classes[j].id === ctClassId && classes[j].students.indexOf(allAttempts[i].studentId) !== -1) { isClass = true; break; }
+            for (var j = 0; j < studentAccounts.length; j++) {
+                if (studentAccounts[j].id === allAttempts[i].studentId && studentAccounts[j].classId === ctClassId) { isClass = true; break; }
             }
             if (isClass) sa.push(allAttempts[i]);
         } else {
@@ -1685,10 +1692,13 @@ function markAttendance() {
     dl.value = new Date().toISOString().split("T")[0];
     var lc = document.getElementById("attendanceStudentList");
     var h = "";
-    for (var i = 0; i < classes.length; i++) {
-        for (var j = 0; j < classes[i].students.length; j++) {
-            h += '<label class="attendance-item"><span>' + classes[i].students[j] + ' (' + classes[i].name + ')</span><select class="att-status" data-student="' + classes[i].students[j] + '"><option value="present">Present</option><option value="absent">Absent</option><option value="late">Late</option></select></label>';
+    for (var i = 0; i < studentAccounts.length; i++) {
+        var s = studentAccounts[i];
+        var className = "";
+        for (var j = 0; j < classes.length; j++) {
+            if (classes[j].id === s.classId) { className = classes[j].name; break; }
         }
+        h += '<label class="attendance-item"><span>' + s.name + ' (' + className + ')</span><select class="att-status" data-student="' + s.id + '"><option value="present">Present</option><option value="absent">Absent</option><option value="late">Late</option></select></label>';
     }
     lc.innerHTML = h;
     document.getElementById("attendanceModal").classList.add("active");
@@ -1809,7 +1819,12 @@ function renderParentProgress() {
 function renderParentAssignments() {
     var c = document.getElementById("parentAssignmentsContent");
     var sc = null;
-    for (var i = 0; i < classes.length; i++) { if (classes[i].students.indexOf(currentUser.childId) !== -1) { sc = classes[i]; break; } }
+    for (var i = 0; i < classes.length; i++) {
+        for (var j = 0; j < studentAccounts.length; j++) {
+            if (studentAccounts[j].id === currentUser.childId && studentAccounts[j].classId === classes[i].id) { sc = classes[i]; break; }
+        }
+        if (sc) break;
+    }
     if (!sc) { c.innerHTML = "<p>No class info found.</p>"; return; }
     var my = [];
     for (var i = 0; i < assignments.length; i++) { if (assignments[i].classId === sc.id) my.push(assignments[i]); }
@@ -1869,8 +1884,7 @@ function showPrincipalTab(tab) {
 
 function renderPrincipalSchool() {
     var c = document.getElementById("principalSchoolContent");
-    var ts = 0;
-    for (var i = 0; i < classes.length; i++) ts += classes[i].students.length;
+    var ts = studentAccounts.length;
     var avg = allAttempts.length > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / allAttempts.length : 0;
     var h = '<div class="analytics-grid"><div class="analytics-card"><h4>School Overview</h4><p>Classes: <strong>' + classes.length + '</strong></p><p>Students: <strong>' + ts + '</strong></p><p>Questions: <strong>' + questions.length + '</strong></p><p>Quizzes Taken: <strong>' + allAttempts.length + '</strong></p><p>Average: <strong>' + avg.toFixed(1) + '%</strong></p></div></div>';
     c.innerHTML = h;
