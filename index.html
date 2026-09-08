@@ -195,7 +195,6 @@
                 <button class="tab-btn active" onclick="showCTTab('overview')">&#128202; Class Overview</button>
                 <button class="tab-btn" onclick="showCTTab('students')">&#128100; Students</button>
                 <button class="tab-btn" onclick="showCTTab('cross-subject')">&#128200; Cross-Subject Analytics</button>
-                <button class="tab-btn" onclick="showCTTab('attendance')">&#9851; Attendance</button>
             </div>
             <div id="ctOverviewTab" class="tab-content active">
                 <h3>&#128202; Class Overview</h3>
@@ -212,16 +211,6 @@
             <div id="ctCrossSubjectTab" class="tab-content" style="display:none;">
                 <h3>&#128200; Cross-Subject Performance</h3>
                 <div id="ctCrossSubjectContent"></div>
-            </div>
-            <div id="ctAttendanceTab" class="tab-content" style="display:none;">
-                <h3>&#9851; Attendance</h3>
-                <div class="attendance-toolbar">
-                    <select id="ctAttendanceDate" onchange="renderCTAttendance()">
-                        <option value="">Select Date</option>
-                    </select>
-                    <button class="action-btn" onclick="markAttendance()">&#9851; Mark Attendance</button>
-                </div>
-                <div id="ctAttendanceContent"></div>
             </div>
         </div>
 

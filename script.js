@@ -1455,14 +1455,13 @@ function loadClassAnalytics() {
 }
 
 function showCTTab(tab) {
-    var map = { overview: 0, students: 1, "cross-subject": 2, attendance: 3 };
-    var ids = ["ctOverviewTab", "ctStudentsTab", "ctCrossSubjectTab", "ctAttendanceTab"];
+    var map = { overview: 0, students: 1, "cross-subject": 2 };
+    var ids = ["ctOverviewTab", "ctStudentsTab", "ctCrossSubjectTab"];
     for (var i = 0; i < ids.length; i++) document.getElementById(ids[i]).style.display = "none";
     activateTab("#classTeacherDashboard", map[tab]);
     if (tab === "overview") { document.getElementById("ctOverviewTab").style.display = "block"; renderCTOverview(); }
     else if (tab === "students") { document.getElementById("ctStudentsTab").style.display = "block"; renderCTStudents(); }
     else if (tab === "cross-subject") { document.getElementById("ctCrossSubjectTab").style.display = "block"; renderCTCrossSubject(); }
-    else if (tab === "attendance") { document.getElementById("ctAttendanceTab").style.display = "block"; renderCTAttendance(); }
 }
 
 function renderCTOverview() {
@@ -1470,12 +1469,13 @@ function renderCTOverview() {
     var ctClassId = currentUser ? currentUser.classId : null;
     var ts = 0;
     var className = "All Classes";
+    for (var i = 0; i < studentAccounts.length; i++) {
+        if (!ctClassId || studentAccounts[i].classId === ctClassId) ts++;
+    }
     if (ctClassId) {
         for (var i = 0; i < classes.length; i++) {
-            if (classes[i].id === ctClassId) { className = classes[i].name; ts = classes[i].students.length; break; }
+            if (classes[i].id === ctClassId) { className = classes[i].name; break; }
         }
-    } else {
-        for (var i = 0; i < classes.length; i++) ts += classes[i].students.length;
     }
     var sa = [];
     for (var i = 0; i < allAttempts.length; i++) {
@@ -1936,9 +1936,7 @@ function refreshStudentLists() {
 function renderPrincipalAnalytics() {
     var c = document.getElementById("principalAnalyticsContent");
     var avg = allAttempts.length > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / allAttempts.length : 0;
-    var ts = 0;
-    for (var i = 0; i < classes.length; i++) ts += classes[i].students.length;
-    c.innerHTML = '<div class="analytics-grid"><div class="analytics-card"><h4>School Analytics</h4><p>Attempts: <strong>' + allAttempts.length + '</strong></p><p>Average: <strong>' + avg.toFixed(1) + '%</strong></p><p>Students: <strong>' + ts + '</strong></p><p>Questions: <strong>' + questions.length + '</strong></p></div></div>';
+    c.innerHTML = '<div class="analytics-grid"><div class="analytics-card"><h4>School Analytics</h4><p>Attempts: <strong>' + allAttempts.length + '</strong></p><p>Average: <strong>' + avg.toFixed(1) + '%</strong></p><p>Students: <strong>' + studentAccounts.length + '</strong></p><p>Questions: <strong>' + questions.length + '</strong></p></div></div>';
 }
 
 var pendingImportData = [];
