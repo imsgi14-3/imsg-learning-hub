@@ -1929,37 +1929,6 @@ function showStudentPassword(sid) {
     }
 }
 
-function syncToFirebase() {
-    if (typeof db === "undefined") { alert("Firebase not connected."); return; }
-    var count = 0;
-    for (var i = 0; i < studentAccounts.length; i++) {
-        var s = studentAccounts[i];
-        db.collection("students").doc(s.id).set(s).then(function() {
-            count++;
-            if (count === studentAccounts.length) alert("Synced " + count + " students to Firebase!");
-        }).catch(function(err) {
-            alert("Sync error: " + err.message);
-        });
-    }
-    for (var i = 0; i < classes.length; i++) {
-        db.collection("classes").doc(classes[i].id).set(classes[i]).catch(function() {});
-    }
-    for (var i = 0; i < questions.length; i++) {
-        db.collection("questions").doc(questions[i].id).set(questions[i]).catch(function() {});
-    }
-    for (var i = 0; i < teachers.length; i++) {
-        db.collection("teachers").doc(teachers[i].id).set(teachers[i]).catch(function() {});
-    }
-    for (var i = 0; i < allAttempts.length; i++) {
-        db.collection("attempts").doc(allAttempts[i].attemptId).set(allAttempts[i]).catch(function() {});
-    }
-    for (var i = 0; i < assignments.length; i++) {
-        var a = assignments[i];
-        db.collection("assignments").doc(a.id || ("assign-" + i)).set(a).catch(function() {});
-    }
-    alert("All data synced to Firebase cloud!");
-}
-
 function exportStudentCredentials() {
     if (currentRole === "classteacher") {
         doExportCredentials();
