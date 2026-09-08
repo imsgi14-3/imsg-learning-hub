@@ -370,17 +370,65 @@ function handleLogin(e) {
             loginSuccess();
         }
         return;
-    } else if (role === "teacher") {
-        id = document.getElementById("teacherId").value || "T-001";
-        name = document.getElementById("teacherName").value || "Teacher";
-        subject = document.getElementById("teacherSubject").value;
+    } else if (role === "teacher" || role === "classteacher") {
+        id = document.getElementById("teacherId").value.trim();
+        name = document.getElementById("teacherName").value.trim();
         password = document.getElementById("teacherPassword").value;
-    } else if (role === "classteacher") {
-        id = document.getElementById("teacherId").value || "T-CT-001";
-        name = document.getElementById("teacherName").value || "Class Teacher";
-        subject = "All Subjects";
-        ctClassId = document.getElementById("ctClassSelect").value;
-        password = document.getElementById("teacherPassword").value;
+        if (!id || !password) { alert("Please enter Teacher ID and Password."); return; }
+        var found = null;
+        for (var i = 0; i < teachers.length; i++) {
+            if (teachers[i].id === id) { found = teachers[i]; break; }
+        }
+        if (!found) { alert("Teacher ID not found. Contact admin to create your account."); return; }
+        if (found.password !== password) { alert("Incorrect password."); return; }
+        subject = found.subject;
+        if (found.isClassTeacher) {
+            role = "classteacher";
+            ctClassId = found.classId || "";
+            if (!ctClassId) { alert("No class assigned to you. Contact admin."); return; }
+        } else {
+            role = "teacher";
+        }
+        var email = id.toLowerCase() + "@imsg.edu.pk";
+        var loginSuccess = function() {
+            currentUser = { id: found.id, name: found.name, role: role, subject: subject, childId: null, classId: ctClassId };
+            currentRole = role;
+            document.getElementById("loginPage").style.display = "none";
+            document.getElementById("logoutBar").style.display = "flex";
+            document.getElementById("homeBtn").style.display = "inline-block";
+            document.getElementById("loggedUser").textContent = found.name + " (" + role + ")";
+            dashboardsHide();
+            if (role === "teacher") {
+                document.getElementById("teacherDashboard").style.display = "block";
+                document.getElementById("teacherDisplayName").textContent = found.name;
+                document.getElementById("teacherSubjectDisplay").textContent = subject || "All";
+                populateTeacherClasses();
+                showTeacherTab("classes");
+            } else {
+                document.getElementById("classTeacherDashboard").style.display = "block";
+                document.getElementById("ctDisplayName").textContent = found.name;
+                showCTTab("overview");
+            }
+            history.pushState({ page: "dashboard" }, "", "#dashboard");
+        };
+        if (typeof fbAuth !== "undefined") {
+            fbAuth.signInWithEmailAndPassword(email, password).then(function() {
+                loginSuccess();
+            }).catch(function(error) {
+                if (error.code === "auth/user-not-found") {
+                    fbAuth.createUserWithEmailAndPassword(email, password).then(function() {
+                        loginSuccess();
+                    }).catch(function(err) {
+                        loginSuccess();
+                    });
+                } else {
+                    loginSuccess();
+                }
+            });
+        } else {
+            loginSuccess();
+        }
+        return;
     } else if (role === "parent") {
         id = document.getElementById("parentId").value || "P-001";
         name = document.getElementById("parentName").value || "Parent";
@@ -406,21 +454,7 @@ function handleLogin(e) {
     document.getElementById("homeBtn").style.display = "inline-block";
     document.getElementById("loggedUser").textContent = name + " (" + role + ")";
     dashboardsHide();
-    if (role === "student") {
-        document.getElementById("studentDashboard").style.display = "block";
-        document.getElementById("studentDisplayName").textContent = name;
-        showStudentTab("practice");
-    } else if (role === "teacher") {
-        document.getElementById("teacherDashboard").style.display = "block";
-        document.getElementById("teacherDisplayName").textContent = name;
-        document.getElementById("teacherSubjectDisplay").textContent = subject || "All";
-        populateTeacherClasses();
-        showTeacherTab("classes");
-    } else if (role === "classteacher") {
-        document.getElementById("classTeacherDashboard").style.display = "block";
-        document.getElementById("ctDisplayName").textContent = name;
-        showCTTab("overview");
-    } else if (role === "parent") {
+    if (role === "parent") {
         document.getElementById("parentDashboard").style.display = "block";
         document.getElementById("parentDisplayName").textContent = name;
         document.getElementById("childIdDisplay").textContent = childId || "";
@@ -1846,16 +1880,54 @@ function renderPrincipalClasses() {
 function renderPrincipalTeachers() {
     var c = document.getElementById("principalTeachersContent");
     if (teachers.length === 0) { c.innerHTML = "<p>No teachers added yet.</p>"; return; }
-    var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Subject</th><th>Actions</th></tr></thead><tbody>';
+    var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Subject</th><th>Role</th><th>Class</th><th>Password</th><th>Actions</th></tr></thead><tbody>';
     for (var i = 0; i < teachers.length; i++) {
-        h += '<tr><td>' + teachers[i].id + '</td><td>' + teachers[i].name + '</td><td>' + teachers[i].subject + '</td><td><button onclick="editTeacher(\'' + teachers[i].id + '\')" class="action-btn">Edit</button> <button onclick="deleteTeacher(\'' + teachers[i].id + '\')" class="action-btn danger">Delete</button></td></tr>';
+        var t = teachers[i];
+        var roleLabel = "";
+        if (t.isSubjectTeacher && t.isClassTeacher) roleLabel = "Subject + Class Teacher";
+        else if (t.isClassTeacher) roleLabel = "Class Teacher";
+        else roleLabel = "Subject Teacher";
+        var classLabel = "-";
+        if (t.isClassTeacher && t.classId) {
+            for (var j = 0; j < classes.length; j++) {
+                if (classes[j].id === t.classId) { classLabel = classes[j].name; break; }
+            }
+        }
+        h += '<tr><td>' + t.id + '</td><td>' + t.name + '</td><td>' + t.subject + '</td><td>' + roleLabel + '</td><td>' + classLabel + '</td><td>' + (t.password || "-") + '</td><td><button onclick="editTeacher(\'' + t.id + '\')" class="action-btn">Edit</button> <button onclick="deleteTeacher(\'' + t.id + '\')" class="action-btn danger">Delete</button></td></tr>';
     }
     c.innerHTML = h + '</tbody></table>';
 }
 
+function toggleCTClassField() {
+    var isCT = document.getElementById("tmIsClassTeacher").checked;
+    document.getElementById("tmClassField").style.display = isCT ? "block" : "none";
+    if (isCT) {
+        var sel = document.getElementById("tmClassId");
+        sel.innerHTML = "";
+        for (var i = 0; i < classes.length; i++) {
+            var opt = document.createElement("option");
+            opt.value = classes[i].id;
+            opt.textContent = classes[i].name;
+            sel.appendChild(opt);
+        }
+    }
+}
+
+function generateTeacherId() {
+    var num = teachers.length + 1;
+    var id = "T-" + (num < 10 ? "0" : "") + num;
+    for (var i = 0; i < teachers.length; i++) {
+        if (teachers[i].id === id) { num++; id = "T-" + (num < 10 ? "0" : "") + num; i = -1; }
+    }
+    return id;
+}
+
 function showAddTeacherModal() {
     document.getElementById("teacherForm").reset();
-    document.getElementById("tmTeacherId").value = "";
+    document.getElementById("tmEditId").value = "";
+    document.getElementById("tmIsSubjectTeacher").checked = true;
+    document.getElementById("tmIsClassTeacher").checked = false;
+    document.getElementById("tmClassField").style.display = "none";
     document.getElementById("teacherModalTitle").textContent = "Add Teacher";
     document.getElementById("teacherModal").classList.add("active");
     document.getElementById("modalOverlay").classList.add("active");
@@ -1865,10 +1937,13 @@ function editTeacher(tid) {
     var t = null;
     for (var i = 0; i < teachers.length; i++) { if (teachers[i].id === tid) { t = teachers[i]; break; } }
     if (!t) return;
-    document.getElementById("tmTeacherId").value = t.id;
-    document.getElementById("tmId").value = t.id;
+    document.getElementById("tmEditId").value = t.id;
     document.getElementById("tmName").value = t.name;
     document.getElementById("tmSubject").value = t.subject;
+    document.getElementById("tmIsSubjectTeacher").checked = t.isSubjectTeacher !== false;
+    document.getElementById("tmIsClassTeacher").checked = t.isClassTeacher === true;
+    toggleCTClassField();
+    if (t.isClassTeacher && t.classId) document.getElementById("tmClassId").value = t.classId;
     document.getElementById("teacherModalTitle").textContent = "Edit Teacher";
     document.getElementById("teacherModal").classList.add("active");
     document.getElementById("modalOverlay").classList.add("active");
@@ -1882,10 +1957,46 @@ function deleteTeacher(tid) {
 
 function saveTeacher(e) {
     e.preventDefault();
-    var id = document.getElementById("tmTeacherId").value;
-    var d = { id: document.getElementById("tmId").value, name: document.getElementById("tmName").value, subject: document.getElementById("tmSubject").value };
-    if (id) { for (var i = 0; i < teachers.length; i++) { if (teachers[i].id === id) { teachers[i] = d; break; } } }
-    else teachers.push(d);
+    var editId = document.getElementById("tmEditId").value;
+    var name = document.getElementById("tmName").value.trim();
+    var subject = document.getElementById("tmSubject").value;
+    var isSubjectTeacher = document.getElementById("tmIsSubjectTeacher").checked;
+    var isClassTeacher = document.getElementById("tmIsClassTeacher").checked;
+    var classId = isClassTeacher ? document.getElementById("tmClassId").value : "";
+
+    if (!isSubjectTeacher && !isClassTeacher) {
+        alert("Please select at least one role type.");
+        return;
+    }
+
+    if (editId) {
+        for (var i = 0; i < teachers.length; i++) {
+            if (teachers[i].id === editId) {
+                teachers[i].name = name;
+                teachers[i].subject = subject;
+                teachers[i].isSubjectTeacher = isSubjectTeacher;
+                teachers[i].isClassTeacher = isClassTeacher;
+                teachers[i].classId = classId;
+                break;
+            }
+        }
+    } else {
+        var tid = generateTeacherId();
+        var password = generateRandomPassword();
+        var teacherObj = {
+            id: tid, name: name, subject: subject, password: password,
+            isSubjectTeacher: isSubjectTeacher, isClassTeacher: isClassTeacher,
+            classId: classId, createdAt: Date.now()
+        };
+        teachers.push(teacherObj);
+        if (typeof fbAuth !== "undefined") {
+            var email = tid.toLowerCase() + "@imsg.edu.pk";
+            fbAuth.createUserWithEmailAndPassword(email, password).catch(function(err) {
+                console.log("Auth create skipped:", err.message);
+            });
+        }
+        alert("Teacher added!\n\nID: " + tid + "\nPassword: " + password + "\n\nShare these with the teacher.");
+    }
     saveAll(); closeModal(); renderPrincipalTeachers();
 }
 

@@ -504,14 +504,10 @@
         <div id="teacherModal" class="modal">
             <h3 id="teacherModalTitle">&#128105;&#8205;&#127979; Add Teacher</h3>
             <form id="teacherForm" onsubmit="saveTeacher(event)">
-                <input type="hidden" id="tmTeacherId">
+                <input type="hidden" id="tmEditId">
                 <div class="form-row">
-                    <label>Teacher ID</label>
-                    <input type="text" id="tmId" placeholder="e.g., T-CS-001" required>
-                </div>
-                <div class="form-row">
-                    <label>Name</label>
-                    <input type="text" id="tmName" placeholder="Full name" required>
+                    <label>Full Name</label>
+                    <input type="text" id="tmName" placeholder="e.g., Muhammad Khan" required>
                 </div>
                 <div class="form-row">
                     <label>Subject</label>
@@ -523,11 +519,24 @@
                         <option value="Mathematics">Mathematics</option>
                         <option value="English">English</option>
                         <option value="Urdu">Urdu</option>
+                        <option value="Islamiyat">Islamiyat</option>
+                        <option value="Pakistan Studies">Pakistan Studies</option>
                     </select>
                 </div>
                 <div class="form-row">
-                    <label>Password</label>
-                    <input type="password" id="tmPassword" placeholder="Login password" required>
+                    <label>Role Type</label>
+                    <div style="display:flex;gap:15px;margin-top:5px;">
+                        <label style="display:flex;align-items:center;gap:5px;font-weight:normal;">
+                            <input type="checkbox" id="tmIsSubjectTeacher" checked> Subject Teacher
+                        </label>
+                        <label style="display:flex;align-items:center;gap:5px;font-weight:normal;">
+                            <input type="checkbox" id="tmIsClassTeacher" onchange="toggleCTClassField()"> Class Teacher
+                        </label>
+                    </div>
+                </div>
+                <div id="tmClassField" class="form-row" style="display:none;">
+                    <label>Assigned Class</label>
+                    <select id="tmClassId"></select>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
