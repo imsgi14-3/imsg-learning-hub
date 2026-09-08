@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMSG Learning Hub - Test Suite</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f172a; color: #e2e8f0; padding: 20px; }
+        h1 { text-align: center; margin-bottom: 10px; color: #818cf8; }
+        .subtitle { text-align: center; color: #94a3b8; margin-bottom: 30px; }
+        .test-summary { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; }
+        .test-summary h2 { margin-bottom: 10px; }
+        .pass-text { color: #10b981; font-weight: 600; font-size: 1.2rem; }
+        .fail-text { color: #ef4444; font-weight: 600; font-size: 1.2rem; }
+        .test-suite { background: #1e293b; border-left: 4px solid #818cf8; padding: 12px 16px; margin: 15px 0 5px; border-radius: 0 8px 8px 0; }
+        .test-suite h3 { color: #818cf8; font-size: 1rem; }
+        .test-result { padding: 8px 16px; margin: 2px 0; border-radius: 6px; font-size: 0.85rem; font-family: monospace; }
+        .test-result.pass { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .test-result.fail { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 0.9rem; cursor: pointer; margin: 4px; font-weight: 600; }
+        .btn-primary { background: #818cf8; color: white; }
+        .btn-primary:hover { background: #6366f1; }
+        .btn-all { background: #10b981; color: white; font-size: 1rem; padding: 12px 28px; }
+        .btn-all:hover { background: #059669; }
+        .controls { text-align: center; margin-bottom: 20px; }
+        #results { max-width: 900px; margin: 0 auto; }
+        .stats { display: flex; gap: 20px; justify-content: center; margin: 15px 0; }
+        .stat { background: #1e293b; padding: 15px 25px; border-radius: 10px; text-align: center; min-width: 100px; }
+        .stat-value { font-size: 1.8rem; font-weight: 700; }
+        .stat-label { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; }
+        .stat.pass .stat-value { color: #10b981; }
+        .stat.fail .stat-value { color: #ef4444; }
+        .stat.total .stat-value { color: #818cf8; }
+    </style>
+</head>
+<body>
+    <h1>IMSG Learning Hub - Test Suite</h1>
+    <p class="subtitle">Comprehensive automated tests for the learning platform</p>
+
+    <div class="controls">
+        <button class="btn btn-all" onclick="runAllTests()">&#9654; Run All Tests</button>
+        <button class="btn btn-primary" onclick="runSingle('auth')">Auth</button>
+        <button class="btn btn-primary" onclick="runSingle('students')">Students</button>
+        <button class="btn btn-primary" onclick="runSingle('teachers')">Teachers</button>
+        <button class="btn btn-primary" onclick="runSingle('quiz')">Quiz</button>
+        <button class="btn btn-primary" onclick="runSingle('questions')">Questions</button>
+        <button class="btn btn-primary" onclick="runSingle('analytics')">Analytics</button>
+        <button class="btn btn-primary" onclick="runSingle('persistence')">Persistence</button>
+    </div>
+
+    <div id="results">
+        <div class="test-summary"><h2>Ready</h2><p>Click "Run All Tests" to start</p></div>
+    </div>
+
+    <script src="../questionLoader.js"></script>
+    <script src="../script.js"></script>
+    <script src="test-utils.js"></script>
+    <script src="auth-tests.js"></script>
+    <script src="student-tests.js"></script>
+    <script src="teacher-tests.js"></script>
+    <script src="quiz-tests.js"></script>
+    <script src="question-tests.js"></script>
+    <script src="analytics-tests.js"></script>
+    <script src="data-tests.js"></script>
+    <script>
+        var appReady = false;
+
+        window.onload = function() {
+            loadData();
+            if (typeof QuestionLoader !== "undefined") {
+                QuestionLoader.loadAllChapters(function(allQs) {
+                    if (allQs && allQs.length > 0) {
+                        var jsonById = {};
+                        for (var i = 0; i < allQs.length; i++) jsonById[allQs[i].id] = allQs[i];
+                        var cleaned = [];
+                        for (var i = 0; i < questions.length; i++) {
+                            if (jsonById[questions[i].id]) cleaned.push(jsonById[questions[i].id]);
+                            else if (!questions[i].subject || !questions[i].chapter) cleaned.push(questions[i]);
+                        }
+                        for (var i = 0; i < allQs.length; i++) {
+                            var found = false;
+                            for (var j = 0; j < cleaned.length; j++) { if (cleaned[j].id === allQs[i].id) { found = true; break; } }
+                            if (!found) cleaned.push(allQs[i]);
+                        }
+                        questions = cleaned;
+                    }
+                    appReady = true;
+                    document.getElementById("results").innerHTML = '<div class="test-summary"><h2>Ready</h2><p>' + questions.length + ' questions loaded. Click "Run All Tests" to start.</p></div>';
+                });
+            } else {
+                appReady = true;
+            }
+        };
+
+        function runAllTests() {
+            if (!appReady) { alert("Still loading, please wait..."); return; }
+            var result = TestRunner.run(function() {
+                runAuthTests();
+                runStudentTests();
+                runTeacherTests();
+                runQuizTests();
+                runQuestionTests();
+                runAnalyticsTests();
+                runPersistenceTests();
+            });
+            showResults(result);
+        }
+
+        function runSingle(test) {
+            if (!appReady) { alert("Still loading, please wait..."); return; }
+            var result = TestRunner.run(function() {
+                if (test === "auth") runAuthTests();
+                else if (test === "students") runStudentTests();
+                else if (test === "teachers") runTeacherTests();
+                else if (test === "quiz") runQuizTests();
+                else if (test === "questions") runQuestionTests();
+                else if (test === "analytics") runAnalyticsTests();
+                else if (test === "persistence") runPersistenceTests();
+            });
+            showResults(result);
+        }
+
+        function showResults(result) {
+            var cls = result.failed === 0 ? "pass" : "fail";
+            var html = '<div class="stats">' +
+                '<div class="stat total"><div class="stat-value">' + result.total + '</div><div class="stat-label">Total</div></div>' +
+                '<div class="stat pass"><div class="stat-value">' + result.passed + '</div><div class="stat-label">Passed</div></div>' +
+                '<div class="stat fail"><div class="stat-value">' + result.failed + '</div><div class="stat-label">Failed</div></div>' +
+                '</div>' +
+                '<div class="test-summary"><h2>' + (result.failed === 0 ? 'All Tests Passed!' : result.failed + ' Test(s) Failed') + '</h2>' +
+                '<p class="' + cls + '-text">' + result.passed + '/' + result.total + ' passed</p></div>';
+
+            for (var i = 0; i < result.results.length; i++) {
+                var r = result.results[i];
+                if (r.type === "suite") {
+                    html += '<div class="test-suite"><h3>' + r.name + '</h3></div>';
+                } else {
+                    var icon = r.type === "pass" ? "&#10003;" : "&#10007;";
+                    html += '<div class="test-result ' + r.type + '">' + icon + ' ' + r.test + '</div>';
+                }
+            }
+
+            document.getElementById("results").innerHTML = html;
+        }
+    </script>
+</body>
+</html>
