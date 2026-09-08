@@ -192,16 +192,6 @@ function loadData() {
     allAttempts = JSON.parse(localStorage.getItem(ATTEMPTS_KEY)) || [];
     conceptStats = JSON.parse(localStorage.getItem(CONCEPTS_KEY)) || {};
     studentAccounts = JSON.parse(localStorage.getItem(STUDENTS_KEY)) || [];
-    if (studentAccounts.length === 0) {
-        studentAccounts = [
-            { id: "9A-001", name: "Ahmed Ali", classId: "CLASS-9A", grade: 9, password: "123", forcePasswordChange: false },
-            { id: "9A-002", name: "Sara Khan", classId: "CLASS-9A", grade: 9, password: "123", forcePasswordChange: false },
-            { id: "9A-003", name: "Usman Tariq", classId: "CLASS-9A", grade: 9, password: "123", forcePasswordChange: false },
-            { id: "9B-001", name: "Fatima Noor", classId: "CLASS-9B", grade: 9, password: "123", forcePasswordChange: false },
-            { id: "9B-002", name: "Bilal Ahmed", classId: "CLASS-9B", grade: 9, password: "123", forcePasswordChange: false },
-            { id: "9B-003", name: "Ayesha Siddiqui", classId: "CLASS-9B", grade: 9, password: "123", forcePasswordChange: false }
-        ];
-    }
     if (classes.length === 0) {
         classes = [
             { id: "CLASS-9A", name: "9A", grade: 9, section: "A", students: ["9A-001", "9A-002", "9A-003"] },
@@ -271,11 +261,6 @@ function handleLogin(e) {
         document.getElementById("homeBtn").style.display = "inline-block";
         document.getElementById("loggedUser").textContent = found.name + " (Student)";
         dashboardsHide();
-        if (found.forcePasswordChange) {
-            document.getElementById("passwordChangeModal").classList.add("active");
-            document.getElementById("modalOverlay").classList.add("active");
-            return;
-        }
         document.getElementById("studentDashboard").style.display = "block";
         document.getElementById("studentDisplayName").textContent = found.name;
         showStudentTab("practice");
@@ -1504,19 +1489,18 @@ function renderCTOverview() {
 function renderCTStudents() {
     var c = document.getElementById("ctStudentsList");
     var ctClassId = currentUser ? currentUser.classId : null;
-    var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Attempts</th><th>Average</th><th>Actions</th></tr></thead><tbody>';
+    var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Father Name</th><th>Roll No</th><th>Attempts</th><th>Average</th><th>Actions</th></tr></thead><tbody>';
     var found = false;
     for (var i = 0; i < studentAccounts.length; i++) {
         var s = studentAccounts[i];
         if (ctClassId && s.classId !== ctClassId) continue;
         found = true;
-        var className = "N/A";
-        for (var j = 0; j < classes.length; j++) { if (classes[j].id === s.classId) { className = classes[j].name; break; } }
         var sa = [];
         for (var k = 0; k < allAttempts.length; k++) { if (allAttempts[k].studentId === s.id) sa.push(allAttempts[k]); }
         var avg = sa.length > 0 ? sa.reduce(function(sum, a) { return sum + a.percentage; }, 0) / sa.length : 0;
-        h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + className + '</td><td>' + sa.length + '</td><td>' + avg.toFixed(1) + '%</td>' +
+        h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + (s.fatherName || "-") + '</td><td>' + (s.rollNo || "-") + '</td><td>' + sa.length + '</td><td>' + avg.toFixed(1) + '%</td>' +
             '<td><button onclick="editStudentAccount(\'' + s.id + '\')" class="action-btn">Edit</button> ' +
+            '<button onclick="showStudentPassword(\'' + s.id + '\')" class="action-btn">Show Pass</button> ' +
             '<button onclick="deleteStudentAccount(\'' + s.id + '\')" class="action-btn danger">Delete</button></td></tr>';
     }
     if (!found) { c.innerHTML = "<p>No students in your class yet.</p>"; return; }
@@ -1793,43 +1777,82 @@ function saveTeacher(e) {
     saveAll(); closeModal(); renderPrincipalTeachers();
 }
 
+function generateRandomPassword() {
+    var chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+    var pass = "";
+    for (var i = 0; i < 8; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    return pass;
+}
+
+function generateStudentId(classObj, rollNo) {
+    var prefix = classObj.name;
+    var num = (rollNo < 10 ? "0" : "") + rollNo;
+    return prefix + "-" + num;
+}
+
 function renderPrincipalStudents() {
     var c = document.getElementById("principalStudentsContent");
-    if (studentAccounts.length === 0) { c.innerHTML = "<p>No students yet. Click 'Add Student' to create accounts.</p>"; return; }
-    var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Grade</th><th>Password</th><th>Actions</th></tr></thead><tbody>';
+    if (studentAccounts.length === 0) { c.innerHTML = "<p>No students yet. Click 'Add Student' or 'Import Excel' to add students.</p>"; return; }
+    var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Father Name</th><th>Class</th><th>Roll No</th><th>Password</th><th>Actions</th></tr></thead><tbody>';
     for (var i = 0; i < studentAccounts.length; i++) {
         var s = studentAccounts[i];
         var className = "N/A";
         for (var j = 0; j < classes.length; j++) {
             if (classes[j].id === s.classId) { className = classes[j].name; break; }
         }
-        h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + className + '</td><td>' + s.grade + '</td><td>' + s.password + '</td>' +
+        h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + (s.fatherName || "-") + '</td><td>' + className + '</td><td>' + (s.rollNo || "-") + '</td><td>' + s.password + '</td>' +
             '<td><button onclick="editStudentAccount(\'' + s.id + '\')" class="action-btn">Edit</button> ' +
+            '<button onclick="showStudentPassword(\'' + s.id + '\')" class="action-btn">Show Pass</button> ' +
             '<button onclick="deleteStudentAccount(\'' + s.id + '\')" class="action-btn danger">Delete</button></td></tr>';
     }
     c.innerHTML = h + '</tbody></table>';
 }
 
+function showStudentPassword(sid) {
+    for (var i = 0; i < studentAccounts.length; i++) {
+        if (studentAccounts[i].id === sid) {
+            alert("Student: " + studentAccounts[i].name + "\nID: " + studentAccounts[i].id + "\nPassword: " + studentAccounts[i].password);
+            return;
+        }
+    }
+}
+
 function showCreateStudentModal() {
     document.getElementById("studentForm").reset();
-    document.getElementById("smStudentId").value = "";
+    document.getElementById("smEditId").value = "";
+    document.getElementById("smGeneratedInfo").style.display = "none";
     document.getElementById("studentModalTitle").textContent = "\uD83D\uDC64 Add Student";
     var sel = document.getElementById("smClassId");
     sel.innerHTML = "";
     if (currentRole === "classteacher" && currentUser && currentUser.classId) {
         for (var i = 0; i < classes.length; i++) {
             if (classes[i].id === currentUser.classId) {
-                sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + ' (Grade ' + classes[i].grade + ')</option>';
+                sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
                 break;
             }
         }
     } else {
         for (var i = 0; i < classes.length; i++) {
-            sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + ' (Grade ' + classes[i].grade + ')</option>';
+            sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
         }
     }
+    updateStudentPreview();
     document.getElementById("studentModal").classList.add("active");
     document.getElementById("modalOverlay").classList.add("active");
+}
+
+function updateStudentPreview() {
+    var classId = document.getElementById("smClassId").value;
+    var rollNo = document.getElementById("smRollNo").value;
+    var infoDiv = document.getElementById("smGeneratedInfo");
+    if (!classId || !rollNo) { infoDiv.style.display = "none"; return; }
+    var classObj = null;
+    for (var i = 0; i < classes.length; i++) { if (classes[i].id === classId) { classObj = classes[i]; break; } }
+    if (!classObj) { infoDiv.style.display = "none"; return; }
+    var sid = generateStudentId(classObj, parseInt(rollNo));
+    document.getElementById("smPreviewId").textContent = "Student ID: " + sid;
+    document.getElementById("smPreviewPass").textContent = "Password: (auto-generated 8-digit)";
+    infoDiv.style.display = "block";
 }
 
 function editStudentAccount(sid) {
@@ -1838,18 +1861,17 @@ function editStudentAccount(sid) {
         if (studentAccounts[i].id === sid) { s = studentAccounts[i]; break; }
     }
     if (!s) return;
-    document.getElementById("smStudentId").value = s.id;
-    document.getElementById("smId").value = s.id;
-    document.getElementById("smId").disabled = true;
+    document.getElementById("smEditId").value = s.id;
     document.getElementById("smName").value = s.name;
-    document.getElementById("smGrade").value = s.grade;
-    document.getElementById("smPassword").value = s.password;
+    document.getElementById("smFatherName").value = s.fatherName || "";
+    document.getElementById("smRollNo").value = s.rollNo || "";
     document.getElementById("studentModalTitle").textContent = "\uD83D\uDC64 Edit Student";
+    document.getElementById("smGeneratedInfo").style.display = "none";
     var sel = document.getElementById("smClassId");
     sel.innerHTML = "";
     for (var i = 0; i < classes.length; i++) {
         var selected = classes[i].id === s.classId ? " selected" : "";
-        sel.innerHTML += '<option value="' + classes[i].id + '"' + selected + '>' + classes[i].name + ' (Grade ' + classes[i].grade + ')</option>';
+        sel.innerHTML += '<option value="' + classes[i].id + '"' + selected + '>' + classes[i].name + '</option>';
     }
     document.getElementById("studentModal").classList.add("active");
     document.getElementById("modalOverlay").classList.add("active");
@@ -1857,33 +1879,37 @@ function editStudentAccount(sid) {
 
 function saveStudentAccount(e) {
     e.preventDefault();
-    var editId = document.getElementById("smStudentId").value;
-    var id = document.getElementById("smId").value.trim();
+    var editId = document.getElementById("smEditId").value;
     var name = document.getElementById("smName").value.trim();
+    var fatherName = document.getElementById("smFatherName").value.trim();
     var classId = document.getElementById("smClassId").value;
-    var grade = parseInt(document.getElementById("smGrade").value);
-    var password = document.getElementById("smPassword").value || "123";
-    if (!id || !name) { alert("Please fill in Student ID and Name."); return; }
+    var rollNo = parseInt(document.getElementById("smRollNo").value);
+    if (!name || !fatherName || !classId || !rollNo) { alert("Please fill in all fields."); return; }
+    var classObj = null;
+    for (var i = 0; i < classes.length; i++) { if (classes[i].id === classId) { classObj = classes[i]; break; } }
+    if (!classObj) { alert("Invalid class selected."); return; }
     if (editId) {
         for (var i = 0; i < studentAccounts.length; i++) {
             if (studentAccounts[i].id === editId) {
                 studentAccounts[i].name = name;
+                studentAccounts[i].fatherName = fatherName;
                 studentAccounts[i].classId = classId;
-                studentAccounts[i].grade = grade;
-                studentAccounts[i].password = password;
+                studentAccounts[i].rollNo = rollNo;
                 break;
             }
         }
     } else {
+        var newId = generateStudentId(classObj, rollNo);
         for (var i = 0; i < studentAccounts.length; i++) {
-            if (studentAccounts[i].id === id) { alert("Student ID already exists!"); return; }
+            if (studentAccounts[i].id === newId) { alert("A student with ID " + newId + " already exists in this class!"); return; }
         }
-        studentAccounts.push({ id: id, name: name, classId: classId, grade: grade, password: password, forcePasswordChange: true });
+        var newPass = generateRandomPassword();
+        studentAccounts.push({ id: newId, name: name, fatherName: fatherName, classId: classId, rollNo: rollNo, password: newPass });
+        alert("Student created!\n\nID: " + newId + "\nPassword: " + newPass + "\n\nPlease share these credentials with the student.");
     }
     saveAll();
     closeModal();
     renderPrincipalStudents();
-    document.getElementById("smId").disabled = false;
 }
 
 function deleteStudentAccount(sid) {
@@ -2005,42 +2031,6 @@ function confirmImport() {
     renderQuestions();
 }
 
-function validatePasswordChange() {
-    var cur = document.getElementById("pcCurrent").value;
-    var nw = document.getElementById("pcNew").value;
-    var cf = document.getElementById("pcConfirm").value;
-    var err = document.getElementById("pcError");
-    err.style.display = "none";
-    if (nw.length < 3) { err.textContent = "New password must be at least 3 characters."; err.style.display = "block"; return false; }
-    if (nw !== cf) { err.textContent = "New passwords do not match."; err.style.display = "block"; return false; }
-    return true;
-}
-
-function changePassword(e) {
-    e.preventDefault();
-    var cur = document.getElementById("pcCurrent").value;
-    var nw = document.getElementById("pcNew").value;
-    var err = document.getElementById("pcError");
-    err.style.display = "none";
-    if (!validatePasswordChange()) return;
-    var found = null;
-    for (var i = 0; i < studentAccounts.length; i++) {
-        if (studentAccounts[i].id === currentUser.id) { found = studentAccounts[i]; break; }
-    }
-    if (!found) { err.textContent = "Account not found."; err.style.display = "block"; return; }
-    if (found.password !== cur) { err.textContent = "Current password is incorrect."; err.style.display = "block"; return; }
-    found.password = nw;
-    found.forcePasswordChange = false;
-    saveAll();
-    document.getElementById("passwordChangeModal").classList.remove("active");
-    document.getElementById("modalOverlay").classList.remove("active");
-    document.getElementById("studentDashboard").style.display = "block";
-    document.getElementById("studentDisplayName").textContent = found.name;
-    showStudentTab("practice");
-    history.pushState({ page: "dashboard" }, "", "#dashboard");
-    alert("Password changed successfully!");
-}
-
 function showStudentExcelModal() {
     document.getElementById("studentExcelFile").value = "";
     document.getElementById("studentExcelPreview").innerHTML = "";
@@ -2062,13 +2052,12 @@ function previewStudentExcel(e) {
             var data = XLSX.utils.sheet_to_json(ws, { header: 1 });
             if (data.length < 2) { alert("Excel file is empty or has no data rows."); return; }
             var headers = data[0].map(function(h) { return String(h).trim().toLowerCase(); });
-            var idIdx = headers.indexOf("id");
             var nameIdx = headers.indexOf("name");
+            var fatherIdx = headers.indexOf("father name");
             var classIdx = headers.indexOf("class");
-            var gradeIdx = headers.indexOf("grade");
-            var passIdx = headers.indexOf("password");
-            if (idIdx === -1 || nameIdx === -1 || classIdx === -1) {
-                alert("Excel must have columns: ID, Name, Class (and optionally Grade, Password).");
+            var rollIdx = headers.indexOf("roll no");
+            if (nameIdx === -1 || fatherIdx === -1 || classIdx === -1 || rollIdx === -1) {
+                alert("Excel must have columns: Name, Father Name, Class, Roll No");
                 return;
             }
             pendingStudentExcelData = [];
@@ -2077,31 +2066,32 @@ function previewStudentExcel(e) {
             for (var i = 0; i < studentAccounts.length; i++) existingIds[studentAccounts[i].id] = true;
             for (var i = 1; i < data.length; i++) {
                 var row = data[i];
-                if (!row || !row[idIdx]) continue;
-                var sid = String(row[idIdx]).trim();
+                if (!row || !row[nameIdx]) continue;
                 var sname = String(row[nameIdx]).trim();
+                var sfather = String(row[fatherIdx]).trim();
                 var sclass = String(row[classIdx]).trim();
-                var sgrade = gradeIdx !== -1 ? parseInt(row[gradeIdx]) || 9 : 9;
-                var spass = passIdx !== -1 && row[passIdx] ? String(row[passIdx]).trim() : "123";
-                if (!sid || !sname) { errors.push("Row " + (i + 1) + ": Missing ID or Name."); continue; }
-                if (existingIds[sid]) { errors.push("Row " + (i + 1) + ": ID " + sid + " already exists (skipped)."); continue; }
+                var sroll = parseInt(row[rollIdx]);
+                if (!sname || !sfather || !sclass || !sroll) { errors.push("Row " + (i + 1) + ": Missing Name, Father Name, Class, or Roll No."); continue; }
                 var matchedClass = null;
                 for (var j = 0; j < classes.length; j++) {
                     if (classes[j].name === sclass) { matchedClass = classes[j]; break; }
                 }
                 if (!matchedClass) { errors.push("Row " + (i + 1) + ": Class '" + sclass + "' not found."); continue; }
-                pendingStudentExcelData.push({ id: sid, name: sname, classId: matchedClass.id, grade: sgrade, password: spass, forcePasswordChange: true });
-                existingIds[sid] = true;
+                var genId = generateStudentId(matchedClass, sroll);
+                if (existingIds[genId]) { errors.push("Row " + (i + 1) + ": ID " + genId + " already exists (skipped)."); continue; }
+                var genPass = generateRandomPassword();
+                pendingStudentExcelData.push({ id: genId, name: sname, fatherName: sfather, classId: matchedClass.id, rollNo: sroll, password: genPass });
+                existingIds[genId] = true;
             }
             var h = '<p><b>' + pendingStudentExcelData.length + '</b> students ready to import.</p>';
             if (errors.length > 0) h += '<p style="color:#e74c3c;">' + errors.join("<br>") + '</p>';
             if (pendingStudentExcelData.length > 0) {
-                h += '<table><thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Grade</th><th>Password</th></tr></thead><tbody>';
+                h += '<table><thead><tr><th>ID</th><th>Name</th><th>Father Name</th><th>Class</th><th>Roll No</th><th>Password</th></tr></thead><tbody>';
                 for (var i = 0; i < pendingStudentExcelData.length; i++) {
                     var s = pendingStudentExcelData[i];
                     var cn = "N/A";
                     for (var j = 0; j < classes.length; j++) { if (classes[j].id === s.classId) { cn = classes[j].name; break; } }
-                    h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + cn + '</td><td>' + s.grade + '</td><td>' + s.password + '</td></tr>';
+                    h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + s.fatherName + '</td><td>' + cn + '</td><td>' + s.rollNo + '</td><td>' + s.password + '</td></tr>';
                 }
                 h += '</tbody></table>';
                 document.getElementById("studentExcelConfirmBtn").style.display = "inline-block";
@@ -2116,6 +2106,7 @@ function previewStudentExcel(e) {
 
 function confirmStudentExcelImport() {
     if (pendingStudentExcelData.length === 0) return;
+    var count = pendingStudentExcelData.length;
     for (var i = 0; i < pendingStudentExcelData.length; i++) {
         studentAccounts.push(pendingStudentExcelData[i]);
     }
@@ -2123,14 +2114,13 @@ function confirmStudentExcelImport() {
     pendingStudentExcelData = [];
     closeModal();
     renderPrincipalStudents();
-    alert("Students imported successfully!");
+    alert(count + " students imported successfully!");
 }
 
 function closeModal() {
     var ids = ["questionModal", "classModal", "assignmentModal", "excelModal", "teacherModal", "attendanceModal", "studentModal", "studentExcelModal"];
     for (var i = 0; i < ids.length; i++) document.getElementById(ids[i]).classList.remove("active");
     document.getElementById("modalOverlay").classList.remove("active");
-    document.getElementById("smId").disabled = false;
 }
 
 window.onload = function() {

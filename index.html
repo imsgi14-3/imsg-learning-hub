@@ -83,7 +83,7 @@
                     </div>
                     <button type="submit" class="login-button">&#9654; Sign In</button>
                 </form>
-                <p class="demo-note">Students: Use your ID (e.g. <b>9A-001</b>) and password <b>123</b><br>Teachers/Parents = <b>123</b>, Principal = <b>admin</b></p>
+                <p class="demo-note">Students: Use your assigned ID and password<br>Teachers/Parents = <b>123</b>, Principal = <b>admin</b></p>
             </div>
         </div>
 
@@ -564,29 +564,27 @@
         <div id="studentModal" class="modal">
             <h3 id="studentModalTitle">&#128100; Add Student</h3>
             <form id="studentForm" onsubmit="saveStudentAccount(event)">
-                <input type="hidden" id="smStudentId">
+                <input type="hidden" id="smEditId">
                 <div class="form-row">
-                    <label>Student ID (e.g., 9A-004)</label>
-                    <input type="text" id="smId" placeholder="e.g., 9A-004" required>
-                </div>
-                <div class="form-row">
-                    <label>Full Name</label>
+                    <label>Student Name</label>
                     <input type="text" id="smName" placeholder="e.g., Ahmed Ali" required>
                 </div>
                 <div class="form-row">
+                    <label>Father's Name</label>
+                    <input type="text" id="smFatherName" placeholder="e.g., Muhammad Ali" required>
+                </div>
+                <div class="form-row">
                     <label>Class</label>
-                    <select id="smClassId" required></select>
+                    <select id="smClassId" required onchange="updateStudentPreview()"></select>
                 </div>
                 <div class="form-row">
-                    <label>Grade</label>
-                    <select id="smGrade">
-                        <option value="9">Grade 9</option>
-                        <option value="10">Grade 10</option>
-                    </select>
+                    <label>Roll Number</label>
+                    <input type="number" id="smRollNo" placeholder="e.g., 1" min="1" required oninput="updateStudentPreview()">
                 </div>
-                <div class="form-row">
-                    <label>Password</label>
-                    <input type="text" id="smPassword" placeholder="Default: 123" value="123">
+                <div id="smGeneratedInfo" style="display:none;background:var(--bg);padding:10px;border-radius:8px;margin:10px 0;">
+                    <p style="margin:0;font-size:13px;color:var(--text-mid);">System will generate:</p>
+                    <p id="smPreviewId" style="margin:4px 0;font-weight:700;color:var(--primary);"></p>
+                    <p id="smPreviewPass" style="margin:4px 0;font-weight:700;color:var(--accent);"></p>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -597,37 +595,15 @@
 
         <div id="studentExcelModal" class="modal">
             <h3>&#128202; Import Students from Excel</h3>
-            <p>Expected columns: <b>ID, Name, Class, Grade, Password</b></p>
-            <p>Class should match an existing class name (e.g., 9A, 9B). Students with existing IDs will be skipped.</p>
+            <p>Expected columns: <b>Name, Father Name, Class, Roll No</b></p>
+            <p>Class must match an existing class (e.g., 9A, 9B). System auto-generates ID and password for each student.</p>
+            <p><a href="generate-sample.html" target="_blank" class="action-btn" style="text-decoration:none;display:inline-block;margin:5px 0;">&#128229; Download Sample Excel</a></p>
             <input type="file" id="studentExcelFile" accept=".xlsx,.xls,.csv" onchange="previewStudentExcel(event)">
             <div id="studentExcelPreview"></div>
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="closeModal()">Cancel</button>
                 <button id="studentExcelConfirmBtn" class="btn-save" style="display:none;" onclick="confirmStudentExcelImport()">Import Students</button>
             </div>
-        </div>
-
-        <div id="passwordChangeModal" class="modal">
-            <h3>&#128274; Change Your Password</h3>
-            <p>You must change your password before continuing.</p>
-            <form id="passwordChangeForm" onsubmit="changePassword(event)">
-                <div class="form-row">
-                    <label>Current Password</label>
-                    <input type="password" id="pcCurrent" required>
-                </div>
-                <div class="form-row">
-                    <label>New Password</label>
-                    <input type="password" id="pcNew" required minlength="3">
-                </div>
-                <div class="form-row">
-                    <label>Confirm New Password</label>
-                    <input type="password" id="pcConfirm" required minlength="3">
-                </div>
-                <p id="pcError" style="color:#e74c3c;display:none;margin:0;"></p>
-                <div class="modal-actions">
-                    <button type="submit" class="btn-save">Change Password</button>
-                </div>
-            </form>
         </div>
 
     </main>

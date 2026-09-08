@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Sample Student Excel</title>
+    <script src="xlsx.full.min.js"></script>
+</head>
+<body>
+    <h2>Generate Sample Student Import File</h2>
+    <p>Click the button below to download a sample Excel file with the correct format.</p>
+    <button onclick="generate()">Download Sample Excel</button>
+    <script>
+    function generate() {
+        var data = [
+            ["Name", "Father Name", "Class", "Roll No"],
+            ["Ahmed Ali", "Muhammad Ali", "9A", 1],
+            ["Sara Khan", "Kamran Khan", "9A", 2],
+            ["Usman Tariq", "Tariq Mehmood", "9A", 3],
+            ["Fatima Noor", "Noor Hassan", "9B", 1],
+            ["Bilal Ahmed", "Ahmed Raza", "9B", 2],
+            ["Ayesha Siddiqui", "Siddiqui Ahmed", "9B", 3]
+        ];
+        var ws = XLSX.utils.aoa_to_sheet(data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Students");
+        ws["!cols"] = [{ wch: 20 }, { wch: 20 }, { wch: 10 }, { wch: 10 }];
+        XLSX.writeFile(wb, "sample_students.xlsx");
+    }
+    </script>
+</body>
+</html>
