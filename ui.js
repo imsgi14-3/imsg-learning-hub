@@ -76,10 +76,12 @@ var UI = (function() {
         var keys = Object.keys(subjects).sort();
         for (var i = 0; i < keys.length; i++) {
             var icon = "📚";
-            if (keys[i].indexOf("Science") !== -1) icon = "🔬";
+            if (keys[i].indexOf("Science") !== -1) icon = "💻";
             if (keys[i].indexOf("Math") !== -1) icon = "📐";
             if (keys[i].indexOf("English") !== -1) icon = "📖";
             if (keys[i].indexOf("Urdu") !== -1) icon = "✍️";
+            if (keys[i].indexOf("Social") !== -1) icon = "🌍";
+            if (keys[i].indexOf("Islamiyat") !== -1) icon = "🕌";
             html += '<div class="quiz-mode-card" onclick="showSubjectChapters(\'' + keys[i].replace(/'/g, "\\'") + '\')">';
             html += '<div class="mode-icon">' + icon + '</div>';
             html += '<div class="mode-title">' + keys[i] + '</div>';
@@ -89,6 +91,7 @@ var UI = (function() {
     }
 
     function showSubjectChapters(subject) {
+        currentSubject = subject;
         $("subjectListView").style.display = "none";
         $("chapterListView").style.display = "block";
         $("chapterSubjectTitle").textContent = subject;
@@ -100,14 +103,16 @@ var UI = (function() {
                 chapters[ch]++;
             }
         }
-        var keys = Object.keys(chapters).sort();
+        var keys = Object.keys(chapters).sort(function(a, b) { return Number(a) - Number(b); });
         var html = "";
         for (var i = 0; i < keys.length; i++) {
-            html += '<div class="quiz-mode-card" onclick="showChapterQuizOptions(\'' + subject.replace(/'/g, "\\'") + '\', \'' + keys[i].replace(/'/g, "\\'") + '\')">';
-            html += '<div class="mode-title">' + keys[i] + '</div>';
+            html += '<div class="quiz-mode-card" onclick="showChapterQuizOptions(' + keys[i] + ', \'' + subject.replace(/'/g, "\\'") + '\')">';
+            html += '<div class="mode-title">Chapter ' + keys[i] + '</div>';
             html += '<div class="mode-desc">' + chapters[keys[i]] + ' questions</div></div>';
         }
         $("chapterGrid").innerHTML = html;
+        $("chapterGrid").style.display = "";
+        $("chapterQuizOptions").style.display = "none";
     }
 
     function showSubjectList() {
@@ -115,37 +120,306 @@ var UI = (function() {
         $("chapterListView").style.display = "none";
     }
 
-    function showChapterQuizOptions(subject, chapter) {
-        var container = $("chapterQuizOptions");
-        if (!container) return;
-        container.style.display = "block";
-        var qs = DataStore.getQuestionsByChapter(subject, chapter);
+    function showChapterQuizOptions(chapterNum, subject) {
+        var chapterQuestions = [];
+        for (var i = 0; i < DataStore.questions.length; i++) {
+            if (DataStore.questions[i].subject === subject && DataStore.questions[i].chapter == chapterNum) {
+                chapterQuestions.push(DataStore.questions[i]);
+            }
+        }
+        if (chapterQuestions.length === 0) { alert("No questions for this chapter."); return; }
+        $("chapterGrid").style.display = "none";
+        var panel = $("chapterQuizOptions");
+        panel.style.display = "block";
+        var html = '<button class="mode-back-btn" onclick="backToChapters()">&#8592; Back to Chapters</button>';
+        html += '<h3>' + subject + ' — Chapter ' + chapterNum + '</h3>';
+        html += '<p>' + chapterQuestions.length + ' questions available</p>';
+        html += '<div class="quiz-mode-grid">';
+        html += '<div class="quiz-mode-card" onclick="showTopicPicker(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\')">';
+        html += '<div class="quiz-mode-icon">&#9889;</div>';
+        html += '<h4>Quick Practice</h4>';
+        html += '<p>15 questions &bull; 20 min<br>Pick a topic to revise</p>';
+        html += '</div>';
+        html += '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\', \'test\')">';
+        html += '<div class="quiz-mode-icon">&#128218;</div>';
+        html += '<h4>Chapter Test</h4>';
+        html += '<p>30 questions &bull; 40 min<br>67% straight + 33% scenario</p>';
+        html += '</div>';
+        html += '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\', \'weak\')">';
+        html += '<div class="quiz-mode-icon">&#128200;</div>';
+        html += '<h4>Weak Areas</h4>';
+        html += '<p>Mistakes from this chapter<br>Fix your weak points</p>';
+        html += '</div>';
+        html += '</div>';
+        panel.innerHTML = html;
+    }
+
+    function backToChapters() {
+        $("chapterGrid").style.display = "";
+        $("chapterQuizOptions").style.display = "none";
+    }
+
+    function showTopicPicker(chapterNum, subject) {
+        var chapterQuestions = [];
+        for (var i = 0; i < DataStore.questions.length; i++) {
+            if (DataStore.questions[i].subject === subject && DataStore.questions[i].chapter == chapterNum) {
+                chapterQuestions.push(DataStore.questions[i]);
+            }
+        }
         var topics = {};
-        for (var i = 0; i < qs.length; i++) {
-            var t = qs[i].topic || "General";
+        for (var i = 0; i < chapterQuestions.length; i++) {
+            var t = chapterQuestions[i].topic || "General";
             if (!topics[t]) topics[t] = 0;
             topics[t]++;
         }
-        var html = '<h4>Practice Options for ' + chapter + '</h4>';
+        var panel = $("chapterQuizOptions");
+        var html = '<button class="mode-back-btn" onclick="showChapterQuizOptions(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\')">&#8592; Back to Modes</button>';
+        html += '<h3>&#9889; Quick Practice — Pick a Topic</h3>';
+        html += '<p>Choose a topic from Chapter ' + chapterNum + '</p>';
         html += '<div class="quiz-mode-grid">';
-        html += '<div class="quiz-mode-card" onclick="launchQuiz(\'' + subject.replace(/'/g, "\\'") + '\', \'' + chapter.replace(/'/g, "\\'") + '\', \'all\', 20)">';
-        html += '<div class="mode-icon">📝</div><div class="mode-title">Quick Practice</div>';
-        html += '<div class="mode-desc">20 random questions</div></div>';
-        html += '<div class="quiz-mode-card" onclick="launchQuiz(\'' + subject.replace(/'/g, "\\'") + '\', \'' + chapter.replace(/'/g, "\\'") + '\', \'all\', ' + qs.length + ')">';
-        html += '<div class="mode-icon">📋</div><div class="mode-title">Full Chapter</div>';
-        html += '<div class="mode-desc">' + qs.length + ' questions</div></div>';
-        html += '</div>';
         var topicKeys = Object.keys(topics).sort();
-        if (topicKeys.length > 0) {
-            html += '<h4 style="margin-top:15px;">Practice by Topic</h4><div class="quiz-mode-grid">';
-            for (var i = 0; i < topicKeys.length; i++) {
-                html += '<div class="quiz-mode-card" onclick="launchQuiz(\'' + subject.replace(/'/g, "\\'") + '\', \'' + chapter.replace(/'/g, "\\'") + '\', \'' + topicKeys[i].replace(/'/g, "\\'") + '\', ' + topics[topicKeys[i]] + ')">';
-                html += '<div class="mode-title">' + topicKeys[i] + '</div>';
-                html += '<div class="mode-desc">' + topics[topicKeys[i]] + ' questions</div></div>';
+        for (var i = 0; i < topicKeys.length; i++) {
+            html += '<div class="quiz-mode-card" onclick="launchTopicPractice(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\', \'' + topicKeys[i].replace(/'/g, "\\'") + '\')">';
+            html += '<div class="mode-title">' + topicKeys[i] + '</div>';
+            html += '<div class="mode-desc">' + topics[topicKeys[i]] + ' questions</div></div>';
+        }
+        html += '<div class="quiz-mode-card" onclick="launchTopicPractice(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\', \'all\')">';
+        html += '<div class="mode-title">All Topics</div>';
+        html += '<div class="mode-desc">' + chapterQuestions.length + ' questions</div></div>';
+        html += '</div>';
+        panel.innerHTML = html;
+    }
+
+    function launchTopicPractice(chapterNum, subject, topic) {
+        var filtered = [];
+        for (var i = 0; i < DataStore.questions.length; i++) {
+            var q = DataStore.questions[i];
+            if (q.subject === subject && q.chapter == chapterNum && (topic === "all" || q.topic === topic)) {
+                filtered.push(q);
             }
+        }
+        if (filtered.length === 0) { alert("No questions available."); return; }
+        var count = Math.min(15, filtered.length);
+        var selected = DataStore.shuffleArray(filtered).slice(0, count);
+        startQuizUI(selected, 20, "practice", subject, chapterNum);
+    }
+
+    function launchChapterMode(chapterNum, subject, mode) {
+        var filtered = [];
+        for (var i = 0; i < DataStore.questions.length; i++) {
+            if (DataStore.questions[i].subject === subject && DataStore.questions[i].chapter == chapterNum) {
+                filtered.push(DataStore.questions[i]);
+            }
+        }
+        if (filtered.length === 0) { alert("No questions available for this chapter."); return; }
+        var count, time;
+        if (mode === "test") {
+            count = Math.min(30, filtered.length);
+            time = 40;
+        } else if (mode === "weak") {
+            var weak = getWeakQuestions();
+            var chapterWeak = [];
+            for (var i = 0; i < weak.length; i++) {
+                if (weak[i].subject === subject && weak[i].chapter == chapterNum) chapterWeak.push(weak[i]);
+            }
+            if (chapterWeak.length === 0) { alert("No weak areas found for this chapter. Complete some quizzes first!"); return; }
+            count = Math.min(15, chapterWeak.length);
+            time = 20;
+            filtered = chapterWeak;
+        } else {
+            count = Math.min(15, filtered.length);
+            time = 20;
+        }
+        var selected = balancedSelect(filtered, count);
+        startQuizUI(selected, time, mode, subject, chapterNum);
+    }
+
+    function balancedSelect(pool, count) {
+        var straight = [];
+        var scenario = [];
+        for (var i = 0; i < pool.length; i++) {
+            if (pool[i].mode === "scenario") scenario.push(pool[i]);
+            else straight.push(pool[i]);
+        }
+        straight = DataStore.shuffleArray(straight);
+        scenario = DataStore.shuffleArray(scenario);
+        var straightCount = Math.round(count * 0.6667);
+        var scenarioCount = count - straightCount;
+        var result = [];
+        for (var i = 0; i < straightCount && i < straight.length; i++) result.push(straight[i]);
+        for (var i = 0; i < scenarioCount && i < scenario.length; i++) result.push(scenario[i]);
+        var remaining = count - result.length;
+        if (remaining > 0) {
+            var used = {};
+            for (var i = 0; i < result.length; i++) used[result[i].id] = true;
+            for (var i = 0; i < pool.length && remaining > 0; i++) {
+                if (!used[pool[i].id]) { result.push(pool[i]); remaining--; }
+            }
+        }
+        return DataStore.shuffleArray(result);
+    }
+
+    function getWeakQuestions() {
+        var attempts = DataStore.allAttempts || [];
+        var wrongIds = {};
+        for (var i = 0; i < attempts.length; i++) {
+            var a = attempts[i];
+            if (a.questions && a.answers) {
+                try {
+                    var qs = typeof a.questions === "string" ? JSON.parse(a.questions) : a.questions;
+                    var ans = typeof a.answers === "string" ? JSON.parse(a.answers) : a.answers;
+                    for (var j = 0; j < qs.length; j++) {
+                        if (ans[j] !== undefined && qs[j]) {
+                            var correctIdx = qs[j].answer ? qs[j].answer.charCodeAt(0) - 65 : -1;
+                            if (ans[j] !== correctIdx && qs[j].id) wrongIds[qs[j].id] = true;
+                        }
+                    }
+                } catch(e) {}
+            }
+        }
+        var weak = [];
+        for (var i = 0; i < DataStore.questions.length; i++) {
+            if (wrongIds[DataStore.questions[i].id]) weak.push(DataStore.questions[i]);
+        }
+        return weak;
+    }
+
+    function showModeDetail(mode) {
+        var panel = $("modeDetailPanel");
+        if (!panel) return;
+        var html = "";
+        if (mode === "quick") {
+            html = '<div class="mode-detail">';
+            html += '<h4>&#9889; Quick Practice</h4>';
+            html += '<p class="mode-desc">Fast revision session. Pick a subject or do all.</p>';
+            html += '<div class="mode-info">';
+            html += '<div class="mode-info-item"><strong>10</strong> questions</div>';
+            html += '<div class="mode-info-item"><strong>15 min</strong> time limit</div>';
+            html += '<div class="mode-info-item">Instant feedback</div>';
+            html += '</div>';
+            html += '<div class="mode-subject-select"><label>Subject</label>';
+            html += '<select id="quickSubject"><option value="all">All Subjects</option>';
+            var subjects = {};
+            for (var i = 0; i < DataStore.questions.length; i++) {
+                var s = DataStore.questions[i].subject;
+                if (!subjects[s]) subjects[s] = 0;
+                subjects[s]++;
+            }
+            var skeys = Object.keys(subjects).sort();
+            for (var i = 0; i < skeys.length; i++) {
+                html += '<option value="' + skeys[i] + '">' + skeys[i] + ' (' + subjects[skeys[i]] + ')</option>';
+            }
+            html += '</select></div>';
+            html += '<button class="mode-start-btn" onclick="launchQuickPractice()">Start Practice</button>';
+            html += '<button class="mode-back-btn" onclick="hideModeDetail()">Back</button>';
+            html += '</div>';
+        } else if (mode === "chapter") {
+            var subjectCounts = {};
+            for (var i = 0; i < DataStore.questions.length; i++) {
+                var s = DataStore.questions[i].subject;
+                subjectCounts[s] = (subjectCounts[s] || 0) + 1;
+            }
+            html = '<div class="mode-detail">';
+            html += '<h4>&#128218; Chapter Test</h4>';
+            html += '<p class="mode-desc">Assessment covering one full subject. Balanced topic coverage.</p>';
+            html += '<div class="mode-info">';
+            html += '<div class="mode-info-item"><strong>30</strong> questions</div>';
+            html += '<div class="mode-info-item"><strong>40 min</strong> time limit</div>';
+            html += '<div class="mode-info-item">Score + review</div>';
+            html += '</div>';
+            html += '<div class="mode-subject-select"><label>Select Subject</label>';
+            html += '<select id="chapterSubject">';
+            var skeys = Object.keys(subjectCounts).sort();
+            for (var i = 0; i < skeys.length; i++) {
+                html += '<option value="' + skeys[i] + '">' + skeys[i] + ' (' + subjectCounts[skeys[i]] + ')</option>';
+            }
+            html += '</select></div>';
+            html += '<button class="mode-start-btn" onclick="launchChapterTest()">Start Test</button>';
+            html += '<button class="mode-back-btn" onclick="hideModeDetail()">Back</button>';
+            html += '</div>';
+        } else if (mode === "fullbook") {
+            var total = DataStore.questions.length;
+            html = '<div class="mode-detail">';
+            html += '<h4>&#128214; Full Book Test</h4>';
+            html += '<p class="mode-desc">Comprehensive exam. All chapters, balanced difficulty.</p>';
+            html += '<div class="mode-info">';
+            html += '<div class="mode-info-item"><strong>50</strong> questions</div>';
+            html += '<div class="mode-info-item"><strong>60 min</strong> time limit</div>';
+            html += '<div class="mode-info-item">Full review + weak analysis</div>';
+            html += '</div>';
+            html += '<button class="mode-start-btn" onclick="launchFullBookTest()">Start Test</button>';
+            html += '<button class="mode-back-btn" onclick="hideModeDetail()">Back</button>';
+            html += '</div>';
+        } else if (mode === "weak") {
+            var weakCount = getWeakQuestions().length;
+            html = '<div class="mode-detail">';
+            html += '<h4>&#128200; Weak Areas</h4>';
+            html += '<p class="mode-desc">Questions you got wrong before. Focus on improvement.</p>';
+            html += '<div class="mode-info">';
+            html += '<div class="mode-info-item"><strong>' + Math.min(10, weakCount) + '</strong> questions</div>';
+            html += '<div class="mode-info-item"><strong>15 min</strong> time limit</div>';
+            html += '<div class="mode-info-item">Targeted practice</div>';
+            html += '</div>';
+            html += '<button class="mode-start-btn" onclick="launchWeakPractice()">Start Practice</button>';
+            html += '<button class="mode-back-btn" onclick="hideModeDetail()">Back</button>';
             html += '</div>';
         }
-        container.innerHTML = html;
+        panel.innerHTML = html;
+        panel.style.display = "block";
+    }
+
+    function hideModeDetail() {
+        var panel = $("modeDetailPanel");
+        if (panel) panel.style.display = "none";
+    }
+
+    function launchQuickPractice() {
+        var sel = $("quickSubject");
+        var f = sel ? sel.value : "all";
+        var filtered = [];
+        for (var i = 0; i < DataStore.questions.length; i++) {
+            if (f === "all" || DataStore.questions[i].subject === f) filtered.push(DataStore.questions[i]);
+        }
+        if (filtered.length < 5) { alert("Not enough questions. Need at least 5."); return; }
+        var selected = DataStore.shuffleArray(filtered).slice(0, Math.min(10, filtered.length));
+        startQuizUI(selected, 15, "quick", f, "all");
+    }
+
+    function launchChapterTest() {
+        var sel = $("chapterSubject");
+        var subject = sel ? sel.value : "Computer Science";
+        var filtered = [];
+        for (var i = 0; i < DataStore.questions.length; i++) {
+            if (DataStore.questions[i].subject === subject) filtered.push(DataStore.questions[i]);
+        }
+        if (filtered.length < 10) { alert("Not enough questions for this subject. Need at least 10."); return; }
+        var selected = balancedSelect(filtered, Math.min(30, filtered.length));
+        startQuizUI(selected, 40, "chapter", subject, "all");
+    }
+
+    function launchFullBookTest() {
+        if (DataStore.questions.length < 20) { alert("Not enough questions. Need at least 20."); return; }
+        var selected = balancedSelect(DataStore.questions, Math.min(50, DataStore.questions.length));
+        startQuizUI(selected, 60, "fullbook", "all", "all");
+    }
+
+    function launchWeakPractice() {
+        var weak = getWeakQuestions();
+        if (weak.length === 0) { alert("No weak areas found. Complete some quizzes first!"); return; }
+        var selected = DataStore.shuffleArray(weak).slice(0, Math.min(10, weak.length));
+        startQuizUI(selected, 15, "weak", "all", "all");
+    }
+
+    function startQuizUI(selected, timeMinutes, mode, subject, chapter) {
+        QuizEngine.startQuiz(selected, mode, subject || "all", chapter || "all");
+        QuizEngine.setTimerMinutes(timeMinutes);
+        $("loginPage").style.display = "none";
+        $("studentDashboard").style.display = "none";
+        $("quiz").style.display = "block";
+        $("result").style.display = "none";
+        $("review").style.display = "none";
+        displayQuestion();
+        startTimer();
     }
 
     function launchQuiz(subject, chapter, topic, count) {
@@ -158,12 +432,7 @@ var UI = (function() {
         if (qs.length === 0) { alert("No questions available"); return; }
         qs = DataStore.shuffleArray(qs);
         if (count && qs.length > count) qs = qs.slice(0, count);
-        QuizEngine.startQuiz(qs, "practice", subject, chapter);
-        $("loginPage").style.display = "none";
-        $("studentDashboard").style.display = "none";
-        $("quiz").style.display = "block";
-        displayQuestion();
-        startTimer();
+        startQuizUI(qs, 20, "practice", subject, chapter);
     }
 
     function startTimer() { QuizEngine.startTimer(); }
