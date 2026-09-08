@@ -2482,14 +2482,17 @@ window.onload = function() {
             if (allQs && allQs.length > 0) {
                 var jsonById = {};
                 for (var i = 0; i < allQs.length; i++) jsonById[allQs[i].id] = allQs[i];
+                var cleaned = [];
                 for (var i = 0; i < questions.length; i++) {
-                    if (jsonById[questions[i].id]) questions[i] = jsonById[questions[i].id];
+                    if (jsonById[questions[i].id]) { cleaned.push(jsonById[questions[i].id]); }
+                    else if (!questions[i].subject || !questions[i].chapter) { cleaned.push(questions[i]); }
                 }
-                var existingIds = {};
-                for (var i = 0; i < questions.length; i++) existingIds[questions[i].id] = true;
                 for (var i = 0; i < allQs.length; i++) {
-                    if (!existingIds[allQs[i].id]) questions.push(allQs[i]);
+                    var found = false;
+                    for (var j = 0; j < cleaned.length; j++) { if (cleaned[j].id === allQs[i].id) { found = true; break; } }
+                    if (!found) cleaned.push(allQs[i]);
                 }
+                questions = cleaned;
                 saveAll();
                 console.log("Loaded " + allQs.length + " questions from JSON. Total: " + questions.length);
             }
