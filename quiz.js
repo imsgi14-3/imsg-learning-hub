@@ -41,7 +41,7 @@ var QuizEngine = (function() {
             timeLeft--;
             var timerEl = document.getElementById("timer");
             if (timerEl) timerEl.textContent = "Time: " + timeLeft;
-            if (timeLeft <= 10 && timerEl) timerEl.style.color = "#ef4444";
+            if (timeLeft <= 10 && timerEl) { timerEl.style.color = "#ef4444"; timerEl.style.background = "rgba(239,68,68,0.1)"; timerEl.style.animation = "timerPulse 0.5s ease-in-out infinite"; }
             if (timeLeft <= 0) {
                 clearTimer();
                 var attempt = finish();

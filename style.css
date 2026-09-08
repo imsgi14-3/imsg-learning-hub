@@ -2071,12 +2071,12 @@ footer {
 /* Dashboard Overview Cards */
 .overview-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
 .overview-card {
-    background: var(--card-bg);
-    border-radius: var(--radius);
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
     padding: 18px 14px;
     text-align: center;
     border-left: 4px solid var(--primary);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-sm);
     transition: transform 0.2s;
 }
 .overview-card:hover { transform: translateY(-3px); }
@@ -2087,15 +2087,15 @@ footer {
 .overview-card.average { border-left-color: #ef4444; }
 .overview-card.classes { border-left-color: #06b6d4; }
 .overview-card .card-icon { font-size: 1.8rem; margin-bottom: 6px; }
-.overview-card .card-value { font-size: 1.8rem; font-weight: 700; color: var(--text); }
-.overview-card .card-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+.overview-card .card-value { font-size: 1.8rem; font-weight: 700; color: var(--text-dark); }
+.overview-card .card-label { font-size: 0.8rem; color: var(--text-light); margin-top: 4px; }
 
 /* Bar Charts */
-.chart-section { background: var(--card-bg); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
-.chart-section h4 { margin-bottom: 16px; color: var(--text); }
+.chart-section { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
+.chart-section h4 { margin-bottom: 16px; color: var(--text-dark); }
 .bar-chart { display: flex; flex-direction: column; gap: 10px; }
 .bar-row { display: flex; align-items: center; gap: 10px; }
-.bar-label { min-width: 120px; font-size: 0.8rem; color: var(--text); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-label { min-width: 120px; font-size: 0.8rem; color: var(--text-dark); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bar-track { flex: 1; height: 22px; background: var(--border); border-radius: 11px; overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 11px; transition: width 0.6s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 0.7rem; color: white; font-weight: 600; min-width: 30px; }
 .bar-fill.blue { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
@@ -2111,17 +2111,92 @@ footer {
 /* Donut Chart */
 .donut-container { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; padding: 10px 0; }
 .donut-chart { width: 140px; height: 140px; border-radius: 50%; position: relative; }
-.donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: var(--card-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-.donut-center .donut-value { font-size: 1.2rem; font-weight: 700; color: var(--text); }
-.donut-center .donut-label { font-size: 0.65rem; color: var(--text-muted); }
+.donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: var(--bg-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+.donut-center .donut-value { font-size: 1.2rem; font-weight: 700; color: var(--text-dark); }
+.donut-center .donut-label { font-size: 0.65rem; color: var(--text-light); }
 .donut-legend { display: flex; flex-direction: column; gap: 8px; }
 .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
 .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
 /* Class Performance Cards */
 .perf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
-.perf-card { background: var(--card-bg); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+.perf-card { background: var(--bg-card); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); }
 .perf-card h5 { margin: 0 0 10px; font-size: 0.95rem; }
 .perf-card .perf-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 6px 0; }
 .perf-card .perf-fill { height: 100%; border-radius: 4px; transition: width 0.6s; }
-.perf-card .perf-text { font-size: 0.8rem; color: var(--text-muted); }
+.perf-card .perf-text { font-size: 0.8rem; color: var(--text-light); }
+
+/* ==================== STAT CARDS ==================== */
+.stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; text-align: center; box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary); transition: transform 0.2s; }
+.stat-card:hover { transform: translateY(-2px); }
+.stat-card.blue { border-left-color: #3b82f6; }
+.stat-card.green { border-left-color: #10b981; }
+.stat-card.purple { border-left-color: #8b5cf6; }
+.stat-card.orange { border-left-color: #f59e0b; }
+.stat-number { font-size: 2rem; font-weight: 700; color: var(--text-dark); line-height: 1.2; }
+.stat-label { font-size: 0.85rem; color: var(--text-light); margin-top: 4px; }
+
+/* ==================== PALETTE BUTTONS ==================== */
+.palette-btn { width: 32px; height: 32px; border: 2px solid var(--border); border-radius: 6px; background: var(--bg-card); color: var(--text-dark); font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.palette-btn:hover { border-color: var(--primary); background: rgba(99,102,241,0.1); }
+.palette-btn.current { border-color: var(--primary); background: var(--primary); color: white; }
+.palette-btn.answered { border-color: #10b981; background: #10b981; color: white; }
+
+/* ==================== BAR CHART ==================== */
+.chart-bars { display: flex; flex-direction: column; gap: 8px; }
+.chart-bar-row { display: flex; align-items: center; gap: 12px; }
+.chart-bar-label { min-width: 120px; font-size: 0.85rem; color: var(--text-dark); text-align: right; }
+.chart-bar-track { flex: 1; height: 20px; background: var(--bg-secondary); border-radius: 10px; overflow: hidden; }
+.chart-bar-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #818cf8); border-radius: 10px; transition: width 0.6s ease; }
+.chart-bar-value { min-width: 40px; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); }
+
+/* ==================== DONUT LEGEND ==================== */
+.legend-color { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+/* ==================== SUBJECT / CHAPTER CARDS ==================== */
+.quiz-mode-card { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; text-align: center; box-shadow: var(--shadow-sm); cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+.quiz-mode-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.mode-icon { font-size: 2.5rem; margin-bottom: 8px; }
+.mode-title { font-size: 1rem; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
+.mode-desc { font-size: 0.8rem; color: var(--text-light); }
+
+/* ==================== CLASS CARDS ==================== */
+.classes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.class-card { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; box-shadow: var(--shadow-sm); border-top: 3px solid var(--primary); }
+.class-card h3 { margin: 0 0 8px; color: var(--text-dark); }
+.class-card p { margin: 4px 0; font-size: 0.85rem; color: var(--text-light); }
+.class-actions { margin-top: 12px; display: flex; gap: 8px; }
+
+/* ==================== DATA TABLES ==================== */
+.data-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); }
+.data-table th { background: var(--primary); color: white; padding: 10px 12px; text-align: left; font-size: 0.8rem; font-weight: 600; }
+.data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 0.85rem; color: var(--text-dark); }
+.data-table tr:hover { background: rgba(99,102,241,0.05); }
+
+/* ==================== SMALL BUTTONS ==================== */
+.btn-sm { padding: 4px 10px; border: none; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer; background: var(--primary); color: white; transition: background 0.2s; }
+.btn-sm:hover { background: #4f46e5; }
+.btn-sm.btn-danger { background: #ef4444; }
+.btn-sm.btn-danger:hover { background: #dc2626; }
+
+/* ==================== ASSIGNMENT ITEMS ==================== */
+.assignment-item { display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 12px; box-shadow: var(--shadow-sm); }
+.assignment-info { flex: 1; }
+.assignment-info h4 { margin: 0 0 4px; color: var(--text-dark); }
+.assignment-info p { margin: 0; font-size: 0.85rem; color: var(--text-light); }
+.assignment-meta { font-size: 0.8rem; color: var(--text-light); margin-top: 4px; }
+.assignment-actions { display: flex; gap: 8px; }
+
+/* ==================== REVIEW STYLES ==================== */
+.review-item { background: var(--bg-card); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm); border-left: 4px solid #10b981; }
+.review-item.incorrect { border-left-color: #ef4444; }
+.review-q { font-size: 1rem; font-weight: 600; color: var(--text-dark); margin-bottom: 10px; }
+.review-option { padding: 6px 12px; margin: 4px 0; border-radius: 6px; font-size: 0.9rem; background: var(--bg-secondary); }
+.review-option.correct-answer { background: #d1fae5; color: #065f46; font-weight: 600; }
+.review-option.wrong-answer { background: #fee2e2; color: #991b1b; font-weight: 600; text-decoration: line-through; }
+.review-explanation { margin-top: 10px; padding: 10px 14px; background: #eff6ff; border-radius: 8px; font-size: 0.85rem; color: #1e40af; border-left: 3px solid #3b82f6; }
+
+/* ==================== EMPTY STATE ==================== */
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
+.empty-state p { font-size: 1rem; margin: 0; }
