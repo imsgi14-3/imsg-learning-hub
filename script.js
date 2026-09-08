@@ -2543,12 +2543,18 @@ window.onload = function() {
                 console.log("Loaded " + allQs.length + " questions from JSON. Total: " + questions.length);
             }
             loadFromFirestore(function() {
+                if (typeof db !== "undefined" && principalAccount) {
+                    db.collection("teachers").doc("PRINCIPAL").set(principalAccount).catch(function() {});
+                }
                 document.getElementById("loginPage").style.display = "block";
                 dashboardsHide();
             });
         });
     } else {
         loadFromFirestore(function() {
+            if (typeof db !== "undefined" && principalAccount) {
+                db.collection("teachers").doc("PRINCIPAL").set(principalAccount).catch(function() {});
+            }
             document.getElementById("loginPage").style.display = "block";
             dashboardsHide();
         });
