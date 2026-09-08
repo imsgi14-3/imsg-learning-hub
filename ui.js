@@ -610,12 +610,14 @@ var UI = (function() {
         $("modalOverlay").style.display = "block";
     }
 
-    function saveAssignment() {
-        var title = $("aTitle") ? $("aTitle").value.trim() : "";
-        var desc = $("aDesc") ? $("aDesc").value.trim() : "";
-        var due = $("aDue") ? $("aDue").value : "";
+    function saveAssignment(e) {
+        if (e) e.preventDefault();
+        var title = $("amTitleInput") ? $("amTitleInput").value.trim() : "";
+        var subject = $("amSubject") ? $("amSubject").value : "";
+        var classId = $("amClass") ? $("amClass").value : "";
+        var due = $("amDueDate") ? $("amDueDate").value : "";
         if (!title) { alert("Title required"); return; }
-        var a = { id: "A-" + Date.now(), title: title, description: desc, dueDate: due, questions: [], createdAt: Date.now() };
+        var a = { id: "A-" + Date.now(), title: title, subject: subject, classId: classId, description: "", dueDate: due, questions: [], createdAt: Date.now() };
         DataStore.assignments.push(a);
         DataStore.save();
         closeModal();
@@ -789,14 +791,16 @@ var UI = (function() {
     }
 
     function showCTTab(tab) {
-        var tabs = ["overview", "students", "cross-subject"];
-        for (var i = 0; i < tabs.length; i++) {
-            var el = $("ct" + tabs[i].charAt(0).toUpperCase() + tabs[i].slice(1).replace("-", "") + "Tab");
-            if (el) el.style.display = tabs[i] === tab ? "block" : "none";
+        var tabMap = { "overview": "ctOverviewTab", "students": "ctStudentsTab", "cross-subject": "ctCrossSubjectTab" };
+        var allTabs = ["overview", "students", "cross-subject"];
+        for (var i = 0; i < allTabs.length; i++) {
+            var el = $(tabMap[allTabs[i]]);
+            if (el) el.style.display = allTabs[i] === tab ? "block" : "none";
         }
         var btns = document.querySelectorAll("#classTeacherDashboard .tab-btn");
         for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
-        if (btns[tabs.indexOf(tab)]) btns[tabs.indexOf(tab)].classList.add("active");
+        var idx = allTabs.indexOf(tab);
+        if (btns[idx]) btns[idx].classList.add("active");
     }
 
     function showParentTab(tab) {
@@ -813,19 +817,70 @@ var UI = (function() {
     function showAddTeacherModal() {
         $("teacherModal").style.display = "block";
         $("modalOverlay").style.display = "block";
+        if ($("teacherForm")) $("teacherForm").reset();
+        if ($("tmEditId")) $("tmEditId").value = "";
+        if ($("teacherModalTitle")) $("teacherModalTitle").textContent = "Add Teacher";
+        var sel = $("tmClassId");
+        if (sel) {
+            sel.innerHTML = '<option value="">Select Class</option>';
+            for (var i = 0; i < DataStore.classes.length; i++) {
+                sel.innerHTML += '<option value="' + DataStore.classes[i].id + '">' + DataStore.classes[i].name + '</option>';
+            }
+        }
     }
 
-    function saveTeacher() {
-        var name = $("tName") ? $("tName").value.trim() : "";
+    function saveTeacher(e) {
+        if (e) e.preventDefault();
+        var name = $("tmName") ? $("tmName").value.trim() : "";
+        var subject = $("tmSubject") ? $("tmSubject").value : "";
+        var isSubject = $("tmIsSubjectTeacher") ? $("tmIsSubjectTeacher").checked : true;
+        var isClass = $("tmIsClassTeacher") ? $("tmIsClassTeacher").checked : false;
+        var classId = $("tmClassId") ? $("tmClassId").value : "";
         if (!name) { alert("Name required"); return; }
-        var id = DataStore.generateTeacherId();
-        var teacher = { id: id, name: name, subject: $("tSubject") ? $("tSubject").value : "", role: "subject", password: $("tPassword") ? $("tPassword").value.trim() || DataStore.generateRandomPassword() : DataStore.generateRandomPassword(), createdAt: Date.now() };
+        var id = $("tmEditId") ? $("tmEditId").value : "";
+        var role = isClass ? (isSubject ? "both" : "class") : "subject";
+        if (id) {
+            for (var i = 0; i < DataStore.teachers.length; i++) {
+                if (DataStore.teachers[i].id === id) {
+                    DataStore.teachers[i].name = name;
+                    DataStore.teachers[i].subject = subject;
+                    DataStore.teachers[i].role = role;
+                    DataStore.teachers[i].classId = classId;
+                    DataStore.save();
+                    closeModal();
+                    renderPrincipalTeachers();
+                    return;
+                }
+            }
+        }
+        id = DataStore.generateTeacherId();
+        var teacher = { id: id, name: name, subject: subject, role: role, classId: classId, password: DataStore.generateRandomPassword(), createdAt: Date.now() };
         DataStore.addTeacher(teacher);
+        var email = id.toLowerCase() + "@imsg.edu.pk";
+        if (typeof fbAuth !== "undefined" && fbAuth) {
+            fbAuth.createUserWithEmailAndPassword(email, teacher.password + "!Aa1").catch(function() {});
+        }
         closeModal();
         renderPrincipalTeachers();
     }
 
-    function editTeacher(id) { alert("Edit teacher " + id); }
+    function editTeacher(id) {
+        for (var i = 0; i < DataStore.teachers.length; i++) {
+            if (DataStore.teachers[i].id === id) {
+                var t = DataStore.teachers[i];
+                showAddTeacherModal();
+                $("teacherModalTitle").textContent = "Edit Teacher";
+                $("tmEditId").value = t.id;
+                $("tmName").value = t.name || "";
+                $("tmSubject").value = t.subject || "";
+                if ($("tmIsSubjectTeacher")) $("tmIsSubjectTeacher").checked = t.role === "subject" || t.role === "both";
+                if ($("tmIsClassTeacher")) $("tmIsClassTeacher").checked = t.role === "class" || t.role === "both";
+                if ($("tmClassId")) $("tmClassId").value = t.classId || "";
+                if ($("tmClassField")) $("tmClassField").style.display = (t.role === "class" || t.role === "both") ? "block" : "none";
+                break;
+            }
+        }
+    }
     function deleteTeacher(id) {
         if (!confirm("Delete teacher " + id + "?")) return;
         DataStore.removeTeacher(id);
@@ -835,25 +890,74 @@ var UI = (function() {
     function showCreateStudentModal() {
         $("studentModal").style.display = "block";
         $("modalOverlay").style.display = "block";
+        if ($("studentForm")) $("studentForm").reset();
+        if ($("smEditId")) $("smEditId").value = "";
+        if ($("studentModalTitle")) $("studentModalTitle").textContent = "Add Student";
+        if ($("smGeneratedInfo")) $("smGeneratedInfo").style.display = "none";
+        var sel = $("smClassId");
+        if (sel) {
+            sel.innerHTML = '<option value="">Select Class</option>';
+            for (var i = 0; i < DataStore.classes.length; i++) {
+                sel.innerHTML += '<option value="' + DataStore.classes[i].id + '">' + DataStore.classes[i].name + '</option>';
+            }
+        }
     }
 
-    function saveStudent() {
-        var name = $("sName") ? $("sName").value.trim() : "";
-        var classId = $("sClass") ? $("sClass").value : "";
-        var roll = $("sRoll") ? parseInt($("sRoll").value) : 0;
-        if (!name || !classId || !roll) { alert("All fields required"); return; }
+    function saveStudent(e) {
+        if (e) e.preventDefault();
+        var name = $("smName") ? $("smName").value.trim() : "";
+        var fatherName = $("smFatherName") ? $("smFatherName").value.trim() : "";
+        var classId = $("smClassId") ? $("smClassId").value : "";
+        var roll = $("smRollNo") ? parseInt($("smRollNo").value) : 0;
+        if (!name || !classId || !roll) { alert("Name, class, and roll number required"); return; }
         var classObj = DataStore.findClassById(classId);
         if (!classObj) { alert("Class not found"); return; }
+        var editId = $("smEditId") ? $("smEditId").value : "";
+        if (editId) {
+            for (var i = 0; i < DataStore.studentAccounts.length; i++) {
+                if (DataStore.studentAccounts[i].id === editId) {
+                    DataStore.studentAccounts[i].name = name;
+                    DataStore.studentAccounts[i].fatherName = fatherName;
+                    DataStore.studentAccounts[i].classId = classId;
+                    DataStore.studentAccounts[i].rollNo = roll;
+                    DataStore.save();
+                    closeModal();
+                    renderPrincipalStudents();
+                    return;
+                }
+            }
+        }
         var id = DataStore.generateStudentId(classObj, roll);
         if (DataStore.findStudentById(id)) { alert("Student " + id + " already exists"); return; }
-        var password = $("sPassword") ? $("sPassword").value.trim() || DataStore.generateRandomPassword() : DataStore.generateRandomPassword();
-        var student = { id: id, name: name, classId: classId, rollNo: roll, password: password, createdAt: Date.now() };
+        var password = DataStore.generateRandomPassword();
+        var student = { id: id, name: name, fatherName: fatherName, classId: classId, rollNo: roll, password: password, createdAt: Date.now() };
         DataStore.addStudent(student);
-        closeModal();
+        var email = id.toLowerCase() + "@imsg.edu.pk";
+        if (typeof fbAuth !== "undefined" && fbAuth) {
+            fbAuth.createUserWithEmailAndPassword(email, password + "!Aa1").catch(function() {});
+        }
+        if ($("smPreviewId")) $("smPreviewId").textContent = id;
+        if ($("smPreviewPass")) $("smPreviewPass").textContent = password;
+        if ($("smGeneratedInfo")) $("smGeneratedInfo").style.display = "block";
         renderPrincipalStudents();
     }
 
-    function editStudent(id) { alert("Edit student " + id); }
+    function editStudent(id) {
+        for (var i = 0; i < DataStore.studentAccounts.length; i++) {
+            if (DataStore.studentAccounts[i].id === id) {
+                var s = DataStore.studentAccounts[i];
+                showCreateStudentModal();
+                $("studentModalTitle").textContent = "Edit Student";
+                $("smEditId").value = s.id;
+                $("smName").value = s.name || "";
+                if ($("smFatherName")) $("smFatherName").value = s.fatherName || "";
+                $("smClassId").value = s.classId || "";
+                $("smRollNo").value = s.rollNo || "";
+                if ($("smGeneratedInfo")) $("smGeneratedInfo").style.display = "none";
+                break;
+            }
+        }
+    }
     function deleteStudent(id) {
         if (!confirm("Delete student " + id + "?")) return;
         DataStore.removeStudent(id);
@@ -863,23 +967,52 @@ var UI = (function() {
     function showAddClassModal() {
         $("classModal").style.display = "block";
         $("modalOverlay").style.display = "block";
+        if ($("classForm")) $("classForm").reset();
+        if ($("cmClassId")) $("cmClassId").value = "";
+        if ($("classModalTitle")) $("classModalTitle").textContent = "Add Class";
     }
 
-    function saveClass() {
-        var grade = $("cGrade") ? parseInt($("cGrade").value) : 0;
-        var section = $("cSection") ? $("cSection").value.trim() : "";
+    function saveClass(e) {
+        if (e) e.preventDefault();
+        var grade = $("cmGrade") ? parseInt($("cmGrade").value) : 0;
+        var section = $("cmSection") ? $("cmSection").value.trim() : "";
+        var name = $("cmName") ? $("cmName").value.trim() : "";
         if (!grade || !section) { alert("Grade and section required"); return; }
-        var id = "CLASS-" + grade + section.toUpperCase();
+        var editId = $("cmClassId") ? $("cmClassId").value : "";
+        var id = editId || ("CLASS-" + grade + section.toUpperCase());
+        var displayName = name || (grade + section.toUpperCase());
+        if (editId) {
+            for (var i = 0; i < DataStore.classes.length; i++) {
+                if (DataStore.classes[i].id === editId) {
+                    DataStore.classes[i].name = displayName;
+                    DataStore.classes[i].grade = grade;
+                    DataStore.classes[i].section = section.toUpperCase();
+                    DataStore.save();
+                    closeModal();
+                    renderPrincipalClasses();
+                    return;
+                }
+            }
+        }
         for (var i = 0; i < DataStore.classes.length; i++) {
             if (DataStore.classes[i].id === id) { alert("Class exists"); return; }
         }
-        DataStore.classes.push({ id: id, name: grade + section.toUpperCase(), grade: grade, section: section.toUpperCase() });
+        DataStore.classes.push({ id: id, name: displayName, grade: grade, section: section.toUpperCase() });
         DataStore.save();
         closeModal();
         renderPrincipalClasses();
     }
 
-    function editClass(idx) { alert("Edit class " + idx); }
+    function editClass(idx) {
+        var cl = DataStore.classes[idx];
+        if (!cl) return;
+        showAddClassModal();
+        $("classModalTitle").textContent = "Edit Class";
+        $("cmClassId").value = cl.id;
+        if ($("cmName")) $("cmName").value = cl.name || "";
+        $("cmGrade").value = cl.grade || 9;
+        $("cmSection").value = cl.section || "";
+    }
     function deleteClass(idx) {
         if (!confirm("Delete this class?")) return;
         DataStore.classes.splice(idx, 1);

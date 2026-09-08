@@ -39,11 +39,13 @@ var QuizEngine = (function() {
         clearTimer();
         timer = setInterval(function() {
             timeLeft--;
-            UI.updateTimerDisplay(timeLeft);
+            var timerEl = document.getElementById("timer");
+            if (timerEl) timerEl.textContent = "Time: " + timeLeft;
+            if (timeLeft <= 10 && timerEl) timerEl.style.color = "#ef4444";
             if (timeLeft <= 0) {
                 clearTimer();
                 var attempt = finish();
-                UI.showQuizResult(attempt);
+                UI.showResult(attempt);
             }
         }, 1000);
     }

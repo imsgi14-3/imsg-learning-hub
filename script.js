@@ -130,7 +130,8 @@ function saveStudent() { UI.saveStudent(); }
 function editStudent(id) { UI.editStudent(id); }
 function deleteStudent(id) { UI.deleteStudent(id); }
 function showAddClassModal() { UI.showAddClassModal(); }
-function saveClass() { UI.saveClass(); }
+function showCreateClassModal() { UI.showAddClassModal(); }
+function saveClass(e) { UI.saveClass(e); }
 function editClass(i) { UI.editClass(i); }
 function deleteClass(i) { UI.deleteClass(i); }
 function showExcelImportModal() { UI.showExcelImportModal(); }
@@ -138,6 +139,32 @@ function showStudentExcelModal() { UI.showStudentExcelModal(); }
 function exportStudentCredentials() { UI.exportStudentCredentials(); }
 function closeModal() { UI.closeModal(); }
 function loadClassAnalytics() { UI.loadClassAnalytics(); }
+
+function saveStudentAccount(e) { UI.saveStudent(e); }
+function saveAttendance(e) { if (e) e.preventDefault(); alert("Attendance feature coming soon"); }
+function importExcel(e) { if (e) e.preventDefault(); alert("Excel import coming soon"); }
+function confirmImport() { alert("Import confirmation coming soon"); }
+function confirmStudentExcelImport() { alert("Student import coming soon"); }
+function doExportCredentials() { alert("Export coming soon"); }
+function updateAssignmentQuestionList() {}
+function toggleCTClassField() {
+    var cb = document.getElementById("tmIsClassTeacher");
+    var field = document.getElementById("tmClassField");
+    if (cb && field) field.style.display = cb.checked ? "block" : "none";
+}
+function updateStudentPreview() {
+    var classSel = document.getElementById("smClassId");
+    var rollInput = document.getElementById("smRollNo");
+    var preview = document.getElementById("smPreviewId");
+    if (classSel && rollInput && preview) {
+        var classObj = DataStore.findClassById(classSel.value);
+        if (classObj && rollInput.value) {
+            var num = parseInt(rollInput.value);
+            preview.textContent = classObj.name + "-" + (num < 10 ? "0" : "") + num;
+        }
+    }
+}
+function previewStudentExcel(e) { alert("Student Excel preview coming soon"); }
 
 function renderBar(id, data, max) { UI.renderBar(id, data, max); }
 function renderDonut(id, data) { UI.renderDonut(id, data); }
