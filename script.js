@@ -2474,13 +2474,11 @@ window.onload = function() {
     loadData();
     loadFromFirestore(function() {
         if (questions.length === 0 && typeof QuestionLoader !== "undefined") {
-            QuestionLoader.loadChapter(1, function(data) {
-                if (data && data.questions) {
-                    for (var i = 0; i < data.questions.length; i++) {
-                        questions.push(data.questions[i]);
-                    }
+            QuestionLoader.loadAllChapters(function(allQs) {
+                if (allQs && allQs.length > 0) {
+                    questions = allQs;
                     saveAll();
-                    console.log("Loaded " + data.questions.length + " questions from Chapter 1. Total: " + questions.length);
+                    console.log("Loaded " + allQs.length + " questions from JSON files. Total: " + questions.length);
                 }
                 document.getElementById("loginPage").style.display = "block";
                 dashboardsHide();
