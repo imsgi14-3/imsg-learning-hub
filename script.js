@@ -1909,7 +1909,7 @@ function saveStudentAccount(e) {
     }
     saveAll();
     closeModal();
-    renderPrincipalStudents();
+    refreshStudentLists();
 }
 
 function deleteStudentAccount(sid) {
@@ -1918,7 +1918,13 @@ function deleteStudentAccount(sid) {
         if (studentAccounts[i].id === sid) { studentAccounts.splice(i, 1); break; }
     }
     saveAll();
-    renderPrincipalStudents();
+    refreshStudentLists();
+}
+
+function refreshStudentLists() {
+    if (currentRole === "principal") renderPrincipalStudents();
+    if (currentRole === "classteacher") renderCTStudents();
+}
 }
 
 function renderPrincipalAnalytics() {
@@ -2113,7 +2119,7 @@ function confirmStudentExcelImport() {
     saveAll();
     pendingStudentExcelData = [];
     closeModal();
-    renderPrincipalStudents();
+    refreshStudentLists();
     alert(count + " students imported successfully!");
 }
 
