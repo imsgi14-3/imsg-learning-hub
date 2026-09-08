@@ -54,6 +54,12 @@
                             <option value="Islamiyat">Islamiyat</option>
                             <option value="Pakistan Studies">Pakistan Studies</option>
                         </select>
+                        <div id="ctClassField" style="display:none;">
+                            <label for="ctClassSelect">Assigned Class:</label>
+                            <select id="ctClassSelect">
+                                <option value="">Select Class</option>
+                            </select>
+                        </div>
                         <label for="teacherPassword">Password:</label>
                         <input type="password" id="teacherPassword" placeholder="Enter password">
                     </div>
@@ -197,6 +203,10 @@
             </div>
             <div id="ctStudentsTab" class="tab-content" style="display:none;">
                 <h3>&#128100; Student Management</h3>
+                <div class="question-bank-toolbar">
+                    <button class="action-btn" onclick="showCreateStudentModal()">&#43; Add Student</button>
+                    <button class="action-btn" onclick="showStudentExcelModal()">&#128202; Import Excel</button>
+                </div>
                 <div id="ctStudentsList"></div>
             </div>
             <div id="ctCrossSubjectTab" class="tab-content" style="display:none;">

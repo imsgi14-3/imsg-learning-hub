@@ -233,16 +233,24 @@ function updateLoginFields() {
     var ids = ["studentFields", "teacherFields", "parentFields", "principalFields"];
     for (var i = 0; i < ids.length; i++) document.getElementById(ids[i]).style.display = "none";
     if (role === "student") document.getElementById("studentFields").style.display = "block";
-    else if (role === "teacher") document.getElementById("teacherFields").style.display = "block";
+    else if (role === "teacher") { document.getElementById("teacherFields").style.display = "block"; document.getElementById("ctClassField").style.display = "none"; }
     else if (role === "parent") document.getElementById("parentFields").style.display = "block";
     else if (role === "principal") document.getElementById("principalFields").style.display = "block";
-    else if (role === "classteacher") document.getElementById("teacherFields").style.display = "block";
+    else if (role === "classteacher") {
+        document.getElementById("teacherFields").style.display = "block";
+        document.getElementById("ctClassField").style.display = "block";
+        var sel = document.getElementById("ctClassSelect");
+        sel.innerHTML = '<option value="">Select Class</option>';
+        for (var i = 0; i < classes.length; i++) {
+            sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
+        }
+    }
 }
 
 function handleLogin(e) {
     e.preventDefault();
     var role = document.getElementById("roleSelect").value;
-    var name = "", id = "", subject = null, childId = null, password = "";
+    var name = "", id = "", subject = null, childId = null, password = "", ctClassId = null;
     var defaultPasswords = { teacher: "123", classteacher: "123", parent: "123", principal: "admin" };
     if (role === "student") {
         id = document.getElementById("studentId").value.trim();
@@ -282,6 +290,7 @@ function handleLogin(e) {
         id = document.getElementById("teacherId").value || "T-CT-001";
         name = document.getElementById("teacherName").value || "Class Teacher";
         subject = "All Subjects";
+        ctClassId = document.getElementById("ctClassSelect").value;
         password = document.getElementById("teacherPassword").value;
     } else if (role === "parent") {
         id = document.getElementById("parentId").value || "P-001";
@@ -297,7 +306,11 @@ function handleLogin(e) {
         alert("Incorrect password. Demo password for " + role + ": " + defaultPasswords[role]);
         return;
     }
-    currentUser = { id: id, name: name, role: role, subject: subject, childId: childId };
+    if (role === "classteacher" && !ctClassId) {
+        alert("Please select a class for the Class Teacher.");
+        return;
+    }
+    currentUser = { id: id, name: name, role: role, subject: subject, childId: childId, classId: ctClassId };
     currentRole = role;
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("logoutBar").style.display = "flex";
@@ -599,7 +612,10 @@ function showSubjectChapters(subject) {
 function showSubjectList() {
     document.getElementById("subjectListView").style.display = "block";
     document.getElementById("chapterListView").style.display = "none";
-    document.getElementById("modeDetailPanel").style.display = "none";
+    document.getElementById("chapterGrid").style.display = "";
+    document.getElementById("chapterQuizOptions").style.display = "none";
+    var mdp = document.getElementById("modeDetailPanel");
+    if (mdp) mdp.style.display = "none";
     currentSubject = null;
 }
 
@@ -1459,23 +1475,51 @@ function showCTTab(tab) {
 
 function renderCTOverview() {
     var c = document.getElementById("ctOverviewContent");
+    var ctClassId = currentUser ? currentUser.classId : null;
     var ts = 0;
-    for (var i = 0; i < classes.length; i++) ts += classes[i].students.length;
-    var avg = allAttempts.length > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / allAttempts.length : 0;
-    c.innerHTML = '<div class="analytics-card"><h4>Class Overview</h4><p>Classes: <strong>' + classes.length + '</strong></p><p>Students: <strong>' + ts + '</strong></p><p>Questions: <strong>' + questions.length + '</strong></p><p>Average: <strong>' + avg.toFixed(1) + '%</strong></p></div>';
+    var className = "All Classes";
+    if (ctClassId) {
+        for (var i = 0; i < classes.length; i++) {
+            if (classes[i].id === ctClassId) { className = classes[i].name; ts = classes[i].students.length; break; }
+        }
+    } else {
+        for (var i = 0; i < classes.length; i++) ts += classes[i].students.length;
+    }
+    var sa = [];
+    for (var i = 0; i < allAttempts.length; i++) {
+        if (ctClassId) {
+            var isClass = false;
+            for (var j = 0; j < classes.length; j++) {
+                if (classes[j].id === ctClassId && classes[j].students.indexOf(allAttempts[i].studentId) !== -1) { isClass = true; break; }
+            }
+            if (isClass) sa.push(allAttempts[i]);
+        } else {
+            sa.push(allAttempts[i]);
+        }
+    }
+    var avg = sa.length > 0 ? sa.reduce(function(s, a) { return s + a.percentage; }, 0) / sa.length : 0;
+    c.innerHTML = '<div class="analytics-card"><h4>Class: ' + className + '</h4><p>Students: <strong>' + ts + '</strong></p><p>Attempts: <strong>' + sa.length + '</strong></p><p>Average: <strong>' + avg.toFixed(1) + '%</strong></p></div>';
 }
 
 function renderCTStudents() {
     var c = document.getElementById("ctStudentsList");
-    var h = '<table><thead><tr><th>Student</th><th>Class</th><th>Attempts</th><th>Average</th></tr></thead><tbody>';
-    for (var i = 0; i < classes.length; i++) {
-        for (var j = 0; j < classes[i].students.length; j++) {
-            var sid = classes[i].students[j], sa = [];
-            for (var k = 0; k < allAttempts.length; k++) { if (allAttempts[k].studentId === sid) sa.push(allAttempts[k]); }
-            var avg = sa.length > 0 ? sa.reduce(function(s, a) { return s + a.percentage; }, 0) / sa.length : 0;
-            h += '<tr><td>' + sid + '</td><td>' + classes[i].name + '</td><td>' + sa.length + '</td><td>' + avg.toFixed(1) + '%</td></tr>';
-        }
+    var ctClassId = currentUser ? currentUser.classId : null;
+    var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Attempts</th><th>Average</th><th>Actions</th></tr></thead><tbody>';
+    var found = false;
+    for (var i = 0; i < studentAccounts.length; i++) {
+        var s = studentAccounts[i];
+        if (ctClassId && s.classId !== ctClassId) continue;
+        found = true;
+        var className = "N/A";
+        for (var j = 0; j < classes.length; j++) { if (classes[j].id === s.classId) { className = classes[j].name; break; } }
+        var sa = [];
+        for (var k = 0; k < allAttempts.length; k++) { if (allAttempts[k].studentId === s.id) sa.push(allAttempts[k]); }
+        var avg = sa.length > 0 ? sa.reduce(function(sum, a) { return sum + a.percentage; }, 0) / sa.length : 0;
+        h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + className + '</td><td>' + sa.length + '</td><td>' + avg.toFixed(1) + '%</td>' +
+            '<td><button onclick="editStudentAccount(\'' + s.id + '\')" class="action-btn">Edit</button> ' +
+            '<button onclick="deleteStudentAccount(\'' + s.id + '\')" class="action-btn danger">Delete</button></td></tr>';
     }
+    if (!found) { c.innerHTML = "<p>No students in your class yet.</p>"; return; }
     c.innerHTML = h + '</tbody></table>';
 }
 
@@ -1772,8 +1816,17 @@ function showCreateStudentModal() {
     document.getElementById("studentModalTitle").textContent = "\uD83D\uDC64 Add Student";
     var sel = document.getElementById("smClassId");
     sel.innerHTML = "";
-    for (var i = 0; i < classes.length; i++) {
-        sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + ' (Grade ' + classes[i].grade + ')</option>';
+    if (currentRole === "classteacher" && currentUser && currentUser.classId) {
+        for (var i = 0; i < classes.length; i++) {
+            if (classes[i].id === currentUser.classId) {
+                sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + ' (Grade ' + classes[i].grade + ')</option>';
+                break;
+            }
+        }
+    } else {
+        for (var i = 0; i < classes.length; i++) {
+            sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + ' (Grade ' + classes[i].grade + ')</option>';
+        }
     }
     document.getElementById("studentModal").classList.add("active");
     document.getElementById("modalOverlay").classList.add("active");
