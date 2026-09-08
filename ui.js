@@ -45,10 +45,12 @@ var UI = (function() {
                 $("teacherSubjectDisplay").textContent = user ? user.subject : "";
                 $("loggedUser").textContent = (user ? user.name : "Teacher") + " (" + (user ? user.id : "") + ")";
             }
+            renderTeacherDashboard();
         } else if (role === "principal") {
             $("principalDashboard").style.display = "block";
             $("principalDisplayName").textContent = user ? user.name : "Principal";
             $("loggedUser").textContent = (user ? user.name : "Admin") + " (ADMIN-001)";
+            renderPrincipalDashboard();
         }
     }
 

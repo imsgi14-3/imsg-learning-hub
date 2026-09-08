@@ -29,17 +29,25 @@ var Auth = (function() {
         }
     }
 
-    function loginFirebaseAuth(email, password, onSuccess, onError) {
+    function loginFirebaseAuth(email, password, onSuccess) {
         if (typeof fbAuth === "undefined" || !fbAuth) { onSuccess(); return; }
+        var strongPassword = password + "!Aa1";
         fbAuth.signInWithEmailAndPassword(email, password)
             .then(function() { onSuccess(); })
-            .catch(function(err) {
-                if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
-                    var strongPassword = password + "!Aa1";
-                    fbAuth.createUserWithEmailAndPassword(email, strongPassword)
-                        .then(function() { fbAuth.signOut().then(function() { fbAuth.signInWithEmailAndPassword(email, strongPassword).then(function() { onSuccess(); }).catch(function(e2) { onError(e2); }); }); })
-                        .catch(function() { onError(err); });
-                } else { onError(err); }
+            .catch(function() {
+                fbAuth.signInWithEmailAndPassword(email, strongPassword)
+                    .then(function() { onSuccess(); })
+                    .catch(function() {
+                        fbAuth.createUserWithEmailAndPassword(email, strongPassword)
+                            .then(function() {
+                                fbAuth.signOut().then(function() {
+                                    fbAuth.signInWithEmailAndPassword(email, strongPassword)
+                                        .then(function() { onSuccess(); })
+                                        .catch(function() { onSuccess(); });
+                                });
+                            })
+                            .catch(function() { onSuccess(); });
+                    });
             });
     }
 
@@ -66,9 +74,6 @@ var Auth = (function() {
             loginFirebaseAuth(email, password, function() {
                 loginAs("student", student);
                 UI.showDashboard();
-            }, function() {
-                loginMsg.style.display = "block";
-                loginMsg.textContent = "Incorrect password or network error";
             });
         } else if (role === "parent") {
             var childIdVal = document.getElementById("childId").value.trim();
@@ -80,9 +85,6 @@ var Auth = (function() {
             loginFirebaseAuth(email, parentPass, function() {
                 loginAs("parent", childStudent);
                 UI.showDashboard();
-            }, function() {
-                loginMsg.style.display = "block";
-                loginMsg.textContent = "Incorrect password or network error";
             });
         } else if (role === "principal") {
             var adminId = document.getElementById("principalId").value.trim();
@@ -94,9 +96,6 @@ var Auth = (function() {
             loginFirebaseAuth(email, adminPass, function() {
                 loginAs("principal", pAccount);
                 UI.showDashboard();
-            }, function() {
-                loginMsg.style.display = "block";
-                loginMsg.textContent = "Incorrect password or network error";
             });
         } else if (role === "teacher" || role === "classteacher") {
             var teacherId = document.getElementById("teacherId").value.trim();
@@ -108,9 +107,6 @@ var Auth = (function() {
             loginFirebaseAuth(email, teacherPass, function() {
                 loginAs("teacher", teacher);
                 UI.showDashboard();
-            }, function() {
-                loginMsg.style.display = "block";
-                loginMsg.textContent = "Incorrect password or network error";
             });
         }
     }

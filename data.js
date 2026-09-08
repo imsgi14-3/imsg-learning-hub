@@ -148,17 +148,21 @@ var DataStore = (function() {
 
     function getQuestionsByChapter(subject, chapter) {
         var result = [];
+        var chNum = parseInt(chapter);
+        if (isNaN(chNum)) chNum = chapter;
         for (var i = 0; i < questions.length; i++) {
-            if (questions[i].subject === subject && questions[i].chapter === chapter) result.push(questions[i]);
+            if (questions[i].subject === subject && questions[i].chapter == chNum) result.push(questions[i]);
         }
         return result;
     }
 
     function getQuestionsByTopic(subject, chapter, topic) {
         var result = [];
+        var chNum = parseInt(chapter);
+        if (isNaN(chNum)) chNum = chapter;
         for (var i = 0; i < questions.length; i++) {
             var q = questions[i];
-            if (q.subject === subject && q.chapter === chapter && (topic === "all" || q.topic === topic)) result.push(q);
+            if (q.subject === subject && q.chapter == chNum && (topic === "all" || q.topic === topic)) result.push(q);
         }
         return result;
     }
