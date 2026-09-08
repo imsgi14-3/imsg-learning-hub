@@ -35,7 +35,7 @@ var subjectsData = {
         color: "#4f46e5",
         description: "Hardware, Software, Programming & Problem Solving",
         chapters: [
-            { num: 1, title: "Computer Systems", topics: ["Computer Generations", "Systems and Types", "Core Components", "Von Neumann Architecture", "Data Transmission", "Computer Memory"] },
+            { num: 1, title: "Computer Systems", topics: ["1.1 Brief History of Computer Systems and Generations of Computers", "1.2 Understanding Systems and their Types", "1.3 Core Components of a Computer System", "1.4 Von Neumann Architecture", "1.5 Data Transmission within a computer system", "1.6 Computer Memory", "1.7 Software Engineering and Hardware Engineering", "1.8 Computer Software", "1.9 Data Communication"] },
             { num: 2, title: "Computational Thinking & Algorithms", topics: ["Problem Solving", "Algorithms", "Flowcharts", "Pseudocode", "Decomposition", "Pattern Recognition"] },
             { num: 3, title: "Programming Fundamentals", topics: ["Variables", "Data Types", "Input/Output", "Operators", "Conditions", "Loops", "Functions"] },
             { num: 4, title: "Data and Analysis", topics: ["Data Types", "Binary Operations", "Data Representation", "File Handling", "Databases"] },
