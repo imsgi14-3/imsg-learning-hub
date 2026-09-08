@@ -1824,6 +1824,29 @@ function showStudentPassword(sid) {
     }
 }
 
+function exportStudentCredentials() {
+    var list = studentAccounts;
+    if (currentRole === "classteacher" && currentUser && currentUser.classId) {
+        list = [];
+        for (var i = 0; i < studentAccounts.length; i++) {
+            if (studentAccounts[i].classId === currentUser.classId) list.push(studentAccounts[i]);
+        }
+    }
+    if (list.length === 0) { alert("No students to export."); return; }
+    var data = [["Student ID", "Name", "Father Name", "Class", "Roll No", "Password"]];
+    for (var i = 0; i < list.length; i++) {
+        var s = list[i];
+        var className = "";
+        for (var j = 0; j < classes.length; j++) { if (classes[j].id === s.classId) { className = classes[j].name; break; } }
+        data.push([s.id, s.name, s.fatherName || "", className, s.rollNo || "", s.password]);
+    }
+    var ws = XLSX.utils.aoa_to_sheet(data);
+    ws["!cols"] = [{ wch: 15 }, { wch: 20 }, { wch: 20 }, { wch: 10 }, { wch: 10 }, { wch: 12 }];
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Credentials");
+    XLSX.writeFile(wb, "student_credentials.xlsx");
+}
+
 function showCreateStudentModal() {
     document.getElementById("studentForm").reset();
     document.getElementById("smEditId").value = "";
