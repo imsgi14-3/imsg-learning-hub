@@ -104,7 +104,9 @@ var Auth = (function() {
             if (teacher.password !== password) { loginMsg.style.display = "block"; loginMsg.textContent = "Incorrect password."; return; }
             var email = id.toLowerCase() + "@imsg.edu.pk";
             var loginSuccess = function() {
-                currentUser = { id: teacher.id, name: teacher.name, role: "teacher", subject: teacher.subject, childId: null, classId: null };
+                var tClasses = teacher.classes || (teacher.classId ? [teacher.classId] : []);
+                var tSubjects = teacher.subjects || (teacher.subject ? [teacher.subject] : []);
+                currentUser = { id: teacher.id, name: teacher.name, role: "teacher", subject: tSubjects[0] || "", subjects: tSubjects, classes: tClasses, classId: tClasses[0] || "", childId: null, isClassTeacher: teacher.isClassTeacher === true, classTeacherOf: teacher.classTeacherOf || [] };
                 currentRole = "teacher";
                 document.getElementById("loginPage").style.display = "none";
                 document.getElementById("logoutBar").style.display = "flex";
@@ -126,11 +128,13 @@ var Auth = (function() {
             }
             if (!teacher) { loginMsg.style.display = "block"; loginMsg.textContent = "Teacher ID not found."; return; }
             if (teacher.password !== password) { loginMsg.style.display = "block"; loginMsg.textContent = "Incorrect password."; return; }
-            var ctClassId = document.getElementById("ctClassSelect").value;
-            if (teacher.classId) ctClassId = teacher.classId;
+            var ctOf = teacher.classTeacherOf || (teacher.isClassTeacher && teacher.classId ? [teacher.classId] : []);
+            var ctClassId = ctOf.length > 0 ? ctOf[0] : (teacher.classes || [teacher.classId || ""])[0];
+            var tSubjects = teacher.subjects || (teacher.subject ? [teacher.subject] : []);
+            var tClasses = teacher.classes || (teacher.classId ? [teacher.classId] : []);
             var email = id.toLowerCase() + "@imsg.edu.pk";
             var loginSuccess = function() {
-                currentUser = { id: teacher.id, name: teacher.name, role: "classteacher", subject: teacher.subject, childId: null, classId: ctClassId };
+                currentUser = { id: teacher.id, name: teacher.name, role: "classteacher", subject: tSubjects[0] || "", subjects: tSubjects, classes: tClasses, classId: ctClassId, childId: null, isClassTeacher: true, classTeacherOf: ctOf };
                 currentRole = "classteacher";
                 document.getElementById("loginPage").style.display = "none";
                 document.getElementById("logoutBar").style.display = "flex";

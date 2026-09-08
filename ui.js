@@ -24,18 +24,9 @@ var UI = (function() {
         var ids = ["studentFields", "teacherFields", "parentFields", "principalFields"];
         for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) el.style.display = "none"; }
         if (role === "student") $("studentFields").style.display = "block";
-        else if (role === "teacher") { $("teacherFields").style.display = "block"; $("ctClassField").style.display = "none"; }
+        else if (role === "teacher" || role === "classteacher") { $("teacherFields").style.display = "block"; }
         else if (role === "parent") $("parentFields").style.display = "block";
         else if (role === "principal") $("principalFields").style.display = "block";
-        else if (role === "classteacher") {
-            $("teacherFields").style.display = "block";
-            $("ctClassField").style.display = "block";
-            var sel = $("ctClassSelect");
-            sel.innerHTML = '<option value="">Select Class</option>';
-            for (var i = 0; i < classes.length; i++) {
-                sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
-            }
-        }
     }
 
     function activateTab(containerSel, idx) {
@@ -692,8 +683,15 @@ var UI = (function() {
         else if (tab === "questionbank") {
             $("teacherQuestionBankTab").style.display = "block";
             var user = Auth.getUser();
-            if (user && user.subject) {
-                $("qbFilterSubject").value = user.subject;
+            var mySubjects = (user && user.subjects) ? user.subjects : (user && user.subject ? [user.subject] : []);
+            var sel = $("qbFilterSubject");
+            if (mySubjects.length === 1) {
+                sel.value = mySubjects[0];
+            } else if (mySubjects.length > 1) {
+                var opts = sel.options;
+                for (var i = 1; i < opts.length; i++) {
+                    opts[i].style.display = mySubjects.indexOf(opts[i].value) !== -1 ? "" : "none";
+                }
             }
             renderQuestions();
         }
@@ -704,32 +702,56 @@ var UI = (function() {
     function populateAnalyticsClassSelect() {
         var sel = $("analyticsClassSelect");
         if (!sel) return;
+        var user = Auth.getUser();
+        var myClassIds = (user && user.classes) ? user.classes : [];
         sel.innerHTML = '<option value="">Select a class</option>';
         for (var i = 0; i < classes.length; i++) {
-            sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
+            if (myClassIds.length === 0 || myClassIds.indexOf(classes[i].id) !== -1) {
+                sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
+            }
         }
     }
 
     function renderClasses() {
         var c = $("classesList");
         if (!c) return;
-        if (classes.length === 0) { c.innerHTML = "<p>No classes yet.</p>"; return; }
-        var totalAttempts = allAttempts.length;
-        var avg = totalAttempts > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / totalAttempts : 0;
+        var user = Auth.getUser();
+        var myClassIds = (user && user.classes) ? user.classes : [];
+        var myClasses = [];
+        for (var i = 0; i < classes.length; i++) {
+            if (myClassIds.length === 0 || myClassIds.indexOf(classes[i].id) !== -1) myClasses.push(classes[i]);
+        }
+        if (myClasses.length === 0) { c.innerHTML = "<p>No classes assigned to you.</p>"; return; }
+        var totalStudents = 0;
+        var totalAttempts = 0;
+        var avg = 0;
+        for (var i = 0; i < myClasses.length; i++) {
+            for (var j = 0; j < studentAccounts.length; j++) {
+                if (studentAccounts[j].classId === myClasses[i].id) totalStudents++;
+            }
+        }
+        for (var i = 0; i < allAttempts.length; i++) {
+            var isMyClass = false;
+            for (var j = 0; j < studentAccounts.length; j++) {
+                if (studentAccounts[j].id === allAttempts[i].studentId && myClassIds.indexOf(studentAccounts[j].classId) !== -1) { isMyClass = true; break; }
+            }
+            if (isMyClass) { totalAttempts++; avg += allAttempts[i].percentage; }
+        }
+        avg = totalAttempts > 0 ? avg / totalAttempts : 0;
         var h = '<div class="overview-cards">' +
-            '<div class="overview-card classes"><div class="card-icon">&#127979;</div><div class="card-value">' + classes.length + '</div><div class="card-label">Classes</div></div>' +
-            '<div class="overview-card students"><div class="card-icon">&#128100;</div><div class="card-value">' + studentAccounts.length + '</div><div class="card-label">Students</div></div>' +
+            '<div class="overview-card classes"><div class="card-icon">&#127979;</div><div class="card-value">' + myClasses.length + '</div><div class="card-label">My Classes</div></div>' +
+            '<div class="overview-card students"><div class="card-icon">&#128100;</div><div class="card-value">' + totalStudents + '</div><div class="card-label">Students</div></div>' +
             '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + totalAttempts + '</div><div class="card-label">Quizzes Taken</div></div>' +
             '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average Score</div></div>' +
             '</div>';
-        h += '<table><thead><tr><th>Class</th><th>Grade</th><th>Section</th><th>Students</th><th>Actions</th></tr></thead><tbody>';
-        for (var i = 0; i < classes.length; i++) {
-            var cl = classes[i];
+        h += '<table><thead><tr><th>Class</th><th>Grade</th><th>Section</th><th>Students</th></tr></thead><tbody>';
+        for (var i = 0; i < myClasses.length; i++) {
+            var cl = myClasses[i];
             var count = 0;
             for (var j = 0; j < studentAccounts.length; j++) {
                 if (studentAccounts[j].classId === cl.id) count++;
             }
-            h += '<tr><td>' + cl.name + '</td><td>' + cl.grade + '</td><td>' + cl.section + '</td><td>' + count + '</td><td><button onclick="editClass(\'' + cl.id + '\')" class="action-btn">Edit</button> <button onclick="deleteClass(\'' + cl.id + '\')" class="action-btn danger">Delete</button></td></tr>';
+            h += '<tr><td>' + cl.name + '</td><td>' + cl.grade + '</td><td>' + cl.section + '</td><td>' + count + '</td></tr>';
         }
         c.innerHTML = h + '</tbody></table>';
     }
@@ -774,6 +796,8 @@ var UI = (function() {
     function renderQuestions() {
         var c = $("questionsTable");
         if (!c) return;
+        var user = Auth.getUser();
+        var mySubjects = (user && user.subjects) ? user.subjects : (user && user.subject ? [user.subject] : []);
         var st = ($("qbSearch").value || "").toLowerCase();
         var fs = $("qbFilterSubject").value;
         var fc = $("qbFilterChapter").value;
@@ -785,13 +809,14 @@ var UI = (function() {
         for (var i = 0; i < questions.length; i++) {
             var q = questions[i];
             var ok = true;
+            if (mySubjects.length > 0 && mySubjects.indexOf(q.subject) === -1) ok = false;
             if (st && (q.text || q.question || "").toLowerCase().indexOf(st) === -1 && q.id.toLowerCase().indexOf(st) === -1) ok = false;
             if (fs && q.subject !== fs) ok = false;
             if (fc && q.chapter != parseInt(fc)) ok = false;
             if (ft && q.topic !== ft) ok = false;
             if (fg && q.grade !== parseInt(fg)) ok = false;
             if (ok) f.push(q);
-            if (fs && q.subject === fs) {
+            if (q.subject === (fs || (mySubjects.length === 1 ? mySubjects[0] : ""))) {
                 if (q.chapter) chapters[q.chapter] = true;
                 if (q.topic) topics[q.topic] = true;
             }
@@ -872,10 +897,19 @@ var UI = (function() {
     function renderAssignments() {
         var c = $("assignmentsList");
         if (!c) return;
-        if (assignments.length === 0) { c.innerHTML = "<p>No assignments yet.</p>"; return; }
-        var h = '<table><thead><tr><th>Title</th><th>Subject</th><th>Class</th><th>Due Date</th><th>Questions</th><th>Actions</th></tr></thead><tbody>';
+        var user = Auth.getUser();
+        var myClassIds = (user && user.classes) ? user.classes : [];
+        var mySubjects = (user && user.subjects) ? user.subjects : [];
+        var my = [];
         for (var i = 0; i < assignments.length; i++) {
-            var a = assignments[i], cl = null;
+            var matchClass = myClassIds.length === 0 || myClassIds.indexOf(assignments[i].classId) !== -1;
+            var matchSub = mySubjects.length === 0 || mySubjects.indexOf(assignments[i].subject) !== -1;
+            if (matchClass && matchSub) my.push(assignments[i]);
+        }
+        if (my.length === 0) { c.innerHTML = "<p>No assignments for your classes/subjects.</p>"; return; }
+        var h = '<table><thead><tr><th>Title</th><th>Subject</th><th>Class</th><th>Due Date</th><th>Questions</th><th>Actions</th></tr></thead><tbody>';
+        for (var i = 0; i < my.length; i++) {
+            var a = my[i], cl = null;
             for (var j = 0; j < classes.length; j++) { if (classes[j].id === a.classId) { cl = classes[j]; break; } }
             h += '<tr><td>' + a.title + '</td><td>' + a.subject + '</td><td>' + (cl ? cl.name : "N/A") + '</td><td>' + a.dueDate + '</td><td>' + a.questions.length + '</td><td><button onclick="editAssignment(\'' + a.id + '\')" class="action-btn">Edit</button> <button onclick="showAssignmentStatus(\'' + a.id + '\')" class="action-btn">Status</button> <button onclick="deleteAssignment(\'' + a.id + '\')" class="action-btn danger">Delete</button></td></tr>';
         }
@@ -934,10 +968,22 @@ var UI = (function() {
         $("assignmentForm").reset();
         $("amAssignmentId").value = "";
         $("amModalTitle").textContent = "Create Assignment";
+        var user = Auth.getUser();
+        var myClassIds = (user && user.classes) ? user.classes : [];
         var cs = $("amClass");
         cs.innerHTML = '<option value="">Select a class</option>';
         for (var i = 0; i < classes.length; i++) {
-            cs.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
+            if (myClassIds.length === 0 || myClassIds.indexOf(classes[i].id) !== -1) {
+                cs.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
+            }
+        }
+        if (user && user.subjects && user.subjects.length === 1) {
+            $("amSubject").value = user.subjects[0];
+        } else if (user && user.subjects && user.subjects.length > 1) {
+            var amSel = $("amSubject");
+            for (var i = 0; i < amSel.options.length; i++) {
+                amSel.options[i].style.display = user.subjects.indexOf(amSel.options[i].value) !== -1 ? "" : "none";
+            }
         }
         updateAssignmentQuestionList();
         $("assignmentModal").classList.add("active");
@@ -1494,32 +1540,34 @@ var UI = (function() {
         var c = $("principalTeachersContent");
         if (!c) return;
         if (teachers.length === 0) { c.innerHTML = "<p>No teachers added yet.</p>"; return; }
-        var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Subject</th><th>Role</th><th>Class</th><th>Password</th><th>Actions</th></tr></thead><tbody>';
+        var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Subjects</th><th>Classes</th><th>Role</th><th>Password</th><th>Actions</th></tr></thead><tbody>';
         for (var i = 0; i < teachers.length; i++) {
             var t = teachers[i];
             var roleLabel = "";
-            if (t.isSubjectTeacher && t.isClassTeacher) roleLabel = "Subject + Class Teacher";
-            else if (t.isClassTeacher) roleLabel = "Class Teacher";
+            if (t.isClassTeacher) roleLabel = "Class Teacher";
             else roleLabel = "Subject Teacher";
-            var classLabel = "-";
-            if (t.isClassTeacher && t.classId) {
-                for (var j = 0; j < classes.length; j++) {
-                    if (classes[j].id === t.classId) { classLabel = classes[j].name; break; }
+            var subs = t.subjects || (t.subject ? [t.subject] : []);
+            var cls = t.classes || (t.classId ? [t.classId] : []);
+            var classLabels = [];
+            for (var j = 0; j < cls.length; j++) {
+                for (var k = 0; k < classes.length; k++) {
+                    if (classes[k].id === cls[j]) { classLabels.push(classes[k].name); break; }
                 }
             }
-            h += '<tr><td>' + t.id + '</td><td>' + t.name + '</td><td>' + t.subject + '</td><td>' + roleLabel + '</td><td>' + classLabel + '</td><td>' + (t.password || "-") + '</td><td><button onclick="editTeacher(\'' + t.id + '\')" class="action-btn">Edit</button> <button onclick="deleteTeacher(\'' + t.id + '\')" class="action-btn danger">Delete</button></td></tr>';
+            h += '<tr><td>' + t.id + '</td><td>' + t.name + '</td><td>' + subs.join(", ") + '</td><td>' + (classLabels.join(", ") || "-") + '</td><td>' + roleLabel + '</td><td>' + (t.password || "-") + '</td><td><button onclick="editTeacher(\'' + t.id + '\')" class="action-btn">Edit</button> <button onclick="deleteTeacher(\'' + t.id + '\')" class="action-btn danger">Delete</button></td></tr>';
         }
         c.innerHTML = h + '</tbody></table>';
     }
 
     function toggleCTClassField() {
         var isCT = $("tmIsClassTeacher").checked;
-        $("tmClassField").style.display = isCT ? "block" : "none";
+        $("tmClassTeacherField").style.display = isCT ? "block" : "none";
         if (isCT) {
-            var sel = $("tmClassId");
+            var cbs = document.querySelectorAll("#tmClassesList .tm-class-cb:checked");
+            var sel = $("tmClassTeacherList");
             sel.innerHTML = "";
-            for (var i = 0; i < classes.length; i++) {
-                sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
+            for (var i = 0; i < cbs.length; i++) {
+                sel.innerHTML += '<label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-ctof-cb" value="' + cbs[i].value + '"' + (cbs[i].dataset.wasct === "true" ? " checked" : "") + '> ' + cbs[i].dataset.name + '</label>';
             }
         }
     }
@@ -1527,12 +1575,24 @@ var UI = (function() {
     function showAddTeacherModal() {
         $("teacherForm").reset();
         $("tmEditId").value = "";
-        $("tmIsSubjectTeacher").checked = true;
+        var subs = document.querySelectorAll(".tm-subject-cb");
+        for (var i = 0; i < subs.length; i++) subs[i].checked = false;
         $("tmIsClassTeacher").checked = false;
-        $("tmClassField").style.display = "none";
+        $("tmClassTeacherField").style.display = "none";
         $("teacherModalTitle").textContent = "Add Teacher";
+        renderTeacherClassCheckboxes([], []);
         $("teacherModal").classList.add("active");
         $("modalOverlay").classList.add("active");
+    }
+
+    function renderTeacherClassCheckboxes(selectedClassIds, ctOfClassIds) {
+        var c = $("tmClassesList");
+        c.innerHTML = "";
+        for (var i = 0; i < classes.length; i++) {
+            var checked = selectedClassIds.indexOf(classes[i].id) !== -1;
+            var wasCT = ctOfClassIds.indexOf(classes[i].id) !== -1;
+            c.innerHTML += '<label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-class-cb" value="' + classes[i].id + '" data-name="' + classes[i].name + '" data-wasct="' + wasCT + '"' + (checked ? " checked" : "") + ' onchange="toggleCTClassField()"> ' + classes[i].name + '</label>';
+        }
     }
 
     function editTeacher(tid) {
@@ -1541,11 +1601,13 @@ var UI = (function() {
         if (!t) return;
         $("tmEditId").value = t.id;
         $("tmName").value = t.name;
-        $("tmSubject").value = t.subject;
-        $("tmIsSubjectTeacher").checked = t.isSubjectTeacher !== false;
+        var subs = document.querySelectorAll(".tm-subject-cb");
+        for (var i = 0; i < subs.length; i++) subs[i].checked = (t.subjects || []).indexOf(subs[i].value) !== -1;
+        var tClasses = t.classes || (t.classId ? [t.classId] : []);
+        var ctOf = t.classTeacherOf || (t.isClassTeacher && t.classId ? [t.classId] : []);
+        renderTeacherClassCheckboxes(tClasses, ctOf);
         $("tmIsClassTeacher").checked = t.isClassTeacher === true;
         toggleCTClassField();
-        if (t.isClassTeacher && t.classId) $("tmClassId").value = t.classId;
         $("teacherModalTitle").textContent = "Edit Teacher";
         $("teacherModal").classList.add("active");
         $("modalOverlay").classList.add("active");
@@ -1561,26 +1623,36 @@ var UI = (function() {
         e.preventDefault();
         var editId = $("tmEditId").value;
         var name = $("tmName").value.trim();
-        var subject = $("tmSubject").value;
-        var isSubjectTeacher = $("tmIsSubjectTeacher").checked;
+        var subCbs = document.querySelectorAll(".tm-subject-cb:checked");
+        var subjects = [];
+        for (var i = 0; i < subCbs.length; i++) subjects.push(subCbs[i].value);
+        var classCbs = document.querySelectorAll(".tm-class-cb:checked");
+        var classIds = [];
+        for (var i = 0; i < classCbs.length; i++) classIds.push(classCbs[i].value);
         var isClassTeacher = $("tmIsClassTeacher").checked;
-        var classId = isClassTeacher ? $("tmClassId").value : "";
-        if (!isSubjectTeacher && !isClassTeacher) { alert("Please select at least one role type."); return; }
+        var ctOfCbs = document.querySelectorAll(".tm-ctof-cb:checked");
+        var classTeacherOf = [];
+        for (var i = 0; i < ctOfCbs.length; i++) classTeacherOf.push(ctOfCbs[i].value);
+        if (subjects.length === 0) { alert("Please select at least one subject."); return; }
+        if (classIds.length === 0) { alert("Please select at least one class."); return; }
         if (editId) {
             for (var i = 0; i < teachers.length; i++) {
                 if (teachers[i].id === editId) {
                     teachers[i].name = name;
-                    teachers[i].subject = subject;
-                    teachers[i].isSubjectTeacher = isSubjectTeacher;
+                    teachers[i].subjects = subjects;
+                    teachers[i].subject = subjects[0] || "";
+                    teachers[i].classes = classIds;
+                    teachers[i].classId = classIds[0] || "";
+                    teachers[i].isSubjectTeacher = true;
                     teachers[i].isClassTeacher = isClassTeacher;
-                    teachers[i].classId = classId;
+                    teachers[i].classTeacherOf = classTeacherOf;
                     break;
                 }
             }
         } else {
             var tid = generateTeacherId();
             var password = generateRandomPassword();
-            teachers.push({ id: tid, name: name, subject: subject, password: password, isSubjectTeacher: isSubjectTeacher, isClassTeacher: isClassTeacher, classId: classId, createdAt: Date.now() });
+            teachers.push({ id: tid, name: name, subjects: subjects, subject: subjects[0] || "", classes: classIds, classId: classIds[0] || "", password: password, isSubjectTeacher: true, isClassTeacher: isClassTeacher, classTeacherOf: classTeacherOf, createdAt: Date.now() });
             var email = tid.toLowerCase() + "@imsg.edu.pk";
             Auth.loginFirebaseAuth(email, password, function() {});
             alert("Teacher added!\n\nID: " + tid + "\nPassword: " + password + "\n\nShare these with the teacher.");
@@ -1969,7 +2041,8 @@ var UI = (function() {
         } else if (role === "teacher") {
             $("teacherDashboard").style.display = "block";
             $("teacherDisplayName").textContent = user ? user.name : "Teacher";
-            $("teacherSubjectDisplay").textContent = user ? user.subject : "";
+            var tSubs = (user && user.subjects) ? user.subjects : (user && user.subject ? [user.subject] : []);
+            $("teacherSubjectDisplay").textContent = tSubs.join(", ") || "N/A";
             $("loggedUser").textContent = user ? user.name + " (Teacher)" : "Teacher";
             showTeacherTab("classes");
         } else if (role === "classteacher") {

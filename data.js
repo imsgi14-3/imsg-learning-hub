@@ -104,7 +104,17 @@ function loadData() {
         if (!questions[i].subject) { questions[i].subject = "Computer Science"; migrated = true; }
         if (!questions[i].grade) { questions[i].grade = 9; migrated = true; }
     }
+    for (var i = 0; i < teachers.length; i++) {
+        var t = teachers[i];
+        if (!t.subjects) t.subjects = t.subject ? [t.subject] : ["Computer Science"];
+        if (!t.classes) t.classes = t.classId ? [t.classId] : [];
+        if (!t.subject) t.subject = t.subjects[0] || "";
+        if (!t.classId) t.classId = t.classes[0] || "";
+        if (!t.classTeacherOf) t.classTeacherOf = t.isClassTeacher && t.classId ? [t.classId] : [];
+        t.isSubjectTeacher = true;
+    }
     if (migrated) localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
+    if (teachers.length > 0) localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
     var sp = JSON.parse(localStorage.getItem("learningHub_principal"));
     if (sp && sp.id === "ADMIN-001") principalAccount = sp;
     if (classes.length === 0) {
@@ -180,7 +190,15 @@ function loadFromFirestore(callback) {
             snap.forEach(function(doc) {
                 var d = doc.data();
                 if (d.id === "PRINCIPAL" || doc.id === "PRINCIPAL") { if (!principalAccount || principalAccount.id !== "ADMIN-001") principalAccount = d; }
-                else teachers.push(d);
+                else {
+                    if (!d.subjects) d.subjects = d.subject ? [d.subject] : ["Computer Science"];
+                    if (!d.classes) d.classes = d.classId ? [d.classId] : [];
+                    if (!d.subject) d.subject = d.subjects[0] || "";
+                    if (!d.classId) d.classId = d.classes[0] || "";
+                    if (!d.classTeacherOf) d.classTeacherOf = d.isClassTeacher && d.classId ? [d.classId] : [];
+                    d.isSubjectTeacher = true;
+                    teachers.push(d);
+                }
             });
             localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
         }
