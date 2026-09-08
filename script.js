@@ -223,8 +223,12 @@ function loadFromFirestore(callback) {
     }).catch(function() { done(); });
     db.collection("questions").get().then(function(snap) {
         if (snap.size > 0) {
-            questions = [];
-            snap.forEach(function(doc) { questions.push(doc.data()); });
+            var jsonIds = {};
+            for (var i = 0; i < questions.length; i++) jsonIds[questions[i].id] = true;
+            snap.forEach(function(doc) {
+                var q = doc.data();
+                if (!jsonIds[q.id]) questions.push(q);
+            });
             localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
         }
         done();
@@ -2472,22 +2476,28 @@ function closeModal() {
 
 window.onload = function() {
     loadData();
-    loadFromFirestore(function() {
-        if (questions.length === 0 && typeof QuestionLoader !== "undefined") {
-            QuestionLoader.loadAllChapters(function(allQs) {
-                if (allQs && allQs.length > 0) {
-                    questions = allQs;
-                    saveAll();
-                    console.log("Loaded " + allQs.length + " questions from JSON files. Total: " + questions.length);
+    if (typeof QuestionLoader !== "undefined") {
+        QuestionLoader.loadAllChapters(function(allQs) {
+            if (allQs && allQs.length > 0) {
+                var jsonIds = {};
+                for (var i = 0; i < questions.length; i++) jsonIds[questions[i].id] = true;
+                for (var i = 0; i < allQs.length; i++) {
+                    if (!jsonIds[allQs[i].id]) questions.push(allQs[i]);
                 }
+                saveAll();
+                console.log("Loaded " + allQs.length + " questions from JSON. Total: " + questions.length);
+            }
+            loadFromFirestore(function() {
                 document.getElementById("loginPage").style.display = "block";
                 dashboardsHide();
             });
-        } else {
+        });
+    } else {
+        loadFromFirestore(function() {
             document.getElementById("loginPage").style.display = "block";
             dashboardsHide();
-        }
-    });
+        });
+    }
     history.replaceState({ page: "login" }, "", location.href);
     window.addEventListener("beforeunload", function(e) {
         if (document.getElementById("quiz").style.display === "block") {
