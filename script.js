@@ -1825,7 +1825,25 @@ function showStudentPassword(sid) {
 }
 
 function exportStudentCredentials() {
-    var list = studentAccounts;
+    if (currentRole === "classteacher") {
+        doExportCredentials();
+        return;
+    }
+    var sel = document.getElementById("exportClassSelect");
+    sel.innerHTML = '<option value="all">All Classes</option>';
+    for (var i = 0; i < classes.length; i++) {
+        sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
+    }
+    document.getElementById("exportCredentialsModal").classList.add("active");
+    document.getElementById("modalOverlay").classList.add("active");
+}
+
+function doExportCredentials() {
+    var classFilter = document.getElementById("exportClassSelect").value;
+    var list = [];
+    for (var i = 0; i < studentAccounts.length; i++) {
+        if (classFilter === "all" || studentAccounts[i].classId === classFilter) list.push(studentAccounts[i]);
+    }
     if (currentRole === "classteacher" && currentUser && currentUser.classId) {
         list = [];
         for (var i = 0; i < studentAccounts.length; i++) {
@@ -1845,6 +1863,7 @@ function exportStudentCredentials() {
     var wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Credentials");
     XLSX.writeFile(wb, "student_credentials.xlsx");
+    closeModal();
 }
 
 function showCreateStudentModal() {
@@ -2151,7 +2170,7 @@ function confirmStudentExcelImport() {
 }
 
 function closeModal() {
-    var ids = ["questionModal", "classModal", "assignmentModal", "excelModal", "teacherModal", "attendanceModal", "studentModal", "studentExcelModal"];
+    var ids = ["questionModal", "classModal", "assignmentModal", "excelModal", "teacherModal", "attendanceModal", "studentModal", "studentExcelModal", "exportCredentialsModal"];
     for (var i = 0; i < ids.length; i++) document.getElementById(ids[i]).classList.remove("active");
     document.getElementById("modalOverlay").classList.remove("active");
 }

@@ -597,6 +597,20 @@
             </div>
         </div>
 
+        <div id="exportCredentialsModal" class="modal">
+            <h3>&#128196; Export Student Credentials</h3>
+            <div class="form-row">
+                <label>Select Class</label>
+                <select id="exportClassSelect">
+                    <option value="all">All Classes</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-save" onclick="doExportCredentials()">Download Excel</button>
+            </div>
+        </div>
+
     </main>
     <footer><p>&#127891; IMSG I-14/3 Islamabad &bull; Learning Hub</p></footer>
     <script src="xlsx.full.min.js"></script>
