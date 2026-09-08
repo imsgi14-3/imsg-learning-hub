@@ -20,6 +20,7 @@ var QuestionLoader = (function() {
         var config = chapterConfig[chapterNum];
         if (!config) { if (callback) callback(null); return; }
         var url = config.file || ("question-bank/grade9/computer-science/chapter" + chapterNum + ".json");
+        url += "?v=" + Date.now();
         fetch(url)
             .then(function(resp) {
                 if (!resp.ok) throw new Error("File not found");
