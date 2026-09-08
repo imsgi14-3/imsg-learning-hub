@@ -1,174 +1,3 @@
-var currentQuestion = 0;
-var score = 0;
-var timeLeft = 60;
-var timer = null;
-var questions = [];
-var userAnswers = [];
-var currentRole = null;
-var currentUser = null;
-var allAttempts = [];
-var classes = [];
-var assignments = [];
-var teachers = [];
-var attendance = [];
-var conceptStats = {};
-var studentAccounts = [];
-var principalAccount = null;
-
-var QUESTIONS_KEY = DataStore.KEYS.questions;
-var CLASSES_KEY = DataStore.KEYS.classes;
-var ASSIGNMENTS_KEY = DataStore.KEYS.assignments;
-var TEACHERS_KEY = DataStore.KEYS.teachers;
-var ATTENDANCE_KEY = DataStore.KEYS.attendance;
-var ATTEMPTS_KEY = DataStore.KEYS.attempts;
-var CONCEPTS_KEY = DataStore.KEYS.concepts;
-var STUDENTS_KEY = DataStore.KEYS.students;
-var PRINCIPAL_KEY = DataStore.KEYS.principal;
-
-function loadData() {
-    DataStore.load();
-    questions = DataStore.questions;
-    classes = DataStore.classes;
-    assignments = DataStore.assignments;
-    teachers = DataStore.teachers;
-    attendance = DataStore.attendance;
-    allAttempts = DataStore.allAttempts;
-    conceptStats = DataStore.conceptStats;
-    studentAccounts = DataStore.studentAccounts;
-    principalAccount = DataStore.principalAccount;
-}
-
-function saveAll() {
-    DataStore.questions = questions;
-    DataStore.classes = classes;
-    DataStore.assignments = assignments;
-    DataStore.teachers = teachers;
-    DataStore.attendance = attendance;
-    DataStore.allAttempts = allAttempts;
-    DataStore.conceptStats = conceptStats;
-    DataStore.studentAccounts = studentAccounts;
-    if (principalAccount) DataStore.principalAccount = principalAccount;
-    DataStore.save();
-}
-
-function loadFromFirestore(callback) {
-    DataStore.loadFromFirestore(function() {
-        questions = DataStore.questions;
-        classes = DataStore.classes;
-        assignments = DataStore.assignments;
-        teachers = DataStore.teachers;
-        attendance = DataStore.attendance;
-        allAttempts = DataStore.allAttempts;
-        conceptStats = DataStore.conceptStats;
-        studentAccounts = DataStore.studentAccounts;
-        principalAccount = DataStore.principalAccount;
-        if (callback) callback();
-    });
-}
-
-function handleLogin(e) { Auth.handleLogin(e); }
-function handleLogout() { Auth.handleLogout(); }
-function updateLoginFields() {
-    var role = document.getElementById("roleSelect").value;
-    var sf = document.getElementById("studentFields");
-    var tf = document.getElementById("teacherFields");
-    var pf = document.getElementById("parentFields");
-    var prf = document.getElementById("principalFields");
-    if (sf) sf.style.display = "none";
-    if (tf) tf.style.display = "none";
-    if (pf) pf.style.display = "none";
-    if (prf) prf.style.display = "none";
-    if (role === "student" || role === "parent") { if (sf) sf.style.display = "block"; }
-    else if (role === "teacher" || role === "classteacher") { if (tf) tf.style.display = "block"; }
-    else if (role === "principal") { if (prf) prf.style.display = "block"; }
-}
-
-function activateTab(tab) { if (Auth.isLoggedIn()) UI.showDashboard(); }
-function showStudentTab(tab) { UI.showStudentTab(tab); }
-function showTeacherTab(tab) { UI.showTeacherTab(tab); }
-function showCTTab(tab) { UI.showCTTab(tab); }
-function showParentTab(tab) { UI.showParentTab(tab); }
-function showPrincipalTab(tab) { UI.showPrincipalTab(tab); }
-
-function startPractice() { UI.launchQuiz("Computer Science", "Chapter 1", "all", 20); }
-function displayQuestion() { UI.displayQuestion(); }
-function nextQuestion() { UI.nextQuestion(); }
-function prevQuestion() { UI.prevQuestion(); }
-function skipQuestion() { UI.skipQuestion(); }
-function jumpToQuestion(idx) { UI.jumpToQuestion(idx); }
-function showReview() { UI.showReview(); }
-function backToDashboard() { UI.backToDashboard(); }
-function startTimer() { UI.startTimer(); }
-
-function showSubjectList() { UI.showSubjectList(); }
-function showSubjectChapters(s) { UI.showSubjectChapters(s); }
-function showChapterQuizOptions(s, c) { UI.showChapterQuizOptions(s, c); }
-function launchQuiz(s, c, t, n) { UI.launchQuiz(s, c, t, n); }
-function startAssignmentQuiz(i) { UI.startAssignmentQuiz(i); }
-function showResults() { UI.renderStudentResults(); }
-
-function shuffleArray(arr) { return DataStore.shuffleArray(arr); }
-function generateRandomPassword() { return DataStore.generateRandomPassword(); }
-function generateStudentId(c, r) { return DataStore.generateStudentId(c, r); }
-function generateTeacherId() { return DataStore.generateTeacherId(); }
-
-function showAddQuestionModal() { UI.showAddQuestionModal(); }
-function saveQuestion(e) { UI.saveQuestion(e); }
-function editQuestion(id) { UI.editQuestion(id); }
-function deleteQuestion(id) { UI.deleteQuestion(id); }
-function filterQuestions() { UI.filterQuestions(); }
-function showCreateAssignmentModal() { UI.showCreateAssignmentModal(); }
-function saveAssignment() { UI.saveAssignment(); }
-function editAssignment(i) { UI.editAssignment(i); }
-function deleteAssignment(i) { UI.deleteAssignment(i); }
-function showAddTeacherModal() { UI.showAddTeacherModal(); }
-function saveTeacher() { UI.saveTeacher(); }
-function editTeacher(id) { UI.editTeacher(id); }
-function deleteTeacher(id) { UI.deleteTeacher(id); }
-function showCreateStudentModal() { UI.showCreateStudentModal(); }
-function saveStudent() { UI.saveStudent(); }
-function editStudent(id) { UI.editStudent(id); }
-function deleteStudent(id) { UI.deleteStudent(id); }
-function showAddClassModal() { UI.showAddClassModal(); }
-function showCreateClassModal() { UI.showAddClassModal(); }
-function saveClass(e) { UI.saveClass(e); }
-function editClass(i) { UI.editClass(i); }
-function deleteClass(i) { UI.deleteClass(i); }
-function showExcelImportModal() { UI.showExcelImportModal(); }
-function showStudentExcelModal() { UI.showStudentExcelModal(); }
-function exportStudentCredentials() { UI.exportStudentCredentials(); }
-function closeModal() { UI.closeModal(); }
-function loadClassAnalytics() { UI.loadClassAnalytics(); }
-
-function saveStudentAccount(e) { UI.saveStudent(e); }
-function saveAttendance(e) { if (e) e.preventDefault(); alert("Attendance feature coming soon"); }
-function importExcel(e) { if (e) e.preventDefault(); alert("Excel import coming soon"); }
-function confirmImport() { alert("Import confirmation coming soon"); }
-function confirmStudentExcelImport() { alert("Student import coming soon"); }
-function doExportCredentials() { alert("Export coming soon"); }
-function updateAssignmentQuestionList() {}
-function toggleCTClassField() {
-    var cb = document.getElementById("tmIsClassTeacher");
-    var field = document.getElementById("tmClassField");
-    if (cb && field) field.style.display = cb.checked ? "block" : "none";
-}
-function updateStudentPreview() {
-    var classSel = document.getElementById("smClassId");
-    var rollInput = document.getElementById("smRollNo");
-    var preview = document.getElementById("smPreviewId");
-    if (classSel && rollInput && preview) {
-        var classObj = DataStore.findClassById(classSel.value);
-        if (classObj && rollInput.value) {
-            var num = parseInt(rollInput.value);
-            preview.textContent = classObj.name + "-" + (num < 10 ? "0" : "") + num;
-        }
-    }
-}
-function previewStudentExcel(e) { alert("Student Excel preview coming soon"); }
-
-function renderBar(id, data, max) { UI.renderBar(id, data, max); }
-function renderDonut(id, data) { UI.renderDonut(id, data); }
-
 window.onload = function() {
     loadData();
     loadFromFirestore(function() {
@@ -188,26 +17,98 @@ window.onload = function() {
                         if (!found) cleaned.push(allQs[i]);
                     }
                     questions = cleaned;
-                    DataStore.questions = questions;
                 }
-                if (!principalAccount) { principalAccount = DataStore.principalAccount; }
                 Auth.restoreSession();
                 if (Auth.isLoggedIn()) { UI.showDashboard(); }
             });
         } else {
-            if (!principalAccount) { principalAccount = DataStore.principalAccount; }
             Auth.restoreSession();
             if (Auth.isLoggedIn()) { UI.showDashboard(); }
         }
     });
 };
 
-var subjectsData = {
-    "Computer Science": {
-        chapters: [
-            { num: 1, title: "Fundamentals of Computer", topics: ["Input & Output Devices", "Primary & Secondary Memory", "Number Systems", "Boolean Logic", "Software & Hardware", "Networking Basics", "Operating System", "Storage Devices", "Computer Networks"] },
-            { num: 2, title: "Data Representation", topics: ["Binary & Hexadecimal", "ASCII & Unicode", "Image Representation", "Sound Digitization", "Data Compression"] },
-            { num: 3, title: "Computer Architecture", topics: ["Von Neumann Architecture", "CPU Components", "Registers & Buses", "Instruction Cycle", "Memory Hierarchy"] }
-        ]
-    }
-};
+function handleLogin(e) { Auth.handleLogin(e); }
+function handleLogout() { Auth.handleLogout(); }
+function updateLoginFields() { UI.updateLoginFields(); }
+function showStudentTab(tab) { UI.showStudentTab(tab); }
+function showTeacherTab(tab) { UI.showTeacherTab(tab); }
+function showCTTab(tab) { UI.showCTTab(tab); }
+function showParentTab(tab) { UI.showParentTab(tab); }
+function showPrincipalTab(tab) { UI.showPrincipalTab(tab); }
+function startPractice() { UI.startPractice(); }
+function displayQuestion() { QuizEngine.displayQuestion(); }
+function checkAnswer(sel) { QuizEngine.checkAnswer(sel); }
+function nextQuestion() { QuizEngine.nextQuestion(); }
+function prevQuestion() { QuizEngine.prevQuestion(); }
+function skipQuestion() { QuizEngine.skipQuestion(); }
+function jumpToQuestion(idx) { QuizEngine.jumpToQuestion(idx); }
+function showReview() { QuizEngine.showReview(); }
+function backToDashboard() { QuizEngine.backToDashboard(); }
+function showSubjectList() { UI.showSubjectList(); }
+function showSubjectChapters(s) { UI.showSubjectChapters(s); }
+function showChapterQuizOptions(c, s) { UI.showChapterQuizOptions(c, s); }
+function backToChapters() { UI.backToChapters(); }
+function showTopicPicker(c, s) { UI.showTopicPicker(c, s); }
+function launchTopicPractice(c, s, t) { UI.launchTopicPractice(c, s, t); }
+function launchChapterMode(c, s, m) { UI.launchChapterMode(c, s, m); }
+function launchQuiz(s, c, t, n) { UI.launchQuiz(s, c, t, n); }
+function launchQuickPractice() { UI.launchQuickPractice(); }
+function launchChapterTest() { UI.launchChapterTest(); }
+function launchFullBookTest() { UI.launchFullBookTest(); }
+function launchWeakPractice() { UI.launchWeakPractice(); }
+function showModeDetail(m) { UI.showModeDetail(m); }
+function hideModeDetail() { UI.hideModeDetail(); }
+function startAssignmentQuiz(i) { UI.startAssignmentQuiz(i); }
+function renderBar(n, p, c) { return renderBar(n, p, c); }
+function showAddQuestionModal() { UI.showAddQuestionModal(); }
+function saveQuestion(e) { UI.saveQuestion(e); }
+function editQuestion(id) { UI.editQuestion(id); }
+function deleteQuestion(id) { UI.deleteQuestion(id); }
+function filterQuestions() { UI.filterQuestions(); }
+function showCreateAssignmentModal() { UI.showCreateAssignmentModal(); }
+function updateAssignmentQuestionList() { UI.updateAssignmentQuestionList(); }
+function saveAssignment(e) { UI.saveAssignment(e); }
+function editAssignment(i) { UI.editAssignment(i); }
+function deleteAssignment(i) { UI.deleteAssignment(i); }
+function showAddTeacherModal() { UI.showAddTeacherModal(); }
+function toggleCTClassField() { UI.toggleCTClassField(); }
+function saveTeacher(e) { UI.saveTeacher(e); }
+function editTeacher(id) { UI.editTeacher(id); }
+function deleteTeacher(id) { UI.deleteTeacher(id); }
+function showCreateStudentModal() { UI.showCreateStudentModal(); }
+function updateStudentPreview() { UI.updateStudentPreview(); }
+function saveStudentAccount(e) { UI.saveStudentAccount(e); }
+function editStudentAccount(id) { UI.editStudentAccount(id); }
+function deleteStudentAccount(id) { UI.deleteStudentAccount(id); }
+function showStudentPassword(id) { UI.showStudentPassword(id); }
+function refreshStudentLists() { UI.refreshStudentLists(); }
+function showCreateClassModal() { UI.showCreateClassModal(); }
+function saveClass(e) { UI.saveClass(e); }
+function editClass(i) { UI.editClass(i); }
+function deleteClass(i) { UI.deleteClass(i); }
+function showExcelImportModal() { UI.showExcelImportModal(); }
+function importExcel(e) { UI.importExcel(e); }
+function confirmImport() { UI.confirmImport(); }
+function showStudentExcelModal() { UI.showStudentExcelModal(); }
+function previewStudentExcel(e) { UI.previewStudentExcel(e); }
+function confirmStudentExcelImport() { UI.confirmStudentExcelImport(); }
+function exportStudentCredentials() { UI.exportStudentCredentials(); }
+function doExportCredentials() { UI.doExportCredentials(); }
+function closeModal() { UI.closeModal(); }
+function loadClassAnalytics() { UI.loadClassAnalytics(); }
+function markAttendance() { UI.markAttendance(); }
+function saveAttendance(e) { UI.saveAttendance(e); }
+function dashboardsHide() { UI.dashboardsHide(); }
+function renderClasses() { UI.renderClasses(); }
+function renderQuestions() { UI.renderQuestions(); }
+function renderAssignments() { UI.renderAssignments(); }
+function renderCTOverview() { UI.renderCTOverview(); }
+function renderCTStudents() { UI.renderCTStudents(); }
+function renderCTCrossSubject() { UI.renderCTCrossSubject(); }
+function renderCTAttendance() { UI.renderCTAttendance(); }
+function renderPrincipalSchool() { UI.renderPrincipalSchool(); }
+function renderPrincipalClasses() { UI.renderPrincipalClasses(); }
+function renderPrincipalTeachers() { UI.renderPrincipalTeachers(); }
+function renderPrincipalStudents() { UI.renderPrincipalStudents(); }
+function renderPrincipalAnalytics() { UI.renderPrincipalAnalytics(); }
