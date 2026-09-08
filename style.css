@@ -1333,6 +1333,68 @@ tr:last-child td {
     display: block;
 }
 
+/* ============================================
+   RESULTS LIST
+   ============================================ */
+.results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+.result-item:hover {
+    box-shadow: var(--shadow-sm);
+    transform: translateX(4px);
+}
+
+.result-info {
+    flex: 1;
+}
+
+.result-date {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.result-subject {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.result-score {
+    font-size: 20px;
+    font-weight: 800;
+    padding: 8px 18px;
+    border-radius: 20px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.result-score.pass {
+    background: rgba(16,185,129,0.1);
+    color: var(--success);
+}
+
+.result-score.fail {
+    background: rgba(239,68,68,0.1);
+    color: var(--error);
+}
+
 .review-item {
     background: #fafbfe;
     border-radius: var(--radius-md);

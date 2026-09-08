@@ -2,149 +2,94 @@ var UI = (function() {
     function $(id) { return document.getElementById(id); }
 
     function showLogin() {
-        $("loginContainer").style.display = "flex";
-        $("homeContainer").style.display = "none";
-        $("quizContainer").style.display = "none";
-        $("resultContainer").style.display = "none";
+        $("loginPage").style.display = "flex";
+        $("studentDashboard").style.display = "none";
+        $("teacherDashboard").style.display = "none";
+        $("classTeacherDashboard").style.display = "none";
+        $("parentDashboard").style.display = "none";
+        $("principalDashboard").style.display = "none";
+        $("quiz").style.display = "none";
+        $("result").style.display = "none";
+        $("review").style.display = "none";
+        $("logoutBar").style.display = "none";
     }
 
     function showDashboard() {
-        $("loginContainer").style.display = "none";
-        $("homeContainer").style.display = "block";
-        $("quizContainer").style.display = "none";
-        $("resultContainer").style.display = "none";
-        renderDashboard();
-    }
+        $("loginPage").style.display = "none";
+        $("studentDashboard").style.display = "none";
+        $("teacherDashboard").style.display = "none";
+        $("classTeacherDashboard").style.display = "none";
+        $("parentDashboard").style.display = "none";
+        $("principalDashboard").style.display = "none";
+        $("quiz").style.display = "none";
+        $("result").style.display = "none";
+        $("review").style.display = "none";
+        $("logoutBar").style.display = "flex";
 
-    function showQuiz() {
-        $("loginContainer").style.display = "none";
-        $("homeContainer").style.display = "none";
-        $("quizContainer").style.display = "block";
-        $("resultContainer").style.display = "none";
-    }
-
-    function showResult() {
-        $("loginContainer").style.display = "none";
-        $("homeContainer").style.display = "none";
-        $("quizContainer").style.display = "none";
-        $("resultContainer").style.display = "block";
-    }
-
-    function renderDashboard() {
         var role = Auth.getRole();
-        var dashboards = $("dashboards");
-        if (role === "student" || role === "parent") renderStudentDashboard();
-        else if (role === "teacher") renderTeacherDashboard();
-        else if (role === "principal") renderPrincipalDashboard();
+        var user = Auth.getUser();
+        if (role === "student" || role === "parent") {
+            $("studentDashboard").style.display = "block";
+            $("studentDisplayName").textContent = user ? user.name : "Student";
+            $("loggedUser").textContent = (user ? user.name : "Student") + " (" + (user ? user.id : "") + ")";
+            renderStudentDashboard();
+        } else if (role === "teacher") {
+            var isClassTeacher = user && (user.role === "class" || user.role === "both");
+            if (isClassTeacher) {
+                $("classTeacherDashboard").style.display = "block";
+                $("ctDisplayName").textContent = user ? user.name : "Class Teacher";
+                $("loggedUser").textContent = (user ? user.name : "Teacher") + " (" + (user ? user.id : "") + ")";
+            } else {
+                $("teacherDashboard").style.display = "block";
+                $("teacherDisplayName").textContent = user ? user.name : "Teacher";
+                $("teacherSubjectDisplay").textContent = user ? user.subject : "";
+                $("loggedUser").textContent = (user ? user.name : "Teacher") + " (" + (user ? user.id : "") + ")";
+            }
+        } else if (role === "principal") {
+            $("principalDashboard").style.display = "block";
+            $("principalDisplayName").textContent = user ? user.name : "Principal";
+            $("loggedUser").textContent = (user ? user.name : "Admin") + " (ADMIN-001)";
+        }
     }
 
     function renderStudentDashboard() {
         var user = Auth.getUser();
-        var name = user ? user.name : "Student";
-        var attempts = DataStore.getAttemptsByStudent(user ? user.id : "");
-        var avg = 0;
-        if (attempts.length > 0) { var sum = 0; for (var i = 0; i < attempts.length; i++) sum += attempts[i].percentage; avg = Math.round(sum / attempts.length); }
-        var dashboards = $("dashboards");
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>Welcome, ' + name + '</h2></div>';
-        html += '<div class="stat-cards"><div class="stat-card blue"><div class="stat-number">' + attempts.length + '</div><div class="stat-label">Quizzes Taken</div></div>';
-        html += '<div class="stat-card green"><div class="stat-number">' + avg + '%</div><div class="stat-label">Average Score</div></div></div>';
-        html += '<div class="action-buttons">';
-        html += '<button onclick="UI.startPracticeFromDashboard(\'all\')" class="btn-action green">Practice All Subjects</button>';
-        html += '<button onclick="UI.startPracticeFromDashboard(\'subject\')" class="btn-action blue">Practice by Subject</button>';
-        html += '<button onclick="UI.showResults()" class="btn-action purple">View Results</button>';
-        html += '</div></div>';
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
+        if (!user) return;
+        var attempts = DataStore.getAttemptsByStudent(user.id);
+        renderSubjects();
+        renderStudentResults();
+        renderStudentAssignments();
     }
 
-    function renderTeacherDashboard() {
-        var user = Auth.getUser();
-        var name = user ? user.name : "Teacher";
-        var teacherClasses = [];
-        if (user && user.classIds) {
-            for (var i = 0; i < DataStore.classes.length; i++) {
-                for (var j = 0; j < user.classIds.length; j++) {
-                    if (DataStore.classes[i].id === user.classIds[j]) teacherClasses.push(DataStore.classes[i]);
-                }
-            }
-        }
-        var dashboards = $("dashboards");
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>Welcome, ' + name + '</h2></div>';
-        html += '<div class="stat-cards">';
-        html += '<div class="stat-card blue"><div class="stat-number">' + DataStore.questions.length + '</div><div class="stat-label">Questions</div></div>';
-        html += '<div class="stat-card green"><div class="stat-number">' + DataStore.assignments.length + '</div><div class="stat-label">Assignments</div></div>';
-        html += '<div class="stat-card purple"><div class="stat-number">' + teacherClasses.length + '</div><div class="stat-label">Classes</div></div>';
-        html += '</div>';
-        html += '<div class="action-buttons">';
-        html += '<button onclick="UI.showTeacherQuestions()" class="btn-action blue">Manage Questions</button>';
-        html += '<button onclick="UI.showTeacherAssignments()" class="btn-action purple">Manage Assignments</button>';
-        html += '<button onclick="UI.showTeacherAnalytics()" class="btn-action green">Analytics</button>';
-        html += '</div></div>';
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
-    }
-
-    function renderPrincipalDashboard() {
-        var totalStudents = DataStore.studentAccounts.length;
-        var totalTeachers = DataStore.teachers.length;
-        var totalClasses = DataStore.classes.length;
-        var totalAttempts = DataStore.allAttempts.length;
-        var avg = 0;
-        if (totalAttempts > 0) { var sum = 0; for (var i = 0; i < DataStore.allAttempts.length; i++) sum += DataStore.allAttempts[i].percentage; avg = Math.round(sum / totalAttempts); }
-        var dashboards = $("dashboards");
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>Principal Dashboard</h2></div>';
-        html += '<div class="stat-cards">';
-        html += '<div class="stat-card blue"><div class="stat-number">' + totalStudents + '</div><div class="stat-label">Students</div></div>';
-        html += '<div class="stat-card green"><div class="stat-number">' + totalTeachers + '</div><div class="stat-label">Teachers</div></div>';
-        html += '<div class="stat-card purple"><div class="stat-number">' + totalClasses + '</div><div class="stat-label">Classes</div></div>';
-        html += '<div class="stat-card orange"><div class="stat-number">' + totalAttempts + '</div><div class="stat-label">Attempts</div></div>';
-        html += '<div class="stat-card green"><div class="stat-number">' + avg + '%</div><div class="stat-label">Avg Score</div></div>';
-        html += '</div>';
-        html += '<div class="action-buttons">';
-        html += '<button onclick="UI.showPrincipalStudents()" class="btn-action blue">Students</button>';
-        html += '<button onclick="UI.showPrincipalTeachers()" class="btn-action green">Teachers</button>';
-        html += '<button onclick="UI.showPrincipalClasses()" class="btn-action purple">Classes</button>';
-        html += '<button onclick="UI.showPrincipalAnalytics()" class="btn-action orange">Analytics</button>';
-        html += '</div></div>';
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
-    }
-
-    function startPracticeFromDashboard(mode) {
-        if (mode === "all") { launchFullPractice(); return; }
-        showSubjectPicker();
-    }
-
-    function showSubjectPicker() {
+    function renderSubjects() {
+        var container = $("subjectGrid");
+        if (!container) return;
         var subjects = {};
         for (var i = 0; i < DataStore.questions.length; i++) {
-            if (!subjects[DataStore.questions[i].subject]) subjects[DataStore.questions[i].subject] = 0;
-            subjects[DataStore.questions[i].subject]++;
+            var s = DataStore.questions[i].subject;
+            if (!subjects[s]) subjects[s] = 0;
+            subjects[s]++;
         }
-        var keys = Object.keys(subjects);
-        var dashboards = $("dashboards");
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>Select Subject</h2>';
-        html += '<button onclick="renderDashboard()" class="btn-back">Back</button></div>';
-        html += '<div class="subject-grid">';
+        var html = "";
+        var keys = Object.keys(subjects).sort();
         for (var i = 0; i < keys.length; i++) {
             var icon = "📚";
-            if (keys[i].toLowerCase().indexOf("science") !== -1) icon = "🔬";
-            if (keys[i].toLowerCase().indexOf("math") !== -1) icon = "📐";
-            if (keys[i].toLowerCase().indexOf("english") !== -1) icon = "📖";
-            if (keys[i].toLowerCase().indexOf("urdu") !== -1) icon = "✍️";
-            if (keys[i].toLowerCase().indexOf("social") !== -1) icon = "🌍";
-            if (keys[i].toLowerCase().indexOf("islam") !== -1) icon = "🕌";
-            html += '<div class="subject-card" onclick="UI.showChaptersForSubject(\'' + keys[i].replace(/'/g, "\\'") + '\')">';
-            html += '<div class="subject-icon">' + icon + '</div>';
-            html += '<div class="subject-name">' + keys[i] + '</div>';
-            html += '<div class="subject-count">' + subjects[keys[i]] + ' questions</div></div>';
+            if (keys[i].indexOf("Science") !== -1) icon = "🔬";
+            if (keys[i].indexOf("Math") !== -1) icon = "📐";
+            if (keys[i].indexOf("English") !== -1) icon = "📖";
+            if (keys[i].indexOf("Urdu") !== -1) icon = "✍️";
+            html += '<div class="quiz-mode-card" onclick="showSubjectChapters(\'' + keys[i].replace(/'/g, "\\'") + '\')">';
+            html += '<div class="mode-icon">' + icon + '</div>';
+            html += '<div class="mode-title">' + keys[i] + '</div>';
+            html += '<div class="mode-desc">' + subjects[keys[i]] + ' questions</div></div>';
         }
-        html += '</div></div>';
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
+        container.innerHTML = html || "<p>No questions available</p>";
     }
 
-    function showChaptersForSubject(subject) {
+    function showSubjectChapters(subject) {
+        $("subjectListView").style.display = "none";
+        $("chapterListView").style.display = "block";
+        $("chapterSubjectTitle").textContent = subject;
         var chapters = {};
         for (var i = 0; i < DataStore.questions.length; i++) {
             if (DataStore.questions[i].subject === subject) {
@@ -154,80 +99,68 @@ var UI = (function() {
             }
         }
         var keys = Object.keys(chapters).sort();
-        var dashboards = $("dashboards");
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>' + subject + ' - Chapters</h2>';
-        html += '<button onclick="UI.showSubjectPicker()" class="btn-back">Back</button></div>';
-        html += '<div class="chapter-list">';
+        var html = "";
         for (var i = 0; i < keys.length; i++) {
-            html += '<div class="chapter-item" onclick="UI.showChapterDetail(\'' + subject.replace(/'/g, "\\'") + '\', \'' + keys[i].replace(/'/g, "\\'") + '\')">';
-            html += '<div class="chapter-name">' + keys[i] + '</div>';
-            html += '<div class="chapter-count">' + chapters[keys[i]] + ' questions</div>';
-            html += '<button onclick="event.stopPropagation(); UI.quickPracticeChapter(\'' + subject.replace(/'/g, "\\'") + '\', \'' + keys[i].replace(/'/g, "\\'") + '\')" class="btn-action green btn-sm">Quick Practice</button>';
+            html += '<div class="quiz-mode-card" onclick="showChapterQuizOptions(\'' + subject.replace(/'/g, "\\'") + '\', \'' + keys[i].replace(/'/g, "\\'") + '\')">';
+            html += '<div class="mode-title">' + keys[i] + '</div>';
+            html += '<div class="mode-desc">' + chapters[keys[i]] + ' questions</div></div>';
+        }
+        $("chapterGrid").innerHTML = html;
+    }
+
+    function showSubjectList() {
+        $("subjectListView").style.display = "block";
+        $("chapterListView").style.display = "none";
+    }
+
+    function showChapterQuizOptions(subject, chapter) {
+        var container = $("chapterQuizOptions");
+        if (!container) return;
+        container.style.display = "block";
+        var qs = DataStore.getQuestionsByChapter(subject, chapter);
+        var topics = {};
+        for (var i = 0; i < qs.length; i++) {
+            var t = qs[i].topic || "General";
+            if (!topics[t]) topics[t] = 0;
+            topics[t]++;
+        }
+        var html = '<h4>Practice Options for ' + chapter + '</h4>';
+        html += '<div class="quiz-mode-grid">';
+        html += '<div class="quiz-mode-card" onclick="launchQuiz(\'' + subject.replace(/'/g, "\\'") + '\', \'' + chapter.replace(/'/g, "\\'") + '\', \'all\', 20)">';
+        html += '<div class="mode-icon">📝</div><div class="mode-title">Quick Practice</div>';
+        html += '<div class="mode-desc">20 random questions</div></div>';
+        html += '<div class="quiz-mode-card" onclick="launchQuiz(\'' + subject.replace(/'/g, "\\'") + '\', \'' + chapter.replace(/'/g, "\\'") + '\', \'all\', ' + qs.length + ')">';
+        html += '<div class="mode-icon">📋</div><div class="mode-title">Full Chapter</div>';
+        html += '<div class="mode-desc">' + qs.length + ' questions</div></div>';
+        html += '</div>';
+        var topicKeys = Object.keys(topics).sort();
+        if (topicKeys.length > 0) {
+            html += '<h4 style="margin-top:15px;">Practice by Topic</h4><div class="quiz-mode-grid">';
+            for (var i = 0; i < topicKeys.length; i++) {
+                html += '<div class="quiz-mode-card" onclick="launchQuiz(\'' + subject.replace(/'/g, "\\'") + '\', \'' + chapter.replace(/'/g, "\\'") + '\', \'' + topicKeys[i].replace(/'/g, "\\'") + '\', ' + topics[topicKeys[i]] + ')">';
+                html += '<div class="mode-title">' + topicKeys[i] + '</div>';
+                html += '<div class="mode-desc">' + topics[topicKeys[i]] + ' questions</div></div>';
+            }
             html += '</div>';
         }
-        html += '</div></div>';
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
+        container.innerHTML = html;
     }
 
-    function showChapterDetail(subject, chapter) {
-        var topics = {};
-        for (var i = 0; i < DataStore.questions.length; i++) {
-            var q = DataStore.questions[i];
-            if (q.subject === subject && q.chapter === chapter) {
-                var t = q.topic || "General";
-                if (!topics[t]) topics[t] = 0;
-                topics[t]++;
-            }
+    function launchQuiz(subject, chapter, topic, count) {
+        var qs = [];
+        if (topic === "all") {
+            qs = DataStore.getQuestionsByChapter(subject, chapter);
+        } else {
+            qs = DataStore.getQuestionsByTopic(subject, chapter, topic);
         }
-        var keys = Object.keys(topics).sort();
-        var dashboards = $("dashboards");
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>' + chapter + '</h2>';
-        html += '<button onclick="UI.showChaptersForSubject(\'' + subject.replace(/'/g, "\\'") + '\')" class="btn-back">Back</button></div>';
-        html += '<div class="topic-list">';
-        html += '<div class="topic-item" onclick="UI.quickPracticeChapter(\'' + subject.replace(/'/g, "\\'") + '\', \'' + chapter.replace(/'/g, "\\'") + '\')">';
-        html += '<div class="topic-name"><strong>All Topics</strong></div>';
-        html += '<button class="btn-action green btn-sm">Start Practice</button></div>';
-        for (var i = 0; i < keys.length; i++) {
-            html += '<div class="topic-item" onclick="UI.quickPracticeTopic(\'' + subject.replace(/'/g, "\\'") + '\', \'' + chapter.replace(/'/g, "\\'") + '\', \'' + keys[i].replace(/'/g, "\\'") + '\')">';
-            html += '<div class="topic-name">' + keys[i] + '</div>';
-            html += '<div class="topic-count">' + topics[keys[i]] + ' questions</div>';
-            html += '<button class="btn-action green btn-sm">Practice</button></div>';
-        }
-        html += '</div></div>';
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
-    }
-
-    function launchFullPractice() {
-        var qs = DataStore.shuffleArray(DataStore.questions).slice(0, 20);
         if (qs.length === 0) { alert("No questions available"); return; }
-        QuizEngine.startQuiz(qs, "fullPractice", "all", "all");
-        currentQuestion = 0;
+        qs = DataStore.shuffleArray(qs);
+        if (count && qs.length > count) qs = qs.slice(0, count);
+        QuizEngine.startQuiz(qs, "practice", subject, chapter);
+        $("loginPage").style.display = "none";
+        $("studentDashboard").style.display = "none";
+        $("quiz").style.display = "block";
         displayQuestion();
-        showQuiz();
-        startTimer();
-    }
-
-    function quickPracticeChapter(subject, chapter) {
-        var qs = DataStore.getQuestionsByChapter(subject, chapter);
-        if (qs.length === 0) { alert("No questions in this chapter"); return; }
-        qs = DataStore.shuffleArray(qs).slice(0, 20);
-        QuizEngine.startQuiz(qs, "chapterPractice", subject, chapter);
-        currentQuestion = 0;
-        displayQuestion();
-        showQuiz();
-        startTimer();
-    }
-
-    function quickPracticeTopic(subject, chapter, topic) {
-        var qs = DataStore.getQuestionsByTopic(subject, chapter, topic);
-        if (qs.length === 0) { alert("No questions in this topic"); return; }
-        qs = DataStore.shuffleArray(qs).slice(0, 20);
-        QuizEngine.startQuiz(qs, "topicPractice", subject, chapter);
-        currentQuestion = 0;
-        displayQuestion();
-        showQuiz();
         startTimer();
     }
 
@@ -240,24 +173,54 @@ var UI = (function() {
         var q = qs[idx];
         var total = qs.length;
         $("questionNumber").textContent = "Question " + (idx + 1) + " of " + total;
-        $("questionText").textContent = q.question;
-        var optionsHtml = "";
-        var opts = ["A", "B", "C", "D"];
-        for (var i = 0; i < q.options.length; i++) {
-            optionsHtml += '<button class="option-btn" onclick="UI.selectAnswer(' + i + ')" id="opt' + i + '">' + opts[i] + '. ' + q.options[i] + '</button>';
+        $("question").textContent = q.question;
+        var opts = $("quizOptions").querySelectorAll(".option");
+        var labels = ["A", "B", "C", "D"];
+        for (var i = 0; i < opts.length; i++) {
+            opts[i].textContent = labels[i] + ". " + (q.options[i] || "");
+            opts[i].className = "option";
+            opts[i].onclick = (function(index) {
+                return function() { selectAnswer(index); };
+            })(i);
         }
-        $("optionsContainer").innerHTML = optionsHtml;
-        var prevBtn = $("prevBtn");
-        var nextBtn = $("nextBtn");
-        if (prevBtn) prevBtn.style.display = idx > 0 ? "inline-block" : "none";
-        if (nextBtn) nextBtn.textContent = idx === total - 1 ? "Finish" : "Next →";
+        var answered = QuizEngine.getUserAnswers();
+        if (answered[idx] !== undefined) {
+            opts[answered[idx]].classList.add("selected");
+        }
+        $("prevButton").style.display = idx > 0 ? "inline-block" : "none";
+        $("skipButton").style.display = "inline-block";
+        $("nextButton").style.display = idx < total - 1 ? "inline-block" : "none";
+        if (idx === total - 1) {
+            $("nextButton").textContent = "Finish Quiz";
+            $("nextButton").style.display = "inline-block";
+            $("skipButton").style.display = "none";
+        } else {
+            $("nextButton").textContent = "Next →";
+        }
+        renderPalette();
+    }
+
+    function renderPalette() {
+        var container = $("questionPalette");
+        if (!container) return;
+        var qs = QuizEngine.getQuizQuestions();
+        var answered = QuizEngine.getUserAnswers();
+        var html = "";
+        for (var i = 0; i < qs.length; i++) {
+            var cls = "palette-btn";
+            if (i === QuizEngine.getCurrentQuestion()) cls += " current";
+            if (answered[i] !== undefined) cls += " answered";
+            html += '<button class="' + cls + '" onclick="jumpToQuestion(' + i + ')">' + (i + 1) + '</button>';
+        }
+        container.innerHTML = html;
     }
 
     function selectAnswer(idx) {
-        var opts = document.querySelectorAll(".option-btn");
+        var opts = $("quizOptions").querySelectorAll(".option");
         for (var i = 0; i < opts.length; i++) opts[i].classList.remove("selected");
         opts[idx].classList.add("selected");
         QuizEngine.recordAnswer(QuizEngine.getCurrentQuestion(), idx);
+        renderPalette();
     }
 
     function nextQuestion() {
@@ -265,7 +228,7 @@ var UI = (function() {
         var idx = QuizEngine.getCurrentQuestion();
         if (idx === qs.length - 1) {
             var attempt = QuizEngine.finish();
-            showQuizResult(attempt);
+            showResult(attempt);
             return;
         }
         QuizEngine.setCurrentQuestion(idx + 1);
@@ -283,65 +246,64 @@ var UI = (function() {
         if (idx < qs.length - 1) { QuizEngine.setCurrentQuestion(idx + 1); displayQuestion(); }
     }
 
-    function showQuizResult(attempt) {
+    function jumpToQuestion(idx) {
+        QuizEngine.setCurrentQuestion(idx);
+        displayQuestion();
+    }
+
+    function showResult(attempt) {
+        QuizEngine.stopTimer();
+        $("quiz").style.display = "none";
+        $("result").style.display = "block";
         var score = attempt.score;
         var total = attempt.totalQuestions;
         var percentage = attempt.percentage;
         var timeUsed = attempt.timeUsed;
-        $("finalScore").textContent = score + " / " + total;
-        $("percentage").textContent = percentage + "%";
-        var message = "";
-        if (percentage === 100) message = "Perfect Score! 🎉";
-        else if (percentage >= 80) message = "Great Job! 👍";
-        else if (percentage >= 60) message = "Good Effort! Keep practicing.";
-        else if (percentage >= 40) message = "Needs improvement. Try again!";
-        else message = "Keep practicing. You'll improve!";
-        $("scoreMessage").textContent = message;
-        $("quizTime").textContent = "Time: " + timeUsed + " seconds";
-        showResult();
+        $("finalScore").textContent = "Score: " + score + " / " + total;
+        $("percentage").textContent = "Percentage: " + percentage + "%";
+        $("timeTaken").textContent = "Time: " + timeUsed + " seconds";
+        var feedback = "";
+        if (percentage === 100) feedback = "Perfect Score! Outstanding!";
+        else if (percentage >= 80) feedback = "Great Job! Keep it up!";
+        else if (percentage >= 60) feedback = "Good effort! Practice more.";
+        else if (percentage >= 40) feedback = "Needs improvement. Try again!";
+        else feedback = "Keep practicing. You'll improve!";
+        $("feedback").textContent = feedback;
+    }
+
+    function showReview() {
+        var qs = QuizEngine.getQuizQuestions();
+        var answers = QuizEngine.getUserAnswers();
+        if (!qs || qs.length === 0) { alert("No quiz data to review"); return; }
+        $("result").style.display = "none";
+        $("review").style.display = "block";
+        var html = "";
+        for (var i = 0; i < qs.length; i++) {
+            var q = qs[i];
+            var userAns = answers[i];
+            var isCorrect = userAns !== undefined && q.options[userAns] !== undefined &&
+                (q.options[userAns] === q.options[q.answer.charCodeAt(0) - 65] || userAns === q.answer.charCodeAt(0) - 65);
+            var correctIdx = q.answer.charCodeAt(0) - 65;
+            html += '<div class="review-item ' + (isCorrect ? "correct" : "incorrect") + '">';
+            html += '<div class="review-q"><strong>Q' + (i + 1) + ':</strong> ' + q.question + '</div>';
+            for (var j = 0; j < q.options.length; j++) {
+                var optCls = "";
+                if (j === correctIdx) optCls = "correct-answer";
+                if (j === userAns && !isCorrect) optCls = "wrong-answer";
+                html += '<div class="review-option ' + optCls + '">' + String.fromCharCode(65 + j) + ". " + q.options[j] + '</div>';
+            }
+            if (q.explanation) html += '<div class="review-explanation">💡 ' + q.explanation + '</div>';
+            html += '</div>';
+        }
+        $("reviewContent").innerHTML = html;
     }
 
     function backToDashboard() {
-        stopTimer();
+        QuizEngine.stopTimer();
+        $("quiz").style.display = "none";
+        $("result").style.display = "none";
+        $("review").style.display = "none";
         showDashboard();
-    }
-
-    function showResults() {
-        var user = Auth.getUser();
-        var attempts = DataStore.getAttemptsByStudent(user ? user.id : "");
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>Your Results</h2>';
-        html += '<button onclick="renderDashboard()" class="btn-back">Back</button></div>';
-        if (attempts.length === 0) {
-            html += '<p>No quiz attempts yet.</p>';
-        } else {
-            html += '<div class="results-list">';
-            for (var i = attempts.length - 1; i >= 0 && i >= attempts.length - 20; i--) {
-                var a = attempts[i];
-                var d = new Date(a.timestamp);
-                var dateStr = d.toLocaleDateString();
-                var timeStr = d.toLocaleTimeString();
-                html += '<div class="result-item">';
-                html += '<div class="result-info">';
-                html += '<div class="result-date">' + dateStr + ' ' + timeStr + '</div>';
-                html += '<div class="result-subject">' + (a.subject || "General") + ' - ' + (a.mode || "practice") + '</div>';
-                html += '</div>';
-                html += '<div class="result-score ' + (a.percentage >= 50 ? "pass" : "fail") + '">' + a.percentage + '%</div>';
-                html += '</div>';
-            }
-            html += '</div>';
-        }
-        html += '</div>';
-        var dashboards = $("dashboards");
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
-        $("homeContainer").style.display = "block";
-        $("quizContainer").style.display = "none";
-        $("resultContainer").style.display = "none";
-    }
-
-    function updateTimerDisplay(seconds) {
-        var timerEl = $("timer");
-        if (timerEl) timerEl.textContent = "Time: " + seconds + "s";
     }
 
     function renderBar(containerId, data, maxVal) {
@@ -377,549 +339,400 @@ var UI = (function() {
         container.innerHTML = html;
     }
 
-    function showTeacherQuestions() {
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>Question Bank</h2>';
-        html += '<button onclick="renderDashboard()" class="btn-back">Back</button>';
-        html += '<button onclick="UI.showAddQuestionModal()" class="btn-action green">+ Add Question</button></div>';
-        html += '<div class="filter-bar"><select id="filterSubject" onchange="UI.renderFilteredQuestions()"><option value="">All Subjects</option></select>';
-        html += '<select id="filterChapter" onchange="UI.renderFilteredQuestions()"><option value="">All Chapters</option></select></div>';
-        html += '<div id="questionsList"></div></div>';
-        var dashboards = $("dashboards");
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
-        var subjects = {};
-        for (var i = 0; i < DataStore.questions.length; i++) {
-            if (!subjects[DataStore.questions[i].subject]) subjects[DataStore.questions[i].subject] = 1;
-            else subjects[DataStore.questions[i].subject]++;
+    function renderStudentResults() {
+        var user = Auth.getUser();
+        var container = $("studentResultsList");
+        if (!container || !user) return;
+        var attempts = DataStore.getAttemptsByStudent(user.id);
+        if (attempts.length === 0) { container.innerHTML = "<p>No quiz attempts yet. Start practicing!</p>"; return; }
+        var html = '<div class="results-list">';
+        for (var i = attempts.length - 1; i >= 0 && i >= attempts.length - 20; i--) {
+            var a = attempts[i];
+            var d = new Date(a.timestamp);
+            html += '<div class="result-item">';
+            html += '<div class="result-info"><div class="result-date">' + d.toLocaleDateString() + ' ' + d.toLocaleTimeString() + '</div>';
+            html += '<div class="result-subject">' + (a.subject || "General") + ' - ' + (a.chapter || "") + '</div></div>';
+            html += '<div class="result-score ' + (a.percentage >= 50 ? "pass" : "fail") + '">' + a.percentage + '%</div>';
+            html += '</div>';
         }
-        var sel = $("filterSubject");
-        var keys = Object.keys(subjects).sort();
-        for (var i = 0; i < keys.length; i++) {
-            sel.innerHTML += '<option value="' + keys[i] + '">' + keys[i] + ' (' + subjects[keys[i]] + ')</option>';
-        }
-        renderFilteredQuestions();
+        html += '</div>';
+        container.innerHTML = html;
     }
 
-    function renderFilteredQuestions() {
-        var subject = $("filterSubject") ? $("filterSubject").value : "";
-        var chapter = $("filterChapter") ? $("filterChapter").value : "";
-        var filtered = DataStore.questions;
-        if (subject) filtered = filtered.filter(function(q) { return q.subject === subject; });
-        if (chapter) filtered = filtered.filter(function(q) { return q.chapter === chapter; });
-        var html = '<div class="questions-table"><table><thead><tr><th>ID</th><th>Subject</th><th>Chapter</th><th>Question</th><th>Options</th><th>Answer</th><th>Actions</th></tr></thead><tbody>';
-        var display = filtered.slice(0, 100);
-        for (var i = 0; i < display.length; i++) {
-            var q = display[i];
+    function renderStudentAssignments() {
+        var container = $("studentAssignmentsList");
+        if (!container) return;
+        var user = Auth.getUser();
+        if (!user) return;
+        var html = "";
+        var found = false;
+        for (var i = 0; i < DataStore.assignments.length; i++) {
+            var a = DataStore.assignments[i];
+            if (a.classId === user.classId) {
+                found = true;
+                html += '<div class="assignment-item">';
+                html += '<div class="assignment-info"><h4>' + (a.title || "Untitled") + '</h4>';
+                html += '<p>' + (a.description || "") + '</p>';
+                html += '<span class="assignment-meta">Due: ' + (a.dueDate || "None") + ' | ' + (a.questions ? a.questions.length : 0) + ' questions</span></div>';
+                html += '<button class="action-btn" onclick="startAssignmentQuiz(' + i + ')">Start</button></div>';
+            }
+        }
+        container.innerHTML = found ? html : "<p>No assignments for your class yet.</p>";
+    }
+
+    function startAssignmentQuiz(assignmentIdx) {
+        var a = DataStore.assignments[assignmentIdx];
+        if (!a || !a.questions || a.questions.length === 0) { alert("No questions in this assignment"); return; }
+        var qs = DataStore.shuffleArray(a.questions);
+        QuizEngine.startQuiz(qs, "assignment", a.classId || "", a.title || "");
+        $("studentDashboard").style.display = "none";
+        $("quiz").style.display = "block";
+        displayQuestion();
+        startTimer();
+    }
+
+    function renderTeacherDashboard() {
+        var user = Auth.getUser();
+        var teacherClasses = [];
+        if (user && user.classIds) {
+            for (var i = 0; i < DataStore.classes.length; i++) {
+                for (var j = 0; j < user.classIds.length; j++) {
+                    if (DataStore.classes[i].id === user.classIds[j]) teacherClasses.push(DataStore.classes[i]);
+                }
+            }
+        }
+        var list = $("classesList");
+        if (list) {
+            if (teacherClasses.length === 0) {
+                list.innerHTML = "<p>No classes assigned yet.</p>";
+            } else {
+                var html = '<div class="classes-grid">';
+                for (var i = 0; i < teacherClasses.length; i++) {
+                    var cl = teacherClasses[i];
+                    var count = DataStore.getStudentCountByClass(cl.id);
+                    html += '<div class="class-card"><h3>' + cl.name + '</h3>';
+                    html += '<p>Students: ' + count + '</p></div>';
+                }
+                html += '</div>';
+                list.innerHTML = html;
+            }
+        }
+        populateAnalyticsClassSelect();
+        renderQuestions();
+        renderAssignments();
+    }
+
+    function populateAnalyticsClassSelect() {
+        var sel = $("analyticsClassSelect");
+        if (!sel) return;
+        var user = Auth.getUser();
+        sel.innerHTML = '<option value="">Select a class</option>';
+        var classList = DataStore.classes;
+        if (user && user.classIds) {
+            classList = [];
+            for (var i = 0; i < DataStore.classes.length; i++) {
+                for (var j = 0; j < user.classIds.length; j++) {
+                    if (DataStore.classes[i].id === user.classIds[j]) classList.push(DataStore.classes[i]);
+                }
+            }
+        }
+        for (var i = 0; i < classList.length; i++) {
+            sel.innerHTML += '<option value="' + classList[i].id + '">' + classList[i].name + '</option>';
+        }
+    }
+
+    function loadClassAnalytics() {
+        var classId = $("analyticsClassSelect") ? $("analyticsClassSelect").value : "";
+        var container = $("classAnalyticsContent");
+        if (!container) return;
+        if (!classId) { container.innerHTML = "<p>Select a class to view analytics</p>"; return; }
+        var attempts = DataStore.getAttemptsByClass(classId);
+        if (attempts.length === 0) { container.innerHTML = "<p>No quiz data for this class yet.</p>"; return; }
+        var avg = 0;
+        var sum = 0;
+        for (var i = 0; i < attempts.length; i++) sum += attempts[i].percentage;
+        avg = Math.round(sum / attempts.length);
+        var html = '<div class="stat-cards">';
+        html += '<div class="stat-card blue"><div class="stat-number">' + attempts.length + '</div><div class="stat-label">Total Attempts</div></div>';
+        html += '<div class="stat-card green"><div class="stat-number">' + avg + '%</div><div class="stat-label">Average Score</div></div>';
+        html += '</div>';
+        var chartData = [];
+        for (var i = attempts.length - 1; i >= 0 && i >= attempts.length - 10; i--) {
+            chartData.push({ label: "Attempt " + (i + 1), value: attempts[i].percentage });
+        }
+        html += '<h4 style="margin-top:15px;">Recent Attempts</h4>';
+        container.innerHTML = html;
+        renderBar(container.id, chartData, 100);
+    }
+
+    function renderQuestions() {
+        var container = $("questionsTable");
+        if (!container) return;
+        var html = '<table class="data-table"><thead><tr><th>ID</th><th>Subject</th><th>Chapter</th><th>Question</th><th>Answer</th><th>Actions</th></tr></thead><tbody>';
+        var show = DataStore.questions.slice(0, 50);
+        for (var i = 0; i < show.length; i++) {
+            var q = show[i];
             html += '<tr>';
             html += '<td>' + (q.id || "-") + '</td>';
             html += '<td>' + (q.subject || "-") + '</td>';
             html += '<td>' + (q.chapter || "-") + '</td>';
-            html += '<td>' + (q.question || "").substring(0, 60) + '</td>';
-            html += '<td>' + (q.options ? q.options.length : 0) + ' opts</td>';
+            html += '<td>' + (q.question || "").substring(0, 50) + '</td>';
             html += '<td>' + (q.answer || "-") + '</td>';
-            html += '<td><button onclick="UI.editQuestion(\'' + (q.id || "").replace(/'/g, "\\'") + '\')" class="btn-sm">Edit</button>';
-            html += '<button onclick="UI.deleteQuestion(\'' + (q.id || "").replace(/'/g, "\\'") + '\')" class="btn-sm btn-danger">Del</button></td>';
+            html += '<td><button class="btn-sm" onclick="editQuestion(\'' + (q.id || "").replace(/'/g, "\\'") + '\')">Edit</button>';
+            html += '<button class="btn-sm btn-danger" onclick="deleteQuestion(\'' + (q.id || "").replace(/'/g, "\\'") + '\')">Del</button></td>';
             html += '</tr>';
         }
-        html += '</tbody></table></div>';
-        if (filtered.length > 100) html += '<p>Showing first 100 of ' + filtered.length + ' questions</p>';
-        var container = $("questionsList");
-        if (container) container.innerHTML = html;
+        html += '</tbody></table>';
+        if (DataStore.questions.length > 50) html += '<p>Showing first 50 of ' + DataStore.questions.length + '</p>';
+        container.innerHTML = html;
+    }
+
+    function filterQuestions() {
+        var search = $("qbSearch") ? $("qbSearch").value.toLowerCase() : "";
+        var subject = $("qbFilterSubject") ? $("qbFilterSubject").value : "";
+        var grade = $("qbFilterGrade") ? $("qbFilterGrade").value : "";
+        var filtered = DataStore.questions;
+        if (search) filtered = filtered.filter(function(q) { return (q.question || "").toLowerCase().indexOf(search) !== -1; });
+        if (subject) filtered = filtered.filter(function(q) { return q.subject === subject; });
+        if (grade) filtered = filtered.filter(function(q) { return String(q.grade) === grade; });
+        var container = $("questionsTable");
+        if (!container) return;
+        var html = '<table class="data-table"><thead><tr><th>ID</th><th>Subject</th><th>Chapter</th><th>Question</th><th>Answer</th><th>Actions</th></tr></thead><tbody>';
+        var show = filtered.slice(0, 50);
+        for (var i = 0; i < show.length; i++) {
+            var q = show[i];
+            html += '<tr>';
+            html += '<td>' + (q.id || "-") + '</td>';
+            html += '<td>' + (q.subject || "-") + '</td>';
+            html += '<td>' + (q.chapter || "-") + '</td>';
+            html += '<td>' + (q.question || "").substring(0, 50) + '</td>';
+            html += '<td>' + (q.answer || "-") + '</td>';
+            html += '<td><button class="btn-sm" onclick="editQuestion(\'' + (q.id || "").replace(/'/g, "\\'") + '\')">Edit</button>';
+            html += '<button class="btn-sm btn-danger" onclick="deleteQuestion(\'' + (q.id || "").replace(/'/g, "\\'") + '\')">Del</button></td>';
+            html += '</tr>';
+        }
+        html += '</tbody></table>';
+        container.innerHTML = html;
     }
 
     function showAddQuestionModal() {
-        var modal = $("questionModal");
-        if (!modal) return;
-        var html = '<div class="modal-content">';
-        html += '<div class="modal-header"><h3>Add Question</h3><span class="modal-close" onclick="UI.closeModal()">&times;</span></div>';
-        html += '<div class="modal-body">';
-        html += '<div class="form-row"><label>Subject:</label><input type="text" id="qSubject" value="Computer Science"></div>';
-        html += '<div class="form-row"><label>Chapter:</label><input type="text" id="qChapter" value="Chapter 1"></div>';
-        html += '<div class="form-row"><label>Topic:</label><input type="text" id="qTopic"></div>';
-        html += '<div class="form-row"><label>Question:</label><textarea id="qText" rows="3"></textarea></div>';
-        html += '<div class="form-row"><label>Option A:</label><input type="text" id="qOptA"></div>';
-        html += '<div class="form-row"><label>Option B:</label><input type="text" id="qOptB"></div>';
-        html += '<div class="form-row"><label>Option C:</label><input type="text" id="qOptC"></div>';
-        html += '<div class="form-row"><label>Option D:</label><input type="text" id="qOptD"></div>';
-        html += '<div class="form-row"><label>Correct (A/B/C/D):</label><select id="qAnswer"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>';
-        html += '<div class="form-row"><label>Explanation:</label><textarea id="qExplanation" rows="2"></textarea></div>';
-        html += '<div class="modal-actions"><button onclick="UI.saveQuestion()" class="btn-action green">Save</button>';
-        html += '<button onclick="UI.closeModal()" class="btn-action">Cancel</button></div>';
-        html += '</div></div>';
-        modal.innerHTML = html;
-        modal.style.display = "flex";
+        $("questionModal").style.display = "block";
+        $("modalOverlay").style.display = "block";
+        $("qmModalTitle").textContent = "Add Question";
+        if ($("questionForm")) $("questionForm").reset();
+        if ($("qmQuestionId")) $("qmQuestionId").value = "";
     }
 
-    function saveQuestion() {
+    function saveQuestion(e) {
+        if (e) e.preventDefault();
         var q = {
-            id: "Q-" + Date.now(),
-            subject: $("qSubject").value.trim(),
-            chapter: $("qChapter").value.trim(),
-            topic: $("qTopic").value.trim(),
-            question: $("qText").value.trim(),
-            options: [$("qOptA").value.trim(), $("qOptB").value.trim(), $("qOptC").value.trim(), $("qOptD").value.trim()],
-            answer: $("qAnswer").value,
-            explanation: $("qExplanation").value.trim()
+            id: $("qmQuestionId").value || ("Q-" + Date.now()),
+            subject: $("qmSubject").value,
+            grade: parseInt($("qmGrade").value),
+            chapter: $("qmChapter").value.trim(),
+            topic: $("qmTopic").value.trim(),
+            difficulty: $("qmDifficulty").value,
+            type: "mcq",
+            question: $("qmText").value.trim(),
+            explanation: $("qmExplanation").value.trim(),
+            options: [$("qmOptionA").value.trim(), $("qmOptionB").value.trim(), $("qmOptionC").value.trim(), $("qmOptionD").value.trim()],
+            answer: $("qmAnswer").value,
+            media: $("qmMedia").value.trim() || null
         };
-        if (!q.question || !q.subject || !q.chapter) { alert("Fill all required fields"); return; }
-        DataStore.questions.push(q);
+        if (!q.question) { alert("Question text required"); return; }
+        if ($("qmQuestionId").value) {
+            for (var i = 0; i < DataStore.questions.length; i++) {
+                if (DataStore.questions[i].id === q.id) { DataStore.questions[i] = q; break; }
+            }
+        } else {
+            DataStore.questions.push(q);
+        }
         DataStore.save();
         closeModal();
-        renderFilteredQuestions();
+        renderQuestions();
     }
 
     function editQuestion(id) {
-        var q = null;
-        for (var i = 0; i < DataStore.questions.length; i++) {
-            if (DataStore.questions[i].id === id) { q = DataStore.questions[i]; break; }
-        }
-        if (!q) return;
-        showAddQuestionModal();
-        $("qSubject").value = q.subject || "";
-        $("qChapter").value = q.chapter || "";
-        $("qTopic").value = q.topic || "";
-        $("qText").value = q.question || "";
-        if (q.options && q.options.length >= 4) {
-            $("qOptA").value = q.options[0];
-            $("qOptB").value = q.options[1];
-            $("qOptC").value = q.options[2];
-            $("qOptD").value = q.options[3];
-        }
-        $("qAnswer").value = q.answer || "A";
-        $("qExplanation").value = q.explanation || "";
-        document.querySelector(".modal-header h3").textContent = "Edit Question";
-        document.querySelector(".modal-actions .btn-green").onclick = function() { updateQuestion(id); };
-    }
-
-    function updateQuestion(id) {
         for (var i = 0; i < DataStore.questions.length; i++) {
             if (DataStore.questions[i].id === id) {
-                DataStore.questions[i].subject = $("qSubject").value.trim();
-                DataStore.questions[i].chapter = $("qChapter").value.trim();
-                DataStore.questions[i].topic = $("qTopic").value.trim();
-                DataStore.questions[i].question = $("qText").value.trim();
-                DataStore.questions[i].options = [$("qOptA").value.trim(), $("qOptB").value.trim(), $("qOptC").value.trim(), $("qOptD").value.trim()];
-                DataStore.questions[i].answer = $("qAnswer").value;
-                DataStore.questions[i].explanation = $("qExplanation").value.trim();
+                var q = DataStore.questions[i];
+                showAddQuestionModal();
+                $("qmModalTitle").textContent = "Edit Question";
+                $("qmQuestionId").value = q.id;
+                $("qmSubject").value = q.subject || "Computer Science";
+                $("qmGrade").value = q.grade || 9;
+                $("qmChapter").value = q.chapter || "";
+                $("qmTopic").value = q.topic || "";
+                $("qmDifficulty").value = q.difficulty || "easy";
+                $("qmText").value = q.question || "";
+                $("qmExplanation").value = q.explanation || "";
+                if (q.options && q.options.length >= 4) {
+                    $("qmOptionA").value = q.options[0];
+                    $("qmOptionB").value = q.options[1];
+                    $("qmOptionC").value = q.options[2];
+                    $("qmOptionD").value = q.options[3];
+                }
+                $("qmAnswer").value = q.answer || "A";
+                $("qmMedia").value = q.media || "";
                 break;
             }
         }
-        DataStore.save();
-        closeModal();
-        renderFilteredQuestions();
     }
 
     function deleteQuestion(id) {
         if (!confirm("Delete this question?")) return;
         DataStore.questions = DataStore.questions.filter(function(q) { return q.id !== id; });
         DataStore.save();
-        renderFilteredQuestions();
+        renderQuestions();
     }
 
-    function showTeacherAssignments() {
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>Assignments</h2>';
-        html += '<button onclick="renderDashboard()" class="btn-back">Back</button>';
-        html += '<button onclick="UI.showCreateAssignmentModal()" class="btn-action green">+ Create Assignment</button></div>';
-        html += '<div id="assignmentsList"></div></div>';
-        var dashboards = $("dashboards");
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
+    function renderAssignments() {
         var container = $("assignmentsList");
+        if (!container) return;
         if (DataStore.assignments.length === 0) { container.innerHTML = "<p>No assignments yet.</p>"; return; }
-        var html2 = '<div class="assignments-list">';
+        var html = "";
         for (var i = 0; i < DataStore.assignments.length; i++) {
             var a = DataStore.assignments[i];
-            html2 += '<div class="assignment-item">';
-            html2 += '<div class="assignment-info"><h4>' + (a.title || "Untitled") + '</h4>';
-            html2 += '<p>' + (a.description || "") + '</p>';
-            html2 += '<span class="assignment-meta">' + (a.questions ? a.questions.length : 0) + ' questions | Due: ' + (a.dueDate || "None") + '</span></div>';
-            html2 += '<div class="assignment-actions">';
-            html2 += '<button onclick="UI.editAssignment(' + i + ')" class="btn-sm">Edit</button>';
-            html2 += '<button onclick="UI.deleteAssignment(' + i + ')" class="btn-sm btn-danger">Delete</button>';
-            html2 += '</div></div>';
+            html += '<div class="assignment-item">';
+            html += '<div class="assignment-info"><h4>' + (a.title || "Untitled") + '</h4>';
+            html += '<p>' + (a.description || "") + '</p>';
+            html += '<span class="assignment-meta">' + (a.questions ? a.questions.length : 0) + ' questions | Due: ' + (a.dueDate || "None") + '</span></div>';
+            html += '<div class="assignment-actions">';
+            html += '<button class="btn-sm" onclick="editAssignment(' + i + ')">Edit</button>';
+            html += '<button class="btn-sm btn-danger" onclick="deleteAssignment(' + i + ')">Del</button>';
+            html += '</div></div>';
         }
-        html2 += '</div>';
-        container.innerHTML = html2;
+        container.innerHTML = html;
     }
 
     function showCreateAssignmentModal() {
-        var modal = $("assignmentModal");
-        if (!modal) return;
-        var html = '<div class="modal-content">';
-        html += '<div class="modal-header"><h3>Create Assignment</h3><span class="modal-close" onclick="UI.closeModal()">&times;</span></div>';
-        html += '<div class="modal-body">';
-        html += '<div class="form-row"><label>Title:</label><input type="text" id="aTitle"></div>';
-        html += '<div class="form-row"><label>Description:</label><textarea id="aDesc" rows="2"></textarea></div>';
-        html += '<div class="form-row"><label>Due Date:</label><input type="date" id="aDue"></div>';
-        html += '<div class="form-row"><label>Class:</label><select id="aClass">';
-        for (var i = 0; i < DataStore.classes.length; i++) {
-            html += '<option value="' + DataStore.classes[i].id + '">' + DataStore.classes[i].name + '</option>';
-        }
-        html += '</select></div>';
-        html += '<div class="form-row"><label>Select Questions:</label><div id="aQuestionList"></div></div>';
-        html += '<div class="modal-actions"><button onclick="UI.saveAssignment()" class="btn-action green">Save</button>';
-        html += '<button onclick="UI.closeModal()" class="btn-action">Cancel</button></div>';
-        html += '</div></div>';
-        modal.innerHTML = html;
-        modal.style.display = "flex";
-        var qList = $("aQuestionList");
-        var qHtml = '<div class="question-select-list">';
-        var show = DataStore.questions.slice(0, 50);
-        for (var i = 0; i < show.length; i++) {
-            qHtml += '<label class="question-select-item"><input type="checkbox" value="' + i + '"> ' + (show[i].question || "").substring(0, 50) + '...</label>';
-        }
-        qHtml += '</div>';
-        qList.innerHTML = qHtml;
+        $("assignmentModal").style.display = "block";
+        $("modalOverlay").style.display = "block";
     }
 
     function saveAssignment() {
-        var a = {
-            id: "A-" + Date.now(),
-            title: $("aTitle").value.trim(),
-            description: $("aDesc").value.trim(),
-            dueDate: $("aDue").value,
-            classId: $("aClass").value,
-            questions: [],
-            createdAt: Date.now()
-        };
-        if (!a.title) { alert("Title required"); return; }
-        var checkboxes = document.querySelectorAll("#aQuestionList input[type='checkbox']:checked");
-        for (var i = 0; i < checkboxes.length; i++) {
-            var idx = parseInt(checkboxes[i].value);
-            if (DataStore.questions[idx]) a.questions.push(DataStore.questions[idx]);
-        }
+        var title = $("aTitle") ? $("aTitle").value.trim() : "";
+        var desc = $("aDesc") ? $("aDesc").value.trim() : "";
+        var due = $("aDue") ? $("aDue").value : "";
+        if (!title) { alert("Title required"); return; }
+        var a = { id: "A-" + Date.now(), title: title, description: desc, dueDate: due, questions: [], createdAt: Date.now() };
         DataStore.assignments.push(a);
         DataStore.save();
         closeModal();
-        showTeacherAssignments();
+        renderAssignments();
     }
 
-    function editAssignment(idx) {
-        showCreateAssignmentModal();
-        var a = DataStore.assignments[idx];
-        $("aTitle").value = a.title || "";
-        $("aDesc").value = a.description || "";
-        $("aDue").value = a.dueDate || "";
-        $("aClass").value = a.classId || "";
-        document.querySelector(".modal-header h3").textContent = "Edit Assignment";
-    }
-
+    function editAssignment(idx) { alert("Edit assignment " + idx); }
     function deleteAssignment(idx) {
         if (!confirm("Delete this assignment?")) return;
         DataStore.assignments.splice(idx, 1);
         DataStore.save();
-        showTeacherAssignments();
+        renderAssignments();
     }
 
-    function showTeacherAnalytics() {
-        var attempts = DataStore.allAttempts;
+    function renderPrincipalDashboard() {
+        var totalStudents = DataStore.studentAccounts.length;
+        var totalTeachers = DataStore.teachers.length;
+        var totalClasses = DataStore.classes.length;
+        var totalAttempts = DataStore.allAttempts.length;
         var avg = 0;
-        if (attempts.length > 0) { var sum = 0; for (var i = 0; i < attempts.length; i++) sum += attempts[i].percentage; avg = Math.round(sum / attempts.length); }
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>Analytics</h2>';
-        html += '<button onclick="renderDashboard()" class="btn-back">Back</button></div>';
-        html += '<div class="stat-cards"><div class="stat-card blue"><div class="stat-number">' + attempts.length + '</div><div class="stat-label">Total Attempts</div></div>';
-        html += '<div class="stat-card green"><div class="stat-number">' + avg + '%</div><div class="stat-label">Average Score</div></div></div>';
-        html += '<div class="chart-section"><h3>Recent Attempts</h3><div id="attemptsChart"></div></div></div>';
-        var dashboards = $("dashboards");
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
-        var chartData = [];
-        var recent = attempts.slice(-10);
-        for (var i = 0; i < recent.length; i++) {
-            chartData.push({ label: "Attempt " + (i + 1), value: recent[i].percentage });
-        }
-        renderBar("attemptsChart", chartData, 100);
-    }
-
-    function showPrincipalStudents() {
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>Students</h2>';
-        html += '<button onclick="renderDashboard()" class="btn-back">Back</button>';
-        html += '<button onclick="UI.showAddStudentModal()" class="btn-action green">+ Add Student</button>';
-        html += '<button onclick="UI.showExcelImportModal()" class="btn-action blue">Import Excel</button></div>';
-        html += '<div class="filter-bar"><select id="filterClass" onchange="UI.renderStudentList()"><option value="">All Classes</option>';
-        for (var i = 0; i < DataStore.classes.length; i++) {
-            html += '<option value="' + DataStore.classes[i].id + '">' + DataStore.classes[i].name + '</option>';
-        }
-        html += '</select></div>';
-        html += '<div id="studentList"></div></div>';
-        var dashboards = $("dashboards");
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
-        renderStudentList();
-    }
-
-    function renderStudentList() {
-        var classId = $("filterClass") ? $("filterClass").value : "";
-        var filtered = DataStore.studentAccounts;
-        if (classId) filtered = filtered.filter(function(s) { return s.classId === classId; });
-        var container = $("studentList");
+        if (totalAttempts > 0) { var sum = 0; for (var i = 0; i < DataStore.allAttempts.length; i++) sum += DataStore.allAttempts[i].percentage; avg = Math.round(sum / totalAttempts); }
+        var container = $("principalSchoolContent");
         if (!container) return;
-        if (filtered.length === 0) { container.innerHTML = "<p>No students found.</p>"; return; }
-        var html = '<div class="students-table"><table><thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Password</th><th>Actions</th></tr></thead><tbody>';
-        for (var i = 0; i < filtered.length; i++) {
-            var s = filtered[i];
-            var className = "";
-            for (var j = 0; j < DataStore.classes.length; j++) {
-                if (DataStore.classes[j].id === s.classId) { className = DataStore.classes[j].name; break; }
-            }
-            html += '<tr>';
-            html += '<td>' + s.id + '</td>';
-            html += '<td>' + (s.name || "-") + '</td>';
-            html += '<td>' + className + '</td>';
-            html += '<td>••••••••</td>';
-            html += '<td><button onclick="UI.editStudent(\'' + s.id + '\')" class="btn-sm">Edit</button>';
-            html += '<button onclick="UI.deleteStudent(\'' + s.id + '\')" class="btn-sm btn-danger">Del</button></td>';
-            html += '</tr>';
-        }
-        html += '</tbody></table></div>';
+        var html = '<div class="stat-cards">';
+        html += '<div class="stat-card blue"><div class="stat-number">' + totalStudents + '</div><div class="stat-label">Students</div></div>';
+        html += '<div class="stat-card green"><div class="stat-number">' + totalTeachers + '</div><div class="stat-label">Teachers</div></div>';
+        html += '<div class="stat-card purple"><div class="stat-number">' + totalClasses + '</div><div class="stat-label">Classes</div></div>';
+        html += '<div class="stat-card orange"><div class="stat-number">' + totalAttempts + '</div><div class="stat-label">Attempts</div></div>';
+        html += '<div class="stat-card green"><div class="stat-number">' + avg + '%</div><div class="stat-label">Avg Score</div></div>';
+        html += '</div>';
         container.innerHTML = html;
     }
 
-    function showAddStudentModal() {
-        var modal = $("studentModal");
-        if (!modal) return;
-        var html = '<div class="modal-content">';
-        html += '<div class="modal-header"><h3>Add Student</h3><span class="modal-close" onclick="UI.closeModal()">&times;</span></div>';
-        html += '<div class="modal-body">';
-        html += '<div class="form-row"><label>Class:</label><select id="sClass">';
-        for (var i = 0; i < DataStore.classes.length; i++) {
-            html += '<option value="' + DataStore.classes[i].id + '">' + DataStore.classes[i].name + '</option>';
+    function showPrincipalTab(tab) {
+        var tabs = ["school", "classes", "teachers", "students", "analytics"];
+        for (var i = 0; i < tabs.length; i++) {
+            var el = $("principal" + tabs[i].charAt(0).toUpperCase() + tabs[i].slice(1) + "Tab");
+            if (el) el.style.display = tabs[i] === tab ? "block" : "none";
         }
-        html += '</select></div>';
-        html += '<div class="form-row"><label>Name:</label><input type="text" id="sName"></div>';
-        html += '<div class="form-row"><label>Roll No:</label><input type="number" id="sRoll" min="1"></div>';
-        html += '<div class="form-row"><label>Password:</label><input type="text" id="sPassword"></div>';
-        html += '<div class="modal-actions"><button onclick="UI.saveStudent()" class="btn-action green">Save</button>';
-        html += '<button onclick="UI.closeModal()" class="btn-action">Cancel</button></div>';
-        html += '</div></div>';
-        modal.innerHTML = html;
-        modal.style.display = "flex";
+        var btns = document.querySelectorAll("#principalDashboard .tab-btn");
+        for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+        if (btns[tabs.indexOf(tab)]) btns[tabs.indexOf(tab)].classList.add("active");
+        if (tab === "school") renderPrincipalDashboard();
+        else if (tab === "classes") renderPrincipalClasses();
+        else if (tab === "teachers") renderPrincipalTeachers();
+        else if (tab === "students") renderPrincipalStudents();
+        else if (tab === "analytics") renderPrincipalAnalytics();
     }
 
-    function saveStudent() {
-        var classId = $("sClass").value;
-        var name = $("sName").value.trim();
-        var roll = parseInt($("sRoll").value);
-        var password = $("sPassword").value.trim() || DataStore.generateRandomPassword();
-        if (!name || !roll) { alert("Name and roll required"); return; }
-        var classObj = DataStore.findClassById(classId);
-        if (!classObj) { alert("Class not found"); return; }
-        var id = DataStore.generateStudentId(classObj, roll);
-        var existing = DataStore.findStudentById(id);
-        if (existing) { alert("Student with ID " + id + " already exists"); return; }
-        var student = { id: id, name: name, classId: classId, rollNo: roll, password: password, createdAt: Date.now() };
-        DataStore.addStudent(student);
-        var email = id.toLowerCase() + "@imsg.edu.pk";
-        if (typeof fbAuth !== "undefined" && fbAuth) {
-            fbAuth.createUserWithEmailAndPassword(email, password + "!Aa1").catch(function() {});
-        }
-        closeModal();
-        renderStudentList();
-    }
-
-    function editStudent(id) {
-        var s = DataStore.findStudentById(id);
-        if (!s) return;
-        showAddStudentModal();
-        $("sName").value = s.name || "";
-        $("sClass").value = s.classId || "";
-        $("sPassword").value = s.password || "";
-        document.querySelector(".modal-header h3").textContent = "Edit Student";
-    }
-
-    function deleteStudent(id) {
-        if (!confirm("Delete student " + id + "?")) return;
-        DataStore.removeStudent(id);
-        renderStudentList();
-    }
-
-    function showAddTeacherModal() {
-        var modal = $("teacherModal");
-        if (!modal) return;
-        var html = '<div class="modal-content">';
-        html += '<div class="modal-header"><h3>Add Teacher</h3><span class="modal-close" onclick="UI.closeModal()">&times;</span></div>';
-        html += '<div class="modal-body">';
-        html += '<div class="form-row"><label>Name:</label><input type="text" id="tName"></div>';
-        html += '<div class="form-row"><label>Subject:</label><input type="text" id="tSubject"></div>';
-        html += '<div class="form-row"><label>Role:</label><select id="tRole"><option value="subject">Subject Teacher</option><option value="class">Class Teacher</option><option value="both">Both</option></select></div>';
-        html += '<div class="form-row" id="tClassRow"><label>Class:</label><select id="tClass">';
-        for (var i = 0; i < DataStore.classes.length; i++) {
-            html += '<option value="' + DataStore.classes[i].id + '">' + DataStore.classes[i].name + '</option>';
-        }
-        html += '</select></div>';
-        html += '<div class="form-row"><label>Password:</label><input type="text" id="tPassword"></div>';
-        html += '<div class="modal-actions"><button onclick="UI.saveTeacher()" class="btn-action green">Save</button>';
-        html += '<button onclick="UI.closeModal()" class="btn-action">Cancel</button></div>';
-        html += '</div></div>';
-        modal.innerHTML = html;
-        modal.style.display = "flex";
-    }
-
-    function saveTeacher() {
-        var name = $("tName").value.trim();
-        var subject = $("tSubject").value.trim();
-        var role = $("tRole").value;
-        var classId = $("tClass").value;
-        var password = $("tPassword").value.trim() || DataStore.generateRandomPassword();
-        if (!name) { alert("Name required"); return; }
-        var id = DataStore.generateTeacherId();
-        var teacher = { id: id, name: name, subject: subject, role: role, classId: role !== "subject" ? classId : "", password: password, createdAt: Date.now() };
-        DataStore.addTeacher(teacher);
-        var email = id.toLowerCase() + "@imsg.edu.pk";
-        if (typeof fbAuth !== "undefined" && fbAuth) {
-            fbAuth.createUserWithEmailAndPassword(email, password + "!Aa1").catch(function() {});
-        }
-        closeModal();
-        renderTeacherList();
-    }
-
-    function showPrincipalTeachers() {
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>Teachers</h2>';
-        html += '<button onclick="renderDashboard()" class="btn-back">Back</button>';
-        html += '<button onclick="UI.showAddTeacherModal()" class="btn-action green">+ Add Teacher</button></div>';
-        html += '<div id="teacherList"></div></div>';
-        var dashboards = $("dashboards");
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
-        renderTeacherList();
-    }
-
-    function renderTeacherList() {
-        var container = $("teacherList");
-        if (!container) return;
-        if (DataStore.teachers.length === 0) { container.innerHTML = "<p>No teachers.</p>"; return; }
-        var html = '<div class="teachers-table"><table><thead><tr><th>ID</th><th>Name</th><th>Subject</th><th>Role</th><th>Class</th><th>Actions</th></tr></thead><tbody>';
-        for (var i = 0; i < DataStore.teachers.length; i++) {
-            var t = DataStore.teachers[i];
-            var className = "";
-            if (t.classId) {
-                for (var j = 0; j < DataStore.classes.length; j++) {
-                    if (DataStore.classes[j].id === t.classId) { className = DataStore.classes[j].name; break; }
-                }
-            }
-            html += '<tr>';
-            html += '<td>' + t.id + '</td>';
-            html += '<td>' + (t.name || "-") + '</td>';
-            html += '<td>' + (t.subject || "-") + '</td>';
-            html += '<td>' + (t.role || "subject") + '</td>';
-            html += '<td>' + className + '</td>';
-            html += '<td><button onclick="UI.editTeacher(\'' + t.id + '\')" class="btn-sm">Edit</button>';
-            html += '<button onclick="UI.deleteTeacher(\'' + t.id + '\')" class="btn-sm btn-danger">Del</button></td>';
-            html += '</tr>';
-        }
-        html += '</tbody></table></div>';
-        container.innerHTML = html;
-    }
-
-    function editTeacher(id) {
-        var t = DataStore.findTeacherById(id);
-        if (!t) return;
-        showAddTeacherModal();
-        $("tName").value = t.name || "";
-        $("tSubject").value = t.subject || "";
-        $("tRole").value = t.role || "subject";
-        $("tClass").value = t.classId || "";
-        $("tPassword").value = t.password || "";
-        document.querySelector(".modal-header h3").textContent = "Edit Teacher";
-    }
-
-    function deleteTeacher(id) {
-        if (!confirm("Delete teacher " + id + "?")) return;
-        DataStore.removeTeacher(id);
-        renderTeacherList();
-    }
-
-    function showPrincipalClasses() {
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>Classes</h2>';
-        html += '<button onclick="renderDashboard()" class="btn-back">Back</button>';
-        html += '<button onclick="UI.showAddClassModal()" class="btn-action green">+ Add Class</button></div>';
-        html += '<div id="classList"></div></div>';
-        var dashboards = $("dashboards");
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
-        renderClassList();
-    }
-
-    function renderClassList() {
-        var container = $("classList");
+    function renderPrincipalClasses() {
+        var container = $("principalClassesContent");
         if (!container) return;
         var html = '<div class="classes-grid">';
         for (var i = 0; i < DataStore.classes.length; i++) {
             var cl = DataStore.classes[i];
             var count = DataStore.getStudentCountByClass(cl.id);
-            html += '<div class="class-card">';
-            html += '<h3>' + cl.name + '</h3>';
+            html += '<div class="class-card"><h3>' + cl.name + '</h3>';
             html += '<p>Grade: ' + cl.grade + ' | Section: ' + cl.section + '</p>';
             html += '<p>Students: ' + count + '</p>';
             html += '<div class="class-actions">';
-            html += '<button onclick="UI.editClass(' + i + ')" class="btn-sm">Edit</button>';
-            html += '<button onclick="UI.deleteClass(' + i + ')" class="btn-sm btn-danger">Del</button>';
+            html += '<button class="btn-sm" onclick="editClass(' + i + ')">Edit</button>';
+            html += '<button class="btn-sm btn-danger" onclick="deleteClass(' + i + ')">Del</button>';
             html += '</div></div>';
         }
         html += '</div>';
+        html += '<button class="action-btn" onclick="showAddClassModal()">+ Add Class</button>';
         container.innerHTML = html;
     }
 
-    function showAddClassModal() {
-        var modal = $("classModal");
-        if (!modal) return;
-        var html = '<div class="modal-content">';
-        html += '<div class="modal-header"><h3>Add Class</h3><span class="modal-close" onclick="UI.closeModal()">&times;</span></div>';
-        html += '<div class="modal-body">';
-        html += '<div class="form-row"><label>Grade:</label><input type="number" id="cGrade" value="9"></div>';
-        html += '<div class="form-row"><label>Section:</label><input type="text" id="cSection" placeholder="A"></div>';
-        html += '<div class="modal-actions"><button onclick="UI.saveClass()" class="btn-action green">Save</button>';
-        html += '<button onclick="UI.closeModal()" class="btn-action">Cancel</button></div>';
-        html += '</div></div>';
-        modal.innerHTML = html;
-        modal.style.display = "flex";
-    }
-
-    function saveClass() {
-        var grade = parseInt($("cGrade").value);
-        var section = $("cSection").value.trim().toUpperCase();
-        if (!grade || !section) { alert("Grade and section required"); return; }
-        var id = "CLASS-" + grade + section;
-        for (var i = 0; i < DataStore.classes.length; i++) {
-            if (DataStore.classes[i].id === id) { alert("Class already exists"); return; }
+    function renderPrincipalTeachers() {
+        var container = $("principalTeachersContent");
+        if (!container) return;
+        if (DataStore.teachers.length === 0) { container.innerHTML = "<p>No teachers.</p>"; return; }
+        var html = '<table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Subject</th><th>Role</th><th>Actions</th></tr></thead><tbody>';
+        for (var i = 0; i < DataStore.teachers.length; i++) {
+            var t = DataStore.teachers[i];
+            html += '<tr><td>' + t.id + '</td><td>' + (t.name || "-") + '</td><td>' + (t.subject || "-") + '</td><td>' + (t.role || "subject") + '</td>';
+            html += '<td><button class="btn-sm" onclick="editTeacher(\'' + t.id + '\')">Edit</button>';
+            html += '<button class="btn-sm btn-danger" onclick="deleteTeacher(\'' + t.id + '\')">Del</button></td></tr>';
         }
-        DataStore.classes.push({ id: id, name: grade + section, grade: grade, section: section });
-        DataStore.save();
-        closeModal();
-        renderClassList();
+        html += '</tbody></table>';
+        container.innerHTML = html;
     }
 
-    function editClass(idx) {
-        var cl = DataStore.classes[idx];
-        showAddClassModal();
-        $("cGrade").value = cl.grade;
-        $("cSection").value = cl.section;
-        document.querySelector(".modal-header h3").textContent = "Edit Class";
+    function renderPrincipalStudents() {
+        var container = $("principalStudentsContent");
+        if (!container) return;
+        if (DataStore.studentAccounts.length === 0) { container.innerHTML = "<p>No students.</p>"; return; }
+        var html = '<table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Actions</th></tr></thead><tbody>';
+        for (var i = 0; i < DataStore.studentAccounts.length; i++) {
+            var s = DataStore.studentAccounts[i];
+            var className = "";
+            for (var j = 0; j < DataStore.classes.length; j++) {
+                if (DataStore.classes[j].id === s.classId) { className = DataStore.classes[j].name; break; }
+            }
+            html += '<tr><td>' + s.id + '</td><td>' + (s.name || "-") + '</td><td>' + className + '</td>';
+            html += '<td><button class="btn-sm" onclick="editStudent(\'' + s.id + '\')">Edit</button>';
+            html += '<button class="btn-sm btn-danger" onclick="deleteStudent(\'' + s.id + '\')">Del</button></td></tr>';
+        }
+        html += '</tbody></table>';
+        container.innerHTML = html;
     }
 
-    function deleteClass(idx) {
-        if (!confirm("Delete this class?")) return;
-        DataStore.classes.splice(idx, 1);
-        DataStore.save();
-        renderClassList();
-    }
-
-    function showPrincipalAnalytics() {
+    function renderPrincipalAnalytics() {
+        var container = $("principalAnalyticsContent");
+        if (!container) return;
         var attempts = DataStore.allAttempts;
         var avg = 0;
         if (attempts.length > 0) { var sum = 0; for (var i = 0; i < attempts.length; i++) sum += attempts[i].percentage; avg = Math.round(sum / attempts.length); }
-        var html = '<div class="dashboard-section"><div class="section-header"><h2>School Analytics</h2>';
-        html += '<button onclick="renderDashboard()" class="btn-back">Back</button></div>';
-        html += '<div class="stat-cards">';
+        var html = '<div class="stat-cards">';
         html += '<div class="stat-card blue"><div class="stat-number">' + attempts.length + '</div><div class="stat-label">Total Attempts</div></div>';
         html += '<div class="stat-card green"><div class="stat-number">' + avg + '%</div><div class="stat-label">Average Score</div></div>';
         html += '<div class="stat-card purple"><div class="stat-number">' + DataStore.studentAccounts.length + '</div><div class="stat-label">Active Students</div></div>';
         html += '</div>';
-        html += '<div class="chart-section"><h3>Score Distribution</h3><div id="scoreChart"></div></div>';
-        html += '<div class="chart-section"><h3>Subject Performance</h3><div id="subjectChart"></div></div></div>';
-        var dashboards = $("dashboards");
-        dashboards.innerHTML = html;
-        dashboards.style.display = "block";
+        html += '<h4 style="margin-top:15px;">Score Distribution</h4><div id="principalScoreChart"></div>';
+        html += '<h4 style="margin-top:15px;">Subject Performance</h4><div id="principalSubjectChart"></div>';
+        container.innerHTML = html;
         var scoreData = [
             { label: "Excellent (80-100)", value: 0 },
             { label: "Good (60-79)", value: 0 },
@@ -933,7 +746,7 @@ var UI = (function() {
             else if (p >= 40) scoreData[2].value++;
             else scoreData[3].value++;
         }
-        renderDonut("scoreChart", scoreData);
+        renderDonut("principalScoreChart", scoreData);
         var subjectData = {};
         for (var i = 0; i < attempts.length; i++) {
             var sub = attempts[i].subject || "Unknown";
@@ -946,163 +759,204 @@ var UI = (function() {
         for (var i = 0; i < subKeys.length; i++) {
             subjectArr.push({ label: subKeys[i], value: Math.round(subjectData[subKeys[i]].total / subjectData[subKeys[i]].count) });
         }
-        renderBar("subjectChart", subjectArr, 100);
+        renderBar("principalSubjectChart", subjectArr, 100);
     }
 
-    function showExcelImportModal() {
-        var modal = $("excelModal");
-        if (!modal) return;
-        var html = '<div class="modal-content">';
-        html += '<div class="modal-header"><h3>Import Students from Excel</h3><span class="modal-close" onclick="UI.closeModal()">&times;</span></div>';
-        html += '<div class="modal-body">';
-        html += '<div class="form-row"><label>Select Excel File:</label><input type="file" id="excelFile" accept=".xlsx,.xls,.csv"></div>';
-        html += '<div id="excelPreview"></div>';
-        html += '<div class="modal-actions"><button onclick="UI.previewExcel()" class="btn-action blue">Preview</button>';
-        html += '<button onclick="UI.confirmExcelImport()" class="btn-action green">Import</button>';
-        html += '<button onclick="UI.closeModal()" class="btn-action">Cancel</button></div>';
-        html += '</div></div>';
-        modal.innerHTML = html;
-        modal.style.display = "flex";
-    }
-
-    var excelData = [];
-    function previewExcel() {
-        var file = $("excelFile").files[0];
-        if (!file) { alert("Select a file"); return; }
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                var wb = XLSX.read(e.target.result, { type: "array" });
-                var ws = wb.Sheets[wb.SheetNames[0]];
-                var data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-                excelData = [];
-                var html = '<table><thead><tr>';
-                if (data.length > 0) {
-                    for (var j = 0; j < data[0].length; j++) html += '<th>' + (data[0][j] || "") + '</th>';
-                    html += '</tr></thead><tbody>';
-                    for (var i = 1; i < data.length && i <= 20; i++) {
-                        html += '<tr>';
-                        var row = {};
-                        for (var j = 0; j < data[i].length; j++) {
-                            html += '<td>' + (data[i][j] || "") + '</td>';
-                            if (data[0] && data[0][j]) row[data[0][j]] = data[i][j];
-                        }
-                        excelData.push(row);
-                        html += '</tr>';
-                    }
-                    html += '</tbody></table>';
-                    html += '<p>' + (data.length - 1) + ' rows found. Showing first 20.</p>';
-                } else {
-                    html = '<p>No data found</p>';
-                }
-                $("excelPreview").innerHTML = html;
-            } catch(err) { alert("Error reading file: " + err.message); }
-        };
-        reader.readAsArrayBuffer(file);
-    }
-
-    function confirmExcelImport() {
-        if (excelData.length === 0) { alert("Preview first"); return; }
-        var count = 0;
-        for (var i = 0; i < excelData.length; i++) {
-            var row = excelData[i];
-            var name = row.name || row.Name || row.STUDENT_NAME || "";
-            var className = row.class || row.Class || row.CLASS || row.className || "";
-            var roll = row.roll || row.ROLL || row.rollNo || row.RollNo || "";
-            var password = row.password || row.PASSWORD || DataStore.generateRandomPassword();
-            if (!name || !className) continue;
-            var classObj = null;
-            for (var j = 0; j < DataStore.classes.length; j++) {
-                if (DataStore.classes[j].name === className || DataStore.classes[j].id === className) { classObj = DataStore.classes[j]; break; }
-            }
-            if (!classObj) {
-                var grade = parseInt(className);
-                var section = className.replace(/[0-9]/g, "") || "A";
-                classObj = { id: "CLASS-" + grade + section, name: className, grade: grade || 9, section: section };
-                DataStore.classes.push(classObj);
-            }
-            var id = DataStore.generateStudentId(classObj, parseInt(roll) || (DataStore.studentAccounts.length + 1));
-            var existing = DataStore.findStudentById(id);
-            if (existing) continue;
-            var student = { id: id, name: name, classId: classObj.id, rollNo: parseInt(roll) || (DataStore.studentAccounts.length + 1), password: password, createdAt: Date.now() };
-            DataStore.addStudent(student);
-            var email = id.toLowerCase() + "@imsg.edu.pk";
-            if (typeof fbAuth !== "undefined" && fbAuth) {
-                fbAuth.createUserWithEmailAndPassword(email, password + "!Aa1").catch(function() {});
-            }
-            count++;
+    function showTeacherTab(tab) {
+        var tabs = ["classes", "questionbank", "assignments", "analytics"];
+        for (var i = 0; i < tabs.length; i++) {
+            var el = $("teacher" + tabs[i].charAt(0).toUpperCase() + tabs[i].slice(1) + "Tab");
+            if (el) el.style.display = tabs[i] === tab ? "block" : "none";
         }
-        DataStore.save();
-        excelData = [];
-        closeModal();
-        alert("Imported " + count + " students");
-        renderStudentList();
+        var btns = document.querySelectorAll("#teacherDashboard .tab-btn");
+        for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+        if (btns[tabs.indexOf(tab)]) btns[tabs.indexOf(tab)].classList.add("active");
     }
 
+    function showStudentTab(tab) {
+        var tabs = ["practice", "assignments", "results", "progress"];
+        for (var i = 0; i < tabs.length; i++) {
+            var el = $("student" + tabs[i].charAt(0).toUpperCase() + tabs[i].slice(1) + "Tab");
+            if (el) el.style.display = tabs[i] === tab ? "block" : "none";
+        }
+        var btns = document.querySelectorAll("#studentDashboard .tab-btn");
+        for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+        if (btns[tabs.indexOf(tab)]) btns[tabs.indexOf(tab)].classList.add("active");
+        if (tab === "practice") {
+            $("subjectListView").style.display = "block";
+            $("chapterListView").style.display = "none";
+        }
+    }
+
+    function showCTTab(tab) {
+        var tabs = ["overview", "students", "cross-subject"];
+        for (var i = 0; i < tabs.length; i++) {
+            var el = $("ct" + tabs[i].charAt(0).toUpperCase() + tabs[i].slice(1).replace("-", "") + "Tab");
+            if (el) el.style.display = tabs[i] === tab ? "block" : "none";
+        }
+        var btns = document.querySelectorAll("#classTeacherDashboard .tab-btn");
+        for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+        if (btns[tabs.indexOf(tab)]) btns[tabs.indexOf(tab)].classList.add("active");
+    }
+
+    function showParentTab(tab) {
+        var tabs = ["progress", "assignments", "results", "attendance"];
+        for (var i = 0; i < tabs.length; i++) {
+            var el = $("parent" + tabs[i].charAt(0).toUpperCase() + tabs[i].slice(1) + "Tab");
+            if (el) el.style.display = tabs[i] === tab ? "block" : "none";
+        }
+        var btns = document.querySelectorAll("#parentDashboard .tab-btn");
+        for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+        if (btns[tabs.indexOf(tab)]) btns[tabs.indexOf(tab)].classList.add("active");
+    }
+
+    function showAddTeacherModal() {
+        $("teacherModal").style.display = "block";
+        $("modalOverlay").style.display = "block";
+    }
+
+    function saveTeacher() {
+        var name = $("tName") ? $("tName").value.trim() : "";
+        if (!name) { alert("Name required"); return; }
+        var id = DataStore.generateTeacherId();
+        var teacher = { id: id, name: name, subject: $("tSubject") ? $("tSubject").value : "", role: "subject", password: $("tPassword") ? $("tPassword").value.trim() || DataStore.generateRandomPassword() : DataStore.generateRandomPassword(), createdAt: Date.now() };
+        DataStore.addTeacher(teacher);
+        closeModal();
+        renderPrincipalTeachers();
+    }
+
+    function editTeacher(id) { alert("Edit teacher " + id); }
+    function deleteTeacher(id) {
+        if (!confirm("Delete teacher " + id + "?")) return;
+        DataStore.removeTeacher(id);
+        renderPrincipalTeachers();
+    }
+
+    function showCreateStudentModal() {
+        $("studentModal").style.display = "block";
+        $("modalOverlay").style.display = "block";
+    }
+
+    function saveStudent() {
+        var name = $("sName") ? $("sName").value.trim() : "";
+        var classId = $("sClass") ? $("sClass").value : "";
+        var roll = $("sRoll") ? parseInt($("sRoll").value) : 0;
+        if (!name || !classId || !roll) { alert("All fields required"); return; }
+        var classObj = DataStore.findClassById(classId);
+        if (!classObj) { alert("Class not found"); return; }
+        var id = DataStore.generateStudentId(classObj, roll);
+        if (DataStore.findStudentById(id)) { alert("Student " + id + " already exists"); return; }
+        var password = $("sPassword") ? $("sPassword").value.trim() || DataStore.generateRandomPassword() : DataStore.generateRandomPassword();
+        var student = { id: id, name: name, classId: classId, rollNo: roll, password: password, createdAt: Date.now() };
+        DataStore.addStudent(student);
+        closeModal();
+        renderPrincipalStudents();
+    }
+
+    function editStudent(id) { alert("Edit student " + id); }
+    function deleteStudent(id) {
+        if (!confirm("Delete student " + id + "?")) return;
+        DataStore.removeStudent(id);
+        renderPrincipalStudents();
+    }
+
+    function showAddClassModal() {
+        $("classModal").style.display = "block";
+        $("modalOverlay").style.display = "block";
+    }
+
+    function saveClass() {
+        var grade = $("cGrade") ? parseInt($("cGrade").value) : 0;
+        var section = $("cSection") ? $("cSection").value.trim() : "";
+        if (!grade || !section) { alert("Grade and section required"); return; }
+        var id = "CLASS-" + grade + section.toUpperCase();
+        for (var i = 0; i < DataStore.classes.length; i++) {
+            if (DataStore.classes[i].id === id) { alert("Class exists"); return; }
+        }
+        DataStore.classes.push({ id: id, name: grade + section.toUpperCase(), grade: grade, section: section.toUpperCase() });
+        DataStore.save();
+        closeModal();
+        renderPrincipalClasses();
+    }
+
+    function editClass(idx) { alert("Edit class " + idx); }
+    function deleteClass(idx) {
+        if (!confirm("Delete this class?")) return;
+        DataStore.classes.splice(idx, 1);
+        DataStore.save();
+        renderPrincipalClasses();
+    }
+
+    function showExcelImportModal() { alert("Excel import coming soon"); }
+    function showStudentExcelModal() { alert("Student Excel import coming soon"); }
+    function exportStudentCredentials() { alert("Export coming soon"); }
     function closeModal() {
         var modals = document.querySelectorAll(".modal");
         for (var i = 0; i < modals.length; i++) modals[i].style.display = "none";
+        var overlay = $("modalOverlay");
+        if (overlay) overlay.style.display = "none";
     }
 
     return {
         $: $,
         showLogin: showLogin,
         showDashboard: showDashboard,
-        showQuiz: showQuiz,
-        showResult: showResult,
         renderDashboard: renderDashboard,
-        startPracticeFromDashboard: startPracticeFromDashboard,
-        showSubjectPicker: showSubjectPicker,
-        showChaptersForSubject: showChaptersForSubject,
-        showChapterDetail: showChapterDetail,
-        launchFullPractice: launchFullPractice,
-        quickPracticeChapter: quickPracticeChapter,
-        quickPracticeTopic: quickPracticeTopic,
         displayQuestion: displayQuestion,
         selectAnswer: selectAnswer,
         nextQuestion: nextQuestion,
         prevQuestion: prevQuestion,
         skipQuestion: skipQuestion,
-        showQuizResult: showQuizResult,
+        jumpToQuestion: jumpToQuestion,
+        showResult: showResult,
+        showReview: showReview,
         backToDashboard: backToDashboard,
-        showResults: showResults,
-        updateTimerDisplay: updateTimerDisplay,
         renderBar: renderBar,
         renderDonut: renderDonut,
-        showTeacherQuestions: showTeacherQuestions,
-        renderFilteredQuestions: renderFilteredQuestions,
+        showStudentTab: showStudentTab,
+        showTeacherTab: showTeacherTab,
+        showCTTab: showCTTab,
+        showParentTab: showParentTab,
+        showPrincipalTab: showPrincipalTab,
+        showSubjectChapters: showSubjectChapters,
+        showSubjectList: showSubjectList,
+        showChapterQuizOptions: showChapterQuizOptions,
+        launchQuiz: launchQuiz,
+        startAssignmentQuiz: startAssignmentQuiz,
+        renderQuestions: renderQuestions,
+        filterQuestions: filterQuestions,
         showAddQuestionModal: showAddQuestionModal,
         saveQuestion: saveQuestion,
         editQuestion: editQuestion,
         deleteQuestion: deleteQuestion,
-        showTeacherAssignments: showTeacherAssignments,
+        renderAssignments: renderAssignments,
         showCreateAssignmentModal: showCreateAssignmentModal,
         saveAssignment: saveAssignment,
         editAssignment: editAssignment,
         deleteAssignment: deleteAssignment,
-        showTeacherAnalytics: showTeacherAnalytics,
-        showPrincipalStudents: showPrincipalStudents,
-        renderStudentList: renderStudentList,
-        showAddStudentModal: showAddStudentModal,
+        loadClassAnalytics: loadClassAnalytics,
+        showAddTeacherModal: showAddTeacherModal,
+        saveTeacher: saveTeacher,
+        editTeacher: editTeacher,
+        deleteTeacher: deleteTeacher,
+        showCreateStudentModal: showCreateStudentModal,
         saveStudent: saveStudent,
         editStudent: editStudent,
         deleteStudent: deleteStudent,
-        showAddTeacherModal: showAddTeacherModal,
-        saveTeacher: saveTeacher,
-        showPrincipalTeachers: showPrincipalTeachers,
-        renderTeacherList: renderTeacherList,
-        editTeacher: editTeacher,
-        deleteTeacher: deleteTeacher,
-        showPrincipalClasses: showPrincipalClasses,
-        renderClassList: renderClassList,
         showAddClassModal: showAddClassModal,
         saveClass: saveClass,
         editClass: editClass,
         deleteClass: deleteClass,
-        showPrincipalAnalytics: showPrincipalAnalytics,
         showExcelImportModal: showExcelImportModal,
-        previewExcel: previewExcel,
-        confirmExcelImport: confirmExcelImport,
+        showStudentExcelModal: showStudentExcelModal,
+        exportStudentCredentials: exportStudentCredentials,
         closeModal: closeModal
     };
+
+    function renderDashboard() {
+        var role = Auth.getRole();
+        if (role === "student" || role === "parent") renderStudentDashboard();
+        else if (role === "teacher") renderTeacherDashboard();
+        else if (role === "principal") renderPrincipalDashboard();
+    }
 })();

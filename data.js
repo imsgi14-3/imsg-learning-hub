@@ -231,6 +231,51 @@ var DataStore = (function() {
 
     function addAttempt(attempt) { allAttempts.push(attempt); save(); }
 
+    function getTopicAnalytics(studentId) {
+        var topicData = {};
+        for (var i = 0; i < allAttempts.length; i++) {
+            var a = allAttempts[i];
+            if (studentId && a.studentId !== studentId) continue;
+            if (!a.questionResults) continue;
+            for (var j = 0; j < a.questionResults.length; j++) {
+                var r = a.questionResults[j];
+                var topic = r.topic || "General";
+                var subject = r.subject || a.subject || "Unknown";
+                var key = subject + " > " + topic;
+                if (!topicData[key]) topicData[key] = { correct: 0, total: 0, subject: subject, topic: topic };
+                topicData[key].total++;
+                if (r.isCorrect) topicData[key].correct++;
+            }
+        }
+        return topicData;
+    }
+
+    function getWeakTopics(studentId, limit) {
+        var topicData = getTopicAnalytics(studentId);
+        var arr = [];
+        var keys = Object.keys(topicData);
+        for (var i = 0; i < keys.length; i++) {
+            var t = topicData[keys[i]];
+            var pct = t.total > 0 ? Math.round((t.correct / t.total) * 100) : 0;
+            arr.push({ key: keys[i], subject: t.subject, topic: t.topic, correct: t.correct, total: t.total, percentage: pct });
+        }
+        arr.sort(function(a, b) { return a.percentage - b.percentage; });
+        return limit ? arr.slice(0, limit) : arr;
+    }
+
+    function getStrongTopics(studentId, limit) {
+        var topicData = getTopicAnalytics(studentId);
+        var arr = [];
+        var keys = Object.keys(topicData);
+        for (var i = 0; i < keys.length; i++) {
+            var t = topicData[keys[i]];
+            var pct = t.total > 0 ? Math.round((t.correct / t.total) * 100) : 0;
+            arr.push({ key: keys[i], subject: t.subject, topic: t.topic, correct: t.correct, total: t.total, percentage: pct });
+        }
+        arr.sort(function(a, b) { return b.percentage - a.percentage; });
+        return limit ? arr.slice(0, limit) : arr;
+    }
+
     return {
         KEYS: KEYS,
         get questions() { return questions; },
@@ -273,6 +318,9 @@ var DataStore = (function() {
         addTeacher: addTeacher,
         updateTeacher: updateTeacher,
         removeTeacher: removeTeacher,
-        addAttempt: addAttempt
+        addAttempt: addAttempt,
+        getTopicAnalytics: getTopicAnalytics,
+        getWeakTopics: getWeakTopics,
+        getStrongTopics: getStrongTopics
     };
 })();

@@ -43,53 +43,55 @@ var Auth = (function() {
             });
     }
 
-    function handleLogin() {
-        var role = document.getElementById("loginRole").value;
-        var id = document.getElementById("loginID").value.trim();
-        var password = document.getElementById("loginPassword").value.trim();
+    function handleLogin(e) {
+        if (e) e.preventDefault();
+        var role = document.getElementById("roleSelect").value;
         var loginMsg = document.getElementById("loginMsg");
-
-        if (!id || !password) { loginMsg.style.display = "block"; loginMsg.textContent = "Please enter ID and password"; return; }
+        if (!loginMsg) {
+            loginMsg = document.createElement("p");
+            loginMsg.id = "loginMsg";
+            loginMsg.style.cssText = "color:#ef4444;text-align:center;margin-top:10px;display:none;";
+            var form = document.getElementById("loginForm");
+            if (form) form.parentNode.insertBefore(loginMsg, form.nextSibling);
+        }
         loginMsg.style.display = "none";
 
-        if (role === "student") {
+        if (role === "student" || role === "parent") {
+            var id = document.getElementById("studentId").value.trim();
+            var password = document.getElementById("studentPassword").value.trim();
+            if (!id || !password) { loginMsg.style.display = "block"; loginMsg.textContent = "Please enter ID and password"; return; }
             var student = DataStore.findStudentById(id);
-            if (!student) { loginMsg.style.display = "block"; loginMsg.textContent = "Account not found"; return; }
+            if (!student) { loginMsg.style.display = "block"; loginMsg.textContent = "Account not found. Please contact your teacher."; return; }
             var email = id.toLowerCase() + "@imsg.edu.pk";
             loginFirebaseAuth(email, password, function() {
-                loginAs("student", student);
-                UI.showDashboard();
-            }, function() {
-                loginMsg.style.display = "block";
-                loginMsg.textContent = "Incorrect password or network error";
-            });
-        } else if (role === "parent") {
-            var parentStudent = DataStore.findStudentById(id);
-            if (!parentStudent) { loginMsg.style.display = "block"; loginMsg.textContent = "Account not found"; return; }
-            var parentEmail = id.toLowerCase() + "@imsg.edu.pk";
-            loginFirebaseAuth(parentEmail, password, function() {
-                loginAs("parent", parentStudent);
+                loginAs(role, student);
                 UI.showDashboard();
             }, function() {
                 loginMsg.style.display = "block";
                 loginMsg.textContent = "Incorrect password or network error";
             });
         } else if (role === "principal") {
+            var adminId = document.getElementById("principalId").value.trim();
+            var adminPass = document.getElementById("principalPassword").value.trim();
+            if (!adminId || !adminPass) { loginMsg.style.display = "block"; loginMsg.textContent = "Please enter admin ID and password"; return; }
             var pAccount = DataStore.principalAccount;
-            if (!pAccount || pAccount.password !== password) { loginMsg.style.display = "block"; loginMsg.textContent = "Incorrect password"; return; }
-            var principalEmail = id.toLowerCase() + "@imsg.edu.pk";
-            loginFirebaseAuth(principalEmail, password, function() {
+            if (!pAccount || pAccount.password !== adminPass) { loginMsg.style.display = "block"; loginMsg.textContent = "Incorrect password"; return; }
+            var email = adminId.toLowerCase() + "@imsg.edu.pk";
+            loginFirebaseAuth(email, adminPass, function() {
                 loginAs("principal", pAccount);
                 UI.showDashboard();
             }, function() {
                 loginMsg.style.display = "block";
                 loginMsg.textContent = "Incorrect password or network error";
             });
-        } else if (role === "teacher") {
-            var teacher = DataStore.findTeacherById(id);
+        } else if (role === "teacher" || role === "classteacher") {
+            var teacherId = document.getElementById("teacherId").value.trim();
+            var teacherPass = document.getElementById("teacherPassword").value.trim();
+            if (!teacherId || !teacherPass) { loginMsg.style.display = "block"; loginMsg.textContent = "Please enter teacher ID and password"; return; }
+            var teacher = DataStore.findTeacherById(teacherId);
             if (!teacher) { loginMsg.style.display = "block"; loginMsg.textContent = "Account not found"; return; }
-            var teacherEmail = id.toLowerCase() + "@imsg.edu.pk";
-            loginFirebaseAuth(teacherEmail, password, function() {
+            var email = teacherId.toLowerCase() + "@imsg.edu.pk";
+            loginFirebaseAuth(email, teacherPass, function() {
                 loginAs("teacher", teacher);
                 UI.showDashboard();
             }, function() {

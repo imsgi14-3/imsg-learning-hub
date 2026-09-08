@@ -40,7 +40,11 @@ var QuizEngine = (function() {
         timer = setInterval(function() {
             timeLeft--;
             UI.updateTimerDisplay(timeLeft);
-            if (timeLeft <= 0) { clearTimer(); UI.showResult(); }
+            if (timeLeft <= 0) {
+                clearTimer();
+                var attempt = finish();
+                UI.showQuizResult(attempt);
+            }
         }, 1000);
     }
 
@@ -49,7 +53,36 @@ var QuizEngine = (function() {
     function recordAnswer(questionIndex, selectedAnswer) {
         userAnswers[questionIndex] = selectedAnswer;
         var q = quizQuestions[questionIndex];
-        if (selectedAnswer === q.answer) score++;
+        var opts = ["A", "B", "C", "D"];
+        var correctIdx = opts.indexOf(q.answer);
+        if (selectedAnswer === correctIdx) score++;
+    }
+
+    function buildQuestionResults() {
+        var results = [];
+        var opts = ["A", "B", "C", "D"];
+        for (var i = 0; i < quizQuestions.length; i++) {
+            var q = quizQuestions[i];
+            var selectedIdx = userAnswers[i];
+            var selectedLetter = (selectedIdx !== undefined && selectedIdx !== null) ? opts[selectedIdx] : null;
+            var correctIdx = opts.indexOf(q.answer);
+            results.push({
+                questionId: q.id || ("Q-" + i),
+                questionText: q.question || "",
+                options: q.options ? q.options.slice() : [],
+                selectedAnswer: selectedLetter,
+                selectedAnswerIndex: (selectedIdx !== undefined && selectedIdx !== null) ? selectedIdx : -1,
+                correctAnswer: q.answer,
+                correctAnswerIndex: correctIdx,
+                isCorrect: selectedLetter === q.answer,
+                topic: q.topic || "General",
+                difficulty: q.difficulty || "medium",
+                chapter: q.chapter || "",
+                subject: q.subject || "",
+                explanation: q.explanation || ""
+            });
+        }
+        return results;
     }
 
     function finish() {
@@ -58,9 +91,7 @@ var QuizEngine = (function() {
         var percentage = total > 0 ? Number(((score / total) * 100).toFixed(2)) : 0;
         var wrong = total - score;
         var timeUsed = 60 - timeLeft;
-        var questionsCopy = quizQuestions.slice();
-        var questionsJson = JSON.stringify(questionsCopy);
-        var answersJson = JSON.stringify(userAnswers.slice());
+        var questionResults = buildQuestionResults();
 
         var user = Auth.getUser();
         var attempt = {
@@ -73,8 +104,7 @@ var QuizEngine = (function() {
             wrong: wrong,
             timeUsed: timeUsed,
             percentage: percentage,
-            questions: questionsJson,
-            answers: answersJson,
+            questionResults: questionResults,
             timestamp: Date.now()
         };
 

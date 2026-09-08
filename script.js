@@ -66,99 +66,81 @@ function loadFromFirestore(callback) {
     });
 }
 
-function handleLogin() { Auth.handleLogin(); }
+function handleLogin(e) { Auth.handleLogin(e); }
 function handleLogout() { Auth.handleLogout(); }
 function updateLoginFields() {
-    var role = document.getElementById("loginRole").value;
-    var idField = document.getElementById("loginID");
-    var passField = document.getElementById("loginPassword");
-    var loginMsg = document.getElementById("loginMsg");
-    loginMsg.style.display = "none";
-    if (role === "principal") {
-        idField.placeholder = "Enter admin ID (ADMIN-001)";
-        passField.placeholder = "Enter password";
-    } else if (role === "student") {
-        idField.placeholder = "Enter student ID (e.g. 9A-01)";
-        passField.placeholder = "Enter password";
-    } else if (role === "parent") {
-        idField.placeholder = "Enter student ID";
-        passField.placeholder = "Enter password";
-    } else if (role === "teacher") {
-        idField.placeholder = "Enter teacher ID (e.g. T-01)";
-        passField.placeholder = "Enter password";
-    }
+    var role = document.getElementById("roleSelect").value;
+    var sf = document.getElementById("studentFields");
+    var tf = document.getElementById("teacherFields");
+    var pf = document.getElementById("parentFields");
+    var prf = document.getElementById("principalFields");
+    if (sf) sf.style.display = "none";
+    if (tf) tf.style.display = "none";
+    if (pf) pf.style.display = "none";
+    if (prf) prf.style.display = "none";
+    if (role === "student" || role === "parent") { if (sf) sf.style.display = "block"; }
+    else if (role === "teacher" || role === "classteacher") { if (tf) tf.style.display = "block"; }
+    else if (role === "principal") { if (prf) prf.style.display = "block"; }
 }
 
-function activateTab(tab) {
-    if (!Auth.isLoggedIn()) return;
-    UI.renderDashboard();
-}
+function activateTab(tab) { if (Auth.isLoggedIn()) UI.showDashboard(); }
+function showStudentTab(tab) { UI.showStudentTab(tab); }
+function showTeacherTab(tab) { UI.showTeacherTab(tab); }
+function showCTTab(tab) { UI.showCTTab(tab); }
+function showParentTab(tab) { UI.showParentTab(tab); }
+function showPrincipalTab(tab) { UI.showPrincipalTab(tab); }
 
-function startPractice() { UI.launchFullPractice(); }
-function startAssignmentQuiz() {}
+function startPractice() { UI.launchQuiz("Computer Science", "Chapter 1", "all", 20); }
 function displayQuestion() { UI.displayQuestion(); }
-function checkAnswer() {}
 function nextQuestion() { UI.nextQuestion(); }
-function showResult() { UI.showResult(); }
-function startTimer() { UI.startTimer(); }
-function updateTimerDisplay(sec) { UI.updateTimerDisplay(sec); }
-function showReview() {}
-function backToDashboard() { UI.backToDashboard(); }
-function jumpToQuestion() {}
 function prevQuestion() { UI.prevQuestion(); }
 function skipQuestion() { UI.skipQuestion(); }
+function jumpToQuestion(idx) { UI.jumpToQuestion(idx); }
+function showReview() { UI.showReview(); }
+function backToDashboard() { UI.backToDashboard(); }
+function startTimer() { UI.startTimer(); }
+
+function showSubjectList() { UI.showSubjectList(); }
+function showSubjectChapters(s) { UI.showSubjectChapters(s); }
+function showChapterQuizOptions(s, c) { UI.showChapterQuizOptions(s, c); }
+function launchQuiz(s, c, t, n) { UI.launchQuiz(s, c, t, n); }
+function startAssignmentQuiz(i) { UI.startAssignmentQuiz(i); }
+function showResults() { UI.renderStudentResults(); }
 
 function shuffleArray(arr) { return DataStore.shuffleArray(arr); }
 function generateRandomPassword() { return DataStore.generateRandomPassword(); }
-function generateStudentId(classObj, rollNo) { return DataStore.generateStudentId(classObj, rollNo); }
+function generateStudentId(c, r) { return DataStore.generateStudentId(c, r); }
 function generateTeacherId() { return DataStore.generateTeacherId(); }
 
+function showAddQuestionModal() { UI.showAddQuestionModal(); }
+function saveQuestion(e) { UI.saveQuestion(e); }
+function editQuestion(id) { UI.editQuestion(id); }
+function deleteQuestion(id) { UI.deleteQuestion(id); }
+function filterQuestions() { UI.filterQuestions(); }
+function showCreateAssignmentModal() { UI.showCreateAssignmentModal(); }
+function saveAssignment() { UI.saveAssignment(); }
+function editAssignment(i) { UI.editAssignment(i); }
+function deleteAssignment(i) { UI.deleteAssignment(i); }
 function showAddTeacherModal() { UI.showAddTeacherModal(); }
 function saveTeacher() { UI.saveTeacher(); }
 function editTeacher(id) { UI.editTeacher(id); }
 function deleteTeacher(id) { UI.deleteTeacher(id); }
-function showAddStudentModal() { UI.showAddStudentModal(); }
+function showCreateStudentModal() { UI.showCreateStudentModal(); }
 function saveStudent() { UI.saveStudent(); }
 function editStudent(id) { UI.editStudent(id); }
 function deleteStudent(id) { UI.deleteStudent(id); }
 function showAddClassModal() { UI.showAddClassModal(); }
 function saveClass() { UI.saveClass(); }
-function editClass(idx) { UI.editClass(idx); }
-function deleteClass(idx) { UI.deleteClass(idx); }
+function editClass(i) { UI.editClass(i); }
+function deleteClass(i) { UI.deleteClass(i); }
 function showExcelImportModal() { UI.showExcelImportModal(); }
-function previewExcel() { UI.previewExcel(); }
-function confirmExcelImport() { UI.confirmExcelImport(); }
-function showAddQuestionModal() { UI.showAddQuestionModal(); }
-function saveQuestion() { UI.saveQuestion(); }
-function editQuestion(id) { UI.editQuestion(id); }
-function deleteQuestion(id) { UI.deleteQuestion(id); }
-function showCreateAssignmentModal() { UI.showCreateAssignmentModal(); }
-function saveAssignment() { UI.saveAssignment(); }
-function editAssignment(idx) { UI.editAssignment(idx); }
-function deleteAssignment(idx) { UI.deleteAssignment(idx); }
+function showStudentExcelModal() { UI.showStudentExcelModal(); }
+function exportStudentCredentials() { UI.exportStudentCredentials(); }
 function closeModal() { UI.closeModal(); }
+function loadClassAnalytics() { UI.loadClassAnalytics(); }
 
 function renderBar(id, data, max) { UI.renderBar(id, data, max); }
 function renderDonut(id, data) { UI.renderDonut(id, data); }
-
-function showTeacherQuestions() { UI.showTeacherQuestions(); }
-function showTeacherAssignments() { UI.showTeacherAssignments(); }
-function showTeacherAnalytics() { UI.showTeacherAnalytics(); }
-function showPrincipalStudents() { UI.showPrincipalStudents(); }
-function showPrincipalTeachers() { UI.showPrincipalTeachers(); }
-function showPrincipalClasses() { UI.showPrincipalClasses(); }
-function showPrincipalAnalytics() { UI.showPrincipalAnalytics(); }
-function renderFilteredQuestions() { UI.renderFilteredQuestions(); }
-function renderStudentList() { UI.renderStudentList(); }
-function renderTeacherList() { UI.renderTeacherList(); }
-function renderClassList() { UI.renderClassList(); }
-function startPracticeFromDashboard(mode) { UI.startPracticeFromDashboard(mode); }
-function showSubjectPicker() { UI.showSubjectPicker(); }
-function showChaptersForSubject(subject) { UI.showChaptersForSubject(subject); }
-function showChapterDetail(subject, chapter) { UI.showChapterDetail(subject, chapter); }
-function quickPracticeChapter(subject, chapter) { UI.quickPracticeChapter(subject, chapter); }
-function quickPracticeTopic(subject, chapter, topic) { UI.quickPracticeTopic(subject, chapter, topic); }
-function showResults() { UI.showResults(); }
 
 window.onload = function() {
     loadData();
