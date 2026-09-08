@@ -194,10 +194,53 @@ function loadData() {
     studentAccounts = JSON.parse(localStorage.getItem(STUDENTS_KEY)) || [];
     if (classes.length === 0) {
         classes = [
-            { id: "CLASS-9A", name: "9A", grade: 9, section: "A", students: ["9A-001", "9A-002", "9A-003"] },
-            { id: "CLASS-9B", name: "9B", grade: 9, section: "B", students: ["9B-001", "9B-002", "9B-003"] }
+            { id: "CLASS-9A", name: "9A", grade: 9, section: "A", students: [] },
+            { id: "CLASS-9B", name: "9B", grade: 9, section: "B", students: [] }
         ];
     }
+}
+
+function loadFromFirestore(callback) {
+    if (typeof db === "undefined") { if (callback) callback(); return; }
+    var loaded = 0;
+    var total = 6;
+    function done() { loaded++; if (loaded >= total && callback) callback(); }
+    db.collection("students").get().then(function(snap) {
+        studentAccounts = [];
+        snap.forEach(function(doc) { studentAccounts.push(doc.data()); });
+        localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
+        done();
+    }).catch(function() { done(); });
+    db.collection("classes").get().then(function(snap) {
+        classes = [];
+        snap.forEach(function(doc) { classes.push(doc.data()); });
+        localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
+        done();
+    }).catch(function() { done(); });
+    db.collection("questions").get().then(function(snap) {
+        questions = [];
+        snap.forEach(function(doc) { questions.push(doc.data()); });
+        localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
+        done();
+    }).catch(function() { done(); });
+    db.collection("assignments").get().then(function(snap) {
+        assignments = [];
+        snap.forEach(function(doc) { assignments.push(doc.data()); });
+        localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments));
+        done();
+    }).catch(function() { done(); });
+    db.collection("attempts").get().then(function(snap) {
+        allAttempts = [];
+        snap.forEach(function(doc) { allAttempts.push(doc.data()); });
+        localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
+        done();
+    }).catch(function() { done(); });
+    db.collection("teachers").get().then(function(snap) {
+        teachers = [];
+        snap.forEach(function(doc) { teachers.push(doc.data()); });
+        localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
+        done();
+    }).catch(function() { done(); });
 }
 
 function saveAll() {
@@ -209,6 +252,35 @@ function saveAll() {
     localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
     localStorage.setItem(CONCEPTS_KEY, JSON.stringify(conceptStats));
     localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
+    saveToFirestore();
+}
+
+function saveToFirestore() {
+    if (typeof db === "undefined") return;
+    for (var i = 0; i < studentAccounts.length; i++) {
+        var s = studentAccounts[i];
+        db.collection("students").doc(s.id).set(s).catch(function() {});
+    }
+    for (var i = 0; i < classes.length; i++) {
+        var c = classes[i];
+        db.collection("classes").doc(c.id).set(c).catch(function() {});
+    }
+    for (var i = 0; i < questions.length; i++) {
+        var q = questions[i];
+        db.collection("questions").doc(q.id).set(q).catch(function() {});
+    }
+    for (var i = 0; i < assignments.length; i++) {
+        var a = assignments[i];
+        db.collection("assignments").doc(a.id || ("assign-" + i)).set(a).catch(function() {});
+    }
+    for (var i = 0; i < teachers.length; i++) {
+        var t = teachers[i];
+        db.collection("teachers").doc(t.id).set(t).catch(function() {});
+    }
+    for (var i = 0; i < allAttempts.length; i++) {
+        var a = allAttempts[i];
+        db.collection("attempts").doc(a.attemptId).set(a).catch(function() {});
+    }
 }
 
 function dashboardsHide() {
@@ -253,18 +325,38 @@ function handleLogin(e) {
         }
         if (!found) { alert("Student ID not found. Contact admin to create your account."); return; }
         if (found.password !== password) { alert("Incorrect password."); return; }
-        name = name || found.name;
-        currentUser = { id: found.id, name: found.name, role: "student", subject: null, childId: null, classId: found.classId, grade: found.grade };
-        currentRole = "student";
-        document.getElementById("loginPage").style.display = "none";
-        document.getElementById("logoutBar").style.display = "flex";
-        document.getElementById("homeBtn").style.display = "inline-block";
-        document.getElementById("loggedUser").textContent = found.name + " (Student)";
-        dashboardsHide();
-        document.getElementById("studentDashboard").style.display = "block";
-        document.getElementById("studentDisplayName").textContent = found.name;
-        showStudentTab("practice");
-        history.pushState({ page: "dashboard" }, "", "#dashboard");
+        var email = id.toLowerCase() + "@imsg.edu.pk";
+        var loginSuccess = function() {
+            name = name || found.name;
+            currentUser = { id: found.id, name: found.name, role: "student", subject: null, childId: null, classId: found.classId, grade: found.grade };
+            currentRole = "student";
+            document.getElementById("loginPage").style.display = "none";
+            document.getElementById("logoutBar").style.display = "flex";
+            document.getElementById("homeBtn").style.display = "inline-block";
+            document.getElementById("loggedUser").textContent = found.name + " (Student)";
+            dashboardsHide();
+            document.getElementById("studentDashboard").style.display = "block";
+            document.getElementById("studentDisplayName").textContent = found.name;
+            showStudentTab("practice");
+            history.pushState({ page: "dashboard" }, "", "#dashboard");
+        };
+        if (typeof fbAuth !== "undefined") {
+            fbAuth.signInWithEmailAndPassword(email, password).then(function() {
+                loginSuccess();
+            }).catch(function(error) {
+                if (error.code === "auth/user-not-found") {
+                    fbAuth.createUserWithEmailAndPassword(email, password).then(function() {
+                        loginSuccess();
+                    }).catch(function(err) {
+                        alert("Login failed: " + err.message);
+                    });
+                } else {
+                    alert("Login failed: " + error.message);
+                }
+            });
+        } else {
+            loginSuccess();
+        }
         return;
     } else if (role === "teacher") {
         id = document.getElementById("teacherId").value || "T-001";
@@ -338,6 +430,7 @@ function handleLogout() {
     currentRole = null;
     currentUser = null;
     clearInterval(timer);
+    if (typeof fbAuth !== "undefined") fbAuth.signOut().catch(function() {});
     document.getElementById("logoutBar").style.display = "none";
     dashboardsHide();
     document.getElementById("quiz").style.display = "none";
@@ -1954,6 +2047,13 @@ function saveStudentAccount(e) {
         }
         var newPass = generateRandomPassword();
         studentAccounts.push({ id: newId, name: name, fatherName: fatherName, classId: classId, rollNo: rollNo, password: newPass });
+        var email = newId.toLowerCase() + "@imsg.edu.pk";
+        if (typeof fbAuth !== "undefined") {
+            var tempUser = fbAuth.currentUser;
+            fbAuth.createUserWithEmailAndPassword(email, newPass).then(function() {
+                if (tempUser) fbAuth.signInWithEmailAndPassword(tempUser.email, tempUser.password || "admin").catch(function() {});
+            }).catch(function() {});
+        }
         alert("Student created!\n\nID: " + newId + "\nPassword: " + newPass + "\n\nPlease share these credentials with the student.");
     }
     saveAll();
@@ -2161,6 +2261,11 @@ function confirmStudentExcelImport() {
     var count = pendingStudentExcelData.length;
     for (var i = 0; i < pendingStudentExcelData.length; i++) {
         studentAccounts.push(pendingStudentExcelData[i]);
+        var s = pendingStudentExcelData[i];
+        var email = s.id.toLowerCase() + "@imsg.edu.pk";
+        if (typeof fbAuth !== "undefined") {
+            fbAuth.createUserWithEmailAndPassword(email, s.password).catch(function() {});
+        }
     }
     saveAll();
     pendingStudentExcelData = [];
@@ -2177,22 +2282,24 @@ function closeModal() {
 
 window.onload = function() {
     loadData();
-    if (questions.length === 0 && typeof QuestionLoader !== "undefined") {
-        QuestionLoader.loadChapter(1, function(data) {
-            if (data && data.questions) {
-                for (var i = 0; i < data.questions.length; i++) {
-                    questions.push(data.questions[i]);
+    loadFromFirestore(function() {
+        if (questions.length === 0 && typeof QuestionLoader !== "undefined") {
+            QuestionLoader.loadChapter(1, function(data) {
+                if (data && data.questions) {
+                    for (var i = 0; i < data.questions.length; i++) {
+                        questions.push(data.questions[i]);
+                    }
+                    saveAll();
+                    console.log("Loaded " + data.questions.length + " questions from Chapter 1. Total: " + questions.length);
                 }
-                saveAll();
-                console.log("Loaded " + data.questions.length + " questions from Chapter 1. Total: " + questions.length);
-            }
+                document.getElementById("loginPage").style.display = "block";
+                dashboardsHide();
+            });
+        } else {
             document.getElementById("loginPage").style.display = "block";
             dashboardsHide();
-        });
-    } else {
-        document.getElementById("loginPage").style.display = "block";
-        dashboardsHide();
-    }
+        }
+    });
     history.replaceState({ page: "login" }, "", location.href);
     window.addEventListener("beforeunload", function(e) {
         if (document.getElementById("quiz").style.display === "block") {
