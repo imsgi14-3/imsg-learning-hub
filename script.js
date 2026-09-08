@@ -11,7 +11,7 @@ var currentRole = null;
 var currentUser = null;
 var activeQuizQuestions = [];
 var shuffledOptionsMap = {};
-var principalAccount = null;
+var principalAccount = { id: "ADMIN-001", name: "Principal", password: "yyJwe6sY", createdAt: Date.now() };
 
 var ATTEMPTS_KEY = "learningHub_attempts";
 var QUESTIONS_KEY = "learningHub_questions";
@@ -194,7 +194,7 @@ function loadData() {
     conceptStats = JSON.parse(localStorage.getItem(CONCEPTS_KEY)) || {};
     studentAccounts = JSON.parse(localStorage.getItem(STUDENTS_KEY)) || [];
     var savedPrincipal = JSON.parse(localStorage.getItem("learningHub_principal"));
-    if (savedPrincipal) { principalAccount = savedPrincipal; }
+    if (savedPrincipal && savedPrincipal.id === "ADMIN-001") { principalAccount = savedPrincipal; }
     if (classes.length === 0) {
         classes = [
             { id: "CLASS-9A", name: "9A", grade: 9, section: "A", students: [] },
@@ -461,17 +461,6 @@ function handleLogin(e) {
         password = document.getElementById("principalPassword").value;
         if (!id || !password) { alert("Please enter Admin ID and Password."); return; }
         if (!principalAccount || principalAccount.id !== id) {
-            if (!principalAccount) {
-                var genPass = generateRandomPassword();
-                principalAccount = { id: id, name: "Principal", password: genPass, createdAt: Date.now() };
-                localStorage.setItem("learningHub_principal", JSON.stringify(principalAccount));
-                if (typeof fbAuth !== "undefined") {
-                    var email = id.toLowerCase() + "@imsg.edu.pk";
-                    fbAuth.createUserWithEmailAndPassword(email, genPass).catch(function() {});
-                }
-                alert("Admin account created!\n\nID: " + id + "\nPassword: " + genPass + "\n\nSave this password — you'll need it to login.");
-                return;
-            }
             alert("Admin ID not found.");
             return;
         }
