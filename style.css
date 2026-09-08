@@ -2005,3 +2005,61 @@ footer {
     transform: translateY(-2px);
     box-shadow: 0 6px 25px rgba(79,70,229,0.4);
 }
+
+/* Dashboard Overview Cards */
+.overview-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.overview-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 18px 14px;
+    text-align: center;
+    border-left: 4px solid var(--primary);
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+}
+.overview-card:hover { transform: translateY(-3px); }
+.overview-card.students { border-left-color: #3b82f6; }
+.overview-card.teachers { border-left-color: #10b981; }
+.overview-card.questions { border-left-color: #f59e0b; }
+.overview-card.quizzes { border-left-color: #8b5cf6; }
+.overview-card.average { border-left-color: #ef4444; }
+.overview-card.classes { border-left-color: #06b6d4; }
+.overview-card .card-icon { font-size: 1.8rem; margin-bottom: 6px; }
+.overview-card .card-value { font-size: 1.8rem; font-weight: 700; color: var(--text); }
+.overview-card .card-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+/* Bar Charts */
+.chart-section { background: var(--card-bg); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
+.chart-section h4 { margin-bottom: 16px; color: var(--text); }
+.bar-chart { display: flex; flex-direction: column; gap: 10px; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { min-width: 120px; font-size: 0.8rem; color: var(--text); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { flex: 1; height: 22px; background: var(--border); border-radius: 11px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 11px; transition: width 0.6s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 0.7rem; color: white; font-weight: 600; min-width: 30px; }
+.bar-fill.blue { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.bar-fill.green { background: linear-gradient(90deg, #10b981, #34d399); }
+.bar-fill.yellow { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.bar-fill.purple { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+.bar-fill.red { background: linear-gradient(90deg, #ef4444, #f87171); }
+.bar-fill.cyan { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+.bar-fill.pink { background: linear-gradient(90deg, #ec4899, #f472b6); }
+.bar-fill.indigo { background: linear-gradient(90deg, #6366f1, #818cf8); }
+.bar-fill.orange { background: linear-gradient(90deg, #f97316, #fb923c); }
+
+/* Donut Chart */
+.donut-container { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; padding: 10px 0; }
+.donut-chart { width: 140px; height: 140px; border-radius: 50%; position: relative; }
+.donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: var(--card-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+.donut-center .donut-value { font-size: 1.2rem; font-weight: 700; color: var(--text); }
+.donut-center .donut-label { font-size: 0.65rem; color: var(--text-muted); }
+.donut-legend { display: flex; flex-direction: column; gap: 8px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* Class Performance Cards */
+.perf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.perf-card { background: var(--card-bg); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+.perf-card h5 { margin: 0 0 10px; font-size: 0.95rem; }
+.perf-card .perf-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 6px 0; }
+.perf-card .perf-fill { height: 100%; border-radius: 4px; transition: width 0.6s; }
+.perf-card .perf-text { font-size: 0.8rem; color: var(--text-muted); }

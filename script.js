@@ -1711,7 +1711,39 @@ function renderCTOverview() {
         }
     }
     var avg = sa.length > 0 ? sa.reduce(function(s, a) { return s + a.percentage; }, 0) / sa.length : 0;
-    c.innerHTML = '<div class="analytics-card"><h4>Class: ' + className + '</h4><p>Students: <strong>' + ts + '</strong></p><p>Attempts: <strong>' + sa.length + '</strong></p><p>Average: <strong>' + avg.toFixed(1) + '%</strong></p></div>';
+    var best = sa.length > 0 ? Math.max.apply(null, sa.map(function(a) { return a.percentage; })) : 0;
+
+    var h = '<div class="overview-cards">' +
+        '<div class="overview-card classes"><div class="card-icon">&#127979;</div><div class="card-value">' + className + '</div><div class="card-label">Class</div></div>' +
+        '<div class="overview-card students"><div class="card-icon">&#128100;</div><div class="card-value">' + ts + '</div><div class="card-label">Students</div></div>' +
+        '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + sa.length + '</div><div class="card-label">Attempts</div></div>' +
+        '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average</div></div>' +
+        '<div class="overview-card questions"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best Score</div></div>' +
+        '</div>';
+
+    if (sa.length > 0) {
+        var diffCount = { excellent: 0, good: 0, needs: 0 };
+        for (var i = 0; i < sa.length; i++) {
+            if (sa[i].percentage >= 80) diffCount.excellent++;
+            else if (sa[i].percentage >= 50) diffCount.good++;
+            else diffCount.needs++;
+        }
+        var total = diffCount.excellent + diffCount.good + diffCount.needs;
+        var ePct = total > 0 ? (diffCount.excellent / total * 100) : 0;
+        var gPct = total > 0 ? (diffCount.good / total * 100) : 0;
+        h += '<div class="chart-section"><h4>&#128202; Results Distribution</h4><div class="donut-container">' +
+            '<div class="donut-chart" style="background: conic-gradient(#10b981 0% ' + ePct + '%, #f59e0b ' + ePct + '% ' + (ePct + gPct) + '%, #ef4444 ' + (ePct + gPct) + '% 100%)">' +
+            '<div class="donut-center"><span class="donut-value">' + total + '</span><span class="donut-label">Total</span></div></div>' +
+            '<div class="donut-legend">' +
+            '<div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Excellent (80%+): ' + diffCount.excellent + '</div>' +
+            '<div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Good (50-79%): ' + diffCount.good + '</div>' +
+            '<div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Needs Work (&lt;50%): ' + diffCount.needs + '</div>' +
+            '</div></div></div>';
+    } else {
+        h += '<div class="chart-section"><p style="color:var(--text-muted);text-align:center;padding:20px;">No quiz data yet for this class.</p></div>';
+    }
+
+    c.innerHTML = h;
 }
 
 function renderCTStudents() {
@@ -1952,8 +1984,63 @@ function showPrincipalTab(tab) {
 function renderPrincipalSchool() {
     var c = document.getElementById("principalSchoolContent");
     var ts = studentAccounts.length;
-    var avg = allAttempts.length > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / allAttempts.length : 0;
-    var h = '<div class="analytics-grid"><div class="analytics-card"><h4>School Overview</h4><p>Classes: <strong>' + classes.length + '</strong></p><p>Students: <strong>' + ts + '</strong></p><p>Questions: <strong>' + questions.length + '</strong></p><p>Quizzes Taken: <strong>' + allAttempts.length + '</strong></p><p>Average: <strong>' + avg.toFixed(1) + '%</strong></p></div></div>';
+    var tc = teachers.length;
+    var tq = questions.length;
+    var ta = allAttempts.length;
+    var avg = ta > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / ta : 0;
+    var h = '<div class="overview-cards">' +
+        '<div class="overview-card classes"><div class="card-icon">&#127979;</div><div class="card-value">' + classes.length + '</div><div class="card-label">Classes</div></div>' +
+        '<div class="overview-card students"><div class="card-icon">&#128100;</div><div class="card-value">' + ts + '</div><div class="card-label">Students</div></div>' +
+        '<div class="overview-card teachers"><div class="card-icon">&#128105;&#8205;&#127979;</div><div class="card-value">' + tc + '</div><div class="card-label">Teachers</div></div>' +
+        '<div class="overview-card questions"><div class="card-icon">&#128218;</div><div class="card-value">' + tq + '</div><div class="card-label">Questions</div></div>' +
+        '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + ta + '</div><div class="card-label">Quizzes Taken</div></div>' +
+        '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average Score</div></div>' +
+        '</div>';
+
+    if (classes.length > 0) {
+        h += '<div class="chart-section"><h4>&#127979; Students Per Class</h4><div class="bar-chart">';
+        var colors = ["blue", "green", "yellow", "purple", "cyan", "pink", "indigo", "orange"];
+        var maxCount = 1;
+        for (var i = 0; i < classes.length; i++) {
+            var cnt = 0;
+            for (var j = 0; j < studentAccounts.length; j++) {
+                if (studentAccounts[j].classId === classes[i].id) cnt++;
+            }
+            if (cnt > maxCount) maxCount = cnt;
+        }
+        for (var i = 0; i < classes.length; i++) {
+            var cnt = 0;
+            for (var j = 0; j < studentAccounts.length; j++) {
+                if (studentAccounts[j].classId === classes[i].id) cnt++;
+            }
+            var pct = maxCount > 0 ? (cnt / maxCount * 100) : 0;
+            h += '<div class="bar-row"><span class="bar-label">' + classes[i].name + '</span><div class="bar-track"><div class="bar-fill ' + colors[i % colors.length] + '" style="width:' + pct + '%">' + cnt + '</div></div></div>';
+        }
+        h += '</div></div>';
+    }
+
+    if (ta > 0) {
+        var diffCount = { easy: 0, medium: 0, hard: 0 };
+        for (var i = 0; i < allAttempts.length; i++) {
+            var p = allAttempts[i].percentage;
+            if (p >= 80) diffCount.easy++;
+            else if (p >= 50) diffCount.medium++;
+            else diffCount.hard++;
+        }
+        var total = diffCount.easy + diffCount.medium + diffCount.hard;
+        var ePct = total > 0 ? (diffCount.easy / total * 100) : 0;
+        var mPct = total > 0 ? (diffCount.medium / total * 100) : 0;
+        var hPct = total > 0 ? (diffCount.hard / total * 100) : 0;
+        h += '<div class="chart-section"><h4>&#128202; Quiz Results Distribution</h4><div class="donut-container">' +
+            '<div class="donut-chart" style="background: conic-gradient(#10b981 0% ' + ePct + '%, #f59e0b ' + ePct + '% ' + (ePct + mPct) + '%, #ef4444 ' + (ePct + mPct) + '% 100%)">' +
+            '<div class="donut-center"><span class="donut-value">' + total + '</span><span class="donut-label">Total</span></div></div>' +
+            '<div class="donut-legend">' +
+            '<div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Excellent (80%+): ' + diffCount.easy + '</div>' +
+            '<div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Good (50-79%): ' + diffCount.medium + '</div>' +
+            '<div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Needs Work (&lt;50%): ' + diffCount.hard + '</div>' +
+            '</div></div></div>';
+    }
+
     c.innerHTML = h;
 }
 
@@ -2315,8 +2402,74 @@ function refreshStudentLists() {
 
 function renderPrincipalAnalytics() {
     var c = document.getElementById("principalAnalyticsContent");
-    var avg = allAttempts.length > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / allAttempts.length : 0;
-    c.innerHTML = '<div class="analytics-grid"><div class="analytics-card"><h4>School Analytics</h4><p>Attempts: <strong>' + allAttempts.length + '</strong></p><p>Average: <strong>' + avg.toFixed(1) + '%</strong></p><p>Students: <strong>' + studentAccounts.length + '</strong></p><p>Questions: <strong>' + questions.length + '</strong></p></div></div>';
+    var ta = allAttempts.length;
+    var avg = ta > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / ta : 0;
+    var best = ta > 0 ? Math.max.apply(null, allAttempts.map(function(a) { return a.percentage; })) : 0;
+    var h = '<div class="overview-cards">' +
+        '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + ta + '</div><div class="card-label">Total Attempts</div></div>' +
+        '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average Score</div></div>' +
+        '<div class="overview-card students"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best Score</div></div>' +
+        '<div class="overview-card questions"><div class="card-icon">&#128218;</div><div class="card-value">' + questions.length + '</div><div class="card-label">Total Questions</div></div>' +
+        '</div>';
+
+    if (ta > 0) {
+        var topicStats = {};
+        for (var i = 0; i < allAttempts.length; i++) {
+            var a = allAttempts[i];
+            if (a.topic) {
+                if (!topicStats[a.topic]) topicStats[a.topic] = { total: 0, sum: 0 };
+                topicStats[a.topic].total++;
+                topicStats[a.topic].sum += a.percentage;
+            }
+        }
+        var topicKeys = Object.keys(topicStats);
+        if (topicKeys.length > 0) {
+            h += '<div class="chart-section"><h4>&#128218; Topic Performance</h4><div class="bar-chart">';
+            var tMax = 0;
+            for (var i = 0; i < topicKeys.length; i++) {
+                var tAvg = topicStats[topicKeys[i]].sum / topicStats[topicKeys[i]].total;
+                if (tAvg > tMax) tMax = tAvg;
+            }
+            var tColors = ["blue", "green", "purple", "cyan", "pink", "indigo", "orange", "yellow", "red"];
+            for (var i = 0; i < topicKeys.length; i++) {
+                var tAvg = topicStats[topicKeys[i]].sum / topicStats[topicKeys[i]].total;
+                var pct = tMax > 0 ? (tAvg / tMax * 100) : 0;
+                h += '<div class="bar-row"><span class="bar-label">' + topicKeys[i].substring(0, 25) + '</span><div class="bar-track"><div class="bar-fill ' + tColors[i % tColors.length] + '" style="width:' + pct + '%">' + tAvg.toFixed(0) + '%</div></div></div>';
+            }
+            h += '</div></div>';
+        }
+
+        var classStats = {};
+        for (var i = 0; i < allAttempts.length; i++) {
+            var a = allAttempts[i];
+            var cName = "Unknown";
+            for (var j = 0; j < studentAccounts.length; j++) {
+                if (studentAccounts[j].id === a.studentId) {
+                    for (var k = 0; k < classes.length; k++) {
+                        if (classes[k].id === studentAccounts[j].classId) { cName = classes[k].name; break; }
+                    }
+                    break;
+                }
+            }
+            if (!classStats[cName]) classStats[cName] = { total: 0, sum: 0 };
+            classStats[cName].total++;
+            classStats[cName].sum += a.percentage;
+        }
+        var classKeys = Object.keys(classStats);
+        if (classKeys.length > 0) {
+            h += '<div class="chart-section"><h4>&#127979; Class Average Comparison</h4><div class="bar-chart">';
+            var cColors = ["blue", "green", "yellow", "purple", "cyan"];
+            for (var i = 0; i < classKeys.length; i++) {
+                var cAvg = classStats[classKeys[i]].sum / classStats[classKeys[i]].total;
+                h += '<div class="bar-row"><span class="bar-label">' + classKeys[i] + '</span><div class="bar-track"><div class="bar-fill ' + cColors[i % cColors.length] + '" style="width:' + cAvg + '%">' + cAvg.toFixed(0) + '%</div></div></div>';
+            }
+            h += '</div></div>';
+        }
+    } else {
+        h += '<div class="chart-section"><p style="color:var(--text-muted);text-align:center;padding:30px;">No quiz data yet. Students need to take quizzes first.</p></div>';
+    }
+
+    c.innerHTML = h;
 }
 
 var pendingImportData = [];
