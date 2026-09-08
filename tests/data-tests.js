@@ -31,6 +31,51 @@ function runPersistenceTests() {
     TestRunner.assertEqual(teachers.length, origTeachers, "Teachers loaded correctly");
     TestRunner.assertEqual(studentAccounts.length, origStudents, "Students loaded correctly");
 
+    TestRunner.suite("Persistence - DataStore Module");
+
+    TestRunner.assertType(DataStore, "object", "DataStore module exists");
+    TestRunner.assertType(DataStore.load, "function", "DataStore.load exists");
+    TestRunner.assertType(DataStore.save, "function", "DataStore.save exists");
+    TestRunner.assertType(DataStore.loadFromFirestore, "function", "DataStore.loadFromFirestore exists");
+    TestRunner.assertType(DataStore.generateRandomPassword, "function", "DataStore.generateRandomPassword exists");
+    TestRunner.assertType(DataStore.generateStudentId, "function", "DataStore.generateStudentId exists");
+    TestRunner.assertType(DataStore.generateTeacherId, "function", "DataStore.generateTeacherId exists");
+    TestRunner.assertType(DataStore.shuffleArray, "function", "DataStore.shuffleArray exists");
+    TestRunner.assertType(DataStore.findStudentById, "function", "DataStore.findStudentById exists");
+    TestRunner.assertType(DataStore.findTeacherById, "function", "DataStore.findTeacherById exists");
+    TestRunner.assertType(DataStore.findClassById, "function", "DataStore.findClassById exists");
+
+    TestRunner.suite("Persistence - Auth Module");
+
+    TestRunner.assertType(Auth, "object", "Auth module exists");
+    TestRunner.assertType(Auth.getRole, "function", "Auth.getRole exists");
+    TestRunner.assertType(Auth.getUser, "function", "Auth.getUser exists");
+    TestRunner.assertType(Auth.isLoggedIn, "function", "Auth.isLoggedIn exists");
+    TestRunner.assertType(Auth.loginAs, "function", "Auth.loginAs exists");
+    TestRunner.assertType(Auth.logout, "function", "Auth.logout exists");
+    TestRunner.assertType(Auth.handleLogin, "function", "Auth.handleLogin exists");
+
+    TestRunner.suite("Persistence - UI Module");
+
+    TestRunner.assertType(UI, "object", "UI module exists");
+    TestRunner.assertType(UI.showLogin, "function", "UI.showLogin exists");
+    TestRunner.assertType(UI.showDashboard, "function", "UI.showDashboard exists");
+    TestRunner.assertType(UI.showQuiz, "function", "UI.showQuiz exists");
+    TestRunner.assertType(UI.showResult, "function", "UI.showResult exists");
+    TestRunner.assertType(UI.renderDashboard, "function", "UI.renderDashboard exists");
+    TestRunner.assertType(UI.displayQuestion, "function", "UI.displayQuestion exists");
+    TestRunner.assertType(UI.renderBar, "function", "UI.renderBar exists");
+    TestRunner.assertType(UI.renderDonut, "function", "UI.renderDonut exists");
+
+    TestRunner.suite("Persistence - QuizEngine Module");
+
+    TestRunner.assertType(QuizEngine, "object", "QuizEngine module exists");
+    TestRunner.assertType(QuizEngine.startQuiz, "function", "QuizEngine.startQuiz exists");
+    TestRunner.assertType(QuizEngine.startTimer, "function", "QuizEngine.startTimer exists");
+    TestRunner.assertType(QuizEngine.stopTimer, "function", "QuizEngine.stopTimer exists");
+    TestRunner.assertType(QuizEngine.recordAnswer, "function", "QuizEngine.recordAnswer exists");
+    TestRunner.assertType(QuizEngine.finish, "function", "QuizEngine.finish exists");
+
     TestRunner.suite("Persistence - Firebase Config");
 
     TestRunner.assertType(db, (typeof db), "Firestore db defined");
