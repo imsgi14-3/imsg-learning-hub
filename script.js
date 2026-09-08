@@ -11,6 +11,7 @@ var currentRole = null;
 var currentUser = null;
 var activeQuizQuestions = [];
 var shuffledOptionsMap = {};
+var principalAccount = null;
 
 var ATTEMPTS_KEY = "learningHub_attempts";
 var QUESTIONS_KEY = "learningHub_questions";
@@ -192,6 +193,8 @@ function loadData() {
     allAttempts = JSON.parse(localStorage.getItem(ATTEMPTS_KEY)) || [];
     conceptStats = JSON.parse(localStorage.getItem(CONCEPTS_KEY)) || {};
     studentAccounts = JSON.parse(localStorage.getItem(STUDENTS_KEY)) || [];
+    var savedPrincipal = JSON.parse(localStorage.getItem("learningHub_principal"));
+    if (savedPrincipal) { principalAccount = savedPrincipal; }
     if (classes.length === 0) {
         classes = [
             { id: "CLASS-9A", name: "9A", grade: 9, section: "A", students: [] },
@@ -253,7 +256,11 @@ function loadFromFirestore(callback) {
     db.collection("teachers").get().then(function(snap) {
         if (snap.size > 0) {
             teachers = [];
-            snap.forEach(function(doc) { teachers.push(doc.data()); });
+            snap.forEach(function(doc) {
+                var d = doc.data();
+                if (d.id === "PRINCIPAL" || doc.id === "PRINCIPAL") { if (!principalAccount) principalAccount = d; }
+                else teachers.push(d);
+            });
             localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
         }
         done();
@@ -269,11 +276,13 @@ function saveAll() {
     localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
     localStorage.setItem(CONCEPTS_KEY, JSON.stringify(conceptStats));
     localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
+    if (principalAccount) localStorage.setItem("learningHub_principal", JSON.stringify(principalAccount));
     saveToFirestore();
 }
 
 function saveToFirestore() {
     if (typeof db === "undefined") return;
+    if (principalAccount) db.collection("teachers").doc("PRINCIPAL").set(principalAccount).catch(function() {});
     for (var i = 0; i < studentAccounts.length; i++) {
         var s = studentAccounts[i];
         db.collection("students").doc(s.id).set(s).catch(function() {});
@@ -448,9 +457,57 @@ function handleLogin(e) {
         childId = document.getElementById("childId").value || "9A-001";
         password = document.getElementById("parentPassword").value;
     } else if (role === "principal") {
-        id = document.getElementById("principalId").value || "ADMIN-001";
-        name = document.getElementById("principalName").value || "Principal";
+        id = document.getElementById("principalId").value.trim();
         password = document.getElementById("principalPassword").value;
+        if (!id || !password) { alert("Please enter Admin ID and Password."); return; }
+        if (!principalAccount || principalAccount.id !== id) {
+            if (!principalAccount) {
+                var genPass = generateRandomPassword();
+                principalAccount = { id: id, name: "Principal", password: genPass, createdAt: Date.now() };
+                localStorage.setItem("learningHub_principal", JSON.stringify(principalAccount));
+                if (typeof fbAuth !== "undefined") {
+                    var email = id.toLowerCase() + "@imsg.edu.pk";
+                    fbAuth.createUserWithEmailAndPassword(email, genPass).catch(function() {});
+                }
+                alert("Admin account created!\n\nID: " + id + "\nPassword: " + genPass + "\n\nSave this password — you'll need it to login.");
+                return;
+            }
+            alert("Admin ID not found.");
+            return;
+        }
+        if (principalAccount.password !== password) { alert("Incorrect password."); return; }
+        var email = id.toLowerCase() + "@imsg.edu.pk";
+        var loginSuccess = function() {
+            currentUser = { id: principalAccount.id, name: "Principal", role: "principal", subject: null, childId: null, classId: null };
+            currentRole = "principal";
+            document.getElementById("loginPage").style.display = "none";
+            document.getElementById("logoutBar").style.display = "flex";
+            document.getElementById("homeBtn").style.display = "inline-block";
+            document.getElementById("loggedUser").textContent = "Principal (admin)";
+            dashboardsHide();
+            document.getElementById("principalDashboard").style.display = "block";
+            document.getElementById("principalDisplayName").textContent = "Principal";
+            showPrincipalTab("school");
+            history.pushState({ page: "dashboard" }, "", "#dashboard");
+        };
+        if (typeof fbAuth !== "undefined") {
+            fbAuth.signInWithEmailAndPassword(email, password).then(function() {
+                loginSuccess();
+            }).catch(function(error) {
+                if (error.code === "auth/user-not-found") {
+                    fbAuth.createUserWithEmailAndPassword(email, password).then(function() {
+                        fbAuth.signInWithEmailAndPassword(email, password).then(function() {
+                            loginSuccess();
+                        }).catch(function() { loginSuccess(); });
+                    }).catch(function() { loginSuccess(); });
+                } else {
+                    alert("Login failed: " + error.message);
+                }
+            });
+        } else {
+            loginSuccess();
+        }
+        return;
     }
     if (password !== defaultPasswords[role]) {
         alert("Incorrect password. Demo password for " + role + ": " + defaultPasswords[role]);
