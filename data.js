@@ -19,6 +19,77 @@ var ATTENDANCE_KEY = "learningHub_attendance";
 var CONCEPTS_KEY = "learningHub_concepts";
 var STUDENTS_KEY = "learningHub_students";
 
+var subjectsData = {
+    "Computer Science": {
+        icon: "&#128187;",
+        color: "#4f46e5",
+        description: "Hardware, Software, Programming & Problem Solving",
+        chapters: [
+            { num: 1, title: "Computer Systems", topics: ["1.1 Brief History of Computer Systems and Generations of Computers", "1.2 Understanding Systems and their Types", "1.3 Core Components of a Computer System", "1.4 Von Neumann Architecture", "1.5 Data Transmission within a computer system", "1.6 Computer Memory", "1.7 Software Engineering and Hardware Engineering", "1.8 Computer Software", "1.9 Data Communication"] },
+            { num: 2, title: "Computational Thinking & Algorithms", topics: ["Problem Solving", "Algorithms", "Flowcharts", "Pseudocode", "Decomposition", "Pattern Recognition"] },
+            { num: 3, title: "Programming Fundamentals", topics: ["Variables", "Data Types", "Input/Output", "Operators", "Conditions", "Loops", "Functions"] },
+            { num: 4, title: "Data and Analysis", topics: ["Data Types", "Binary Operations", "Data Representation", "File Handling", "Databases"] },
+            { num: 5, title: "Applications of Computer Science", topics: ["HTML & CSS", "Web Technologies", "Scratch", "Python", "App Development"] },
+            { num: 6, title: "Impacts of Computing", topics: ["ICT in Daily Life", "Digital Footprint", "Cyberbullying", "Data Privacy", "Environmental Impact"] },
+            { num: 7, title: "Entrepreneurship", topics: ["Digital Entrepreneurship", "E-Commerce", "Digital Marketing", "Business Models", "Career Paths"] }
+        ]
+    },
+    "Physics": {
+        icon: "&#9883;",
+        color: "#f59e0b",
+        description: "Forces, Energy, Waves & Electricity",
+        chapters: [
+            { num: 1, title: "Physical Quantities", topics: ["SI Units", "Measurement", "Errors"] },
+            { num: 2, title: "Kinematics", topics: ["Distance & Displacement", "Speed & Velocity", "Acceleration"] },
+            { num: 3, title: "Forces & Motion", topics: ["Newton's Laws", "Friction", "Momentum"] },
+            { num: 4, title: "Work & Energy", topics: ["Work", "Energy Types", "Power", "Efficiency"] },
+            { num: 5, title: "Simple Machines", topics: ["Levers", "Pulleys", "Mechanical Advantage"] },
+            { num: 6, title: "Sound", topics: ["Sound Waves", "Speed of Sound", "Echo"] },
+            { num: 7, title: "Light", topics: ["Reflection", "Refraction", "Lenses"] },
+            { num: 8, title: "Electricity", topics: ["Current", "Voltage", "Resistance", "Circuits"] }
+        ]
+    },
+    "Chemistry": {
+        icon: "&#128300;",
+        color: "#10b981",
+        description: "Elements, Reactions, Acids & Bases",
+        chapters: [
+            { num: 1, title: "States of Matter", topics: ["Solids", "Liquids", "Gases", "Changes of State"] },
+            { num: 2, title: "Atomic Structure", topics: ["Atoms", "Elements", "Periodic Table"] },
+            { num: 3, title: "Chemical Bonding", topics: ["Ionic Bond", "Covalent Bond", "Metallic Bond"] },
+            { num: 4, title: "Acids & Bases", topics: ["Properties", "pH Scale", "Neutralization"] },
+            { num: 5, title: "Salts", topics: ["Preparation", "Types", "Uses"] },
+            { num: 6, title: "Chemical Reactions", topics: ["Types of Reactions", "Equations", "Balancing"] }
+        ]
+    },
+    "Biology": {
+        icon: "&#129516;",
+        color: "#22c55e",
+        description: "Cells, Genetics, Ecology & Health",
+        chapters: [
+            { num: 1, title: "Cell Biology", topics: ["Cell Structure", "Organelles", "Cell Division"] },
+            { num: 2, title: "Cell Cycle", topics: ["Mitosis", "Meiosis", "Growth"] },
+            { num: 3, title: "Tissues", topics: ["Plant Tissues", "Animal Tissues", "Organ Systems"] },
+            { num: 4, title: "Biodiversity", topics: ["Classification", "Ecosystems", "Food Chains"] },
+            { num: 5, title: "Plant Biology", topics: ["Photosynthesis", "Transpiration", "Growth"] },
+            { num: 6, title: "Human Biology", topics: ["Digestive System", "Circulatory System", "Nervous System"] }
+        ]
+    },
+    "Mathematics": {
+        icon: "&#128290;",
+        color: "#8b5cf6",
+        description: "Algebra, Geometry, Statistics & Numbers",
+        chapters: [
+            { num: 1, title: "Number System", topics: ["Real Numbers", "Rational Numbers", "Surds"] },
+            { num: 2, title: "Algebra", topics: ["Polynomials", "Factorization", "Equations"] },
+            { num: 3, title: "Matrices", topics: ["Matrix Operations", "Types of Matrices", "Determinants"] },
+            { num: 4, title: "Geometry", topics: ["Lines & Angles", "Triangles", "Quadrilaterals"] },
+            { num: 5, title: "Trigonometry", topics: ["Ratios", "Identities", "Applications"] },
+            { num: 6, title: "Statistics", topics: ["Mean", "Median", "Mode", "Graphs"] }
+        ]
+    }
+};
+
 function loadData() {
     questions = JSON.parse(localStorage.getItem(QUESTIONS_KEY)) || [];
     classes = JSON.parse(localStorage.getItem(CLASSES_KEY)) || [];

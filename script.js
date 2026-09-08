@@ -60,7 +60,7 @@ function launchWeakPractice() { UI.launchWeakPractice(); }
 function showModeDetail(m) { UI.showModeDetail(m); }
 function hideModeDetail() { UI.hideModeDetail(); }
 function startAssignmentQuiz(i) { UI.startAssignmentQuiz(i); }
-function renderBar(n, p, c) { return renderBar(n, p, c); }
+function renderBar(n, p, c) { return UI.renderBar(n, p, c); }
 function showAddQuestionModal() { UI.showAddQuestionModal(); }
 function saveQuestion(e) { UI.saveQuestion(e); }
 function editQuestion(id) { UI.editQuestion(id); }

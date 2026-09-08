@@ -232,50 +232,57 @@ var UI = (function() {
     function renderSubjects() {
         var container = $("subjectGrid");
         if (!container) return;
-        var subjects = {};
-        for (var i = 0; i < questions.length; i++) {
-            var s = questions[i].subject;
-            if (!subjects[s]) subjects[s] = 0;
-            subjects[s]++;
-        }
         var html = "";
-        var keys = Object.keys(subjects).sort();
+        var keys = Object.keys(subjectsData).sort();
         for (var i = 0; i < keys.length; i++) {
-            var icon = "📚";
-            if (keys[i].indexOf("Science") !== -1) icon = "💻";
-            if (keys[i].indexOf("Math") !== -1) icon = "📐";
-            if (keys[i].indexOf("English") !== -1) icon = "📖";
-            if (keys[i].indexOf("Urdu") !== -1) icon = "✍️";
-            if (keys[i].indexOf("Social") !== -1) icon = "🌍";
-            if (keys[i].indexOf("Islamiyat") !== -1) icon = "🕌";
-            html += '<div class="quiz-mode-card" onclick="showSubjectChapters(\'' + keys[i].replace(/'/g, "\\'") + '\')">';
-            html += '<div class="mode-icon">' + icon + '</div>';
-            html += '<div class="mode-title">' + keys[i] + '</div>';
-            html += '<div class="mode-desc">' + subjects[keys[i]] + ' questions</div></div>';
+            var s = keys[i];
+            var d = subjectsData[s];
+            var qCount = 0;
+            for (var j = 0; j < questions.length; j++) {
+                if (questions[j].subject === s) qCount++;
+            }
+            html += '<div class="quiz-mode-card" onclick="showSubjectChapters(\'' + s.replace(/'/g, "\\'") + '\')">';
+            html += '<div class="mode-icon">' + d.icon + '</div>';
+            html += '<div class="mode-title">' + s + '</div>';
+            html += '<div class="mode-desc">' + qCount + ' questions &bull; ' + d.chapters.length + ' chapters</div></div>';
         }
-        container.innerHTML = html || "<p>No questions available</p>";
+        container.innerHTML = html || "<p>No subjects available</p>";
     }
 
     function showSubjectChapters(subject) {
         $("subjectListView").style.display = "none";
         $("chapterListView").style.display = "block";
         $("chapterSubjectTitle").textContent = subject;
-        var chapters = {};
-        for (var i = 0; i < questions.length; i++) {
-            if (questions[i].subject === subject) {
-                var ch = questions[i].chapter;
-                if (!chapters[ch]) chapters[ch] = 0;
-                chapters[ch]++;
+        var sData = subjectsData[subject];
+        var html = "";
+        if (sData && sData.chapters) {
+            for (var i = 0; i < sData.chapters.length; i++) {
+                var ch = sData.chapters[i];
+                var qCount = 0;
+                for (var j = 0; j < questions.length; j++) {
+                    if (questions[j].subject === subject && questions[j].chapter == ch.num) qCount++;
+                }
+                html += '<div class="quiz-mode-card" onclick="showChapterQuizOptions(' + ch.num + ', \'' + subject.replace(/'/g, "\\'") + '\')">';
+                html += '<div class="mode-title">Chapter ' + ch.num + ': ' + ch.title + '</div>';
+                html += '<div class="mode-desc">' + qCount + ' questions &bull; ' + ch.topics.length + ' topics</div></div>';
+            }
+        } else {
+            var chapters = {};
+            for (var i = 0; i < questions.length; i++) {
+                if (questions[i].subject === subject) {
+                    var ch = questions[i].chapter;
+                    if (!chapters[ch]) chapters[ch] = 0;
+                    chapters[ch]++;
+                }
+            }
+            var keys = Object.keys(chapters).sort(function(a, b) { return Number(a) - Number(b); });
+            for (var i = 0; i < keys.length; i++) {
+                html += '<div class="quiz-mode-card" onclick="showChapterQuizOptions(' + keys[i] + ', \'' + subject.replace(/'/g, "\\'") + '\')">';
+                html += '<div class="mode-title">Chapter ' + keys[i] + '</div>';
+                html += '<div class="mode-desc">' + chapters[keys[i]] + ' questions</div></div>';
             }
         }
-        var keys = Object.keys(chapters).sort(function(a, b) { return Number(a) - Number(b); });
-        var html = "";
-        for (var i = 0; i < keys.length; i++) {
-            html += '<div class="quiz-mode-card" onclick="showChapterQuizOptions(' + keys[i] + ', \'' + subject.replace(/'/g, "\\'") + '\')">';
-            html += '<div class="mode-title">Chapter ' + keys[i] + '</div>';
-            html += '<div class="mode-desc">' + chapters[keys[i]] + ' questions</div></div>';
-        }
-        $("chapterGrid").innerHTML = html;
+        $("chapterGrid").innerHTML = html || "<p>No chapters available</p>";
         $("chapterGrid").style.display = "";
         $("chapterQuizOptions").style.display = "none";
     }
