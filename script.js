@@ -306,12 +306,16 @@ function handleLogin(e) {
         document.getElementById("studentDashboard").style.display = "block";
         document.getElementById("studentDisplayName").textContent = name;
         showStudentTab("practice");
-    } else if (role === "teacher" || role === "classteacher") {
+    } else if (role === "teacher") {
         document.getElementById("teacherDashboard").style.display = "block";
         document.getElementById("teacherDisplayName").textContent = name;
         document.getElementById("teacherSubjectDisplay").textContent = subject || "All";
         populateTeacherClasses();
         showTeacherTab("classes");
+    } else if (role === "classteacher") {
+        document.getElementById("classTeacherDashboard").style.display = "block";
+        document.getElementById("ctDisplayName").textContent = name;
+        showCTTab("overview");
     } else if (role === "parent") {
         document.getElementById("parentDashboard").style.display = "block";
         document.getElementById("parentDisplayName").textContent = name;
@@ -1173,9 +1177,12 @@ function backToDashboard() {
     if (currentRole === "student") {
         document.getElementById("studentDashboard").style.display = "block";
         showStudentTab("practice");
-    } else if (currentRole === "teacher" || currentRole === "classteacher") {
+    } else if (currentRole === "teacher") {
         document.getElementById("teacherDashboard").style.display = "block";
         showTeacherTab("classes");
+    } else if (currentRole === "classteacher") {
+        document.getElementById("classTeacherDashboard").style.display = "block";
+        showCTTab("overview");
     } else if (currentRole === "parent") {
         document.getElementById("parentDashboard").style.display = "block";
         showParentTab("progress");
@@ -2177,8 +2184,10 @@ window.addEventListener("popstate", function(e) {
         dashboardsHide();
         if (currentRole === "student") {
             document.getElementById("studentDashboard").style.display = "block";
-        } else if (currentRole === "teacher" || currentRole === "classteacher") {
+        } else if (currentRole === "teacher") {
             document.getElementById("teacherDashboard").style.display = "block";
+        } else if (currentRole === "classteacher") {
+            document.getElementById("classTeacherDashboard").style.display = "block";
         } else if (currentRole === "parent") {
             document.getElementById("parentDashboard").style.display = "block";
         } else if (currentRole === "principal") {
