@@ -358,9 +358,13 @@ function handleLogin(e) {
             }).catch(function(error) {
                 if (error.code === "auth/user-not-found") {
                     fbAuth.createUserWithEmailAndPassword(email, password).then(function() {
-                        loginSuccess();
-                    }).catch(function(err) {
-                        alert("Login failed: " + err.message);
+                        fbAuth.signInWithEmailAndPassword(email, password).then(function() {
+                            loginSuccess();
+                        }).catch(function() {
+                            loginSuccess();
+                        });
+                    }).catch(function() {
+                        alert("Login failed: could not create account.");
                     });
                 } else {
                     alert("Login failed: " + error.message);
@@ -417,12 +421,16 @@ function handleLogin(e) {
             }).catch(function(error) {
                 if (error.code === "auth/user-not-found") {
                     fbAuth.createUserWithEmailAndPassword(email, password).then(function() {
-                        loginSuccess();
-                    }).catch(function(err) {
+                        fbAuth.signInWithEmailAndPassword(email, password).then(function() {
+                            loginSuccess();
+                        }).catch(function() {
+                            loginSuccess();
+                        });
+                    }).catch(function() {
                         loginSuccess();
                     });
                 } else {
-                    loginSuccess();
+                    alert("Login failed: " + error.message);
                 }
             });
         } else {
@@ -1995,8 +2003,22 @@ function saveTeacher(e) {
         teachers.push(teacherObj);
         if (typeof fbAuth !== "undefined") {
             var email = tid.toLowerCase() + "@imsg.edu.pk";
-            fbAuth.createUserWithEmailAndPassword(email, password).catch(function(err) {
+            var principalEmail = null;
+            var principalPass = null;
+            if (fbAuth.currentUser) {
+                principalEmail = fbAuth.currentUser.email;
+            }
+            fbAuth.createUserWithEmailAndPassword(email, password).then(function() {
+                if (principalEmail) {
+                    fbAuth.signOut().then(function() {
+                        fbAuth.signInWithEmailAndPassword(principalEmail, "admin").catch(function() {});
+                    });
+                }
+            }).catch(function(err) {
                 console.log("Auth create skipped:", err.message);
+                if (principalEmail) {
+                    fbAuth.signInWithEmailAndPassword(principalEmail, "admin").catch(function() {});
+                }
             });
         }
         alert("Teacher added!\n\nID: " + tid + "\nPassword: " + password + "\n\nShare these with the teacher.");
@@ -2176,10 +2198,18 @@ function saveStudentAccount(e) {
         studentAccounts.push({ id: newId, name: name, fatherName: fatherName, classId: classId, rollNo: rollNo, password: newPass });
         var email = newId.toLowerCase() + "@imsg.edu.pk";
         if (typeof fbAuth !== "undefined") {
-            var tempUser = fbAuth.currentUser;
+            var principalEmail = fbAuth.currentUser ? fbAuth.currentUser.email : null;
             fbAuth.createUserWithEmailAndPassword(email, newPass).then(function() {
-                if (tempUser) fbAuth.signInWithEmailAndPassword(tempUser.email, tempUser.password || "admin").catch(function() {});
-            }).catch(function() {});
+                if (principalEmail) {
+                    fbAuth.signOut().then(function() {
+                        fbAuth.signInWithEmailAndPassword(principalEmail, "admin").catch(function() {});
+                    });
+                }
+            }).catch(function() {
+                if (principalEmail) {
+                    fbAuth.signInWithEmailAndPassword(principalEmail, "admin").catch(function() {});
+                }
+            });
         }
         alert("Student created!\n\nID: " + newId + "\nPassword: " + newPass + "\n\nPlease share these credentials with the student.");
     }
@@ -2391,12 +2421,26 @@ function previewStudentExcel(e) {
 function confirmStudentExcelImport() {
     if (pendingStudentExcelData.length === 0) return;
     var count = pendingStudentExcelData.length;
+    var principalEmail = (typeof fbAuth !== "undefined" && fbAuth.currentUser) ? fbAuth.currentUser.email : null;
+    var created = 0;
     for (var i = 0; i < pendingStudentExcelData.length; i++) {
         studentAccounts.push(pendingStudentExcelData[i]);
         var s = pendingStudentExcelData[i];
         var email = s.id.toLowerCase() + "@imsg.edu.pk";
         if (typeof fbAuth !== "undefined") {
-            fbAuth.createUserWithEmailAndPassword(email, s.password).catch(function() {});
+            fbAuth.createUserWithEmailAndPassword(email, s.password).then(function() {
+                created++;
+                if (created === count && principalEmail) {
+                    fbAuth.signOut().then(function() {
+                        fbAuth.signInWithEmailAndPassword(principalEmail, "admin").catch(function() {});
+                    });
+                }
+            }).catch(function() {
+                created++;
+                if (created === count && principalEmail) {
+                    fbAuth.signInWithEmailAndPassword(principalEmail, "admin").catch(function() {});
+                }
+            });
         }
     }
     saveAll();
