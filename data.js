@@ -99,6 +99,12 @@ function loadData() {
     allAttempts = JSON.parse(localStorage.getItem(ATTEMPTS_KEY)) || [];
     conceptStats = JSON.parse(localStorage.getItem(CONCEPTS_KEY)) || {};
     studentAccounts = JSON.parse(localStorage.getItem(STUDENTS_KEY)) || [];
+    var migrated = false;
+    for (var i = 0; i < questions.length; i++) {
+        if (!questions[i].subject) { questions[i].subject = "Computer Science"; migrated = true; }
+        if (!questions[i].grade) { questions[i].grade = 9; migrated = true; }
+    }
+    if (migrated) localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
     var sp = JSON.parse(localStorage.getItem("learningHub_principal"));
     if (sp && sp.id === "ADMIN-001") principalAccount = sp;
     if (classes.length === 0) {
@@ -151,6 +157,8 @@ function loadFromFirestore(callback) {
             for (var i = 0; i < questions.length; i++) byId[questions[i].id] = i;
             snap.forEach(function(doc) {
                 var q = doc.data();
+                if (!q.subject) q.subject = "Computer Science";
+                if (!q.grade) q.grade = 9;
                 if (byId[q.id] !== undefined) { questions[byId[q.id]] = q; }
                 else { questions.push(q); byId[q.id] = questions.length - 1; }
             });
@@ -178,6 +186,26 @@ function loadFromFirestore(callback) {
         }
         done();
     }).catch(function() { done(); });
+}
+
+function refreshAssignmentsFromFirestore(callback) {
+    if (typeof db === "undefined") { if (callback) callback(); return; }
+    db.collection("assignments").get().then(function(snap) {
+        assignments = [];
+        snap.forEach(function(doc) { assignments.push(doc.data()); });
+        localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments));
+        if (callback) callback();
+    }).catch(function() { if (callback) callback(); });
+}
+
+function refreshAttemptsFromFirestore(callback) {
+    if (typeof db === "undefined") { if (callback) callback(); return; }
+    db.collection("attempts").get().then(function(snap) {
+        allAttempts = [];
+        snap.forEach(function(doc) { allAttempts.push(doc.data()); });
+        localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
+        if (callback) callback();
+    }).catch(function() { if (callback) callback(); });
 }
 
 function shuffleArray(arr) {

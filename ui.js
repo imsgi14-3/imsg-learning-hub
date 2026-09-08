@@ -52,7 +52,7 @@ var UI = (function() {
         for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) el.style.display = "none"; }
         activateTab("#studentDashboard", map[tab]);
         if (tab === "practice") { $("studentPracticeTab").style.display = "block"; renderSubjects(); showSubjectList(); }
-        else if (tab === "assignments") { $("studentAssignmentsTab").style.display = "block"; renderStudentAssignments(); }
+        else if (tab === "assignments") { $("studentAssignmentsTab").style.display = "block"; refreshAssignmentsFromFirestore(function() { renderStudentAssignments(); }); }
         else if (tab === "results") { $("studentResultsTab").style.display = "block"; renderStudentResults(); }
         else if (tab === "progress") { $("studentProgressTab").style.display = "block"; renderStudentProgress(); }
     }
@@ -91,20 +91,30 @@ var UI = (function() {
         var c = $("studentResultsList");
         if (!c) return;
         var user = Auth.getUser();
-        var my = [];
-        for (var i = 0; i < allAttempts.length; i++) {
-            if (allAttempts[i].studentId === user.id) my.push(allAttempts[i]);
-        }
-        if (my.length === 0) { c.innerHTML = '<div class="empty-state"><h4>No results yet</h4><p>Complete a quiz to see your results here.</p></div>'; return; }
-        my.sort(function(a, b) { return new Date(b.timestamp) - new Date(a.timestamp); });
-        var h = '<table class="history-table"><thead><tr><th>Date</th><th>Subject</th><th>Score</th><th>%</th><th>Time</th></tr></thead><tbody>';
-        for (var i = 0; i < my.length; i++) {
-            var d = new Date(my[i].timestamp);
-            var ts = my[i].timeSpent ? Math.floor(my[i].timeSpent / 60) + ":" + (my[i].timeSpent % 60 < 10 ? "0" : "") + (my[i].timeSpent % 60) : "-";
-            var cls = my[i].percentage >= 70 ? "color:var(--success)" : my[i].percentage >= 50 ? "color:var(--accent)" : "color:var(--error)";
-            h += '<tr><td>' + d.toLocaleDateString() + '</td><td>' + my[i].subject + '</td><td>' + my[i].score + '/' + my[i].total + '</td><td style="' + cls + ';font-weight:700;">' + my[i].percentage + '%</td><td>' + ts + '</td></tr>';
-        }
-        c.innerHTML = h + '</tbody></table>';
+        refreshAttemptsFromFirestore(function() {
+            var my = [];
+            for (var i = 0; i < allAttempts.length; i++) {
+                if (allAttempts[i].studentId === user.id) my.push(allAttempts[i]);
+            }
+            if (my.length === 0) { c.innerHTML = '<div class="empty-state"><h4>No results yet</h4><p>Complete a quiz to see your results here.</p></div>'; return; }
+            my.sort(function(a, b) { return new Date(b.timestamp) - new Date(a.timestamp); });
+            var h = '<table class="history-table"><thead><tr><th>Date</th><th>Subject</th><th>Type</th><th>Score</th><th>%</th><th>Time</th></tr></thead><tbody>';
+            for (var i = 0; i < my.length; i++) {
+                var d = new Date(my[i].timestamp);
+                var ts = my[i].timeSpent ? Math.floor(my[i].timeSpent / 60) + ":" + (my[i].timeSpent % 60 < 10 ? "0" : "") + (my[i].timeSpent % 60) : "-";
+                var cls = my[i].percentage >= 70 ? "color:var(--success)" : my[i].percentage >= 50 ? "color:var(--accent)" : "color:var(--error)";
+                var modeLabel = "Practice";
+                if (my[i].mode === "assignment") modeLabel = "Assignment";
+                else if (my[i].mode === "random") modeLabel = "Random Quiz";
+                else if (my[i].mode === "quick") modeLabel = "Quick Practice";
+                else if (my[i].mode === "chapter") modeLabel = "Chapter Test";
+                else if (my[i].mode === "fullbook") modeLabel = "Full Book Test";
+                else if (my[i].mode === "weak") modeLabel = "Weak Areas";
+                var badge = modeLabel === "Assignment" ? ' <span class="badge badge-hard">Assignment</span>' : "";
+                h += '<tr><td>' + d.toLocaleDateString() + '</td><td>' + my[i].subject + '</td><td>' + modeLabel + badge + '</td><td>' + my[i].score + '/' + my[i].total + '</td><td style="' + cls + ';font-weight:700;">' + my[i].percentage + '%</td><td>' + ts + '</td></tr>';
+            }
+            c.innerHTML = h + '</tbody></table>';
+        });
     }
 
     function renderStudentProgress() {
@@ -303,10 +313,22 @@ var UI = (function() {
         $("chapterGrid").style.display = "none";
         var panel = $("chapterQuizOptions");
         panel.style.display = "block";
+        var topicCount = {};
+        for (var i = 0; i < chapterQuestions.length; i++) {
+            var t = chapterQuestions[i].topic || "General";
+            if (!topicCount[t]) topicCount[t] = 0;
+            topicCount[t]++;
+        }
+        var numTopics = Object.keys(topicCount).length;
         var html = '<button class="mode-back-btn" onclick="backToChapters()">&#8592; Back to Chapters</button>';
         html += '<h3>' + subject + ' — Chapter ' + chapterNum + '</h3>';
-        html += '<p>' + chapterQuestions.length + ' questions available</p>';
+        html += '<p>' + chapterQuestions.length + ' questions &bull; ' + numTopics + ' topics</p>';
         html += '<div class="quiz-mode-grid">';
+        html += '<div class="quiz-mode-card quiz-mode-random" onclick="launchRandomQuiz(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\')">';
+        html += '<div class="quiz-mode-icon">&#127922;</div>';
+        html += '<h4>Random Quiz</h4>';
+        html += '<p>' + Math.min(15, chapterQuestions.length) + ' questions &bull; 20 min<br>Mixed topics from this chapter</p>';
+        html += '</div>';
         html += '<div class="quiz-mode-card" onclick="showTopicPicker(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\')">';
         html += '<div class="quiz-mode-icon">&#9889;</div>';
         html += '<h4>Quick Practice</h4>';
@@ -574,8 +596,43 @@ var UI = (function() {
         startQuizUI(selected, 15, "weak", "all", "all");
     }
 
-    function startQuizUI(selected, timeMinutes, mode, subject, chapter) {
-        QuizEngine.startQuiz(selected, mode, subject || "all", chapter || "all");
+    function launchRandomQuiz(chapterNum, subject) {
+        var filtered = [];
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].subject === subject && questions[i].chapter == chapterNum) filtered.push(questions[i]);
+        }
+        if (filtered.length === 0) { alert("No questions available for this chapter."); return; }
+        var byTopic = {};
+        for (var i = 0; i < filtered.length; i++) {
+            var t = filtered[i].topic || "General";
+            if (!byTopic[t]) byTopic[t] = [];
+            byTopic[t].push(filtered[i]);
+        }
+        var topicKeys = Object.keys(byTopic);
+        var count = Math.min(15, filtered.length);
+        var selected = [];
+        var perTopic = Math.max(1, Math.floor(count / topicKeys.length));
+        for (var i = 0; i < topicKeys.length && selected.length < count; i++) {
+            var pool = shuffleArray(byTopic[topicKeys[i]]);
+            var take = Math.min(perTopic, pool.length, count - selected.length);
+            for (var j = 0; j < take; j++) selected.push(pool[j]);
+        }
+        if (selected.length < count) {
+            var remaining = [];
+            var used = {};
+            for (var i = 0; i < selected.length; i++) used[selected[i].id] = true;
+            for (var i = 0; i < filtered.length; i++) {
+                if (!used[filtered[i].id]) remaining.push(filtered[i]);
+            }
+            remaining = shuffleArray(remaining);
+            while (selected.length < count && remaining.length > 0) selected.push(remaining.shift());
+        }
+        selected = shuffleArray(selected);
+        startQuizUI(selected, 20, "random", subject, chapterNum);
+    }
+
+    function startQuizUI(selected, timeMinutes, mode, subject, chapter, aId) {
+        QuizEngine.startQuiz(selected, mode, subject || "all", chapter || "all", aId || "");
         QuizEngine.setTimerMinutes(timeMinutes);
         $("loginPage").style.display = "none";
         $("studentDashboard").style.display = "none";
@@ -623,7 +680,7 @@ var UI = (function() {
         }
         activeQuizQuestions = shuffleArray(activeQuizQuestions);
         if (activeQuizQuestions.length === 0) { alert("Assignment questions not found."); return; }
-        startQuizUI(activeQuizQuestions, 60, "assignment", a.subject, "all");
+        startQuizUI(activeQuizQuestions, 60, "assignment", a.subject, "all", aid);
     }
 
     function showTeacherTab(tab) {
@@ -632,7 +689,14 @@ var UI = (function() {
         for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) el.style.display = "none"; }
         activateTab("#teacherDashboard", map[tab]);
         if (tab === "classes") { $("teacherClassesTab").style.display = "block"; renderClasses(); }
-        else if (tab === "questionbank") { $("teacherQuestionBankTab").style.display = "block"; renderQuestions(); }
+        else if (tab === "questionbank") {
+            $("teacherQuestionBankTab").style.display = "block";
+            var user = Auth.getUser();
+            if (user && user.subject) {
+                $("qbFilterSubject").value = user.subject;
+            }
+            renderQuestions();
+        }
         else if (tab === "assignments") { $("teacherAssignmentsTab").style.display = "block"; renderAssignments(); }
         else if (tab === "analytics") { $("teacherAnalyticsTab").style.display = "block"; populateAnalyticsClassSelect(); }
     }
@@ -712,21 +776,47 @@ var UI = (function() {
         if (!c) return;
         var st = ($("qbSearch").value || "").toLowerCase();
         var fs = $("qbFilterSubject").value;
+        var fc = $("qbFilterChapter").value;
+        var ft = $("qbFilterTopic").value;
         var fg = $("qbFilterGrade").value;
+        var chapters = {};
+        var topics = {};
         var f = [];
         for (var i = 0; i < questions.length; i++) {
             var q = questions[i];
             var ok = true;
             if (st && (q.text || q.question || "").toLowerCase().indexOf(st) === -1 && q.id.toLowerCase().indexOf(st) === -1) ok = false;
             if (fs && q.subject !== fs) ok = false;
+            if (fc && q.chapter != parseInt(fc)) ok = false;
+            if (ft && q.topic !== ft) ok = false;
             if (fg && q.grade !== parseInt(fg)) ok = false;
             if (ok) f.push(q);
+            if (fs && q.subject === fs) {
+                if (q.chapter) chapters[q.chapter] = true;
+                if (q.topic) topics[q.topic] = true;
+            }
         }
+        var chSelect = $("qbFilterChapter");
+        var chVal = chSelect.value;
+        var chHTML = '<option value="">All Chapters</option>';
+        var chKeys = Object.keys(chapters).sort(function(a, b) { return Number(a) - Number(b); });
+        for (var i = 0; i < chKeys.length; i++) {
+            chHTML += '<option value="' + chKeys[i] + '"' + (chVal === chKeys[i] ? ' selected' : '') + '>Chapter ' + chKeys[i] + '</option>';
+        }
+        chSelect.innerHTML = chHTML;
+        var tpSelect = $("qbFilterTopic");
+        var tpVal = tpSelect.value;
+        var tpHTML = '<option value="">All Topics</option>';
+        var tpKeys = Object.keys(topics).sort();
+        for (var i = 0; i < tpKeys.length; i++) {
+            tpHTML += '<option value="' + tpKeys[i].replace(/"/g, '&quot;') + '"' + (tpVal === tpKeys[i] ? ' selected' : '') + '>' + tpKeys[i] + '</option>';
+        }
+        tpSelect.innerHTML = tpHTML;
         if (f.length === 0) { c.innerHTML = "<p>No questions found.</p>"; return; }
-        var h = '<table><thead><tr><th>ID</th><th>Subject</th><th>Grade</th><th>Topic</th><th>Difficulty</th><th>Actions</th></tr></thead><tbody>';
+        var h = '<table><thead><tr><th>ID</th><th>Subject</th><th>Ch</th><th>Topic</th><th>Difficulty</th><th>Actions</th></tr></thead><tbody>';
         for (var i = 0; i < f.length; i++) {
             var q = f[i];
-            h += '<tr><td>' + q.id + '</td><td>' + q.subject + '</td><td>' + q.grade + '</td><td>' + q.topic + '</td><td>' + q.difficulty + '</td><td><button onclick="editQuestion(\'' + q.id + '\')" class="action-btn">Edit</button> <button onclick="deleteQuestion(\'' + q.id + '\')" class="action-btn danger">Delete</button></td></tr>';
+            h += '<tr><td>' + q.id + '</td><td>' + q.subject + '</td><td>' + q.chapter + '</td><td>' + q.topic + '</td><td>' + q.difficulty + '</td><td><button onclick="editQuestion(\'' + q.id + '\')" class="action-btn">Edit</button> <button onclick="deleteQuestion(\'' + q.id + '\')" class="action-btn danger">Delete</button></td></tr>';
         }
         c.innerHTML = h + '</tbody></table>';
     }
@@ -787,9 +877,57 @@ var UI = (function() {
         for (var i = 0; i < assignments.length; i++) {
             var a = assignments[i], cl = null;
             for (var j = 0; j < classes.length; j++) { if (classes[j].id === a.classId) { cl = classes[j]; break; } }
-            h += '<tr><td>' + a.title + '</td><td>' + a.subject + '</td><td>' + (cl ? cl.name : "N/A") + '</td><td>' + a.dueDate + '</td><td>' + a.questions.length + '</td><td><button onclick="editAssignment(\'' + a.id + '\')" class="action-btn">Edit</button> <button onclick="deleteAssignment(\'' + a.id + '\')" class="action-btn danger">Delete</button></td></tr>';
+            h += '<tr><td>' + a.title + '</td><td>' + a.subject + '</td><td>' + (cl ? cl.name : "N/A") + '</td><td>' + a.dueDate + '</td><td>' + a.questions.length + '</td><td><button onclick="editAssignment(\'' + a.id + '\')" class="action-btn">Edit</button> <button onclick="showAssignmentStatus(\'' + a.id + '\')" class="action-btn">Status</button> <button onclick="deleteAssignment(\'' + a.id + '\')" class="action-btn danger">Delete</button></td></tr>';
         }
         c.innerHTML = h + '</tbody></table>';
+    }
+
+    function showAssignmentStatus(aid) {
+        var panel = $("assignmentStatusPanel");
+        if (!panel) return;
+        refreshAttemptsFromFirestore(function() {
+            var a = null;
+            for (var i = 0; i < assignments.length; i++) { if (assignments[i].id === aid) { a = assignments[i]; break; } }
+            if (!a) { panel.style.display = "none"; return; }
+            var cl = null;
+            for (var j = 0; j < classes.length; j++) { if (classes[j].id === a.classId) { cl = classes[j]; break; } }
+            var classStudents = [];
+            for (var i = 0; i < studentAccounts.length; i++) {
+                if (studentAccounts[i].classId === a.classId) classStudents.push(studentAccounts[i]);
+            }
+            var attempted = {};
+            for (var i = 0; i < allAttempts.length; i++) {
+                var att = allAttempts[i];
+                if (att.assignmentId === aid && att.studentId) attempted[att.studentId] = att;
+            }
+            var html = '<button class="mode-back-btn" onclick="hideAssignmentStatus()">&#8592; Back to Assignments</button>';
+            html += '<h3>' + a.title + ' — ' + a.subject + '</h3>';
+            html += '<p>Class: ' + (cl ? cl.name : "N/A") + ' &bull; Due: ' + a.dueDate + ' &bull; Questions: ' + a.questions.length + '</p>';
+            html += '<div class="overview-cards">';
+            html += '<div class="overview-card quizzes"><div class="card-icon">&#9989;</div><div class="card-value">' + Object.keys(attempted).length + '</div><div class="card-label">Attempted</div></div>';
+            html += '<div class="overview-card students"><div class="card-icon">&#9203;</div><div class="card-value">' + Math.max(0, classStudents.length - Object.keys(attempted).length) + '</div><div class="card-label">Not Attempted</div></div>';
+            html += '<div class="overview-card average"><div class="card-icon">&#128100;</div><div class="card-value">' + classStudents.length + '</div><div class="card-label">Total Students</div></div>';
+            html += '</div>';
+            html += '<table class="history-table"><thead><tr><th>Student</th><th>Status</th><th>Score</th><th>%</th><th>Date</th></tr></thead><tbody>';
+            for (var i = 0; i < classStudents.length; i++) {
+                var s = classStudents[i];
+                var att = attempted[s.id];
+                if (att) {
+                    var cls = att.percentage >= 70 ? "color:var(--success)" : att.percentage >= 50 ? "color:var(--accent)" : "color:var(--error)";
+                    html += '<tr><td>' + s.id + ' - ' + (s.name || "N/A") + '</td><td><span style="color:var(--success);">&#9989; Attempted</span></td><td>' + att.score + '/' + att.total + '</td><td style="' + cls + ';font-weight:700;">' + att.percentage + '%</td><td>' + new Date(att.timestamp).toLocaleDateString() + '</td></tr>';
+                } else {
+                    html += '<tr><td>' + s.id + ' - ' + (s.name || "N/A") + '</td><td><span style="color:var(--error);">&#9203; Not Attempted</span></td><td>-</td><td>-</td><td>-</td></tr>';
+                }
+            }
+            html += '</tbody></table>';
+            panel.innerHTML = html;
+            panel.style.display = "block";
+        });
+    }
+
+    function hideAssignmentStatus() {
+        var panel = $("assignmentStatusPanel");
+        if (panel) panel.style.display = "none";
     }
 
     function showCreateAssignmentModal() {
@@ -878,40 +1016,55 @@ var UI = (function() {
         var cl = null;
         for (var i = 0; i < classes.length; i++) { if (classes[i].id === cid) { cl = classes[i]; break; } }
         if (!cl) return;
-        var ca = [];
-        for (var i = 0; i < allAttempts.length; i++) {
-            var sId = allAttempts[i].studentId;
-            for (var j = 0; j < studentAccounts.length; j++) {
-                if (studentAccounts[j].id === sId && studentAccounts[j].classId === cid) { ca.push(allAttempts[i]); break; }
+        refreshAttemptsFromFirestore(function() {
+            var ca = [];
+            for (var i = 0; i < allAttempts.length; i++) {
+                var sId = allAttempts[i].studentId;
+                for (var j = 0; j < studentAccounts.length; j++) {
+                    if (studentAccounts[j].id === sId && studentAccounts[j].classId === cid) { ca.push(allAttempts[i]); break; }
+                }
             }
-        }
-        if (ca.length === 0) { c.innerHTML = '<div class="chart-section"><p style="color:var(--text-muted);text-align:center;padding:20px;">No quiz attempts for this class yet.</p></div>'; return; }
-        var avg = 0; var best = 0;
-        for (var i = 0; i < ca.length; i++) { avg += ca[i].percentage; if (ca[i].percentage > best) best = ca[i].percentage; }
-        avg = avg / ca.length;
-        var h = '<div class="overview-cards">' +
-            '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + ca.length + '</div><div class="card-label">Attempts</div></div>' +
-            '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average</div></div>' +
-            '<div class="overview-card students"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best Score</div></div>' +
-            '</div>';
-        var diffCount = { excellent: 0, good: 0, needs: 0 };
-        for (var i = 0; i < ca.length; i++) {
-            if (ca[i].percentage >= 80) diffCount.excellent++;
-            else if (ca[i].percentage >= 50) diffCount.good++;
-            else diffCount.needs++;
-        }
-        var total = diffCount.excellent + diffCount.good + diffCount.needs;
-        var ePct = total > 0 ? (diffCount.excellent / total * 100) : 0;
-        var gPct = total > 0 ? (diffCount.good / total * 100) : 0;
-        h += '<div class="chart-section"><h4>&#128202; Results Distribution</h4><div class="donut-container">' +
-            '<div class="donut-chart" style="background: conic-gradient(#10b981 0% ' + ePct + '%, #f59e0b ' + ePct + '% ' + (ePct + gPct) + '%, #ef4444 ' + (ePct + gPct) + '% 100%)">' +
-            '<div class="donut-center"><span class="donut-value">' + total + '</span><span class="donut-label">Total</span></div></div>' +
-            '<div class="donut-legend">' +
-            '<div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Excellent (80%+): ' + diffCount.excellent + '</div>' +
-            '<div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Good (50-79%): ' + diffCount.good + '</div>' +
-            '<div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Needs Work (&lt;50%): ' + diffCount.needs + '</div>' +
-            '</div></div></div>';
-        c.innerHTML = h;
+            if (ca.length === 0) { c.innerHTML = '<div class="chart-section"><p style="color:var(--text-muted);text-align:center;padding:20px;">No quiz attempts for this class yet.</p></div>'; return; }
+            var avg = 0; var best = 0;
+            for (var i = 0; i < ca.length; i++) { avg += ca[i].percentage; if (ca[i].percentage > best) best = ca[i].percentage; }
+            avg = avg / ca.length;
+            var modeCounts = {};
+            for (var i = 0; i < ca.length; i++) {
+                var m = ca[i].mode || "practice";
+                if (!modeCounts[m]) modeCounts[m] = 0;
+                modeCounts[m]++;
+            }
+            var h = '<div class="overview-cards">' +
+                '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + ca.length + '</div><div class="card-label">Total Attempts</div></div>' +
+                '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average</div></div>' +
+                '<div class="overview-card students"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best Score</div></div>' +
+                '</div>';
+            h += '<div class="chart-section"><h4>&#128202; Attempt Types</h4><div style="display:flex;gap:12px;flex-wrap:wrap;">';
+            var modeLabels = { practice: "Practice", assignment: "Assignment", random: "Random Quiz", quick: "Quick Practice", chapter: "Chapter Test", fullbook: "Full Book Test", weak: "Weak Areas" };
+            for (var m in modeCounts) {
+                var label = modeLabels[m] || m;
+                h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 16px;border-radius:8px;font-size:13px;"><strong>' + modeCounts[m] + '</strong> ' + label + '</div>';
+            }
+            h += '</div></div>';
+            var diffCount = { excellent: 0, good: 0, needs: 0 };
+            for (var i = 0; i < ca.length; i++) {
+                if (ca[i].percentage >= 80) diffCount.excellent++;
+                else if (ca[i].percentage >= 50) diffCount.good++;
+                else diffCount.needs++;
+            }
+            var total = diffCount.excellent + diffCount.good + diffCount.needs;
+            var ePct = total > 0 ? (diffCount.excellent / total * 100) : 0;
+            var gPct = total > 0 ? (diffCount.good / total * 100) : 0;
+            h += '<div class="chart-section"><h4>&#128202; Results Distribution</h4><div class="donut-container">' +
+                '<div class="donut-chart" style="background: conic-gradient(#10b981 0% ' + ePct + '%, #f59e0b ' + ePct + '% ' + (ePct + gPct) + '%, #ef4444 ' + (ePct + gPct) + '% 100%)">' +
+                '<div class="donut-center"><span class="donut-value">' + total + '</span><span class="donut-label">Total</span></div></div>' +
+                '<div class="donut-legend">' +
+                '<div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Excellent (80%+): ' + diffCount.excellent + '</div>' +
+                '<div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Good (50-79%): ' + diffCount.good + '</div>' +
+                '<div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Needs Work (&lt;50%): ' + diffCount.needs + '</div>' +
+                '</div></div></div>';
+            c.innerHTML = h;
+        });
     }
 
     function showCTTab(tab) {
@@ -939,47 +1092,61 @@ var UI = (function() {
                 if (classes[i].id === ctClassId) { className = classes[i].name; break; }
             }
         }
-        var sa = [];
-        for (var i = 0; i < allAttempts.length; i++) {
-            if (ctClassId) {
-                var isClass = false;
-                for (var j = 0; j < studentAccounts.length; j++) {
-                    if (studentAccounts[j].id === allAttempts[i].studentId && studentAccounts[j].classId === ctClassId) { isClass = true; break; }
+        refreshAttemptsFromFirestore(function() {
+            var sa = [];
+            for (var i = 0; i < allAttempts.length; i++) {
+                if (ctClassId) {
+                    var isClass = false;
+                    for (var j = 0; j < studentAccounts.length; j++) {
+                        if (studentAccounts[j].id === allAttempts[i].studentId && studentAccounts[j].classId === ctClassId) { isClass = true; break; }
+                    }
+                    if (isClass) sa.push(allAttempts[i]);
+                } else {
+                    sa.push(allAttempts[i]);
                 }
-                if (isClass) sa.push(allAttempts[i]);
-            } else {
-                sa.push(allAttempts[i]);
             }
-        }
-        var avg = sa.length > 0 ? sa.reduce(function(s, a) { return s + a.percentage; }, 0) / sa.length : 0;
-        var best = sa.length > 0 ? Math.max.apply(null, sa.map(function(a) { return a.percentage; })) : 0;
-        var h = '<div class="overview-cards">' +
-            '<div class="overview-card classes"><div class="card-icon">&#127979;</div><div class="card-value">' + className + '</div><div class="card-label">Class</div></div>' +
-            '<div class="overview-card students"><div class="card-icon">&#128100;</div><div class="card-value">' + ts + '</div><div class="card-label">Students</div></div>' +
-            '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + sa.length + '</div><div class="card-label">Attempts</div></div>' +
-            '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average</div></div>' +
-            '<div class="overview-card questions"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best Score</div></div>' +
-            '</div>';
-        if (sa.length > 0) {
-            var diffCount = { excellent: 0, good: 0, needs: 0 };
+            var avg = sa.length > 0 ? sa.reduce(function(s, a) { return s + a.percentage; }, 0) / sa.length : 0;
+            var best = sa.length > 0 ? Math.max.apply(null, sa.map(function(a) { return a.percentage; })) : 0;
+            var modeCounts = {};
             for (var i = 0; i < sa.length; i++) {
-                if (sa[i].percentage >= 80) diffCount.excellent++;
-                else if (sa[i].percentage >= 50) diffCount.good++;
-                else diffCount.needs++;
+                var m = sa[i].mode || "practice";
+                if (!modeCounts[m]) modeCounts[m] = 0;
+                modeCounts[m]++;
             }
-            var total = diffCount.excellent + diffCount.good + diffCount.needs;
-            var ePct = total > 0 ? (diffCount.excellent / total * 100) : 0;
-            var gPct = total > 0 ? (diffCount.good / total * 100) : 0;
-            h += '<div class="chart-section"><h4>&#128202; Results Distribution</h4><div class="donut-container">' +
-                '<div class="donut-chart" style="background: conic-gradient(#10b981 0% ' + ePct + '%, #f59e0b ' + ePct + '% ' + (ePct + gPct) + '%, #ef4444 ' + (ePct + gPct) + '% 100%)">' +
-                '<div class="donut-center"><span class="donut-value">' + total + '</span><span class="donut-label">Total</span></div></div>' +
-                '<div class="donut-legend">' +
-                '<div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Excellent (80%+): ' + diffCount.excellent + '</div>' +
-                '<div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Good (50-79%): ' + diffCount.good + '</div>' +
-                '<div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Needs Work (&lt;50%): ' + diffCount.needs + '</div>' +
-                '</div></div></div>';
-        }
-        c.innerHTML = h;
+            var h = '<div class="overview-cards">' +
+                '<div class="overview-card classes"><div class="card-icon">&#127979;</div><div class="card-value">' + className + '</div><div class="card-label">Class</div></div>' +
+                '<div class="overview-card students"><div class="card-icon">&#128100;</div><div class="card-value">' + ts + '</div><div class="card-label">Students</div></div>' +
+                '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + sa.length + '</div><div class="card-label">Attempts</div></div>' +
+                '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average</div></div>' +
+                '<div class="overview-card questions"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best Score</div></div>' +
+                '</div>';
+            var modeLabels = { practice: "Practice", assignment: "Assignment", random: "Random Quiz", quick: "Quick Practice", chapter: "Chapter Test", fullbook: "Full Book Test", weak: "Weak Areas" };
+            h += '<div class="chart-section"><h4>&#128202; Attempt Types</h4><div style="display:flex;gap:12px;flex-wrap:wrap;">';
+            for (var m in modeCounts) {
+                h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 16px;border-radius:8px;font-size:13px;"><strong>' + modeCounts[m] + '</strong> ' + (modeLabels[m] || m) + '</div>';
+            }
+            h += '</div></div>';
+            if (sa.length > 0) {
+                var diffCount = { excellent: 0, good: 0, needs: 0 };
+                for (var i = 0; i < sa.length; i++) {
+                    if (sa[i].percentage >= 80) diffCount.excellent++;
+                    else if (sa[i].percentage >= 50) diffCount.good++;
+                    else diffCount.needs++;
+                }
+                var total = diffCount.excellent + diffCount.good + diffCount.needs;
+                var ePct = total > 0 ? (diffCount.excellent / total * 100) : 0;
+                var gPct = total > 0 ? (diffCount.good / total * 100) : 0;
+                h += '<div class="chart-section"><h4>&#128202; Results Distribution</h4><div class="donut-container">' +
+                    '<div class="donut-chart" style="background: conic-gradient(#10b981 0% ' + ePct + '%, #f59e0b ' + ePct + '% ' + (ePct + gPct) + '%, #ef4444 ' + (ePct + gPct) + '% 100%)">' +
+                    '<div class="donut-center"><span class="donut-value">' + total + '</span><span class="donut-label">Total</span></div></div>' +
+                    '<div class="donut-legend">' +
+                    '<div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Excellent (80%+): ' + diffCount.excellent + '</div>' +
+                    '<div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Good (50-79%): ' + diffCount.good + '</div>' +
+                    '<div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Needs Work (&lt;50%): ' + diffCount.needs + '</div>' +
+                    '</div></div></div>';
+            }
+            c.innerHTML = h;
+        });
     }
 
     function renderCTStudents() {
@@ -1008,16 +1175,104 @@ var UI = (function() {
     function renderCTCrossSubject() {
         var c = $("ctCrossSubjectContent");
         if (!c) return;
-        var ss = {};
-        for (var i = 0; i < allAttempts.length; i++) {
-            var s = allAttempts[i].subject;
-            if (!ss[s]) ss[s] = { n: 0, sum: 0 };
-            ss[s].n++; ss[s].sum += allAttempts[i].percentage;
-        }
-        if (Object.keys(ss).length === 0) { c.innerHTML = "<p>No data yet.</p>"; return; }
-        var h = '<div class="analytics-grid">';
-        for (var s in ss) h += '<div class="analytics-card"><h4>' + s + '</h4><p>Average: <strong>' + (ss[s].sum / ss[s].n).toFixed(1) + '%</strong></p><p>Attempts: <strong>' + ss[s].n + '</strong></p></div>';
-        c.innerHTML = h + '</div>';
+        var user = Auth.getUser();
+        var ctClassId = user ? user.classId : null;
+        refreshAttemptsFromFirestore(function() {
+            var sa = [];
+            for (var i = 0; i < allAttempts.length; i++) {
+                if (ctClassId) {
+                    var isClass = false;
+                    for (var j = 0; j < studentAccounts.length; j++) {
+                        if (studentAccounts[j].id === allAttempts[i].studentId && studentAccounts[j].classId === ctClassId) { isClass = true; break; }
+                    }
+                    if (isClass) sa.push(allAttempts[i]);
+                } else {
+                    sa.push(allAttempts[i]);
+                }
+            }
+            if (sa.length === 0) { c.innerHTML = "<p>No quiz data yet for your class.</p>"; return; }
+            var bySubject = {};
+            for (var i = 0; i < sa.length; i++) {
+                var sub = sa[i].subject || "General";
+                if (!bySubject[sub]) bySubject[sub] = { attempts: 0, totalPct: 0, best: 0, students: {}, modes: {} };
+                bySubject[sub].attempts++;
+                bySubject[sub].totalPct += sa[i].percentage;
+                if (sa[i].percentage > bySubject[sub].best) bySubject[sub].best = sa[i].percentage;
+                bySubject[sub].students[sa[i].studentId] = true;
+                var m = sa[i].mode || "practice";
+                if (!bySubject[sub].modes[m]) bySubject[sub].modes[m] = 0;
+                bySubject[sub].modes[m]++;
+            }
+            var h = '<div class="overview-cards">';
+            var totalAttempts = sa.length;
+            var avgAll = 0;
+            for (var i = 0; i < sa.length; i++) avgAll += sa[i].percentage;
+            avgAll = sa.length > 0 ? (avgAll / sa.length).toFixed(0) : 0;
+            var uniqueStudents = {};
+            for (var i = 0; i < sa.length; i++) uniqueStudents[sa[i].studentId] = true;
+            h += '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + totalAttempts + '</div><div class="card-label">Total Attempts</div></div>';
+            h += '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avgAll + '%</div><div class="card-label">Class Average</div></div>';
+            h += '<div class="overview-card students"><div class="card-icon">&#128100;</div><div class="card-value">' + Object.keys(uniqueStudents).length + '</div><div class="card-label">Active Students</div></div>';
+            h += '</div>';
+            h += '<div class="chart-section"><h4>&#128218; Performance by Subject</h4>';
+            h += '<table class="history-table"><thead><tr><th>Subject</th><th>Avg %</th><th>Best %</th><th>Attempts</th><th>Students</th></tr></thead><tbody>';
+            var subjects = Object.keys(bySubject).sort();
+            for (var i = 0; i < subjects.length; i++) {
+                var s = bySubject[subjects[i]];
+                var avg = (s.totalPct / s.attempts).toFixed(1);
+                var cls = avg >= 70 ? "color:var(--success)" : avg >= 50 ? "color:var(--accent)" : "color:var(--error)";
+                h += '<tr><td><strong>' + subjects[i] + '</strong></td><td style="' + cls + ';font-weight:700;">' + avg + '%</td><td>' + s.best + '%</td><td>' + s.attempts + '</td><td>' + Object.keys(s.students).length + '</td></tr>';
+            }
+            h += '</tbody></table></div>';
+            h += '<div class="chart-section"><h4>&#128202; Mode Breakdown Across Subjects</h4>';
+            var modeLabels = { practice: "Practice", assignment: "Assignment", random: "Random Quiz", quick: "Quick Practice", chapter: "Chapter Test", fullbook: "Full Book Test", weak: "Weak Areas" };
+            var globalModes = {};
+            for (var i = 0; i < sa.length; i++) {
+                var m = sa[i].mode || "practice";
+                if (!globalModes[m]) globalModes[m] = 0;
+                globalModes[m]++;
+            }
+            h += '<div style="display:flex;gap:12px;flex-wrap:wrap;">';
+            for (var m in globalModes) {
+                h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 16px;border-radius:8px;font-size:13px;"><strong>' + globalModes[m] + '</strong> ' + (modeLabels[m] || m) + '</div>';
+            }
+            h += '</div></div>';
+            var perStudent = {};
+            for (var i = 0; i < sa.length; i++) {
+                var sid = sa[i].studentId;
+                if (!perStudent[sid]) perStudent[sid] = { name: sid, total: 0, sum: 0, subjects: {} };
+                perStudent[sid].total++;
+                perStudent[sid].sum += sa[i].percentage;
+                var sub = sa[i].subject || "General";
+                if (!perStudent[sid].subjects[sub]) perStudent[sid].subjects[sub] = { sum: 0, n: 0 };
+                perStudent[sid].subjects[sub].sum += sa[i].percentage;
+                perStudent[sid].subjects[sub].n++;
+            }
+            h += '<div class="chart-section"><h4>&#128100; Student Performance Summary</h4>';
+            h += '<table class="history-table"><thead><tr><th>Student</th><th>Overall Avg</th><th>Attempts</th>';
+            for (var i = 0; i < subjects.length; i++) h += '<th>' + subjects[i] + '</th>';
+            h += '</tr></thead><tbody>';
+            var sids = Object.keys(perStudent).sort();
+            for (var i = 0; i < sids.length; i++) {
+                var st = perStudent[sids[i]];
+                var overallAvg = (st.sum / st.total).toFixed(0);
+                var cls = overallAvg >= 70 ? "color:var(--success)" : overallAvg >= 50 ? "color:var(--accent)" : "color:var(--error)";
+                h += '<tr><td><strong>' + sids[i] + '</strong></td><td style="' + cls + ';font-weight:700;">' + overallAvg + '%</td><td>' + st.total + '</td>';
+                for (var j = 0; j < subjects.length; j++) {
+                    var subData = st.subjects[subjects[j]];
+                    if (subData) {
+                        var subAvg = (subData.sum / subData.n).toFixed(0);
+                        var subCls = subAvg >= 70 ? "color:var(--success)" : subAvg >= 50 ? "color:var(--accent)" : "color:var(--error)";
+                        h += '<td style="' + subCls + ';">' + subAvg + '% (' + subData.n + ')</td>';
+                    } else {
+                        h += '<td style="color:var(--text-muted);">-</td>';
+                    }
+                }
+                h += '</tr>';
+            }
+            h += '</tbody></table></div>';
+            c.innerHTML = h;
+        });
     }
 
     function renderCTAttendance() {
@@ -1554,7 +1809,9 @@ var UI = (function() {
                     question: question, options: [optA, optB, optC, optD],
                     answer: answer.toUpperCase(), explanation: (r.explanation || "").toString().trim(),
                     bloom: (r.bloom || "Remembering").toString().trim(),
-                    source: (r.source || "Excel Import").toString().trim()
+                    source: (r.source || "Excel Import").toString().trim(),
+                    subject: (r.subject || "Computer Science").toString().trim(),
+                    grade: parseInt(r.grade) || 9
                 };
                 pendingImportData.push(qObj);
                 valid++;
@@ -1763,6 +2020,7 @@ var UI = (function() {
         launchChapterTest: launchChapterTest,
         launchFullBookTest: launchFullBookTest,
         launchWeakPractice: launchWeakPractice,
+        launchRandomQuiz: launchRandomQuiz,
         startQuizUI: startQuizUI,
         launchQuiz: launchQuiz,
         startPractice: startPractice,
@@ -1786,6 +2044,8 @@ var UI = (function() {
         editAssignment: editAssignment,
         deleteAssignment: deleteAssignment,
         saveAssignment: saveAssignment,
+        showAssignmentStatus: showAssignmentStatus,
+        hideAssignmentStatus: hideAssignmentStatus,
         loadClassAnalytics: loadClassAnalytics,
         showCTTab: showCTTab,
         renderCTOverview: renderCTOverview,

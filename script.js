@@ -57,6 +57,7 @@ function launchQuickPractice() { UI.launchQuickPractice(); }
 function launchChapterTest() { UI.launchChapterTest(); }
 function launchFullBookTest() { UI.launchFullBookTest(); }
 function launchWeakPractice() { UI.launchWeakPractice(); }
+function launchRandomQuiz(s) { UI.launchRandomQuiz(s); }
 function showModeDetail(m) { UI.showModeDetail(m); }
 function hideModeDetail() { UI.hideModeDetail(); }
 function startAssignmentQuiz(i) { UI.startAssignmentQuiz(i); }
@@ -71,6 +72,8 @@ function updateAssignmentQuestionList() { UI.updateAssignmentQuestionList(); }
 function saveAssignment(e) { UI.saveAssignment(e); }
 function editAssignment(i) { UI.editAssignment(i); }
 function deleteAssignment(i) { UI.deleteAssignment(i); }
+function showAssignmentStatus(i) { UI.showAssignmentStatus(i); }
+function hideAssignmentStatus() { UI.hideAssignmentStatus(); }
 function showAddTeacherModal() { UI.showAddTeacherModal(); }
 function toggleCTClassField() { UI.toggleCTClassField(); }
 function saveTeacher(e) { UI.saveTeacher(e); }

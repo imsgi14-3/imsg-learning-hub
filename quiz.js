@@ -11,6 +11,7 @@ var QuizEngine = (function() {
     var quizChapter = "";
     var questionStartTime = 0;
     var answered = false;
+    var assignmentId = "";
 
     function getQuizQuestions() { return quizQuestions; }
     function getUserAnswers() { return userAnswers; }
@@ -22,12 +23,14 @@ var QuizEngine = (function() {
     function getQuizSubject() { return quizSubject; }
     function getQuizChapter() { return quizChapter; }
     function getTimer() { return timer; }
+    function getAssignmentId() { return assignmentId; }
 
-    function startQuiz(questions, mode, subject, chapter) {
+    function startQuiz(questions, mode, subject, chapter, aId) {
         quizQuestions = questions;
         quizMode = mode || "practice";
         quizSubject = subject || "";
         quizChapter = chapter || "";
+        assignmentId = aId || "";
         currentQuestion = 0;
         score = 0;
         timeLeft = quizTimeLimit;
@@ -226,6 +229,8 @@ var QuizEngine = (function() {
             total: quizQuestions.length,
             percentage: pct,
             timeSpent: timeSpent,
+            mode: quizMode,
+            assignmentId: assignmentId || "",
             questions: [],
             topicPerformance: {}
         };

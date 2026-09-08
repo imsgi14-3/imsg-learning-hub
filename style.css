@@ -1689,6 +1689,16 @@ footer {
     line-height: 1.6;
 }
 
+.quiz-mode-random {
+    background: linear-gradient(135deg, var(--primary), #6366f1);
+    color: white;
+    border: none;
+}
+.quiz-mode-random h4 { color: white; }
+.quiz-mode-random p { color: rgba(255,255,255,0.85); }
+.quiz-mode-random:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(99,102,241,0.3); }
+.quiz-mode-random .quiz-mode-icon { font-size: 32px; margin-bottom: 8px; }
+
 .subject-card {
     background: white;
     border: 2px solid var(--border);

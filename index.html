@@ -137,7 +137,7 @@
         <!-- TEACHER DASHBOARD -->
         <div id="teacherDashboard" style="display:none;">
             <h2>&#128218; Teacher Dashboard - <span id="teacherDisplayName">Teacher</span></h2>
-            <p class="teacher-subject">Subject: <span id="teacherSubjectDisplay">Computer Science</span></p>
+            <p class="teacher-subject">Subject: <span id="teacherSubjectDisplay"></span></p>
             <div class="dashboard-tabs">
                 <button class="tab-btn active" onclick="showTeacherTab('classes')">&#127979; My Classes</button>
                 <button class="tab-btn" onclick="showTeacherTab('questionbank')">&#128218; Question Bank</button>
@@ -161,6 +161,12 @@
                         <option value="Biology">Biology</option>
                         <option value="Mathematics">Mathematics</option>
                     </select>
+                    <select id="qbFilterChapter" onchange="filterQuestions()">
+                        <option value="">All Chapters</option>
+                    </select>
+                    <select id="qbFilterTopic" onchange="filterQuestions()">
+                        <option value="">All Topics</option>
+                    </select>
                     <select id="qbFilterGrade" onchange="filterQuestions()">
                         <option value="">All Grades</option>
                         <option value="9">Grade 9</option>
@@ -177,6 +183,7 @@
                     <button class="action-btn" onclick="showCreateAssignmentModal()">&#43; Create Assignment</button>
                 </div>
                 <div id="assignmentsList"></div>
+                <div id="assignmentStatusPanel" style="display:none;margin-top:20px;"></div>
             </div>
             <div id="teacherAnalyticsTab" class="tab-content" style="display:none;">
                 <h3>&#128200; Class Analytics</h3>
@@ -476,7 +483,7 @@
         <div id="excelModal" class="modal">
             <h3>&#128229; Import Questions from Excel</h3>
             <p class="login-subtitle">Upload an Excel (.xlsx) or CSV file with these columns:</p>
-            <p class="login-subtitle" style="font-size:11px;color:#666;">id | chapter | topic | type | mode | difficulty | question | optionA | optionB | optionC | optionD | answer | explanation | bloom | source</p>
+            <p class="login-subtitle" style="font-size:11px;color:#666;">id | subject | chapter | topic | type | mode | difficulty | question | optionA | optionB | optionC | optionD | answer | explanation | bloom | source</p>
             <form id="excelForm" onsubmit="importExcel(event)">
                 <div class="form-row full">
                     <label>Excel/CSV File</label>
