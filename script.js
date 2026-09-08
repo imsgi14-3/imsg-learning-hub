@@ -206,39 +206,51 @@ function loadFromFirestore(callback) {
     var total = 6;
     function done() { loaded++; if (loaded >= total && callback) callback(); }
     db.collection("students").get().then(function(snap) {
-        studentAccounts = [];
-        snap.forEach(function(doc) { studentAccounts.push(doc.data()); });
-        localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
+        if (snap.size > 0) {
+            studentAccounts = [];
+            snap.forEach(function(doc) { studentAccounts.push(doc.data()); });
+            localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
+        }
         done();
     }).catch(function() { done(); });
     db.collection("classes").get().then(function(snap) {
-        classes = [];
-        snap.forEach(function(doc) { classes.push(doc.data()); });
-        localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
+        if (snap.size > 0) {
+            classes = [];
+            snap.forEach(function(doc) { classes.push(doc.data()); });
+            localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
+        }
         done();
     }).catch(function() { done(); });
     db.collection("questions").get().then(function(snap) {
-        questions = [];
-        snap.forEach(function(doc) { questions.push(doc.data()); });
-        localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
+        if (snap.size > 0) {
+            questions = [];
+            snap.forEach(function(doc) { questions.push(doc.data()); });
+            localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
+        }
         done();
     }).catch(function() { done(); });
     db.collection("assignments").get().then(function(snap) {
-        assignments = [];
-        snap.forEach(function(doc) { assignments.push(doc.data()); });
-        localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments));
+        if (snap.size > 0) {
+            assignments = [];
+            snap.forEach(function(doc) { assignments.push(doc.data()); });
+            localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments));
+        }
         done();
     }).catch(function() { done(); });
     db.collection("attempts").get().then(function(snap) {
-        allAttempts = [];
-        snap.forEach(function(doc) { allAttempts.push(doc.data()); });
-        localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
+        if (snap.size > 0) {
+            allAttempts = [];
+            snap.forEach(function(doc) { allAttempts.push(doc.data()); });
+            localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
+        }
         done();
     }).catch(function() { done(); });
     db.collection("teachers").get().then(function(snap) {
-        teachers = [];
-        snap.forEach(function(doc) { teachers.push(doc.data()); });
-        localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
+        if (snap.size > 0) {
+            teachers = [];
+            snap.forEach(function(doc) { teachers.push(doc.data()); });
+            localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
+        }
         done();
     }).catch(function() { done(); });
 }
