@@ -370,15 +370,19 @@ function handleLogin(e) {
             fbAuth.signInWithEmailAndPassword(email, password).then(function() {
                 loginSuccess();
             }).catch(function(error) {
-                if (error.code === "auth/user-not-found") {
-                    fbAuth.createUserWithEmailAndPassword(email, password).then(function() {
-                        fbAuth.signInWithEmailAndPassword(email, password).then(function() {
+                if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+                    fbAuth.signInWithEmailAndPassword(email, found.password).then(function() {
+                        loginSuccess();
+                    }).catch(function(err) {
+                        if (err.code === "auth/user-not-found") {
+                            fbAuth.createUserWithEmailAndPassword(email, found.password).then(function() {
+                                fbAuth.signInWithEmailAndPassword(email, found.password).then(function() {
+                                    loginSuccess();
+                                }).catch(function() { loginSuccess(); });
+                            }).catch(function() { loginSuccess(); });
+                        } else {
                             loginSuccess();
-                        }).catch(function() {
-                            loginSuccess();
-                        });
-                    }).catch(function() {
-                        alert("Login failed: could not create account.");
+                        }
                     });
                 } else {
                     alert("Login failed: " + error.message);
@@ -433,15 +437,19 @@ function handleLogin(e) {
             fbAuth.signInWithEmailAndPassword(email, password).then(function() {
                 loginSuccess();
             }).catch(function(error) {
-                if (error.code === "auth/user-not-found") {
-                    fbAuth.createUserWithEmailAndPassword(email, password).then(function() {
-                        fbAuth.signInWithEmailAndPassword(email, password).then(function() {
-                            loginSuccess();
-                        }).catch(function() {
-                            loginSuccess();
-                        });
-                    }).catch(function() {
+                if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+                    fbAuth.signInWithEmailAndPassword(email, found.password).then(function() {
                         loginSuccess();
+                    }).catch(function(err) {
+                        if (err.code === "auth/user-not-found") {
+                            fbAuth.createUserWithEmailAndPassword(email, found.password).then(function() {
+                                fbAuth.signInWithEmailAndPassword(email, found.password).then(function() {
+                                    loginSuccess();
+                                }).catch(function() { loginSuccess(); });
+                            }).catch(function() { loginSuccess(); });
+                        } else {
+                            loginSuccess();
+                        }
                     });
                 } else {
                     alert("Login failed: " + error.message);
@@ -483,12 +491,20 @@ function handleLogin(e) {
             fbAuth.signInWithEmailAndPassword(email, password).then(function() {
                 loginSuccess();
             }).catch(function(error) {
-                if (error.code === "auth/user-not-found") {
-                    fbAuth.createUserWithEmailAndPassword(email, password).then(function() {
-                        fbAuth.signInWithEmailAndPassword(email, password).then(function() {
+                if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+                    fbAuth.signInWithEmailAndPassword(email, principalAccount.password).then(function() {
+                        loginSuccess();
+                    }).catch(function(err) {
+                        if (err.code === "auth/user-not-found") {
+                            fbAuth.createUserWithEmailAndPassword(email, principalAccount.password).then(function() {
+                                fbAuth.signInWithEmailAndPassword(email, principalAccount.password).then(function() {
+                                    loginSuccess();
+                                }).catch(function() { loginSuccess(); });
+                            }).catch(function() { loginSuccess(); });
+                        } else {
                             loginSuccess();
-                        }).catch(function() { loginSuccess(); });
-                    }).catch(function() { loginSuccess(); });
+                        }
+                    });
                 } else {
                     alert("Login failed: " + error.message);
                 }
