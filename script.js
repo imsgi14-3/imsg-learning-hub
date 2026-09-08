@@ -1872,7 +1872,11 @@ function renderPrincipalClasses() {
     var c = document.getElementById("principalClassesContent");
     var h = '<table><thead><tr><th>Class</th><th>Grade</th><th>Section</th><th>Students</th></tr></thead><tbody>';
     for (var i = 0; i < classes.length; i++) {
-        h += '<tr><td>' + classes[i].name + '</td><td>' + classes[i].grade + '</td><td>' + classes[i].section + '</td><td>' + classes[i].students.length + '</td></tr>';
+        var count = 0;
+        for (var j = 0; j < studentAccounts.length; j++) {
+            if (studentAccounts[j].classId === classes[i].id) count++;
+        }
+        h += '<tr><td>' + classes[i].name + '</td><td>' + classes[i].grade + '</td><td>' + classes[i].section + '</td><td>' + count + '</td></tr>';
     }
     c.innerHTML = h + '</tbody></table>';
 }
@@ -2351,7 +2355,12 @@ function previewStudentExcel(e) {
                 for (var j = 0; j < classes.length; j++) {
                     if (classes[j].name === sclass) { matchedClass = classes[j]; break; }
                 }
-                if (!matchedClass) { errors.push("Row " + (i + 1) + ": Class '" + sclass + "' not found."); continue; }
+                if (!matchedClass) {
+                    var gradeNum = parseInt(sclass) || 9;
+                    var sectionChar = sclass.replace(/[0-9]/g, "").toUpperCase() || "A";
+                    matchedClass = { id: "CLASS-" + sclass, name: sclass, grade: gradeNum, section: sectionChar, students: [] };
+                    classes.push(matchedClass);
+                }
                 var genId = generateStudentId(matchedClass, sroll);
                 if (existingIds[genId]) { errors.push("Row " + (i + 1) + ": ID " + genId + " already exists (skipped)."); continue; }
                 var genPass = generateRandomPassword();
