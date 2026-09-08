@@ -3,13 +3,13 @@ var QuestionLoader = (function() {
     var loadedChapters = {};
 
     var chapterConfig = {
-        1: { chapter: 1, chapterTitle: "Computer Systems", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 1" },
-        2: { chapter: 2, chapterTitle: "Networks and Communication", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 2" },
-        3: { chapter: 3, chapterTitle: "Data and Privacy", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 3" },
-        4: { chapter: 4, chapterTitle: "Programming Basics", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 4" },
-        5: { chapter: 5, chapterTitle: "Problem Solving", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 5" },
-        6: { chapter: 6, chapterTitle: "Arrays and Lists", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 6" },
-        7: { chapter: 7, chapterTitle: "Website Development", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 7" }
+        1: { chapter: 1, chapterTitle: "Computer Systems", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 1", file: "question-bank/grade9/computer-science/chapter1.json" },
+        2: { chapter: 2, chapterTitle: "Networks and Communication", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 2", file: "question-bank/grade9/computer-science/chapter2.json" },
+        3: { chapter: 3, chapterTitle: "Data and Privacy", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 3", file: "question-bank/grade9/computer-science/chapter3.json" },
+        4: { chapter: 4, chapterTitle: "Programming Basics", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 4", file: "question-bank/grade9/computer-science/chapter4.json" },
+        5: { chapter: 5, chapterTitle: "Problem Solving", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 5", file: "question-bank/grade9/computer-science/chapter5.json" },
+        6: { chapter: 6, chapterTitle: "Arrays and Lists", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 6", file: "question-bank/grade9/computer-science/chapter6.json" },
+        7: { chapter: 7, chapterTitle: "Website Development", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 7", file: "question-bank/grade9/computer-science/chapter7.json" }
     };
 
     function loadChapter(chapterNum, callback) {
@@ -17,7 +17,9 @@ var QuestionLoader = (function() {
             if (callback) callback(loadedChapters[chapterNum]);
             return;
         }
-        var url = "question-bank/chapter" + chapterNum + ".json";
+        var config = chapterConfig[chapterNum];
+        if (!config) { if (callback) callback(null); return; }
+        var url = config.file || ("question-bank/grade9/computer-science/chapter" + chapterNum + ".json");
         fetch(url)
             .then(function(resp) {
                 if (!resp.ok) throw new Error("File not found");
