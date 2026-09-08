@@ -223,11 +223,12 @@ function loadFromFirestore(callback) {
     }).catch(function() { done(); });
     db.collection("questions").get().then(function(snap) {
         if (snap.size > 0) {
-            var jsonIds = {};
-            for (var i = 0; i < questions.length; i++) jsonIds[questions[i].id] = true;
+            var byId = {};
+            for (var i = 0; i < questions.length; i++) byId[questions[i].id] = i;
             snap.forEach(function(doc) {
                 var q = doc.data();
-                if (!jsonIds[q.id]) questions.push(q);
+                if (byId[q.id] !== undefined) { questions[byId[q.id]] = q; }
+                else { questions.push(q); byId[q.id] = questions.length - 1; }
             });
             localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
         }
@@ -2479,10 +2480,15 @@ window.onload = function() {
     if (typeof QuestionLoader !== "undefined") {
         QuestionLoader.loadAllChapters(function(allQs) {
             if (allQs && allQs.length > 0) {
-                var jsonIds = {};
-                for (var i = 0; i < questions.length; i++) jsonIds[questions[i].id] = true;
+                var jsonById = {};
+                for (var i = 0; i < allQs.length; i++) jsonById[allQs[i].id] = allQs[i];
+                for (var i = 0; i < questions.length; i++) {
+                    if (jsonById[questions[i].id]) questions[i] = jsonById[questions[i].id];
+                }
+                var existingIds = {};
+                for (var i = 0; i < questions.length; i++) existingIds[questions[i].id] = true;
                 for (var i = 0; i < allQs.length; i++) {
-                    if (!jsonIds[allQs[i].id]) questions.push(allQs[i]);
+                    if (!existingIds[allQs[i].id]) questions.push(allQs[i]);
                 }
                 saveAll();
                 console.log("Loaded " + allQs.length + " questions from JSON. Total: " + questions.length);
