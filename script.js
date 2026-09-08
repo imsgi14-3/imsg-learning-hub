@@ -1925,7 +1925,6 @@ function refreshStudentLists() {
     if (currentRole === "principal") renderPrincipalStudents();
     if (currentRole === "classteacher") renderCTStudents();
 }
-}
 
 function renderPrincipalAnalytics() {
     var c = document.getElementById("principalAnalyticsContent");
