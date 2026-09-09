@@ -2407,8 +2407,6 @@ var UI = (function() {
             }
         });
     }
-        history.pushState({ page: "dashboard" }, "", "#dashboard");
-    }
 
     return {
         $: $,
