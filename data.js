@@ -200,7 +200,7 @@ function loadFromFirestore(callback) {
     }).catch(function() { done(); });
     db.collection("teachers").get().then(function(snap) {
         if (snap.size > 0) {
-            teachers = [];
+            var firestoreTeachers = [];
             snap.forEach(function(doc) {
                 var d = doc.data();
                 if (d.id === "PRINCIPAL" || doc.id === "PRINCIPAL") { if (!principalAccount || principalAccount.id !== "ADMIN-001") principalAccount = d; }
@@ -225,9 +225,14 @@ function loadFromFirestore(callback) {
                         }
                         if (typeof db !== "undefined") db.collection("teachers").doc(oldId).delete().catch(function() {});
                     }
-                    teachers.push(d);
+                    firestoreTeachers.push(d);
                 }
             });
+            var localById = {};
+            for (var i = 0; i < teachers.length; i++) localById[teachers[i].id] = teachers[i];
+            for (var i = 0; i < firestoreTeachers.length; i++) localById[firestoreTeachers[i].id] = firestoreTeachers[i];
+            teachers = [];
+            for (var id in localById) teachers.push(localById[id]);
             localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
         }
         done();
