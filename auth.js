@@ -93,7 +93,7 @@ var Auth = (function() {
             };
             loginFirebaseAuth(email, password, loginSuccess);
         } else if (role === "teacher") {
-            id = document.getElementById("teacherId").value.trim();
+            id = document.getElementById("teacherId").value.trim().toLowerCase();
             password = document.getElementById("teacherPassword").value;
             if (!id || !password) { loginMsg.style.display = "block"; loginMsg.textContent = "Please enter Teacher ID and Password."; return; }
             var teacher = null;
@@ -120,7 +120,7 @@ var Auth = (function() {
             };
             loginFirebaseAuth(email, password, loginSuccess);
         } else if (role === "classteacher") {
-            id = document.getElementById("teacherId").value.trim();
+            id = document.getElementById("teacherId").value.trim().toLowerCase();
             password = document.getElementById("teacherPassword").value;
             if (!id || !password) { loginMsg.style.display = "block"; loginMsg.textContent = "Please enter Teacher ID and Password."; return; }
             var teacher = null;
@@ -172,10 +172,10 @@ var Auth = (function() {
             };
             loginFirebaseAuth(email, password, loginSuccess);
         } else if (role === "principal") {
-            id = document.getElementById("principalId").value.trim();
+            id = document.getElementById("principalId").value.trim().toLowerCase();
             password = document.getElementById("principalPassword").value;
             if (!id || !password) { loginMsg.style.display = "block"; loginMsg.textContent = "Please enter Admin ID and Password."; return; }
-            if (id !== "ADMIN-001") { loginMsg.style.display = "block"; loginMsg.textContent = "Invalid Admin ID."; return; }
+            if (id !== "admin-001") { loginMsg.style.display = "block"; loginMsg.textContent = "Invalid Admin ID."; return; }
             if (password !== principalAccount.password) { loginMsg.style.display = "block"; loginMsg.textContent = "Incorrect password."; return; }
             var email = id.toLowerCase() + "@imsg.edu.pk";
             var loginSuccess = function() {
