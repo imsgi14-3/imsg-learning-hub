@@ -2656,27 +2656,17 @@ var UI = (function() {
             showPrincipalTab("school");
         }
         history.pushState({ page: "dashboard" }, "", "#dashboard");
+    }
+
+    function manualRefresh() {
+        var role = Auth.getRole();
+        lastRefreshTime = 0;
         refreshAllData(function() {
             var freshUser = null;
             try { freshUser = JSON.parse(localStorage.getItem("learningHub_user")); } catch(e) {}
             if (freshUser && freshUser.user) {
-                Auth.loginAs(freshUser.role, freshUser.user);
                 var u = freshUser.user;
-                if (role === "teacher") {
-                    for (var i = 0; i < teachers.length; i++) {
-                        if (teachers[i].id === u.id) {
-                            u.classSubjects = teachers[i].classSubjects || u.classSubjects;
-                            u.subjects = teachers[i].subjects || u.subjects;
-                            u.classes = teachers[i].classes || u.classes;
-                            break;
-                        }
-                    }
-                    Auth.loginAs(role, u);
-                    $("teacherDisplayName").textContent = u.name || "Teacher";
-                    var ts = (u.subjects) ? u.subjects : (u.subject ? [u.subject] : []);
-                    $("teacherSubjectDisplay").textContent = ts.join(", ") || "N/A";
-                    showTeacherTab("classes");
-                } else if (role === "classteacher") {
+                if (role === "teacher" || role === "classteacher") {
                     for (var i = 0; i < teachers.length; i++) {
                         if (teachers[i].id === u.id) {
                             u.classSubjects = teachers[i].classSubjects || u.classSubjects;
@@ -2686,18 +2676,9 @@ var UI = (function() {
                             break;
                         }
                     }
-                    Auth.loginAs(role, u);
-                    $("ctDisplayName").textContent = u.name || "Class Teacher";
-                    showCTTab("overview");
-                } else if (role === "student") {
-                    $("studentDisplayName").textContent = u.name || "Student";
-                    showStudentTab("practice");
-                } else if (role === "parent") {
-                    $("parentDisplayName").textContent = u.name || "Parent";
-                    showParentTab("progress");
-                } else if (role === "principal") {
-                    showPrincipalTab("school");
                 }
+                Auth.loginAs(role, u);
+                showDashboard();
             }
         });
     }
@@ -2707,6 +2688,7 @@ var UI = (function() {
         dashboardsHide: dashboardsHide,
         showLogin: showLogin,
         showDashboard: showDashboard,
+        manualRefresh: manualRefresh,
         renderDashboard: renderDashboard,
         updateLoginFields: updateLoginFields,
         activateTab: activateTab,

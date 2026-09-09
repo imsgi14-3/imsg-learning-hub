@@ -109,6 +109,7 @@ function loadClassAnalytics() { UI.loadClassAnalytics(); }
 function markAttendance() { UI.markAttendance(); }
 function saveAttendance(e) { UI.saveAttendance(e); }
 function dashboardsHide() { UI.dashboardsHide(); }
+function manualRefresh() { UI.manualRefresh(); }
 function renderClasses() { UI.renderClasses(); }
 function renderQuestions() { UI.renderQuestions(); }
 function renderAssignments() { UI.renderAssignments(); }
