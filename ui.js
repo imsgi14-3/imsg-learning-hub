@@ -1602,7 +1602,7 @@ var UI = (function() {
         var c = $("principalTeachersContent");
         if (!c) return;
         if (teachers.length === 0) { c.innerHTML = "<p>No teachers added yet.</p>"; return; }
-        var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Class → Subjects</th><th>Role</th><th>Password</th><th>Actions</th></tr></thead><tbody>';
+        var h = '<table><thead><tr><th>Name</th><th>Class → Subjects</th><th>Role</th><th>Actions</th></tr></thead><tbody>';
         for (var i = 0; i < teachers.length; i++) {
             var t = teachers[i];
             var roleLabel = "";
@@ -1617,7 +1617,11 @@ var UI = (function() {
                 }
                 csText.push(className + ": " + cs[cid].join(", "));
             }
-            h += '<tr><td>' + t.id + '</td><td>' + t.name + '</td><td style="font-size:12px;">' + (csText.join("<br>") || "-") + '</td><td>' + roleLabel + '</td><td>' + (t.password || "-") + '</td><td><button onclick="editTeacher(\'' + t.id + '\')" class="action-btn">Edit</button> <button onclick="deleteTeacher(\'' + t.id + '\')" class="action-btn danger">Delete</button></td></tr>';
+            var email = t.id.toLowerCase() + "@imsg.edu.pk";
+            h += '<tr><td><strong>' + t.name + '</strong>';
+            h += '<br><span style="font-size:11px;color:var(--text-muted);">ID: ' + t.id + ' &bull; Pass: ' + (t.password || "-") + '</span>';
+            h += '<br><span style="font-size:11px;color:var(--text-muted);">Email: ' + email + '</span>';
+            h += '</td><td style="font-size:12px;">' + (csText.join("<br>") || "-") + '</td><td>' + roleLabel + '</td><td><button onclick="editTeacher(\'' + t.id + '\')" class="action-btn">Edit</button> <button onclick="deleteTeacher(\'' + t.id + '\')" class="action-btn danger">Delete</button></td></tr>';
         }
         c.innerHTML = h + '</tbody></table>';
     }
