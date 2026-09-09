@@ -1,6 +1,7 @@
 window.onload = function() {
     loadData();
     loadFromFirestore(function() {
+        saveToFirestore();
         if (typeof QuestionLoader !== "undefined") {
             QuestionLoader.loadAllChapters(function(allQs) {
                 if (allQs && allQs.length > 0) {
