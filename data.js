@@ -268,39 +268,117 @@ function refreshAttemptsFromFirestore(callback) {
     }).catch(function() { if (callback) callback(); });
 }
 
+var lastRefreshTime = 0;
+var REFRESH_COOLDOWN = 30000;
+
 function refreshAllData(callback) {
-    if (typeof db === "undefined") { console.warn("Firestore not available for refresh"); if (callback) callback(); return; }
-    loadFromFirestore(function() {
-        console.log("Refresh complete. Teachers:", teachers.length, "Classes:", classes.length, "Students:", studentAccounts.length);
-        var user = null;
-        try { user = JSON.parse(localStorage.getItem("learningHub_user")); } catch(e) {}
-        if (user && user.user) {
-            var role = user.role;
-            var u = user.user;
-            if (role === "teacher" || role === "classteacher") {
-                for (var i = 0; i < teachers.length; i++) {
-                    if (teachers[i].id === u.id) {
-                        u.classSubjects = teachers[i].classSubjects || u.classSubjects;
-                        u.subjects = teachers[i].subjects || u.subjects;
-                        u.classes = teachers[i].classes || u.classes;
-                        u.classId = teachers[i].classId || u.classId;
-                        u.isClassTeacher = teachers[i].isClassTeacher;
-                        u.classTeacherOf = teachers[i].classTeacherOf || u.classTeacherOf;
-                        break;
-                    }
-                }
-            } else if (role === "student") {
-                for (var i = 0; i < studentAccounts.length; i++) {
-                    if (studentAccounts[i].id === u.id) {
-                        u.classId = studentAccounts[i].classId || u.classId;
-                        break;
-                    }
-                }
-            }
-            localStorage.setItem("learningHub_user", JSON.stringify({ role: role, user: u }));
-        }
+    if (typeof db === "undefined") { if (callback) callback(); return; }
+    var now = Date.now();
+    if (now - lastRefreshTime < REFRESH_COOLDOWN) { if (callback) callback(); return; }
+    lastRefreshTime = now;
+    var role = null;
+    try { var s = JSON.parse(localStorage.getItem("learningHub_user")); role = s ? s.role : null; } catch(e) {}
+    if (role === "student") {
+        refreshStudentData(callback);
+    } else if (role === "teacher" || role === "classteacher") {
+        refreshTeacherData(callback);
+    } else if (role === "parent") {
+        refreshParentData(callback);
+    } else if (role === "principal") {
+        refreshAdminData(callback);
+    } else {
         if (callback) callback();
-    });
+    }
+}
+
+function refreshStudentData(callback) {
+    if (typeof db === "undefined") { if (callback) callback(); return; }
+    var loaded = 0, total = 3;
+    function done() { loaded++; if (loaded >= total && callback) callback(); }
+    db.collection("classes").get().then(function(snap) {
+        if (snap.size > 0) { classes = []; snap.forEach(function(doc) { classes.push(doc.data()); }); localStorage.setItem(CLASSES_KEY, JSON.stringify(classes)); }
+        done();
+    }).catch(function() { done(); });
+    db.collection("assignments").get().then(function(snap) {
+        if (snap.size > 0) { assignments = []; snap.forEach(function(doc) { assignments.push(doc.data()); }); localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments)); }
+        done();
+    }).catch(function() { done(); });
+    db.collection("questions").get().then(function(snap) {
+        if (snap.size > 0) { var byId = {}; for (var i = 0; i < questions.length; i++) byId[questions[i].id] = i; snap.forEach(function(doc) { var q = doc.data(); if (byId[q.id] !== undefined) questions[byId[q.id]] = q; else questions.push(q); }); localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions)); }
+        done();
+    }).catch(function() { done(); });
+}
+
+function refreshTeacherData(callback) {
+    if (typeof db === "undefined") { if (callback) callback(); return; }
+    var loaded = 0, total = 4;
+    function done() { loaded++; if (loaded >= total && callback) callback(); }
+    db.collection("teachers").get().then(function(snap) {
+        if (snap.size > 0) {
+            var firestoreTeachers = [];
+            snap.forEach(function(doc) { var d = doc.data(); if (d.id !== "PRINCIPAL" && doc.id !== "PRINCIPAL") firestoreTeachers.push(d); });
+            var localById = {}; for (var i = 0; i < teachers.length; i++) localById[teachers[i].id] = teachers[i];
+            for (var i = 0; i < firestoreTeachers.length; i++) localById[firestoreTeachers[i].id] = firestoreTeachers[i];
+            teachers = []; for (var id in localById) teachers.push(localById[id]);
+            localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
+        }
+        done();
+    }).catch(function() { done(); });
+    db.collection("classes").get().then(function(snap) {
+        if (snap.size > 0) { classes = []; snap.forEach(function(doc) { classes.push(doc.data()); }); localStorage.setItem(CLASSES_KEY, JSON.stringify(classes)); }
+        done();
+    }).catch(function() { done(); });
+    db.collection("assignments").get().then(function(snap) {
+        if (snap.size > 0) { assignments = []; snap.forEach(function(doc) { assignments.push(doc.data()); }); localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments)); }
+        done();
+    }).catch(function() { done(); });
+    db.collection("questions").get().then(function(snap) {
+        if (snap.size > 0) { var byId = {}; for (var i = 0; i < questions.length; i++) byId[questions[i].id] = i; snap.forEach(function(doc) { var q = doc.data(); if (byId[q.id] !== undefined) questions[byId[q.id]] = q; else questions.push(q); }); localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions)); }
+        done();
+    }).catch(function() { done(); });
+}
+
+function refreshParentData(callback) {
+    if (typeof db === "undefined") { if (callback) callback(); return; }
+    var loaded = 0, total = 2;
+    function done() { loaded++; if (loaded >= total && callback) callback(); }
+    db.collection("assignments").get().then(function(snap) {
+        if (snap.size > 0) { assignments = []; snap.forEach(function(doc) { assignments.push(doc.data()); }); localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments)); }
+        done();
+    }).catch(function() { done(); });
+    db.collection("attempts").get().then(function(snap) {
+        if (snap.size > 0) { allAttempts = []; snap.forEach(function(doc) { allAttempts.push(doc.data()); }); localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts)); }
+        done();
+    }).catch(function() { done(); });
+}
+
+function refreshAdminData(callback) {
+    if (typeof db === "undefined") { if (callback) callback(); return; }
+    var loaded = 0, total = 4;
+    function done() { loaded++; if (loaded >= total && callback) callback(); }
+    db.collection("teachers").get().then(function(snap) {
+        if (snap.size > 0) {
+            var firestoreTeachers = [];
+            snap.forEach(function(doc) { var d = doc.data(); if (d.id !== "PRINCIPAL" && doc.id !== "PRINCIPAL") firestoreTeachers.push(d); });
+            var localById = {}; for (var i = 0; i < teachers.length; i++) localById[teachers[i].id] = teachers[i];
+            for (var i = 0; i < firestoreTeachers.length; i++) localById[firestoreTeachers[i].id] = firestoreTeachers[i];
+            teachers = []; for (var id in localById) teachers.push(localById[id]);
+            localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
+        }
+        done();
+    }).catch(function() { done(); });
+    db.collection("students").get().then(function(snap) {
+        if (snap.size > 0) { studentAccounts = []; snap.forEach(function(doc) { studentAccounts.push(doc.data()); }); localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts)); }
+        done();
+    }).catch(function() { done(); });
+    db.collection("classes").get().then(function(snap) {
+        if (snap.size > 0) { classes = []; snap.forEach(function(doc) { classes.push(doc.data()); }); localStorage.setItem(CLASSES_KEY, JSON.stringify(classes)); }
+        done();
+    }).catch(function() { done(); });
+    db.collection("attempts").get().then(function(snap) {
+        if (snap.size > 0) { allAttempts = []; snap.forEach(function(doc) { allAttempts.push(doc.data()); }); localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts)); }
+        done();
+    }).catch(function() { done(); });
 }
 
 function shuffleArray(arr) {
