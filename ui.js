@@ -2144,16 +2144,241 @@ var UI = (function() {
     function renderPrincipalAnalytics() {
         var c = $("principalAnalyticsContent");
         if (!c) return;
-        var ta = allAttempts.length;
-        var avg = ta > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / ta : 0;
-        var best = ta > 0 ? Math.max.apply(null, allAttempts.map(function(a) { return a.percentage; })) : 0;
-        var h = '<div class="overview-cards">' +
-            '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + ta + '</div><div class="card-label">Total Attempts</div></div>' +
-            '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average Score</div></div>' +
-            '<div class="overview-card students"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best Score</div></div>' +
-            '<div class="overview-card questions"><div class="card-icon">&#128218;</div><div class="card-value">' + questions.length + '</div><div class="card-label">Total Questions</div></div>' +
-            '</div>';
-        c.innerHTML = h;
+        refreshAdminData(function() {
+            var ta = allAttempts.length;
+            var avg = ta > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / ta : 0;
+            var best = ta > 0 ? Math.max.apply(null, allAttempts.map(function(a) { return a.percentage; })) : 0;
+            var h = '<div class="overview-cards">' +
+                '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + ta + '</div><div class="card-label">Total Attempts</div></div>' +
+                '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average Score</div></div>' +
+                '<div class="overview-card students"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best Score</div></div>' +
+                '<div class="overview-card questions"><div class="card-icon">&#128218;</div><div class="card-value">' + questions.length + '</div><div class="card-label">Total Questions</div></div>' +
+                '</div>';
+            h += renderStudentRankings();
+            h += renderTopicAnalysis();
+            h += renderQuestionAccuracy();
+            h += renderProgressOverTime();
+            h += renderSubjectPerformance();
+            h += renderDifficultyAnalysis();
+            c.innerHTML = h;
+        });
+    }
+
+    function renderStudentRankings() {
+        if (allAttempts.length === 0 || studentAccounts.length === 0) return '';
+        var studentStats = {};
+        for (var i = 0; i < allAttempts.length; i++) {
+            var a = allAttempts[i];
+            var sid = a.studentId;
+            if (!studentStats[sid]) studentStats[sid] = { total: 0, sum: 0, best: 0, attempts: 0, subjects: {} };
+            studentStats[sid].total++;
+            studentStats[sid].sum += a.percentage;
+            studentStats[sid].attempts++;
+            if (a.percentage > studentStats[sid].best) studentStats[sid].best = a.percentage;
+            var sub = a.subject || "General";
+            if (!studentStats[sid].subjects[sub]) studentStats[sid].subjects[sub] = { sum: 0, count: 0 };
+            studentStats[sid].subjects[sub].sum += a.percentage;
+            studentStats[sid].subjects[sub].count++;
+        }
+        var ranked = [];
+        for (var sid in studentStats) {
+            var name = sid;
+            for (var j = 0; j < studentAccounts.length; j++) { if (studentAccounts[j].id === sid) { name = studentAccounts[j].name; break; } }
+            var className = "";
+            for (var j = 0; j < studentAccounts.length; j++) { if (studentAccounts[j].id === sid) {
+                for (var k = 0; k < classes.length; k++) { if (classes[k].id === studentAccounts[j].classId) { className = classes[k].name; break; } }
+                break;
+            }}
+            ranked.push({ id: sid, name: name, className: className, avg: studentStats[sid].sum / studentStats[sid].attempts, best: studentStats[sid].best, attempts: studentStats[sid].attempts });
+        }
+        ranked.sort(function(a, b) { return b.avg - a.avg; });
+        var h = '<div class="chart-section"><h4>&#127942; Student Rankings</h4>';
+        var showCount = Math.min(ranked.length, 10);
+        if (showCount > 0) {
+            h += '<table class="history-table"><thead><tr><th>#</th><th>Student</th><th>Class</th><th>Avg %</th><th>Best %</th><th>Attempts</th></tr></thead><tbody>';
+            for (var i = 0; i < showCount; i++) {
+                var r = ranked[i];
+                var medal = i === 0 ? '&#129351;' : i === 1 ? '&#129352;' : i === 2 ? '&#129353;' : (i + 1);
+                var color = r.avg >= 80 ? 'var(--success)' : r.avg >= 50 ? 'var(--accent)' : 'var(--error)';
+                h += '<tr><td>' + medal + '</td><td><strong>' + r.name + '</strong></td><td>' + r.className + '</td><td style="color:' + color + ';font-weight:700;">' + r.avg.toFixed(0) + '%</td><td>' + r.best + '%</td><td>' + r.attempts + '</td></tr>';
+            }
+            h += '</tbody></table>';
+        } else {
+            h += '<p style="color:var(--text-muted);">No student data yet.</p>';
+        }
+        h += '</div>';
+        return h;
+    }
+
+    function renderSubjectPerformance() {
+        if (allAttempts.length === 0) return '';
+        var subStats = {};
+        for (var i = 0; i < allAttempts.length; i++) {
+            var sub = allAttempts[i].subject || "General";
+            if (!subStats[sub]) subStats[sub] = { total: 0, sum: 0, best: 0, students: {} };
+            subStats[sub].total++;
+            subStats[sub].sum += allAttempts[i].percentage;
+            if (allAttempts[i].percentage > subStats[sub].best) subStats[sub].best = allAttempts[i].percentage;
+            subStats[sub].students[allAttempts[i].studentId] = true;
+        }
+        var h = '<div class="chart-section"><h4>&#128218; Subject Performance</h4>';
+        h += '<table class="history-table"><thead><tr><th>Subject</th><th>Attempts</th><th>Avg %</th><th>Best %</th><th>Students</th></tr></thead><tbody>';
+        var keys = Object.keys(subStats).sort();
+        for (var i = 0; i < keys.length; i++) {
+            var s = subStats[keys[i]];
+            var avg = s.sum / s.total;
+            var color = avg >= 80 ? 'var(--success)' : avg >= 50 ? 'var(--accent)' : 'var(--error)';
+            h += '<tr><td><strong>' + keys[i] + '</strong></td><td>' + s.total + '</td><td style="color:' + color + ';font-weight:700;">' + avg.toFixed(0) + '%</td><td>' + s.best + '%</td><td>' + Object.keys(s.students).length + '</td></tr>';
+        }
+        h += '</tbody></table></div>';
+        return h;
+    }
+
+    function renderDifficultyAnalysis() {
+        if (allAttempts.length === 0) return '';
+        var diffStats = { easy: { correct: 0, total: 0 }, medium: { correct: 0, total: 0 }, difficult: { correct: 0, total: 0 } };
+        for (var i = 0; i < allAttempts.length; i++) {
+            var a = allAttempts[i];
+            if (!a.questions) continue;
+            for (var j = 0; j < a.questions.length; j++) {
+                var q = a.questions[j];
+                var diff = "medium";
+                for (var k = 0; k < questions.length; k++) {
+                    if (questions[k].id === q.questionId) { diff = questions[k].difficulty || "medium"; break; }
+                }
+                if (!diffStats[diff]) diffStats[diff] = { correct: 0, total: 0 };
+                diffStats[diff].total++;
+                if (q.correct) diffStats[diff].correct++;
+            }
+        }
+        var h = '<div class="chart-section"><h4>&#127919; Difficulty Analysis</h4>';
+        h += '<table class="history-table"><thead><tr><th>Difficulty</th><th>Total Qs</th><th>Correct</th><th>Accuracy</th></tr></thead><tbody>';
+        var diffColors = { easy: '#22c55e', medium: '#f59e0b', difficult: '#ef4444' };
+        var diffLabels = { easy: 'Easy', medium: 'Medium', difficult: 'Hard' };
+        var diffs = ["easy", "medium", "difficult"];
+        for (var i = 0; i < diffs.length; i++) {
+            var d = diffStats[diffs[i]];
+            if (d.total === 0) continue;
+            var acc = (d.correct / d.total * 100).toFixed(1);
+            var color = acc >= 70 ? 'var(--success)' : acc >= 50 ? 'var(--accent)' : 'var(--error)';
+            h += '<tr><td><span style="color:' + diffColors[diffs[i]] + ';font-weight:700;">' + diffLabels[diffs[i]] + '</span></td><td>' + d.total + '</td><td>' + d.correct + '</td><td style="color:' + color + ';font-weight:700;">' + acc + '%</td></tr>';
+        }
+        h += '</tbody></table></div>';
+        return h;
+    }
+
+    function renderTopicAnalysis() {
+        if (allAttempts.length === 0) return '';
+        var topicStats = {};
+        for (var i = 0; i < allAttempts.length; i++) {
+            var a = allAttempts[i];
+            if (!a.topicPerformance) continue;
+            for (var topic in a.topicPerformance) {
+                var tp = a.topicPerformance[topic];
+                if (!topicStats[topic]) topicStats[topic] = { correct: 0, total: 0, subject: a.subject || "General" };
+                topicStats[topic].correct += tp.correct;
+                topicStats[topic].total += tp.total;
+            }
+        }
+        var topics = [];
+        for (var t in topicStats) {
+            var s = topicStats[t];
+            topics.push({ name: t, correct: s.correct, total: s.total, pct: s.total > 0 ? (s.correct / s.total * 100) : 0, subject: s.subject });
+        }
+        topics.sort(function(a, b) { return a.pct - b.pct; });
+        var h = '<div class="chart-section"><h4>&#128270; Topic Analysis (Weakest First)</h4>';
+        if (topics.length === 0) {
+            h += '<p style="color:var(--text-muted);">No topic data yet.</p>';
+        } else {
+            var showTopics = topics.slice(0, 15);
+            h += '<div class="bar-graph">';
+            for (var i = 0; i < showTopics.length; i++) {
+                var t = showTopics[i];
+                var color = t.pct >= 70 ? 'var(--success)' : t.pct >= 50 ? 'var(--accent)' : 'var(--error)';
+                var label = t.name.length > 35 ? t.name.substring(0, 35) + '...' : t.name;
+                h += '<div class="bar-graph-row">';
+                h += '<div class="bar-graph-label" title="' + t.name + ' (' + t.subject + ')">' + label + '</div>';
+                h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + t.pct + '%;background:' + color + ';"><span class="bar-graph-value">' + t.pct.toFixed(0) + '% (' + t.correct + '/' + t.total + ')</span></div></div>';
+                h += '</div>';
+            }
+            h += '</div>';
+        }
+        h += '</div>';
+        return h;
+    }
+
+    function renderQuestionAccuracy() {
+        if (allAttempts.length === 0) return '';
+        var qStats = {};
+        for (var i = 0; i < allAttempts.length; i++) {
+            var a = allAttempts[i];
+            if (!a.questions) continue;
+            for (var j = 0; j < a.questions.length; j++) {
+                var q = a.questions[j];
+                if (!qStats[q.questionId]) qStats[q.questionId] = { correct: 0, total: 0 };
+                qStats[q.questionId].total++;
+                if (q.correct) qStats[q.questionId].correct++;
+            }
+        }
+        var qs = [];
+        for (var qid in qStats) {
+            var s = qStats[qid];
+            if (s.total < 2) continue;
+            var text = qid;
+            for (var k = 0; k < questions.length; k++) { if (questions[k].id === qid) { text = (questions[k].text || questions[k].question || qid).substring(0, 60); break; } }
+            qs.push({ id: qid, text: text, correct: s.correct, total: s.total, pct: (s.correct / s.total * 100) });
+        }
+        qs.sort(function(a, b) { return a.pct - b.pct; });
+        var h = '<div class="chart-section"><h4>&#10060; Most Missed Questions</h4>';
+        if (qs.length === 0) {
+            h += '<p style="color:var(--text-muted);">Not enough data yet.</p>';
+        } else {
+            var showQs = qs.slice(0, 10);
+            h += '<table class="history-table"><thead><tr><th>Question</th><th>Correct</th><th>Total</th><th>Accuracy</th></tr></thead><tbody>';
+            for (var i = 0; i < showQs.length; i++) {
+                var q = showQs[i];
+                var color = q.pct >= 70 ? 'var(--success)' : q.pct >= 50 ? 'var(--accent)' : 'var(--error)';
+                h += '<tr><td title="' + q.id + '">' + q.text + '...</td><td>' + q.correct + '</td><td>' + q.total + '</td><td style="color:' + color + ';font-weight:700;">' + q.pct.toFixed(0) + '%</td></tr>';
+            }
+            h += '</tbody></table>';
+        }
+        h += '</div>';
+        return h;
+    }
+
+    function renderProgressOverTime() {
+        if (allAttempts.length === 0) return '';
+        var dailyStats = {};
+        for (var i = 0; i < allAttempts.length; i++) {
+            var a = allAttempts[i];
+            var date = a.timestamp ? a.timestamp.substring(0, 10) : null;
+            if (!date) continue;
+            if (!dailyStats[date]) dailyStats[date] = { sum: 0, count: 0 };
+            dailyStats[date].sum += a.percentage;
+            dailyStats[date].count++;
+        }
+        var days = [];
+        for (var d in dailyStats) days.push({ date: d, avg: dailyStats[d].sum / dailyStats[d].count, count: dailyStats[d].count });
+        days.sort(function(a, b) { return a.date < b.date ? -1 : 1; });
+        var h = '<div class="chart-section"><h4>&#128197; Progress Over Time</h4>';
+        if (days.length === 0) {
+            h += '<p style="color:var(--text-muted);">No data yet.</p>';
+        } else {
+            var showDays = days.slice(-14);
+            var maxAvg = 100;
+            h += '<div class="bar-graph">';
+            for (var i = 0; i < showDays.length; i++) {
+                var d = showDays[i];
+                var color = d.avg >= 70 ? 'var(--success)' : d.avg >= 50 ? 'var(--accent)' : 'var(--error)';
+                h += '<div class="bar-graph-row">';
+                h += '<div class="bar-graph-label">' + d.date.substring(5) + '</div>';
+                h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + d.avg + '%;background:' + color + ';"><span class="bar-graph-value">' + d.avg.toFixed(0) + '% (' + d.count + ')</span></div></div>';
+                h += '</div>';
+            }
+            h += '</div>';
+        }
+        h += '</div>';
+        return h;
     }
 
     function showExcelImportModal() {
