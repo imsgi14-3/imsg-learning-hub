@@ -1617,10 +1617,8 @@ var UI = (function() {
                 }
                 csText.push(className + ": " + cs[cid].join(", "));
             }
-            var email = t.id.toLowerCase() + "@imsg.edu.pk";
             h += '<tr><td><strong>' + t.name + '</strong>';
             h += '<br><span style="font-size:11px;color:var(--text-muted);">ID: ' + t.id + ' &bull; Pass: ' + (t.password || "-") + '</span>';
-            h += '<br><span style="font-size:11px;color:var(--text-muted);">Email: ' + email + '</span>';
             h += '</td><td style="font-size:12px;">' + (csText.join("<br>") || "-") + '</td><td>' + roleLabel + '</td><td><button onclick="editTeacher(\'' + t.id + '\')" class="action-btn">Edit</button> <button onclick="deleteTeacher(\'' + t.id + '\')" class="action-btn danger">Delete</button></td></tr>';
         }
         c.innerHTML = h + '</tbody></table>';
@@ -1723,7 +1721,7 @@ var UI = (function() {
 
     function exportTeachers() {
         if (teachers.length === 0) { alert("No teachers to export."); return; }
-        var header = "ID,Name,Password,Role,Class-Subjects,Login Email\n";
+        var header = "ID,Name,Password,Role,Class-Subjects\n";
         var rows = "";
         for (var i = 0; i < teachers.length; i++) {
             var t = teachers[i];
@@ -1738,8 +1736,7 @@ var UI = (function() {
                 csParts.push(className + ": " + cs[cid].join("/"));
             }
             var csText = csParts.join("; ");
-            var email = t.id.toLowerCase() + "@imsg.edu.pk";
-            rows += '"' + t.id + '","' + t.name + '","' + (t.password || "") + '","' + role + '","' + csText + '","' + email + '"\n';
+            rows += '"' + t.id + '","' + t.name + '","' + (t.password || "") + '","' + role + '","' + csText + '"\n';
         }
         var blob = new Blob([header + rows], { type: "text/csv;charset=utf-8;" });
         var url = URL.createObjectURL(blob);
