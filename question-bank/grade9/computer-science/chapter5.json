@@ -1,0 +1,2219 @@
+{
+  "chapter": 5,
+  "chapterTitle": "Applications of Computer Science",
+  "subject": "Computer Science",
+  "grade": 9,
+  "source": "NBF Grade 9 Computer Science, Unit 5",
+  "sections": [
+    "5.1 Artificial Intelligence and Machine Learning",
+    "5.2 Different Areas of AI",
+    "5.3 Applications of AI",
+    "5.4 Cloud Computing"
+  ],
+  "questions": [
+    {
+      "id": "CH5-MCQ-001",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is Artificial Intelligence (AI)?",
+      "options": [
+        "A branch of computer science that makes computer-controlled machines perform human-like tasks",
+        "A type of computer network",
+        "A system used only for printing",
+        "A method for storing files"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines AI as a branch of computer science for making computer-controlled machines perform human-like tasks.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-002",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is one major purpose of AI-based machines?",
+      "options": [
+        "To solve complex problems using decision-making capabilities",
+        "To create only static webpages",
+        "To replace all computer hardware",
+        "To store files without processing"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes AI machines as having decision-making capabilities for solving complex problems.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-003",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How does AI help computers perform tasks?",
+      "options": [
+        "It can train computers to imitate actions of human beings",
+        "It removes all algorithms",
+        "It prevents computers from learning",
+        "It converts hardware into software"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that AI technology can train computers to perform tasks by imitating human actions.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-004",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Machine learning is a field within:",
+      "options": [
+        "Web design",
+        "Computer networking",
+        "Database management",
+        "Artificial Intelligence"
+      ],
+      "answer": "D",
+      "explanation": "The textbook states that machine learning is a field within AI.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-005",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does machine learning teach computers to do?",
+      "options": [
+        "Store data without analysis",
+        "Work without any data",
+        "Only follow fixed mathematical formulas",
+        "Learn from data inputs and experience without direct programming"
+      ],
+      "answer": "D",
+      "explanation": "Machine learning allows computers to learn from data inputs and experience without direct programming.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-006",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A system becomes better at making predictions after receiving more sample data. What concept is illustrated?",
+      "options": [
+        "Cloud storage",
+        "Manual programming only",
+        "Machine learning",
+        "Computer networking"
+      ],
+      "answer": "C",
+      "explanation": "The textbook states that ML algorithms improve decision-making as more sample data is provided.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-007",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does a machine learning algorithm do with training data?",
+      "options": [
+        "Converts it into hardware",
+        "Only prints the data",
+        "Deletes the data",
+        "It analyzes data to produce accurate output values"
+      ],
+      "answer": "D",
+      "explanation": "The textbook states that ML algorithms train on data inputs and analyze them to produce accurate outputs.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-008",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why can machine learning automate decision-making?",
+      "options": [
+        "It avoids analyzing data",
+        "It only stores database records",
+        "It recognizes patterns in large databases and builds models",
+        "It removes all human knowledge"
+      ],
+      "answer": "C",
+      "explanation": "Pattern recognition and model building are central to the textbook's description of ML.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-009",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How many types of machine learning are identified in the textbook?",
+      "options": [
+        "Two",
+        "One",
+        "Three",
+        "Four"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies supervised and unsupervised machine learning.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-010",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which are the two types of machine learning?",
+      "options": [
+        "Static and dynamic learning",
+        "Manual and automatic learning",
+        "Public and private learning",
+        "Supervised and unsupervised learning"
+      ],
+      "answer": "D",
+      "explanation": "These are the two types named in the textbook.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-011",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "What does supervised machine learning use to build a predictive model?",
+      "options": [
+        "No training data",
+        "Known input data and known output responses",
+        "Only unlabeled data",
+        "Only images without labels"
+      ],
+      "answer": "B",
+      "explanation": "Supervised learning uses known inputs and known output responses to build a model.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-012",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A model is trained using car features together with their known prices and then predicts the price of a new car. What type of learning is this?",
+      "options": [
+        "Unsupervised machine learning",
+        "NLP",
+        "Supervised machine learning",
+        "Cloud computing"
+      ],
+      "answer": "C",
+      "explanation": "The textbook's car-price example uses labeled car features and prices, which is supervised learning.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-013",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In supervised learning, what is the goal?",
+      "options": [
+        "To learn a mapping between input and output",
+        "To remove all output labels",
+        "To avoid using training data",
+        "To store files remotely"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes supervised learning as learning a mapping that matches input to output.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-014",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which of the following could be an input feature in the textbook's car-price example?",
+      "options": [
+        "Engine type and power",
+        "The name of the algorithm only",
+        "Final predicted price only",
+        "The model's error message"
+      ],
+      "answer": "A",
+      "explanation": "Engine type and power are listed as car input features.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-015",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is meant by labelled data?",
+      "options": [
+        "Data stored in the cloud",
+        "Data without any values",
+        "Data that cannot be analyzed",
+        "Data assigned to a category or group"
+      ],
+      "answer": "D",
+      "explanation": "The textbook explains unlabeled data as data not assigned a category or group.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-016",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "How does unsupervised learning differ from supervised learning?",
+      "options": [
+        "It does not use data",
+        "It uses unseen, unlabelled data to search for hidden patterns",
+        "It always uses known output responses",
+        "It requires every record to have a price"
+      ],
+      "answer": "B",
+      "explanation": "The textbook states that unsupervised learning uses unseen and unlabelled data to find patterns.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-017",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A bank gives an algorithm customer data without predefined categories and asks it to find natural groups. Which technique is being used?",
+      "options": [
+        "Unsupervised learning using clustering",
+        "Supervised learning using labeled prices",
+        "Speech recognition",
+        "Cloud computing"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that unsupervised learning searches for hidden patterns using clustering or grouping.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-018",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What technique is associated with unsupervised learning in the textbook?",
+      "options": [
+        "Encryption",
+        "Routing",
+        "Proofreading",
+        "Clustering"
+      ],
+      "answer": "D",
+      "explanation": "Clustering is described as the grouping technique used in unsupervised learning.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-019",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What is the purpose of clustering?",
+      "options": [
+        "To translate spoken words",
+        "To label every record manually",
+        "To create a cloud server",
+        "To find hidden patterns or groupings in input data"
+      ],
+      "answer": "D",
+      "explanation": "The textbook describes clustering as finding hidden patterns or groupings.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-020",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A bank collects age, mobile number, gender, income, debt, and credit history to assess loan risk. Which information does the textbook say can be eliminated for the ML system?",
+      "options": [
+        "Only credit history",
+        "Income, debt, and credit history",
+        "All customer information",
+        "Age, mobile number, and gender"
+      ],
+      "answer": "D",
+      "explanation": "The textbook's loan-risk example identifies age, mobile number, and gender as unnecessary for determining loan risk.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-021",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How many stages are in the machine learning process shown in the textbook?",
+      "options": [
+        "Five",
+        "Six",
+        "Three",
+        "Four"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists five stages of the ML process.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-022",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is the first stage of the machine learning process?",
+      "options": [
+        "Learning process",
+        "Collection of training data",
+        "Creating the training model",
+        "Predicting results"
+      ],
+      "answer": "B",
+      "explanation": "Collection of training data is listed first.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-023",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which stage follows collection of training data?",
+      "options": [
+        "Predicting results",
+        "Creating the algorithm",
+        "Deleting data",
+        "Cloud deployment"
+      ],
+      "answer": "B",
+      "explanation": "Creating the algorithm is the second listed stage.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-024",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which stage involves the computer learning from the training data?",
+      "options": [
+        "Learning process",
+        "Data deletion",
+        "Manual proofreading",
+        "Public cloud setup"
+      ],
+      "answer": "A",
+      "explanation": "Learning process is one of the five stages listed in the textbook.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-025",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which stage creates the model used for prediction?",
+      "options": [
+        "Deleting labels",
+        "Collecting output devices",
+        "Creating a database",
+        "Creating the training model"
+      ],
+      "answer": "D",
+      "explanation": "Creating the training model is one of the five ML stages.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-026",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is the final stage shown in the machine learning process?",
+      "options": [
+        "Learning process",
+        "Collecting training data",
+        "Predicting results",
+        "Creating the algorithm"
+      ],
+      "answer": "C",
+      "explanation": "Predicting results is the fifth and final stage.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-027",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why can AI algorithms sometimes produce wrong results?",
+      "options": [
+        "They cannot process information",
+        "They always use perfect formulas",
+        "They never use training data",
+        "They can make errors and may lack transparency about how decisions are made"
+      ],
+      "answer": "D",
+      "explanation": "The textbook states that AI algorithms can make errors and that lack of transparency makes it difficult to identify what went wrong.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-028",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An AI system recommends an incorrect medicine to a patient. What harm described in the textbook could result?",
+      "options": [
+        "Only a formatting error",
+        "Only a larger database",
+        "Only slower internet",
+        "Serious harm or even death"
+      ],
+      "answer": "D",
+      "explanation": "The textbook gives incorrect medical recommendations as a potentially harmful AI error.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-029",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How can human developers introduce bias into AI algorithms?",
+      "options": [
+        "By using only cloud storage",
+        "By printing results",
+        "Intentionally or unintentionally through the way algorithms are developed",
+        "By removing all data"
+      ],
+      "answer": "C",
+      "explanation": "The textbook states that humans can introduce bias intentionally or unintentionally.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-030",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An AI system produces discriminatory results based on gender or age. What issue does this illustrate?",
+      "options": [
+        "Data visualization",
+        "Algorithmic bias",
+        "Speech compression",
+        "Cloud failure"
+      ],
+      "answer": "B",
+      "explanation": "The textbook identifies bias as a cause of discriminatory consequences on grounds such as gender or age.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-031",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How can AI-based automation affect employment?",
+      "options": [
+        "It increases all jobs equally",
+        "It guarantees every person a job",
+        "It removes the need for education",
+        "It can lead to job losses in some areas"
+      ],
+      "answer": "D",
+      "explanation": "The textbook lists job losses from AI-based automation as a disadvantage.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-032",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What may happen if people become overly dependent on AI systems?",
+      "options": [
+        "Networks become disconnected",
+        "Cloud storage stops",
+        "Computer memory becomes smaller",
+        "Creativity and critical-thinking skills may decline"
+      ],
+      "answer": "D",
+      "explanation": "The textbook identifies loss of creativity and critical-thinking skills as a possible consequence of dependence on AI.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-033",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is one principle stated for designers of AI algorithms?",
+      "options": [
+        "They should remove privacy controls",
+        "They should maximize errors",
+        "They should hide all AI behavior",
+        "They should instill moral and ethical values and focus on benefiting people"
+      ],
+      "answer": "D",
+      "explanation": "The textbook states that AI designers should instill moral and ethical values and focus on benefiting people.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-034",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is a benefit of AI-based systems according to the textbook?",
+      "options": [
+        "They guarantee zero errors",
+        "They prevent innovation",
+        "They always eliminate human judgment",
+        "They can solve complex problems efficiently and increase productivity"
+      ],
+      "answer": "D",
+      "explanation": "The textbook lists efficient problem solving and increased productivity as AI benefits.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-035",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A navigation system suggests a shortest route and provides live traffic information. Which AI benefit is illustrated?",
+      "options": [
+        "Automated proofreading",
+        "Improved travel and transportation",
+        "Cloud ownership",
+        "Database normalization"
+      ],
+      "answer": "B",
+      "explanation": "The textbook describes AI helping transportation through shortest routes and real-time traffic information.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-036",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An AI system helps teachers grade assignments and adapt learning to individual students. Which area is illustrated?",
+      "options": [
+        "Defense",
+        "Agriculture",
+        "Education",
+        "Astronomy"
+      ],
+      "answer": "C",
+      "explanation": "The textbook describes AI applications in education including adaptive learning and grading.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-037",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An AI hospital system helps diagnose cancer at an early stage. Which benefit is illustrated?",
+      "options": [
+        "GPS mapping",
+        "Spam filtering",
+        "Better diagnosis and treatment",
+        "Smart pricing"
+      ],
+      "answer": "C",
+      "explanation": "Early diagnosis and treatment are listed as healthcare benefits of AI.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-038",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "AI is used to monitor browsing habits and suggest products. Which benefit is illustrated?",
+      "options": [
+        "Personalized recommendations",
+        "Military surveillance",
+        "Crop spraying",
+        "Machine maintenance"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that AI assistants can suggest products by monitoring browsing habits.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-039",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which popular AI tool is described as helping create essays, emails, and code?",
+      "options": [
+        "Grammarly",
+        "Siri",
+        "ChatGPT",
+        "Lovo AI"
+      ],
+      "answer": "C",
+      "explanation": "The textbook describes ChatGPT as a tool for essays, emails, and coding.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-040",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which ethical issue associated with ChatGPT is mentioned in the textbook?",
+      "options": [
+        "Only slow printing",
+        "Only hardware overheating",
+        "Only battery drain",
+        "Misinformation, cheating, plagiarism, bias, and privacy/security concerns"
+      ],
+      "answer": "D",
+      "explanation": "These ethical issues are explicitly discussed for ChatGPT.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-041",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is Grammarly described as?",
+      "options": [
+        "A text-to-speech tool",
+        "A navigation system",
+        "An AI tool for correcting spelling and grammar mistakes",
+        "A robotics platform"
+      ],
+      "answer": "C",
+      "explanation": "The textbook describes Grammarly as an AI tool for spelling and grammar correction.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-042",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why is Grammarly not a perfect replacement for manual proofreading?",
+      "options": [
+        "It only works with numbers",
+        "It has no AI features",
+        "It cannot process text",
+        "It may miss mistakes and some suggestions may be incorrect"
+      ],
+      "answer": "D",
+      "explanation": "The textbook states that Grammarly is not 100% accurate and is not a replacement for manual proofreading.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-043",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does Lovo AI do?",
+      "options": [
+        "Converts text to speech",
+        "Recognizes fingerprints",
+        "Creates databases",
+        "Detects road traffic"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes Lovo AI as a text-to-speech AI tool.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-044",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which ethical principle is important when developing voice AI?",
+      "options": [
+        "Personal data should not be mishandled or misused",
+        "Copyright should be ignored",
+        "Training data should always be biased",
+        "Algorithms should remain secret from everyone"
+      ],
+      "answer": "A",
+      "explanation": "The textbook stresses privacy, unbiased training data, transparency, and avoiding harm.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-045",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which popular virtual assistant is associated with Apple?",
+      "options": [
+        "Alexa",
+        "Siri",
+        "Cortana",
+        "Google Assistant"
+      ],
+      "answer": "B",
+      "explanation": "The textbook lists Siri as Apple's virtual assistant.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-046",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What is a virtual assistant?",
+      "options": [
+        "A physical robot only",
+        "A database table",
+        "A spreadsheet program",
+        "An interactive AI application that understands natural language"
+      ],
+      "answer": "D",
+      "explanation": "The textbook defines a virtual assistant as an interactive AI-based application that can understand natural language.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-047",
+      "chapter": 5,
+      "topic": "5.1 Artificial Intelligence and Machine Learning",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A school uses an AI writing tool to produce student essays automatically and submits them as original work. Which textbook ethical concerns are most relevant?",
+      "options": [
+        "Cheating and plagiarism",
+        "Cloud storage ownership",
+        "Crop disease detection",
+        "GPS navigation and route planning"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically identifies cheating and plagiarism as ethical issues associated with AI tools such as ChatGPT.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-048",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which AI area converts spoken words into written text?",
+      "options": [
+        "Robotics",
+        "Computer vision",
+        "Speech recognition",
+        "Expert systems"
+      ],
+      "answer": "C",
+      "explanation": "The textbook describes speech recognition as converting spoken words into text.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-049",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A student dictates a paragraph to a computer instead of typing it. Which technology is being used?",
+      "options": [
+        "GPS navigation",
+        "Computer vision",
+        "Speech recognition",
+        "Cloud computing"
+      ],
+      "answer": "C",
+      "explanation": "Speech recognition can be used to dictate text into a computer.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-050",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why can speech recognition sometimes struggle?",
+      "options": [
+        "It cannot process sound",
+        "It always requires a printer",
+        "Different pronunciations can make words difficult for the system to understand",
+        "It only recognizes written text"
+      ],
+      "answer": "C",
+      "explanation": "The textbook notes that different pronunciations can reduce recognition accuracy.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-051",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is computer vision?",
+      "options": [
+        "A method for storing images",
+        "A cloud service",
+        "A type of keyboard",
+        "An AI field that enables computers to obtain meaningful information from digital images and videos"
+      ],
+      "answer": "D",
+      "explanation": "This is the textbook's definition of computer vision.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-052",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which three elements are specifically mentioned for computer vision?",
+      "options": [
+        "Keyboard, printer, and speaker",
+        "Cloud, router, and modem",
+        "Database, monitor, and mouse",
+        "Camera, data, and algorithms"
+      ],
+      "answer": "D",
+      "explanation": "The textbook says computer vision uses camera, data, and algorithms.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-053",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A traffic system analyzes camera images to identify traffic flow. Which AI area is most directly involved?",
+      "options": [
+        "Expert systems",
+        "Computer vision",
+        "Text-to-speech",
+        "Speech recognition"
+      ],
+      "answer": "B",
+      "explanation": "Computer vision is used for traffic flow analysis.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-054",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which is an application of computer vision listed in the textbook?",
+      "options": [
+        "Email composition",
+        "Cloud billing",
+        "Facial recognition",
+        "Spreadsheet formatting"
+      ],
+      "answer": "C",
+      "explanation": "Facial recognition is listed under computer vision applications.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-055",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is Natural Language Processing (NLP)?",
+      "options": [
+        "A technique for manufacturing robots",
+        "A type of database",
+        "An AI-based field that enables computers to understand and process spoken and written language",
+        "A method for compressing images"
+      ],
+      "answer": "C",
+      "explanation": "The textbook describes NLP as giving computers the ability to understand spoken and written words.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-056",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What is the purpose of NLP in human-computer interaction?",
+      "options": [
+        "To enable easier communication using natural language",
+        "To replace all computer hardware",
+        "To control electricity",
+        "To store images"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says NLP provides easy communication between computers and humans using natural language.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-057",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which is an everyday application of NLP?",
+      "options": [
+        "Crop spraying",
+        "Language translation",
+        "GPS satellite launch",
+        "Robot packaging"
+      ],
+      "answer": "B",
+      "explanation": "Language translation is listed as an NLP application.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-058",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A system automatically identifies unwanted emails. Which NLP application is this?",
+      "options": [
+        "Computer vision",
+        "Robotics",
+        "Astronomy",
+        "Email filtering and spam detection"
+      ],
+      "answer": "D",
+      "explanation": "Email filtering and spam detection are listed NLP applications.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-059",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A chatbot analyzes whether a customer review is positive or negative. Which NLP application is involved?",
+      "options": [
+        "Sentiment analysis",
+        "GPS navigation",
+        "Expert-system development",
+        "Speech-to-text only"
+      ],
+      "answer": "A",
+      "explanation": "Sentiment analysis is explicitly listed as an NLP application.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-060",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why is NLP considered difficult according to the textbook?",
+      "options": [
+        "Computers cannot store words",
+        "Natural language contains no patterns",
+        "Complex algorithms are needed to analyze, understand, and translate natural language",
+        "NLP uses no data"
+      ],
+      "answer": "C",
+      "explanation": "The textbook states that NLP is difficult and requires complex algorithms.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-061",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is an expert system?",
+      "options": [
+        "A physical sensor",
+        "An interactive AI program designed to solve complex problems using knowledge and reasoning",
+        "A video editing program",
+        "A database server"
+      ],
+      "answer": "B",
+      "explanation": "This matches the textbook definition of an expert system.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-062",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which is an application of expert systems?",
+      "options": [
+        "GPS map drawing",
+        "Text-to-speech advertising only",
+        "Video game graphics only",
+        "Cancer diagnosis in hospitals"
+      ],
+      "answer": "D",
+      "explanation": "Diagnosis in hospitals is listed as an expert-system application.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-063",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What does an expert system use to find solutions?",
+      "options": [
+        "Knowledge and reasoning",
+        "Only camera images",
+        "Only GPS coordinates",
+        "Only random guesses"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says expert systems use knowledge and reasoning.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-064",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is the first major step in developing an expert system?",
+      "options": [
+        "Deleting the knowledge base",
+        "Providing the final solution",
+        "Publishing the answer",
+        "Obtaining knowledge from experts and creating a knowledge database"
+      ],
+      "answer": "D",
+      "explanation": "The textbook first describes collecting sufficient expert knowledge and creating a knowledge database.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-065",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What does an expert system ask an end user to provide?",
+      "options": [
+        "Required information about the problem",
+        "A new operating system",
+        "A new computer",
+        "Only a password"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says the system asks the user to enter required information through a questionnaire.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-066",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "After receiving user information, an expert system applies rules and reasoning to:",
+      "options": [
+        "Extract knowledge from its knowledge database and interpret it",
+        "Create a video",
+        "Change the user's hardware",
+        "Delete the database"
+      ],
+      "answer": "A",
+      "explanation": "This is the third development step described in the textbook.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-067",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which field studies celestial objects such as the moon, sun, and planets?",
+      "options": [
+        "Speech recognition",
+        "Astronomy",
+        "Robotics",
+        "Agriculture"
+      ],
+      "answer": "B",
+      "explanation": "The textbook defines astronomy as the scientific study of celestial objects.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-068",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "AI analyzes telescope and satellite data to identify celestial objects. Which area is illustrated?",
+      "options": [
+        "AI in agriculture",
+        "AI in business",
+        "AI in gaming",
+        "AI in astronomy"
+      ],
+      "answer": "D",
+      "explanation": "The textbook describes AI analyzing large astronomy datasets from telescopes and satellites.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-069",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How can AI support astronomy?",
+      "options": [
+        "It can only grade assignments",
+        "It can only detect spam",
+        "It can help study galaxy formation, the universe, asteroid motion, and star behavior",
+        "It can only translate languages"
+      ],
+      "answer": "C",
+      "explanation": "These uses are listed in the textbook's astronomy section.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-070",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How do AI-based cybersecurity systems help protect digital systems?",
+      "options": [
+        "They stop all data collection",
+        "They monitor systems, detect malicious activity, and respond in real time",
+        "They only create passwords",
+        "They replace every network device"
+      ],
+      "answer": "B",
+      "explanation": "The textbook describes continuous monitoring and real-time response to malicious activity.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-071",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An AI security system detects unusual network patterns and predicts a cyber threat. Which area is being applied?",
+      "options": [
+        "AI in cybersecurity",
+        "AI in agriculture",
+        "AI in education",
+        "AI in gaming"
+      ],
+      "answer": "A",
+      "explanation": "AI cybersecurity uses pattern/anomaly detection and prediction of cyber threats.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-072",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does GPS stand for?",
+      "options": [
+        "General Processing Software",
+        "Geographical Processing System",
+        "Global Positioning System",
+        "Global Programming Service"
+      ],
+      "answer": "C",
+      "explanation": "GPS is expanded as Global Positioning System in the textbook.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-073",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How do AI-based GPS systems improve traditional GPS?",
+      "options": [
+        "They remove route planning",
+        "They use only static maps",
+        "They dynamically adapt to traffic, road closures, and weather updates",
+        "They stop using location data"
+      ],
+      "answer": "C",
+      "explanation": "The textbook states that AI-driven GPS adapts dynamically to changing conditions.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-074",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A navigation app changes the suggested route because of a road closure and current traffic. What capability is illustrated?",
+      "options": [
+        "Text-to-speech only",
+        "Static mapping",
+        "AI-driven dynamic route planning",
+        "Manual data entry"
+      ],
+      "answer": "C",
+      "explanation": "Dynamic adaptation to traffic and road closures is a stated AI-GPS advantage.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-075",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A road camera identifies vehicles, while a navigation system changes routes based on traffic. Which AI areas are being combined?",
+      "options": [
+        "Computer vision and AI-based GPS navigation",
+        "NLP and expert systems only",
+        "Robotics and text-to-speech only",
+        "Agriculture and gaming"
+      ],
+      "answer": "A",
+      "explanation": "Camera-based image analysis aligns with computer vision; dynamic routing aligns with AI-based GPS.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-076",
+      "chapter": 5,
+      "topic": "5.2 Different Areas of AI",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A medical expert system receives patient symptoms, consults a knowledge database, applies rules, and gives a diagnosis. Which sequence best matches the textbook?",
+      "options": [
+        "Solution → database → user information → rules",
+        "GPS → camera → speech → cloud",
+        "Training data → clustering → dashboard → chatbot",
+        "Knowledge database → user information → rules/reasoning → solution"
+      ],
+      "answer": "D",
+      "explanation": "This follows the four development steps of an expert system in the textbook.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-077",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is robotics concerned with?",
+      "options": [
+        "Computer-controlled machines that perform specific tasks with little or no human intervention",
+        "Only database queries",
+        "Only software proofreading",
+        "Only cloud storage"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines robotics in these terms.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-078",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which is a robotics application mentioned in the textbook?",
+      "options": [
+        "Filtering spam only",
+        "Creating advertisements",
+        "Handling hazardous materials",
+        "Writing essays"
+      ],
+      "answer": "C",
+      "explanation": "Robots are used for hazardous materials in high-risk environments.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-079",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "AI-based hospital microscopes can help by:",
+      "options": [
+        "Scanning samples to detect harmful substances and bacteria",
+        "Creating GPS maps",
+        "Operating social networks",
+        "Filtering advertisements"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes AI microscopes scanning blood samples for harmful substances and bacteria.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-080",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How can AI-based ICU monitoring systems help doctors?",
+      "options": [
+        "They manufacture medicines",
+        "They only store timetables",
+        "They replace all doctors",
+        "They measure real-time data such as heartbeat, blood pressure, and temperature"
+      ],
+      "answer": "D",
+      "explanation": "These real-time measurements are listed in the healthcare application.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-081",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An educational AI system adapts activities to each student's learning needs. What benefit is illustrated?",
+      "options": [
+        "Fraud detection",
+        "Individualized learning",
+        "Predictive maintenance",
+        "Military surveillance"
+      ],
+      "answer": "B",
+      "explanation": "The textbook states that AI systems can adapt to individual learning needs.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-082",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An educational administrator uses AI to schedule courses and analyze student data. Which area is this?",
+      "options": [
+        "AI in agriculture",
+        "AI in defense",
+        "AI in astronomy",
+        "AI in education"
+      ],
+      "answer": "D",
+      "explanation": "Scheduling, timetables, and student-data analysis are listed education applications.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-083",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is AI in gaming mainly used for?",
+      "options": [
+        "Detecting crop disease",
+        "Routing military vehicles",
+        "Making game opponents appear intelligent and gameplay more challenging",
+        "Managing hospital patients"
+      ],
+      "answer": "C",
+      "explanation": "The textbook describes AI in gaming as making opponents seem intelligent and games more engaging.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-084",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A racing game uses AI to make computer-controlled opponents respond intelligently. What is the purpose?",
+      "options": [
+        "To collect medical data",
+        "To create a more challenging and engaging experience",
+        "To detect spam",
+        "To monitor crops"
+      ],
+      "answer": "B",
+      "explanation": "The textbook says AI makes games more challenging, appealing, and fun.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-085",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is AI in agriculture intended to help farmers do?",
+      "options": [
+        "Build cloud databases only",
+        "Translate languages",
+        "Produce higher-quality crops and increase production using land efficiently",
+        "Create chatbots only"
+      ],
+      "answer": "C",
+      "explanation": "This is the textbook's description of AI in agriculture.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-086",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A drone scans crops for insects and disease. Which AI application is illustrated?",
+      "options": [
+        "Education",
+        "Defense",
+        "Agriculture",
+        "Business"
+      ],
+      "answer": "C",
+      "explanation": "The textbook describes AI scanning insect images and monitoring crop/livestock health.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-087",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which technology is used for efficient pesticide spraying in the textbook?",
+      "options": [
+        "AI-based drone technology",
+        "Expert systems",
+        "Speech recognition",
+        "Chatbots"
+      ],
+      "answer": "A",
+      "explanation": "AI-based drones are listed for efficient pesticide spraying.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-088",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A farmer uses driverless tractors and smart fertilization systems. What is the expected benefit?",
+      "options": [
+        "Improved grammar",
+        "Better email filtering",
+        "Increased crop production",
+        "Faster text-to-speech"
+      ],
+      "answer": "C",
+      "explanation": "The textbook links AI farming machinery with increased crop production.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-089",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How does AI filter spam emails in daily life?",
+      "options": [
+        "It sends unwanted emails to spam or trash folders",
+        "It turns them into GPS routes",
+        "It sends them to a printer",
+        "It converts them into images"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes AI filtering spam emails into spam or trash folders.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-090",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A phone unlocks after recognizing the user's face. Which AI use is illustrated?",
+      "options": [
+        "Agricultural spraying",
+        "Expert-system diagnosis",
+        "Predictive maintenance",
+        "Facial recognition for secure access"
+      ],
+      "answer": "D",
+      "explanation": "The textbook describes facial recognition on phones and laptops for identification and secure access.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-091",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Search engines use AI to organize web information and make it accessible. Which daily-life application is this?",
+      "options": [
+        "AI in search engines",
+        "AI in defense",
+        "AI in agriculture",
+        "AI in robotics"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically mentions Google and Yahoo using AI to organize web information.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-092",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A bank uses AI to identify suspicious transactions. What is the main application?",
+      "options": [
+        "Gaming",
+        "Fraud detection and secure transactions",
+        "Education",
+        "Agriculture"
+      ],
+      "answer": "B",
+      "explanation": "The textbook says AI is deployed in banking to detect fraud and provide secure transactions.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-093",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What devices are combined with AI software in self-driving cars?",
+      "options": [
+        "Routers, switches, and modems",
+        "Keyboards, mice, and monitors",
+        "Sensors, cameras, and radars",
+        "Printers, scanners, and speakers"
+      ],
+      "answer": "C",
+      "explanation": "The textbook lists sensors, cameras, and radars.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-094",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How does a self-driving car respond to its environment?",
+      "options": [
+        "AI software gathers sensor information and takes real-time actions",
+        "It requires every action to be manually typed",
+        "It follows only printed maps",
+        "It ignores sensor data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes real-time action based on sensor information.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-095",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A company uses AI for smart pricing and automated recruitment. Which area is illustrated?",
+      "options": [
+        "Agriculture",
+        "Business",
+        "Astronomy",
+        "Healthcare"
+      ],
+      "answer": "B",
+      "explanation": "Smart pricing and automated recruitment are listed business applications.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-096",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which business benefit of AI is identified in the textbook?",
+      "options": [
+        "Improved productivity, accurate decisions, better customer service, and business growth",
+        "Guaranteed zero errors",
+        "Elimination of all employees",
+        "Removal of cybersecurity"
+      ],
+      "answer": "A",
+      "explanation": "These benefits are stated in the business application section.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-097",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A company uses a computer program to answer customer questions instantly through text or voice. What is it?",
+      "options": [
+        "Chatbot",
+        "Expert system only",
+        "Computer vision",
+        "GPS"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines a chatbot as an AI program providing instant answers through text or voice interaction.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-098",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why are chatbots beneficial to businesses?",
+      "options": [
+        "They can provide customer service 24/7 and automate responses",
+        "They require customers to wait for employees",
+        "They only work during office hours",
+        "They cannot answer questions"
+      ],
+      "answer": "A",
+      "explanation": "The textbook highlights 24/7 service and automated responses.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-099",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A defense system monitors computer activity to detect suspicious behavior and prevent unauthorized access. Which application is this?",
+      "options": [
+        "AI in defense security",
+        "AI in education",
+        "AI in agriculture",
+        "AI in gaming"
+      ],
+      "answer": "A",
+      "explanation": "Defense applications include detecting threats, suspicious activity, and unauthorized access.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-100",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A farm combines drones, computer vision, AI surveillance, and smart machinery to improve crop production. Which set of textbook applications is represented?",
+      "options": [
+        "Only language translation and chatbots",
+        "Only gaming and GPS",
+        "Only banking and advertising",
+        "Disease monitoring, security, pesticide spraying, and efficient farming"
+      ],
+      "answer": "D",
+      "explanation": "These are the agriculture benefits and applications described by the textbook.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-101",
+      "chapter": 5,
+      "topic": "5.3 Applications of AI",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A hospital uses AI for early disease diagnosis and real-time patient monitoring. Which two examples from the textbook are combined?",
+      "options": [
+        "AI-based diagnosis and ICU patient monitoring",
+        "Smart pricing and recruitment",
+        "Gaming and agriculture",
+        "GPS navigation and chatbots"
+      ],
+      "answer": "A",
+      "explanation": "Both applications are explicitly described in the healthcare section.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-102",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is cloud computing?",
+      "options": [
+        "A local-only storage method",
+        "Delivery of computing services over the Internet by cloud computing vendors",
+        "A physical computer room",
+        "A type of AI algorithm"
+      ],
+      "answer": "B",
+      "explanation": "The textbook defines cloud computing as delivery of computing services over the Internet by vendors.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-103",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is a service included in cloud computing according to the textbook?",
+      "options": [
+        "Only cameras",
+        "Servers, storage, databases, networking, or software",
+        "Only keyboards",
+        "Only printers"
+      ],
+      "answer": "B",
+      "explanation": "The textbook lists servers, storage, databases, networking, and software.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-104",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why is cloud computing an alternative to in-house data processing?",
+      "options": [
+        "It removes Internet access",
+        "It requires every server to be installed locally",
+        "It stores data only on paper",
+        "Users can access and process data through Internet-connected devices using remote physical servers"
+      ],
+      "answer": "D",
+      "explanation": "The textbook contrasts cloud access through remote servers with in-house processing.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-105",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How many types of cloud computing are identified?",
+      "options": [
+        "Two",
+        "Three",
+        "Five",
+        "Four"
+      ],
+      "answer": "B",
+      "explanation": "The textbook identifies public, private, and hybrid cloud.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-106",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which are the three cloud-computing types?",
+      "options": [
+        "Public, private, and hybrid",
+        "Basic, advanced, and virtual",
+        "Open, closed, and shared",
+        "Local, remote, and wireless"
+      ],
+      "answer": "A",
+      "explanation": "These are the three types listed in the textbook.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-107",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Who owns and operates resources in a public cloud?",
+      "options": [
+        "A local printer manufacturer",
+        "A school teacher",
+        "A cloud service provider",
+        "Only the end user"
+      ],
+      "answer": "C",
+      "explanation": "Public-cloud resources are owned and operated by the cloud service provider.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-108",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An organization uses servers and storage supplied and maintained by a provider over the Internet. Which cloud type is this?",
+      "options": [
+        "Local cloud",
+        "Private cloud",
+        "Public cloud",
+        "Hybrid cloud"
+      ],
+      "answer": "C",
+      "explanation": "This matches the textbook's public-cloud model.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-109",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What is a key feature of public cloud resources?",
+      "options": [
+        "They are dedicated to one organization only",
+        "They cannot be accessed online",
+        "The customer must maintain every physical server",
+        "They are managed and maintained by the cloud service provider"
+      ],
+      "answer": "D",
+      "explanation": "The textbook says the provider manages and maintains public-cloud resources.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-110",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What does a private cloud mean?",
+      "options": [
+        "A combination of public and private cloud",
+        "Cloud resources owned and used inside a single organization",
+        "Resources shared by everyone",
+        "Resources owned only by a public provider"
+      ],
+      "answer": "B",
+      "explanation": "This is the textbook's definition of private cloud.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-111",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A bank owns and operates cloud infrastructure dedicated to its own organization. Which model is this?",
+      "options": [
+        "Hybrid cloud",
+        "Public cloud",
+        "Community cloud",
+        "Private cloud"
+      ],
+      "answer": "D",
+      "explanation": "A private cloud is dedicated to a single organization and operated by it.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-112",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Who is responsible for operating and maintaining private-cloud infrastructure?",
+      "options": [
+        "A public cloud provider only",
+        "The user organization",
+        "A search engine",
+        "A social media company"
+      ],
+      "answer": "B",
+      "explanation": "The textbook states that the organization is responsible for its infrastructure.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-113",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is a hybrid cloud?",
+      "options": [
+        "A cloud with no Internet",
+        "A combination of public and private cloud",
+        "A local database only",
+        "A type of machine learning"
+      ],
+      "answer": "B",
+      "explanation": "The textbook defines hybrid cloud as a combination of public and private cloud.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-114",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A company keeps some applications privately but shares selected data and applications through public cloud services. Which model fits?",
+      "options": [
+        "Public cloud only",
+        "Hybrid cloud",
+        "Private cloud only",
+        "No cloud"
+      ],
+      "answer": "B",
+      "explanation": "The textbook says hybrid cloud allows data and applications to be shared between public and private environments.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-115",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which statement best compares public and private cloud?",
+      "options": [
+        "Both are always maintained by the same provider",
+        "Private cloud is always public",
+        "Public cloud can never use Internet services",
+        "Public-cloud resources are provider-owned and managed; private-cloud resources are dedicated to and maintained by one organization"
+      ],
+      "answer": "D",
+      "explanation": "This directly reflects the textbook's distinction.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    },
+    {
+      "id": "CH5-MCQ-116",
+      "chapter": 5,
+      "topic": "5.4 Cloud Computing",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "An organization wants provider-managed resources for rapid access, while another wants more control over its infrastructure. Which cloud models best match these needs?",
+      "options": [
+        "Public cloud for provider management; private cloud for greater organizational control",
+        "Both models are identical",
+        "Hybrid for neither",
+        "Private for provider management; public for complete internal control"
+      ],
+      "answer": "A",
+      "explanation": "The textbook highlights provider management and rapid access in public cloud, and greater organizational control in private cloud.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 5"
+    }
+  ]
+}

@@ -111,6 +111,12 @@ function loadData() {
         if (!t.subject) t.subject = t.subjects[0] || "";
         if (!t.classId) t.classId = t.classes[0] || "";
         if (!t.classTeacherOf) t.classTeacherOf = t.isClassTeacher && t.classId ? [t.classId] : [];
+        if (!t.classSubjects) {
+            t.classSubjects = {};
+            for (var j = 0; j < t.classes.length; j++) {
+                t.classSubjects[t.classes[j]] = t.subjects.slice();
+            }
+        }
         t.isSubjectTeacher = true;
     }
     if (migrated) localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
@@ -196,6 +202,12 @@ function loadFromFirestore(callback) {
                     if (!d.subject) d.subject = d.subjects[0] || "";
                     if (!d.classId) d.classId = d.classes[0] || "";
                     if (!d.classTeacherOf) d.classTeacherOf = d.isClassTeacher && d.classId ? [d.classId] : [];
+                    if (!d.classSubjects) {
+                        d.classSubjects = {};
+                        for (var j = 0; j < d.classes.length; j++) {
+                            d.classSubjects[d.classes[j]] = d.subjects.slice();
+                        }
+                    }
                     d.isSubjectTeacher = true;
                     teachers.push(d);
                 }
@@ -260,11 +272,16 @@ function generateStudentId(classObj, rollNo) {
     return prefix + "-" + num;
 }
 
-function generateTeacherId() {
-    var num = teachers.length + 1;
-    var id = "T-" + (num < 10 ? "0" : "") + num;
+function generateTeacherId(name) {
+    var base = "";
+    if (name) {
+        base = name.toLowerCase().replace(/[^a-z]/g, "");
+    }
+    if (base.length < 2) base = "teacher";
+    var num = 1;
+    var id = base + "t" + (num < 10 ? "0" : "") + num;
     for (var i = 0; i < teachers.length; i++) {
-        if (teachers[i].id === id) { num++; id = "T-" + (num < 10 ? "0" : "") + num; i = -1; }
+        if (teachers[i].id === id) { num++; id = base + "t" + (num < 10 ? "0" : "") + num; i = -1; }
     }
     return id;
 }

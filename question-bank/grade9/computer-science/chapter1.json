@@ -869,13 +869,13 @@
       "difficulty": "easy",
       "question": "Which optical storage medium has a capacity of 700 MB according to the textbook?",
       "options": [
-        "DVD",
         "CD",
-        "USB flash drive",
-        "HDD"
+        "DVD",
+        "Blu-ray Disc",
+        "USB Flash Drive"
       ],
       "answer": "A",
-      "explanation": "The correct answer is DVD.",
+      "explanation": "The textbook states that a CD (Compact Disk) has a capacity of 700 MB.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 1"
     },
@@ -2577,15 +2577,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "medium",
-      "question": "Which OS function manages input/output operations?",
+      "question": "Which operating-system function manages input/output operations?",
       "options": [
-        "Operating system",
-        "Plotter",
-        "Router",
-        "Scanner"
+        "Input/Output management",
+        "Memory management",
+        "File management",
+        "User authentication"
       ],
       "answer": "A",
-      "explanation": "The correct answer is Operating system.",
+      "explanation": "The textbook lists management of input/output operations as a function of an operating system.",
       "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 1"
     },
@@ -3783,6 +3783,44 @@
       ],
       "answer": "A",
       "explanation": "The correct answer is Privacy concerns.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 1"
+    },
+    {
+      "id": "CH1-MCQ-200",
+      "chapter": 1,
+      "topic": "1.8 Computer Software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which category of high-level language uses clear logical structures, including sequences, selection and repetition?",
+      "options": [
+        "Structured Languages",
+        "Machine Language",
+        "Assembly Language",
+        "Binary Code"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes Structured Languages as using clear logical structures, including sequences, conditional statements (selection), and loops (repetition).",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 1"
+    },
+    {
+      "id": "CH1-MCQ-201",
+      "chapter": 1,
+      "topic": "1.8 Computer Software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which of the following is given in the textbook as an example of a high-level programming language?",
+      "options": [
+        "Visual Basic",
+        "Machine Language",
+        "Assembly Language",
+        "Binary Code"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives Visual Basic, C, Java and Pascal as examples of high-level languages.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 1"
     }

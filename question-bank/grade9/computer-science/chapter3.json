@@ -1,0 +1,3087 @@
+{
+  "chapter": 3,
+  "chapterTitle": "Programing Fundamentals",
+  "subject": "Computer Science",
+  "grade": 9,
+  "source": "NBF Grade 9 Computer Science, Unit 3",
+  "questions": [
+    {
+      "id": "CH3-MCQ-001",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A document accessible through the internet is called a:",
+      "options": [
+        "Webpage",
+        "Website",
+        "Web application",
+        "Search engine"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines a webpage as a document that exists and is accessible through the internet.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-002",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A set of webpages is termed a:",
+      "options": [
+        "Web browser",
+        "Website",
+        "URL",
+        "Web server"
+      ],
+      "answer": "B",
+      "explanation": "A website is a set of webpages.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-003",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which software is used to access a webpage? ",
+      "options": [
+        "Compiler",
+        "Web browser",
+        "Spreadsheet",
+        "Text editor"
+      ],
+      "answer": "B",
+      "explanation": "The textbook states that a web browser is used to access a webpage.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-004",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The generally accessible address of an internet document is its:",
+      "options": [
+        "DOM",
+        "URL",
+        "GUI",
+        "IDE"
+      ],
+      "answer": "B",
+      "explanation": "URL stands for Universal Resource Locator and is the accessible address of the document.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-005",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A search engine primarily helps a user to:",
+      "options": [
+        "Write HTML code",
+        "Seek relevant information using keywords",
+        "Install an operating system",
+        "Design circuit boards"
+      ],
+      "answer": "B",
+      "explanation": "The textbook explains that search engines seek relevant information based on entered keywords.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-006",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The first page displayed when a website opens is its:",
+      "options": [
+        "Header",
+        "Homepage",
+        "Index loop",
+        "Backend"
+      ],
+      "answer": "B",
+      "explanation": "The textbook notes that every website has a homepage that is displayed first.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-007",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Websites and relevant pages need to be uploaded to:",
+      "options": [
+        "A web hosting service",
+        "A spreadsheet",
+        "A compiler",
+        "A text tag"
+      ],
+      "answer": "A",
+      "explanation": "Web hosting services offer web servers that allow clients and visitors to access the website.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-008",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A computer program that executes tasks through a browser and internet connection by remotely accessing a server is a:",
+      "options": [
+        "Static website",
+        "Web application",
+        "Search engine",
+        "HTML tag"
+      ],
+      "answer": "B",
+      "explanation": "This is the textbook definition of a web application.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-009",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Which best distinguishes a static website from a dynamic website according to the textbook?",
+      "options": [
+        "A static site changes for every user",
+        "A dynamic site never changes",
+        "A static site's loaded content remains unchanged unless modified, while a dynamic site can change with user input",
+        "A static site cannot contain multiple pages"
+      ],
+      "answer": "C",
+      "explanation": "The textbook describes static content as unchanged after loading, while dynamic content changes according to user input or choice.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-010",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "scenario",
+      "difficulty": "difficult",
+      "question": "An online-shopping site showing customized information after a member logs in is an example of:",
+      "options": [
+        "Static website",
+        "Dynamic website",
+        "Plain text file",
+        "Search engine"
+      ],
+      "answer": "B",
+      "explanation": "The textbook uses customized member content as an example of dynamic website behavior.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-011",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The front-end of a website provides the interface that the visitor:",
+      "options": [
+        "Compiles",
+        "Views and interacts with",
+        "Stores permanently",
+        "Uses only through a server"
+      ],
+      "answer": "B",
+      "explanation": "The front-end provides the graphical interface that visitors view and interact with.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-012",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The graphical interface of a website is nowadays termed:",
+      "options": [
+        "GUI",
+        "URL",
+        "DOM",
+        "IDE"
+      ],
+      "answer": "A",
+      "explanation": "GUI means Graphical User Interface.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-013",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A person who develops the front-end websites and GUIs is called a:",
+      "options": [
+        "Back-end Developer",
+        "Front-end Developer",
+        "Search Engineer",
+        "Web Server"
+      ],
+      "answer": "B",
+      "explanation": "The textbook uses the term Front-end Developer for this role.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-014",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The bridging between a website's front-end and server is handled by:",
+      "options": [
+        "Back-end development",
+        "HTML comments",
+        "A search engine",
+        "A heading tag"
+      ],
+      "answer": "A",
+      "explanation": "Back-end development handles communication between the front-end and the server.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-015",
+      "chapter": 3,
+      "topic": "3.1 Introduction",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Which statement best matches the textbook's division of web development?",
+      "options": [
+        "HTML is only backend technology",
+        "Front-end uses HTML, CSS and JavaScript, while back-end provides services communicating with the server",
+        "Back-end only designs headings",
+        "Front-end never interacts with users"
+      ],
+      "answer": "B",
+      "explanation": "The textbook identifies HTML, CSS and JavaScript for front-end development and describes back-end development as the bridge to the server.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-016",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "HTML is used to:",
+      "options": [
+        "Define and display contents in the form of a webpage",
+        "Debug hardware",
+        "Store electricity",
+        "Create only databases"
+      ],
+      "answer": "A",
+      "explanation": "HTML is the language used to define and display webpage contents.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-017",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "HTML identifies webpage objects mainly on the basis of:",
+      "options": [
+        "Tags",
+        "Rows",
+        "Files",
+        "Servers"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes HTML as tag-based and says objects are identified on the basis of tags.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-018",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Characters between '<' and '>' are called:",
+      "options": [
+        "Attributes",
+        "Tags",
+        "Comments",
+        "Scripts"
+      ],
+      "answer": "B",
+      "explanation": "The textbook defines characters between angle brackets as tags.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-019",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A starting HTML tag is generally written as:",
+      "options": [
+        "<tag>",
+        "</tag>",
+        "tag<>",
+        "[tag]"
+      ],
+      "answer": "A",
+      "explanation": "The textbook shows a starting tag in the form <tag>.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-020",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "An ending tag is recognized by the presence of:",
+      "options": [
+        "A colon",
+        "A slash",
+        "A comma",
+        "A number"
+      ],
+      "answer": "B",
+      "explanation": "The ending tag is recognized with a slash, such as </tag>.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-021",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The <p> tag is used for:",
+      "options": [
+        "A paragraph/sentence",
+        "A video",
+        "A table row",
+        "A hyperlink"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that the p tag is used for paragraphs or sentences.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-022",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "An HTML file commonly has the extension:",
+      "options": [
+        ".css",
+        ".js",
+        ".html",
+        ".exe"
+      ],
+      "answer": "C",
+      "explanation": "The textbook states that the extension of an HTML file is .html.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-023",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which environment is specifically used in the chapter for writing code?",
+      "options": [
+        "Visual Studio 2022",
+        "MS Paint",
+        "PowerPoint",
+        "Excel"
+      ],
+      "answer": "A",
+      "explanation": "The chapter says it uses the Visual Studio version 2022 environment.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-024",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The Document Object Model represents an HTML file as a:",
+      "options": [
+        "DOM-tree",
+        "Spreadsheet",
+        "Linear equation",
+        "Database table"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that HTML files are interpreted as a DOM-tree.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-025",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In the DOM tree, the top level for the whole webpage is:",
+      "options": [
+        "body",
+        "head",
+        "Document",
+        "title"
+      ],
+      "answer": "C",
+      "explanation": "The textbook states that Document comes at the top of the tree for the whole webpage.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-026",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In the HTML DOM described in the textbook, the <html> node contains:",
+      "options": [
+        "Only a title",
+        "head and body sub-nodes",
+        "Only images",
+        "Only comments"
+      ],
+      "answer": "B",
+      "explanation": "The html node has head and body as its two sub-nodes.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-027",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "HTML comments are written between:",
+      "options": [
+        "<comment> and </comment>",
+        "<!-- and -->",
+        "<note> and </note>",
+        "/* and */"
+      ],
+      "answer": "B",
+      "explanation": "The textbook specifies <!-- and --> for HTML comments.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-028",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What happens to an HTML comment when the page is displayed?",
+      "options": [
+        "It appears as normal text",
+        "It is ignored by the browser and does not appear in output",
+        "It becomes a heading",
+        "It becomes a hyperlink"
+      ],
+      "answer": "B",
+      "explanation": "The textbook says comments are visible only in code and are not part of the output.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-029",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The <head> tag-pair can contain the:",
+      "options": [
+        "Main visible webpage content only",
+        "Title of the webpage",
+        "Table rows only",
+        "Image dimensions only"
+      ],
+      "answer": "B",
+      "explanation": "The textbook explains that tags such as the title can be placed in the head and are not part of the main body.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-030",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The <title> tag-pair gives the webpage a:",
+      "options": [
+        "Name",
+        "Border",
+        "Paragraph",
+        "Video"
+      ],
+      "answer": "A",
+      "explanation": "The title tag allows a webpage to have a name visible on the browser tab.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-031",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The main constituents of an HTML document are arranged in the:",
+      "options": [
+        "<body> tag-pair",
+        "<title> tag-pair",
+        "<head> tag-pair",
+        "<br> tag"
+      ],
+      "answer": "A",
+      "explanation": "The body contains the main part and constituents of the HTML document.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-032",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How many heading levels are defined in HTML in the textbook?",
+      "options": [
+        "3",
+        "4",
+        "6",
+        "10"
+      ],
+      "answer": "C",
+      "explanation": "The textbook states that HTML has six defined heading levels.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-033",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is the largest heading level?",
+      "options": [
+        "h1",
+        "h3",
+        "h5",
+        "h6"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that level 1 is the largest heading and level 6 is the smallest.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-034",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Which correctly represents a fifth-level heading tag-pair?",
+      "options": [
+        "<h5>...</h5>",
+        "<h5>...</h6>",
+        "</h5>...</h5>",
+        "<5h>...</5h>"
+      ],
+      "answer": "A",
+      "explanation": "A heading tag-pair uses the same heading number in its opening and closing tags.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-035",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The tag used to split a sentence into multiple lines is:",
+      "options": [
+        "<br/>",
+        "<p>",
+        "<li>",
+        "<span>"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that <br/> is used for a line break.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-036",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "If a second sentence is written on a new line in HTML without a line-break tag, the browser will:",
+      "options": [
+        "Always preserve the source line break",
+        "Put the sentences in the same line",
+        "Delete the second sentence",
+        "Convert it into a table"
+      ],
+      "answer": "B",
+      "explanation": "The textbook notes that HTML does not recognize a source-code new line as a displayed line break without <br/>.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-037",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The <span> tag is used to provide style and arrangement to:",
+      "options": [
+        "A line",
+        "A whole website",
+        "A table row",
+        "A video clip"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that span is used to provide style and arrangement to a line.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-038",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The <div> tag provides the same styling effect to:",
+      "options": [
+        "A set of lines",
+        "Only one character",
+        "Only a URL",
+        "Only a table header"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes div as applying the effect to a set of lines and commonly applying styles and classes.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-039",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which tag is used for italic text?",
+      "options": [
+        "<b>",
+        "<i>",
+        "<u>",
+        "<strong>"
+      ],
+      "answer": "B",
+      "explanation": "The textbook identifies the i tag-pair for italics.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-040",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which tag is used for emphasis?",
+      "options": [
+        "<em>",
+        "<u>",
+        "<small>",
+        "<sub>"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that <em> is used for emphasis.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-041",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which tag-pair is used to underline text?",
+      "options": [
+        "<u>",
+        "<b>",
+        "<sup>",
+        "<i>"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists u for underlining text.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-042",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The <img> tag uses which parameter to specify the image file path?",
+      "options": [
+        "href",
+        "src",
+        "target",
+        "style"
+      ],
+      "answer": "B",
+      "explanation": "The textbook states that src specifies the path and file name of the image.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-043",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The alt parameter of an image provides its:",
+      "options": [
+        "Border size",
+        "Description",
+        "Page title",
+        "Video controls"
+      ],
+      "answer": "B",
+      "explanation": "The alt parameter provides a description of the image.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-044",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which pair specifies image dimensions in the textbook example?",
+      "options": [
+        "length and breadth",
+        "width and height",
+        "size and scale",
+        "top and left"
+      ],
+      "answer": "B",
+      "explanation": "The textbook says width and height can be specified for an image.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-045",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "HTML represents bullets and numbering using:",
+      "options": [
+        "<ul> and <ol>",
+        "<br> and <p>",
+        "<th> and <td>",
+        "<head> and <body>"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses unordered <ul> and ordered <ol> lists.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-046",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In an HTML table, the <tr> tag-pair defines a:",
+      "options": [
+        "Row",
+        "Header",
+        "Cell value",
+        "Link"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that <tr> defines a row in a table.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-047",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The first row of an HTML table is generally the:",
+      "options": [
+        "Header row",
+        "Footer row",
+        "Image row",
+        "Link row"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies the first row as the header row.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-048",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The <th> tag-pair is used for:",
+      "options": [
+        "Table headings",
+        "Table data only",
+        "Images",
+        "Paragraphs"
+      ],
+      "answer": "A",
+      "explanation": "Table header cells are defined with the th tag-pair.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-049",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The <td> tag-pair is used for:",
+      "options": [
+        "Table data",
+        "Table title only",
+        "A hyperlink",
+        "A heading"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says data is manipulated through the td tag-pair.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-050",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which attribute of the <a> tag refers to the destination address/path?",
+      "options": [
+        "href",
+        "alt",
+        "src",
+        "width"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that href refers to the address along with the path.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-051",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "The target value '_blank' opens the destination:",
+      "options": [
+        "In the same tab or window",
+        "In a new tab or window",
+        "Inside a table cell",
+        "As a comment"
+      ],
+      "answer": "B",
+      "explanation": "The textbook states that _blank opens the destination in a new tab or window.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-052",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The target value '_self' opens the destination:",
+      "options": [
+        "In the same tab or window",
+        "In a new tab only",
+        "In a separate browser",
+        "As an image"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that _self opens the destination in the same tab or window.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-053",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A hyperlink can be associated with:",
+      "options": [
+        "Text only",
+        "Images only",
+        "Text and images",
+        "Tables only"
+      ],
+      "answer": "C",
+      "explanation": "The textbook states that hyperlinks can be associated with text as well as images.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-054",
+      "chapter": 3,
+      "topic": "3.2 RTML",
+      "type": "mcq",
+      "mode": "scenario",
+      "difficulty": "difficult",
+      "question": "Which situation best uses an internal link?",
+      "options": [
+        "Linking to Headings.html from the same website",
+        "Linking to a weather satellite",
+        "Changing font color",
+        "Loading a video"
+      ],
+      "answer": "A",
+      "explanation": "The textbook's example uses Headings.html as an internal link.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-056",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "CSS mainly handles the webpage's:",
+      "options": [
+        "Look, arrangement and presentation",
+        "Arithmetic calculations",
+        "Server hardware",
+        "File storage"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says stylesheet languages handle the scheme, arrangement and presentation of the webpage and its components.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-057",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The most common stylesheet language used with HTML is:",
+      "options": [
+        "CSS",
+        "DSSSL",
+        "XSL",
+        "DOM"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies CSS as the most common stylesheet language used with HTML.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-058",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In the textbook's description, HTML defines webpage contents while CSS handles the:",
+      "options": [
+        "Look of components",
+        "Server connection",
+        "File extension",
+        "User password"
+      ],
+      "answer": "A",
+      "explanation": "The textbook contrasts HTML for contents with CSS for the look of components.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-059",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Using CSS helps make web designing code easier to:",
+      "options": [
+        "Manage and troubleshoot",
+        "Print only",
+        "Compile hardware",
+        "Remove all tags"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that CSS makes code easier to manage and troubleshoot.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-060",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "To style table borders using the example in the textbook, the style rule targets:",
+      "options": [
+        "table, th, td",
+        "html, body only",
+        "img, p, br",
+        "ul, ol, li only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook example defines the border for table, header cells and every other cell using table, th, td.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-061",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which CSS property is used in the table example to set a border?",
+      "options": [
+        "border",
+        "color",
+        "font-size",
+        "background-image"
+      ],
+      "answer": "A",
+      "explanation": "The example uses the border property for table borders.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-062",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The table example uses which property to add a background color?",
+      "options": [
+        "background-color",
+        "background-image",
+        "text-decoration",
+        "font-style"
+      ],
+      "answer": "A",
+      "explanation": "The textbook's table styling example uses background-color.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-063",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The <style> tag-pair is used to contain:",
+      "options": [
+        "CSS style rules",
+        "Table data",
+        "Images",
+        "Hyperlinks"
+      ],
+      "answer": "A",
+      "explanation": "The textbook places CSS rules inside the style tag-pair.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-064",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which section of the CSS topic deals with decorating tables?",
+      "options": [
+        "3.3.1 Decorating Tables with CSS",
+        "3.3.2 Homepage Decor",
+        "3.3.3 Adding a Video Clip in Website",
+        "3.4.1 Let's Meet Javascript"
+      ],
+      "answer": "A",
+      "explanation": "3.3.1 is the exact textbook subsection heading.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-065",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Homepage Decor is section:",
+      "options": [
+        "3.3.1",
+        "3.3.2",
+        "3.3.3",
+        "3.4.2"
+      ],
+      "answer": "B",
+      "explanation": "The textbook labels Homepage Decor as section 3.3.2.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-066",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In the homepage styling example, h3 headings are changed to:",
+      "options": [
+        "Green",
+        "Blue",
+        "Yellow",
+        "Black"
+      ],
+      "answer": "A",
+      "explanation": "The example sets the h3 color to green.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-067",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "The example styles normal text with a:",
+      "options": [
+        "Wavy underline",
+        "Double border",
+        "Red background",
+        "Large image"
+      ],
+      "answer": "A",
+      "explanation": "The textbook example uses text-decoration: underline wavy.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-068",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which property is used in the homepage example to create a background image?",
+      "options": [
+        "background-image",
+        "background-color",
+        "border",
+        "font-style"
+      ],
+      "answer": "A",
+      "explanation": "The example uses background-image: url(...).",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-069",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which value of background-attachment keeps the background image fixed?",
+      "options": [
+        "fixed",
+        "scroll",
+        "inline",
+        "center"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that fixed keeps the background image fixed.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-070",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "scenario",
+      "difficulty": "difficult",
+      "question": "Which CSS approach is most suitable when styles need to be maintained separately in a large project, according to the textbook?",
+      "options": [
+        "External CSS",
+        "Inline CSS only",
+        "HTML comments",
+        "<br/>"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says external CSS is used with large projects, including commercial purposes.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-071",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The <video> tag is used to:",
+      "options": [
+        "Add a video clip to a website",
+        "Create a hyperlink",
+        "Make a table",
+        "Declare a variable"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses the video tag to add video clips.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-072",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The controls parameter of the video tag enables:",
+      "options": [
+        "Play/pause and volume controls",
+        "Only captions",
+        "Only a border",
+        "Only a hyperlink"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that controls enables play/pause and volume controls.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-073",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Among video formats, the textbook identifies the most commonly supported type across browsers as:",
+      "options": [
+        "MP4",
+        "DOCX",
+        "PNG",
+        "CSS"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says MP4 is the most commonly supported video type among browsers.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-074",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The autoplay parameter causes the video to:",
+      "options": [
+        "Automatically load as the webpage loads",
+        "Open in a new tab",
+        "Become an image",
+        "Stop immediately"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that autoplay automatically loads the video as the webpage loads.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-075",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "When autoplay is used instead of controls, the video does not provide:",
+      "options": [
+        "Volume or play/pause controls",
+        "A source",
+        "A size",
+        "A webpage"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states autoplay does not provide controls for volume or play/pause.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-076",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which of the following is NOT one of the three CSS methods named in the textbook?",
+      "options": [
+        "Inline",
+        "Embedded",
+        "External",
+        "Conditional"
+      ],
+      "answer": "D",
+      "explanation": "The textbook lists Inline, Embedded and External CSS.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-077",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Inline CSS is incorporated using an HTML tag in the:",
+      "options": [
+        "Body section",
+        "Server",
+        "Search engine",
+        "File system"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains inline CSS through a style attribute added to an HTML tag in the body.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-078",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Embedded (Internal) CSS places styles inside the:",
+      "options": [
+        "<style> tag-pair in the header",
+        "<td> tag-pair",
+        "<img> tag",
+        "URL"
+      ],
+      "answer": "A",
+      "explanation": "The textbook places embedded CSS in the header under the style tag-pair.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-079",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "One benefit of Embedded CSS in the textbook is that changing one CSS line can affect:",
+      "options": [
+        "The respective components throughout the page",
+        "Only the file name",
+        "Only one character",
+        "The browser installation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says a change in one CSS line is reflected throughout the respective components.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-080",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "External CSS is commonly stored in a file with the extension:",
+      "options": [
+        ".css",
+        ".html",
+        ".exe",
+        ".jpg"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that a file with the .css extension can contain the CSS code.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-081",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "An external CSS file is attached in the HTML:",
+      "options": [
+        "Head portion using a link",
+        "Table row using td",
+        "Image using src",
+        "Paragraph using p"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says the CSS file is attached in the head portion by passing the link.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-082",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "According to the textbook, the priority order when all three CSS methods are present is:",
+      "options": [
+        "Inline, Embedded, External",
+        "External, Embedded, Inline",
+        "Embedded, Inline, External",
+        "External, Inline, Embedded"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly gives Inline as highest, followed by Embedded, then External.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-083",
+      "chapter": 3,
+      "topic": "3.3 Cascading Style Sheets (CSS)",
+      "type": "mcq",
+      "mode": "scenario",
+      "difficulty": "difficult",
+      "question": "A designer wants one style change to affect repeated components across a page without mixing the style into each HTML occurrence. Which method best matches the textbook's description?",
+      "options": [
+        "Embedded CSS",
+        "Only inline CSS",
+        "HTML comments",
+        "A hyperlink"
+      ],
+      "answer": "A",
+      "explanation": "Embedded CSS separates presentation-related code and changes can be reflected across the respective components.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-085",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "JavaScript is primarily used in development of:",
+      "options": [
+        "Web pages and scripts",
+        "Only spreadsheets",
+        "Only operating systems",
+        "Computer hardware"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes JavaScript as primarily used in development of web pages and scripts.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-086",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "JavaScript is used at the client-end to help make webpages:",
+      "options": [
+        "Dynamic",
+        "Printed",
+        "Offline only",
+        "Physical"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says JavaScript is used at the client-end for making pages dynamic.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-087",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "JavaScript code can be embedded in HTML using the:",
+      "options": [
+        "<script> tag-pair",
+        "<table> tag-pair",
+        "<img> tag-pair",
+        "<br> tag-pair"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that JavaScript can be embedded in HTML with the starting and ending script tags.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-088",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which function is shown for displaying a sentence in the browser?",
+      "options": [
+        "document.write()",
+        "prompt()",
+        "alert() only",
+        "printPage()"
+      ],
+      "answer": "A",
+      "explanation": "The textbook example uses document.write() to display a sentence.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-089",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In JavaScript, additional spaces and tabs in the displayed sentence are:",
+      "options": [
+        "Discarded",
+        "Converted into headings",
+        "Always printed",
+        "Changed into links"
+      ],
+      "answer": "A",
+      "explanation": "The textbook notes that JavaScript discards additional spaces and tabs in the sentence.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-090",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which notation is used for a JavaScript line comment?",
+      "options": [
+        "//",
+        "<!-- -->",
+        "##",
+        "<>"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that JavaScript uses // for line comments.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-091",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which notation is used for a JavaScript block comment?",
+      "options": [
+        "/* ... */",
+        "<!-- -->",
+        "// only",
+        "<comment>"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that JavaScript uses /* ... */ for block comments.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-092",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "An event in programming is something a user or another program does that can:",
+      "options": [
+        "Be sensed and trigger a task",
+        "Only change a file extension",
+        "Prevent all execution",
+        "Create hardware"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines an event as an action that can be sensed and triggers a task.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-093",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The button example uses which event to respond to a click?",
+      "options": [
+        "onclick",
+        "onloadonly",
+        "onprint",
+        "onhoverfile"
+      ],
+      "answer": "A",
+      "explanation": "The textbook's event-based example uses onclick.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-094",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The alert functionality is commonly used to:",
+      "options": [
+        "Inform the user about a result or notification",
+        "Store an array",
+        "Create a CSS file",
+        "Define an HTML title"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes alert as a functionality for informing the user about a result or notification.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-095",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which JavaScript function is used in the textbook to take input from a user?",
+      "options": [
+        "prompt()",
+        "document.write()",
+        "onclick()",
+        "style()"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that prompt() pops up a message window for user input.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-096",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A variable is an entity that:",
+      "options": [
+        "Stores some value for later use",
+        "Always stores only images",
+        "Can never change",
+        "Only creates hyperlinks"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines a variable as an entity that stores a value for later use.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-097",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which keyword is used to declare a variable in the textbook?",
+      "options": [
+        "var",
+        "letonly",
+        "define",
+        "declare"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that a variable is declared with the var keyword.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-098",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is a basic value type listed for JavaScript variables in the textbook?",
+      "options": [
+        "Boolean",
+        "Table row",
+        "HTML tag",
+        "CSS selector"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists Number, String and Boolean as basic datatypes supported by JavaScript.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-099",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A Boolean value is either:",
+      "options": [
+        "true or false",
+        "1 or 2 only",
+        "yes or no as strings only",
+        "red or blue"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines Boolean as either true or false.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-100",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which statement about JavaScript variable names is correct according to the textbook?",
+      "options": [
+        "A number cannot be the first character",
+        "A number must be the first character",
+        "Spaces must be included",
+        "Case is ignored"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that a variable name cannot start with a number.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-101",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "JavaScript is case sensitive, so 'reward' and 'Reward' are:",
+      "options": [
+        "Different variables",
+        "Always the same variable",
+        "Invalid variables",
+        "HTML tags"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly says these are two different variables because JavaScript is case sensitive.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-102",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The first assignment of a value to a variable is called:",
+      "options": [
+        "Initialization",
+        "Iteration",
+        "Selection",
+        "Linking"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines initialization as the first value assigned after declaration.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-103",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is described as a good programming practice?",
+      "options": [
+        "Declare and initialize a variable at the same time",
+        "Use numbers as the first character",
+        "Change variable names randomly",
+        "Avoid meaningful names"
+      ],
+      "answer": "A",
+      "explanation": "The textbook recommends declaring and initializing the variable at the same time.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-104",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "What is the result of 5555 % 10 in the textbook's example?",
+      "options": [
+        "5",
+        "555.5",
+        "55",
+        "0"
+      ],
+      "answer": "A",
+      "explanation": "The modulus operator gives the remainder; 5555 divided by 10 leaves remainder 5.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-105",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does the modulus (%) operator provide?",
+      "options": [
+        "The remainder of a division operation",
+        "The quotient only",
+        "A Boolean value only",
+        "A webpage title"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that modulus gives the remainder of division.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-106",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which is NOT listed as an arithmetic operator in the textbook's JavaScript section?",
+      "options": [
+        "Addition (+)",
+        "Subtraction (-)",
+        "Multiplication (*)",
+        "Exponent-only operator (^)"
+      ],
+      "answer": "D",
+      "explanation": "The textbook lists +, -, *, / and %, but does not list ^ as an arithmetic operator there.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-107",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Why is sequence important in programming according to the textbook?",
+      "options": [
+        "A variable may be used before it is defined and assigned a value, producing unexpected results",
+        "All statements must be alphabetical",
+        "HTML cannot contain JavaScript",
+        "Loops cannot repeat"
+      ],
+      "answer": "A",
+      "explanation": "The textbook demonstrates that using a variable before it is defined and assigned can lead to unexpected output.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-108",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A conditional statement chooses among possibilities on the basis of a:",
+      "options": [
+        "Constraint/condition",
+        "File extension",
+        "Image size",
+        "CSS color"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes conditional or selection statements as choosing based on a constraint.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-109",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which statement executes code when a condition is met?",
+      "options": [
+        "if",
+        "for",
+        "var",
+        "array"
+      ],
+      "answer": "A",
+      "explanation": "The textbook presents if as a selection statement executed when the condition is met.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-110",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which operator means 'greater than or equal to'?",
+      "options": [
+        ">=",
+        "<=",
+        ">",
+        "=="
+      ],
+      "answer": "A",
+      "explanation": "The textbook's comparison-operator table gives >= for greater than or equal to.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-111",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "If kid_age is 5 and the condition is kid_age > 3, what happens in the textbook's example?",
+      "options": [
+        "Admission is granted",
+        "The condition is skipped",
+        "The variable is deleted",
+        "A loop begins"
+      ],
+      "answer": "A",
+      "explanation": "Since 5 is greater than 3, the if condition is met and the admission message is displayed.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-112",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why is if-else useful compared with a simple if?",
+      "options": [
+        "It provides for either of two situations",
+        "It removes all conditions",
+        "It creates arrays automatically",
+        "It changes CSS priority"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that if-else aligns both cases so either situation will occur.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-113",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "When more than two possibilities exist, the textbook introduces:",
+      "options": [
+        "if-else if-else",
+        "Only if",
+        "Only else",
+        "Nested HTML"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses if-else if-else to handle more than two possibilities.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-114",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In an if-else if-else structure, the final else handles:",
+      "options": [
+        "A condition not already catered for",
+        "Only the first condition",
+        "Only a loop",
+        "Only initialization"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says else takes care of conditions not already catered for.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-115",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A for loop is used to perform similar tasks in:",
+      "options": [
+        "Fewer lines of code",
+        "More physical devices",
+        "Only HTML comments",
+        "A new browser"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says iterative statements such as for loops avoid writing the same line repeatedly.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-116",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A for loop needs an index, a terminating condition and a:",
+      "options": [
+        "Step-size",
+        "URL",
+        "Table header",
+        "DOM root"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes initialization of the index, terminating condition and step-size.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-117",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "In the example for(index = 0; index < 10; index=index+1), the step-size is:",
+      "options": [
+        "1",
+        "2",
+        "9",
+        "10"
+      ],
+      "answer": "A",
+      "explanation": "The index is increased by 1 each iteration.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-118",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "In the example for(index = 10; index > 0; index=index-2), the values printed are:",
+      "options": [
+        "10, 8, 6, 4, 2",
+        "10, 9, 8, 7, 6",
+        "0, 2, 4, 6, 8",
+        "10, 5, 0"
+      ],
+      "answer": "A",
+      "explanation": "The loop starts at 10 and decreases the index by 2 while it remains greater than 0.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-119",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A loop placed inside another loop is called a:",
+      "options": [
+        "Nested Loop",
+        "Conditional statement",
+        "Function argument",
+        "DOM node"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines one loop residing inside another as a nested loop.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-120",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "In a nested loop, after the inner loop finishes, what happens next?",
+      "options": [
+        "The outer loop's index increments and the inner loop runs again if the outer condition continues",
+        "The program always stops",
+        "The inner loop becomes the outer loop",
+        "The webpage closes"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that the outer index increments and the inner loop starts again until the outer loop terminates.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-121",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In the mathematical-tables example, the outer loop determines:",
+      "options": [
+        "Which table is required",
+        "The individual multiplication result only",
+        "The webpage title",
+        "The CSS method"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says the outer loop assigns the value for which the table is required.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-122",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "An array can hold a number of:",
+      "options": [
+        "Homogeneous set of elements",
+        "Unrelated webpages",
+        "CSS files only",
+        "HTML comments only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines an array as a datatype that can hold a number of homogeneous elements.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-123",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Array indexing in the textbook starts with:",
+      "options": [
+        "0",
+        "1",
+        "-1",
+        "10"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly states that array-index starts at 0.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-124",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is an advantage of an array over separate variables such as num1, num2, ... num25?",
+      "options": [
+        "It can contain the values and allow access using an index",
+        "It removes the need for all data",
+        "It can only store one value",
+        "It automatically creates a webpage"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that an array can contain many values and each can be accessed by its index.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-125",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which declaration creates an empty/null array in the textbook example?",
+      "options": [
+        "var Arr = []",
+        "var Arr = 5",
+        "var Arr = ()",
+        "var Arr = nullTag"
+      ],
+      "answer": "A",
+      "explanation": "The textbook shows var Arr = [] for declaring a null array.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-126",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "scenario",
+      "difficulty": "difficult",
+      "question": "A for loop can be used to populate an array by:",
+      "options": [
+        "Assigning input to successive array indexes",
+        "Changing CSS priority",
+        "Opening new tabs",
+        "Adding HTML comments"
+      ],
+      "answer": "A",
+      "explanation": "The textbook demonstrates taking user input through prompt() and assigning it to array indexes in a for loop.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-127",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A function is useful because a frequently occurring set of code can be:",
+      "options": [
+        "Segmented once and called again and again",
+        "Deleted after one use",
+        "Converted into a table",
+        "Used only in CSS"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that functions avoid rewriting frequently occurring code.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-128",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A function is identified and called through its:",
+      "options": [
+        "Name",
+        "Color",
+        "Border",
+        "URL"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that a function has a name through which it is identified and called.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-129",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A function may have arguments that are:",
+      "options": [
+        "Variables local to that function",
+        "Only global HTML tags",
+        "CSS files",
+        "Browser windows"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes arguments as variables local to the function with limited lifespan.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-130",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Variables outside functions are described in the textbook as:",
+      "options": [
+        "Global variables",
+        "Local tags",
+        "Array indexes",
+        "DOM comments"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that variables outside functions are global variables and can be accessed anywhere in the program.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-131",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "scenario",
+      "difficulty": "difficult",
+      "question": "The function in the textbook that receives currency and amount as arguments demonstrates:",
+      "options": [
+        "Passing arguments to a function",
+        "Creating an HTML table",
+        "External CSS",
+        "A nested loop"
+      ],
+      "answer": "A",
+      "explanation": "The msgSure example defines currency and amount as arguments and passes values when the function is called.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-132",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "The calcBill() example returns:",
+      "options": [
+        "amount_rcvd - bill",
+        "bill + amount_rcvd",
+        "bill * amount_rcvd",
+        "amount_rcvd / bill"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that calcBill subtracts bill from amount_rcvd and returns the result.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-133",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "If calcBill(2345, 5000) is used as in the textbook example, the returned balance is:",
+      "options": [
+        "2655",
+        "7345",
+        "2345",
+        "5000"
+      ],
+      "answer": "A",
+      "explanation": "5000 - 2345 = 2655, matching the textbook's output.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-134",
+      "chapter": 3,
+      "topic": "3.4 Java Script",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A function can return a value so that the result can be:",
+      "options": [
+        "Used outside the function",
+        "Only printed inside comments",
+        "Stored only in CSS",
+        "Used only as a tag"
+      ],
+      "answer": "A",
+      "explanation": "The textbook's calcBill example returns a value that is assigned to balance outside the function.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-135",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Debugging refers to:",
+      "options": [
+        "Locating an error or bug in code",
+        "Creating a webpage title",
+        "Adding a table",
+        "Choosing a CSS color"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines debugging as locating an error or bug in code.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-136",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In Visual Studio .Net, debugging can be started from the Run menu by choosing:",
+      "options": [
+        "Run Debugging",
+        "Open Website",
+        "Create Table",
+        "Insert Image"
+      ],
+      "answer": "A",
+      "explanation": "The textbook instructs the user to select Run and choose Run Debugging.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-137",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The debugging menu includes a debug:",
+      "options": [
+        "Console",
+        "Spreadsheet",
+        "Search engine",
+        "Web server"
+      ],
+      "answer": "A",
+      "explanation": "The textbook mentions the debugging menu and a debug console.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-138",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The Pause/Continue control is used to:",
+      "options": [
+        "Pause or continue debugging code",
+        "Create a new variable",
+        "Change a webpage title",
+        "Open an external CSS file"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says the first button allows Pause/Continue of debugging code.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-139",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The Step Into function goes through code:",
+      "options": [
+        "Line by line",
+        "File by file only",
+        "Only at the end",
+        "In reverse automatically"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says Step Into goes through the code line by line as the program normally executes.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-140",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A breakpoint is assigned to emphasize lines where you want to check:",
+      "options": [
+        "Variable values",
+        "HTML file extensions",
+        "Video size",
+        "CSS priority"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes breakpoints as useful for checking values of variables.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-141",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Multiple breakpoints can be assigned for:",
+      "options": [
+        "Traceability",
+        "Changing HTML tags",
+        "Creating hyperlinks",
+        "Installing Visual Studio"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says multiple breakpoints can be assigned for traceability.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-142",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In Visual Studio .Net, a breakpoint is shown as a:",
+      "options": [
+        "Red dot at the start of a line",
+        "Blue heading",
+        "Green table",
+        "Yellow hyperlink"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that a breakpoint is shown as a red dot at the start of the line.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-143",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "When execution reaches a breakpoint in debug mode, execution:",
+      "options": [
+        "Halts at the breakpoint",
+        "Always ends the program",
+        "Deletes the line",
+        "Skips the whole file"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says execution halts at every breakpoint so behavior can be analyzed.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-144",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Why does stopping at breakpoints help in debugging?",
+      "options": [
+        "It allows the behavior of code according to values to be analyzed",
+        "It automatically rewrites the code",
+        "It removes all variables",
+        "It changes HTML into CSS"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says this makes it easier to trace a bug and fix it accordingly.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-145",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "scenario",
+      "difficulty": "difficult",
+      "question": "A student wants to inspect a variable's value at a particular line during execution. The most appropriate textbook feature is:",
+      "options": [
+        "Breakpoint",
+        "Hyperlink",
+        "<title>",
+        "External CSS"
+      ],
+      "answer": "A",
+      "explanation": "The textbook recommends assigning a breakpoint where variable values need to be checked.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-146",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which feature provides thorough tracing by following normal execution line by line?",
+      "options": [
+        "Step Into",
+        "Pause/Continue only",
+        "External CSS",
+        "Target _blank"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes Step Into as providing line-by-line tracing capability.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-147",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "scenario",
+      "difficulty": "medium",
+      "question": "If a program behaves unexpectedly after a variable is used before it is defined and assigned, debugging can help by:",
+      "options": [
+        "Tracing execution and checking values at selected lines",
+        "Changing the file extension",
+        "Adding a table border",
+        "Opening a new browser tab"
+      ],
+      "answer": "A",
+      "explanation": "The textbook connects debugging, tracing and checking variable values to finding and fixing bugs.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-148",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Which sequence best matches the debugging approach described?",
+      "options": [
+        "Start debugging → trace code → inspect values at breakpoints → identify/fix bug",
+        "Create table → add image → install browser → stop",
+        "Write CSS → print → close browser → create variable",
+        "Open search engine → add heading → compile hardware"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes entering debugging, stepping through code, using breakpoints to analyze values, and tracing bugs for fixing.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-149",
+      "chapter": 3,
+      "topic": "3.5 Debug The Code",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A breakpoint is particularly useful when the programmer needs to determine:",
+      "options": [
+        "What the code is doing at a specific execution point",
+        "Which HTML extension is required",
+        "Which website is the homepage",
+        "Which video format is most common"
+      ],
+      "answer": "A",
+      "explanation": "A breakpoint halts execution at a selected line so the code's behavior and values can be analyzed.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-150",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A dynamic website changes its contents according to:",
+      "options": [
+        "User input",
+        "Only the file extension",
+        "The printer",
+        "The HTML title"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines dynamic website content as changing according to user input.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-151",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which technologies are named together for creating a dynamic website in the textbook?",
+      "options": [
+        "JavaScript, HTML and CSS",
+        "Only HTML",
+        "Only CSS",
+        "Only a search engine"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that a dynamic website can be created via JavaScript along with HTML and CSS.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-152",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why would a school prefer a dynamic result website over separate static pages for every student?",
+      "options": [
+        "It reduces the handling and management of many separate webpages",
+        "It prevents students from viewing results",
+        "It removes the need for HTML",
+        "It makes all results identical"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that separate static pages become harder to manage as the number of students increases.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-153",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In the textbook's dynamic website example, the page initially prints index numbers in:",
+      "options": [
+        "Ascending order",
+        "Descending order",
+        "Random order",
+        "Alphabetical order"
+      ],
+      "answer": "A",
+      "explanation": "The example first prints indexes from 0 upward, producing ascending order.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-154",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which function is added to print the index in descending order?",
+      "options": [
+        "descOrder()",
+        "calcBill()",
+        "msgSure()",
+        "prompt()"
+      ],
+      "answer": "A",
+      "explanation": "The textbook's dynamic website example adds descOrder().",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-155",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What triggers descOrder() in the example?",
+      "options": [
+        "Clicking the button",
+        "Loading an image",
+        "Changing the title",
+        "Opening a CSS file"
+      ],
+      "answer": "A",
+      "explanation": "The button's onclick calls descOrder().",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-156",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "The paragraph in the dynamic example has the id:",
+      "options": [
+        "dynamicContent",
+        "descOrder",
+        "bodyContent",
+        "indexNo"
+      ],
+      "answer": "A",
+      "explanation": "The textbook example uses id=\"dynamicContent\".",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-157",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A dynamic content component is a portion of a website that:",
+      "options": [
+        "Alters based on user input",
+        "Never changes",
+        "Exists only in CSS",
+        "Cannot respond to events"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines dynamic content as a component or portion that alters based on user input.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-158",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The button in the example is associated with which event handler?",
+      "options": [
+        "onclick",
+        "onprint",
+        "onclose",
+        "oncss"
+      ],
+      "answer": "A",
+      "explanation": "The example uses onclick=\"descOrder()\" on the button.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-159",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "When the Descending Order button is pressed, the function prints index values:",
+      "options": [
+        "In reverse/descending order",
+        "Only as headings",
+        "As a table",
+        "As CSS properties"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that descOrder() prints index numbers in reverse order.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-160",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which code idea changes the webpage background color dynamically in the textbook example?",
+      "options": [
+        "document.body.style.backgroundColor",
+        "document.title.color",
+        "window.array.background",
+        "body.href"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses document.body.style.backgroundColor to change the background color.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-161",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In document.body.style.backgroundColor, the document refers to:",
+      "options": [
+        "The whole HTML page",
+        "Only the button",
+        "Only the body text",
+        "Only the CSS file"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that document refers to the whole HTML page.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-162",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In the same expression, body relates to:",
+      "options": [
+        "The content visible on the page",
+        "The browser's address bar",
+        "The server database",
+        "The CSS file name"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says body relates to the visible content.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-163",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "The style property in the dynamic example is used to:",
+      "options": [
+        "Dynamically set properties of an element",
+        "Create an array",
+        "Declare a variable",
+        "Create a hyperlink"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that style can be used to dynamically set properties such as background color.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    },
+    {
+      "id": "CH3-MCQ-164",
+      "chapter": 3,
+      "topic": "3.6 Create a Dynamic Website",
+      "type": "mcq",
+      "mode": "scenario",
+      "difficulty": "difficult",
+      "question": "A school wants one webpage to display different information after a user interacts with a button. Which approach best matches the textbook's dynamic website example?",
+      "options": [
+        "Use JavaScript event handling with HTML/CSS",
+        "Create a separate static page for every click",
+        "Use only a table",
+        "Use only an image"
+      ],
+      "answer": "A",
+      "explanation": "The textbook demonstrates JavaScript functions and button events with HTML/CSS to change page content/appearance.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 3"
+    }
+  ]
+}

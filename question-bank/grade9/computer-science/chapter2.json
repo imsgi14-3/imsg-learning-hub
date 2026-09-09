@@ -1,0 +1,2897 @@
+{
+  "chapter": 2,
+  "chapterTitle": "Computational Thinking & Algorithms",
+  "subject": "Computer Science",
+  "grade": 9,
+  "source": "NBF Grade 9 Computer Science, Unit 2",
+  "questions": [
+    {
+      "id": "CH2-MCQ-001",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A problem is best described in the textbook as a ____ that needs to be overcome using some action.",
+      "options": [
+        "challenge or situation",
+        "computer program",
+        "flowchart symbol",
+        "data type"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines a problem as a challenge or situation that needs to be overcome using some action.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-002",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "According to Unit 2, problems can be found in which areas?",
+      "options": [
+        "Only computer science",
+        "Only education",
+        "Economic, healthcare, education, transportation, internet and biology",
+        "Only transportation and internet"
+      ],
+      "answer": "C",
+      "explanation": "The textbook gives examples of problems from several fields, including economic, healthcare, education, transportation, internet and biology.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-003",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which statement best describes why a computer is used to solve problems?",
+      "options": [
+        "It creates problems automatically",
+        "It can perform written operations quickly and accurately",
+        "It always knows the solution without instructions",
+        "It replaces the need to understand a problem"
+      ],
+      "answer": "B",
+      "explanation": "The textbook states that computers work faster and perform operations more accurately than humans, but they require instructions.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-004",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A school wants to investigate how to increase its literacy rate. This is an example of a problem in which field?",
+      "options": [
+        "Healthcare",
+        "Education",
+        "Transportation",
+        "Internet"
+      ],
+      "answer": "B",
+      "explanation": "Increasing literacy rate is given by the textbook as an education problem.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-005",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A hospital asks how to expand access to medicines. Which field does this problem belong to?",
+      "options": [
+        "Education",
+        "Healthcare",
+        "Biology",
+        "Transportation"
+      ],
+      "answer": "B",
+      "explanation": "Expanding access to medicines is presented as a healthcare problem.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-006",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A transport authority asks why motorway accidents are increasing. Which field is being investigated?",
+      "options": [
+        "Transportation",
+        "Education",
+        "Internet",
+        "Economics"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists increasing motorway accidents under transportation problems.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-007",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which question is identified in the textbook as an internet-related problem?",
+      "options": [
+        "How to manage limited budgets?",
+        "Why are accidents increasing?",
+        "Why do websites show advertisements?",
+        "How to increase literacy rate?"
+      ],
+      "answer": "C",
+      "explanation": "The textbook uses website advertisements as an example of an internet problem.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-008",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which of the following is presented as a biology-related problem?",
+      "options": [
+        "How do trees give all their oxygen?",
+        "How to secure mobile banking transactions?",
+        "How to increase literacy rate?",
+        "How to manage limited budgets?"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists a question about trees and oxygen under biology.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-009",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which field includes the problem 'How to manage limited budgets?'",
+      "options": [
+        "Economic",
+        "Healthcare",
+        "Education",
+        "Biology"
+      ],
+      "answer": "A",
+      "explanation": "Managing limited budgets is given as an economic problem.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-010",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A teacher asks students to identify problems from daily life before designing a computer solution. Why is this useful?",
+      "options": [
+        "It removes the need for a solution",
+        "It helps identify the situation that needs to be overcome",
+        "It guarantees a correct program",
+        "It converts every problem into a counting problem"
+      ],
+      "answer": "B",
+      "explanation": "Problem solving begins with understanding the challenge or situation that needs action.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-011",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which statement is most consistent with the textbook's view of problems?",
+      "options": [
+        "Problems occur only in computing",
+        "Problems occur in many fields",
+        "Every problem has a yes/no answer",
+        "Every problem must be solved manually"
+      ],
+      "answer": "B",
+      "explanation": "The textbook emphasizes that problems occur across many fields.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-012",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A question asks 'What subject areas of education should be focused on more?' How should it be classified by field?",
+      "options": [
+        "Internet",
+        "Education",
+        "Transportation",
+        "Healthcare"
+      ],
+      "answer": "B",
+      "explanation": "The question is one of the textbook's examples of an education problem.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-013",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which field is associated with the question 'How do 5G cell phone signals harm humans?' in the textbook examples?",
+      "options": [
+        "Transportation",
+        "Internet",
+        "Biology",
+        "Education"
+      ],
+      "answer": "C",
+      "explanation": "The textbook places this question with the biology examples.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-014",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A student says every real-world problem is automatically a computing problem. Which response agrees with the textbook?",
+      "options": [
+        "Yes, because computers solve every problem",
+        "No; a computing problem is solved step-by-step using computation",
+        "Yes, if the problem is difficult",
+        "No; computing problems never have inputs"
+      ],
+      "answer": "B",
+      "explanation": "The next section distinguishes general problems from computing problems solved step-by-step using computation.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-015",
+      "chapter": 2,
+      "topic": "2.1 Problems",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Why does Unit 2 begin with general problems before identifying computing problems?",
+      "options": [
+        "To avoid algorithms",
+        "To establish the challenge before considering computational solutions",
+        "To teach programming syntax first",
+        "To classify all problems as decision problems"
+      ],
+      "answer": "B",
+      "explanation": "The unit moves from understanding problems to identifying those that can be solved step-by-step using computation.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-016",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A computing problem is a problem that is solved ____ using computation.",
+      "options": [
+        "randomly",
+        "step-by-step",
+        "without input",
+        "only by humans"
+      ],
+      "answer": "B",
+      "explanation": "The textbook defines a computing problem as one solved step-by-step using computation.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-017",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A computing problem can include what kind of calculations?",
+      "options": [
+        "Only arithmetic",
+        "Only logical",
+        "Arithmetical or logical",
+        "Neither arithmetic nor logical"
+      ],
+      "answer": "C",
+      "explanation": "The textbook states that computing problems can include arithmetical or logical calculations.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-018",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which feature is normally present in a computing problem?",
+      "options": [
+        "A well-defined input",
+        "No desired output",
+        "No computation",
+        "Only a graphical interface"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says computing problems usually have a well-defined input and desired properties that the output must satisfy.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-019",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which are the three types of computing problems listed in Unit 2?",
+      "options": [
+        "Decision, search and counting",
+        "Sorting, looping and coding",
+        "Input, process and output",
+        "Arithmetic, logical and graphical"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists Decision Problems, Search Problems and Counting Problems.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-020",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A decision problem requires which type of response?",
+      "options": [
+        "A binary Yes/No response",
+        "A list of all possible routes",
+        "A count of combinations only",
+        "A graph with no answer"
+      ],
+      "answer": "A",
+      "explanation": "A decision problem requires a binary response such as Yes or No.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-021",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Checking whether a condition is true or false is an example of a:",
+      "options": [
+        "Search problem",
+        "Counting problem",
+        "Decision problem",
+        "Concept map"
+      ],
+      "answer": "C",
+      "explanation": "True/false questions are examples of decision problems.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-022",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A problem asks whether a sequence contains 'aa'. What type of computing problem is it?",
+      "options": [
+        "Decision",
+        "Search",
+        "Counting",
+        "IPO"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives this as a Yes/No decision problem.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-023",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In a search problem, we search for a solution among a:",
+      "options": [
+        "Set of objects",
+        "Set of colours",
+        "Set of programs only",
+        "Single output"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes search problems as searching among a set of objects for a solution.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-024",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Search problems are often represented using:",
+      "options": [
+        "Graphs",
+        "Tables only",
+        "Paragraphs",
+        "Audio signals"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that search problems are often represented using graphs.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-025",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In a graph used for a search problem, what do nodes represent in the route-finding example?",
+      "options": [
+        "Cities",
+        "Calculations",
+        "Programs",
+        "Answers"
+      ],
+      "answer": "A",
+      "explanation": "The route-finding example treats nodes as cities and links as routes.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-026",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which three elements are needed to solve the search problems described in the textbook?",
+      "options": [
+        "Initial state, operations and goal",
+        "Input, output and printer",
+        "Start, code and compiler",
+        "Question, answer and explanation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies initial state, operations and goal for search problems.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-027",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In a search problem, the initial state represents:",
+      "options": [
+        "The node from where the search starts",
+        "The final answer",
+        "The number of choices",
+        "The program output"
+      ],
+      "answer": "A",
+      "explanation": "Initial state is the node from which the search begins.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-028",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In a search problem, operations represent:",
+      "options": [
+        "Moves that transition from one node to another",
+        "The final target only",
+        "The input data only",
+        "The number of combinations"
+      ],
+      "answer": "A",
+      "explanation": "Operations are the moves that transition from one node to another.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-029",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In a search problem, the goal defines:",
+      "options": [
+        "The target end condition",
+        "The starting node",
+        "The input format",
+        "The number of nodes"
+      ],
+      "answer": "A",
+      "explanation": "The goal defines the target or end condition.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-030",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Google Maps is identified in the textbook as an example of a:",
+      "options": [
+        "Counting problem",
+        "Search problem",
+        "Decision problem",
+        "IPO chart"
+      ],
+      "answer": "B",
+      "explanation": "The textbook explicitly identifies Google Maps as a search problem.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-031",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Counting problems are based on the principle that if one event has A choices and another has B choices, the total combinations are:",
+      "options": [
+        "A+B",
+        "A-B",
+        "A×B",
+        "A÷B"
+      ],
+      "answer": "C",
+      "explanation": "The textbook gives the counting principle as A multiplied by B.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-032",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A student has 5 shirts and 3 pants. How many shirt-and-pants combinations are possible?",
+      "options": [
+        "8",
+        "15",
+        "2",
+        "53"
+      ],
+      "answer": "B",
+      "explanation": "Using the textbook's counting principle, 5 × 3 = 15 combinations.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-033",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A computer shop offers 4 monitors, 2 keyboards, 4 computers and 3 printers. How many complete systems can be selected?",
+      "options": [
+        "13",
+        "24",
+        "48",
+        "96"
+      ],
+      "answer": "D",
+      "explanation": "The textbook calculates 4 × 2 × 4 × 3 = 96 possible systems.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-034",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Why can counting problems become complicated as the number of choices increases?",
+      "options": [
+        "There are fewer combinations",
+        "Listing all possibilities can become difficult",
+        "Counting never uses multiplication",
+        "They stop having inputs"
+      ],
+      "answer": "B",
+      "explanation": "The textbook notes that counting problems can become complicated when all possibilities must be listed.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-035",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A student chooses one item from each of three categories containing 2, 4 and 5 choices. Which operation follows the textbook's counting principle?",
+      "options": [
+        "2+4+5",
+        "2×4×5",
+        "2−4−5",
+        "2÷4÷5"
+      ],
+      "answer": "B",
+      "explanation": "For independent choices across categories, the textbook applies multiplication of the numbers of choices.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-036",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A route-finding problem asks for a path from city S to city T. Which part identifies the desired destination?",
+      "options": [
+        "Initial state",
+        "Operations",
+        "Goal",
+        "Input"
+      ],
+      "answer": "C",
+      "explanation": "The goal defines the target end condition, which here is reaching city T.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-037",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In the eight-puzzle example, how many numbered tiles are on the 3×3 board?",
+      "options": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "answer": "C",
+      "explanation": "The textbook describes eight numbered tiles and one empty space.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-038",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which moves are allowed in the eight-puzzle example?",
+      "options": [
+        "Only diagonal moves",
+        "Left, right, above and below",
+        "Only upward moves",
+        "Any number of spaces at once"
+      ],
+      "answer": "B",
+      "explanation": "The textbook specifies four types of slides: left, right, above and below.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-039",
+      "chapter": 2,
+      "topic": "2.2 Identifying a Computing Problem",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Why is the eight-puzzle an example of a search problem?",
+      "options": [
+        "It requires finding moves from an initial configuration to a target configuration",
+        "It only counts tiles",
+        "It asks only a Yes/No question",
+        "It has no restrictions"
+      ],
+      "answer": "A",
+      "explanation": "The puzzle requires finding a sequence of allowed moves from an initial state to a final configuration.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-040",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Problem solving is defined as the process of analyzing a situation and accordingly:",
+      "options": [
+        "Generating some response",
+        "Deleting the input",
+        "Drawing only a concept map",
+        "Choosing a programming language"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines problem solving as analyzing a situation and behaving accordingly to generate a response.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-041",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How many steps does the textbook give for solving simple problems?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "6"
+      ],
+      "answer": "C",
+      "explanation": "The simple problem-solving process contains four steps.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-042",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is the first step for solving a simple problem?",
+      "options": [
+        "Implement the plan",
+        "Evaluate",
+        "Define and analyze the problem",
+        "Design a flowchart"
+      ],
+      "answer": "C",
+      "explanation": "The first step is to define and analyze the problem.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-043",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In simple problem solving, 'Design a plan' means deciding:",
+      "options": [
+        "What we are going to do (algorithm)",
+        "Which monitor to buy",
+        "What the final grade is",
+        "Which concept map tool to use"
+      ],
+      "answer": "A",
+      "explanation": "The textbook links designing a plan with deciding what to do, expressed as an algorithm.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-044",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which step involves coding the plan using a programming language?",
+      "options": [
+        "Define and analyze",
+        "Design a plan",
+        "Implement the plan",
+        "Evaluate"
+      ],
+      "answer": "C",
+      "explanation": "Implementation means coding the plan using a programming language.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-045",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The purpose of the evaluation step is to ask:",
+      "options": [
+        "Did our plan work?",
+        "What is the input?",
+        "How many nodes exist?",
+        "Which shape is oval?"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes evaluation as checking whether the plan worked.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-046",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How many steps are used for complex problems in the textbook?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "answer": "D",
+      "explanation": "The complex problem-solving process contains six steps.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-047",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which step is added early in the complex problem-solving process?",
+      "options": [
+        "Decompose the problem",
+        "Skip analysis",
+        "Remove evaluation",
+        "Avoid planning"
+      ],
+      "answer": "A",
+      "explanation": "Complex problems are decomposed into manageable sub-problems.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-048",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "After decomposing a complex problem, what should be identified?",
+      "options": [
+        "Potential plans for each sub-problem",
+        "Only the final output",
+        "Only the programming language",
+        "The computer brand"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says to identify potential plans for each sub-problem.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-049",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "If plans A, B and C are identified for a sub-problem, the next relevant step is to:",
+      "options": [
+        "Select and design the best plan",
+        "Ignore all plans",
+        "Immediately delete the problem",
+        "Return to the input"
+      ],
+      "answer": "A",
+      "explanation": "The complex process calls for selecting and designing the best plan.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-050",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which step follows 'Select and design best plan' in complex problem solving?",
+      "options": [
+        "Implement that plan",
+        "Define the problem",
+        "Decompose again",
+        "Identify the field"
+      ],
+      "answer": "A",
+      "explanation": "Implementation follows selection and design of the best plan.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-051",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Why must a problem be thoroughly investigated before action is taken?",
+      "options": [
+        "To capture all relevant aspects of the problem",
+        "To avoid defining objectives",
+        "To make the problem larger",
+        "To eliminate all inputs"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says investigation is needed to capture all relevant aspects before acting.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-052",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "When defining a problem, the textbook says there must be clarity and:",
+      "options": [
+        "Specified objectives",
+        "No input",
+        "No plan",
+        "A programming language"
+      ],
+      "answer": "A",
+      "explanation": "The objectives of the problem must be specified clearly.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-053",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A complex project is divided into manageable sub-problems before plans are compared. Which problem-solving idea is being used?",
+      "options": [
+        "Decomposition",
+        "Evaluation",
+        "Output",
+        "Counting"
+      ],
+      "answer": "A",
+      "explanation": "Dividing a complex problem into manageable sub-problems is decomposition.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-054",
+      "chapter": 2,
+      "topic": "2.3 Problem Solving",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A team tests its implemented solution and asks whether it achieved the intended result. Which step is this?",
+      "options": [
+        "Define and analyze",
+        "Select and design",
+        "Implement",
+        "Evaluate"
+      ],
+      "answer": "D",
+      "explanation": "Evaluation checks whether the plan worked.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-055",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "The computer systems in Unit 2 are described as working on which model?",
+      "options": [
+        "IPO",
+        "OSI",
+        "HTML",
+        "CPU"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that computer systems work on the Input-Process-Output model.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-056",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "IPO stands for:",
+      "options": [
+        "Input-Processing-Output",
+        "Input-Program-Operation",
+        "Instruction-Process-Output",
+        "Input-Plan-Operation"
+      ],
+      "answer": "A",
+      "explanation": "IPO means Input-Processing-Output.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-057",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Analyzing a problem using the IPO model breaks it into how many main components?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "6"
+      ],
+      "answer": "B",
+      "explanation": "The three components are Input, Processing and Output.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-058",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In the IPO model, input refers to:",
+      "options": [
+        "Requirements from the environment",
+        "The final information presented",
+        "The operations performed",
+        "The programming language"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines input as requirements from the environment.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-059",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In the IPO model, processing refers to:",
+      "options": [
+        "The computation dependent upon the requirement",
+        "The final answer only",
+        "The user's name",
+        "The environment only"
+      ],
+      "answer": "A",
+      "explanation": "Processing is the computation dependent upon the requirement.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-060",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In the IPO model, output is:",
+      "options": [
+        "The thing presented to the environment",
+        "The input entered",
+        "The operation performed",
+        "The algorithm only"
+      ],
+      "answer": "A",
+      "explanation": "Output is the thing presented to the environment.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-061",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A program receives two numbers and adds them. The two numbers belong to which IPO component?",
+      "options": [
+        "Input",
+        "Processing",
+        "Output",
+        "Goal"
+      ],
+      "answer": "A",
+      "explanation": "The numbers supplied to the program are input.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-062",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "For the same addition program, the addition operation belongs to:",
+      "options": [
+        "Input",
+        "Processing",
+        "Output",
+        "Initial state"
+      ],
+      "answer": "B",
+      "explanation": "The addition is the operation performed on the input, so it is processing.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-063",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "For the same addition program, the displayed sum belongs to:",
+      "options": [
+        "Input",
+        "Processing",
+        "Output",
+        "Initial state"
+      ],
+      "answer": "C",
+      "explanation": "The displayed result is the output presented to the user.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-064",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A problem statement asks for length and width to calculate rectangle area. In IPO terms, length and width are:",
+      "options": [
+        "Outputs",
+        "Inputs",
+        "Processes",
+        "Goals"
+      ],
+      "answer": "B",
+      "explanation": "The textbook's rectangle IPO example uses length and width as inputs.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-065",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "For rectangle area, which process is shown in the textbook?",
+      "options": [
+        "Length + Width",
+        "Length × Width",
+        "Length ÷ Width",
+        "Length − Width"
+      ],
+      "answer": "B",
+      "explanation": "The process is area = length × width.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-066",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is the output in the textbook's rectangle-area IPO example?",
+      "options": [
+        "Length",
+        "Width",
+        "Area",
+        "Formula only"
+      ],
+      "answer": "C",
+      "explanation": "The output provided to the user is the area.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-067",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A student enters three grades, the system sums them, divides by the number of grades, and displays the average. Which is the processing?",
+      "options": [
+        "The three grades",
+        "Sum all grades and divide by the number of grades",
+        "The displayed average",
+        "The student name"
+      ],
+      "answer": "B",
+      "explanation": "The textbook's example processes grades by summing and dividing by their number.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-068",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why does the IPO model help when analyzing a problem?",
+      "options": [
+        "It identifies input, operations and output",
+        "It automatically writes every program",
+        "It removes the need for algorithms",
+        "It guarantees no errors"
+      ],
+      "answer": "A",
+      "explanation": "The model helps identify what is given, what operations are performed and what is produced.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-069",
+      "chapter": 2,
+      "topic": "2.4 Input-Processing-Output (I-P-O) Model",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A system has a correct formula but displays no result. Which IPO component is missing from the described behavior?",
+      "options": [
+        "Input",
+        "Processing",
+        "Output",
+        "Initial state"
+      ],
+      "answer": "C",
+      "explanation": "If the result is not presented, the output part is missing.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-070",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "An IPO chart represents Inputs, Process and Output in:",
+      "options": [
+        "Tabular form",
+        "A programming language only",
+        "A graph only",
+        "A paragraph only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that IPO charts represent the IPO model in tabular form.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-071",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "IPO charts are considered a handy tool used by:",
+      "options": [
+        "Software designers",
+        "Only network engineers",
+        "Only hardware manufacturers",
+        "Only database users"
+      ],
+      "answer": "A",
+      "explanation": "The textbook calls IPO charts a handy tool for software designers.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-072",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What belongs in the Input column of an IPO chart?",
+      "options": [
+        "Data entered in the system",
+        "Operations applied to input",
+        "Data turned into information",
+        "The final program code"
+      ],
+      "answer": "A",
+      "explanation": "The input column contains data entered into the system.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-073",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What belongs in the Process column?",
+      "options": [
+        "Operations applied to the input",
+        "Data entered by the user",
+        "Information presented to the user",
+        "The name of the software"
+      ],
+      "answer": "A",
+      "explanation": "The process column records the operations applied to input.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-074",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What belongs in the Output column?",
+      "options": [
+        "Data that has been turned into information",
+        "Raw input only",
+        "The formula only",
+        "The initial state"
+      ],
+      "answer": "A",
+      "explanation": "The output is data that has been turned into information.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-075",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "For rectangle area, which pair belongs in the Input column?",
+      "options": [
+        "Length and Width",
+        "Area and Width",
+        "Length and Area",
+        "Area and Formula"
+      ],
+      "answer": "A",
+      "explanation": "Length and width are the required inputs.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-076",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "For rectangle area, which belongs in the Process column?",
+      "options": [
+        "Area = Length × Width",
+        "Length",
+        "Width",
+        "Area"
+      ],
+      "answer": "A",
+      "explanation": "The multiplication formula is the process.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-077",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "For rectangle area, which belongs in the Output column?",
+      "options": [
+        "Area",
+        "Length",
+        "Width",
+        "Multiplication sign"
+      ],
+      "answer": "A",
+      "explanation": "The calculated area is the output.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-078",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A program takes three grades, adds them and divides by three. What should appear in the Output column if the requirement is to display the average?",
+      "options": [
+        "Three grades",
+        "Sum and division",
+        "Average",
+        "Number of students"
+      ],
+      "answer": "C",
+      "explanation": "The requested information presented to the user is the average.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-079",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A student puts 'Area' in the Input column for the rectangle problem. What is the best correction?",
+      "options": [
+        "Move Area to Output because it is the calculated information",
+        "Move Area to Input because it is entered",
+        "Put Area in Process because it is a number",
+        "Remove Area completely"
+      ],
+      "answer": "A",
+      "explanation": "In the textbook example, length and width are inputs and area is the output.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-080",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which order correctly describes the IPO chart?",
+      "options": [
+        "Output → Input → Process",
+        "Input → Process → Output",
+        "Process → Output → Input",
+        "Input → Output → Process"
+      ],
+      "answer": "B",
+      "explanation": "The IPO sequence is Input, Process and Output.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-081",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A requirement is 'calculate a student's average based on grades.' Which set best matches the textbook example?",
+      "options": [
+        "Grades → sum and divide by number of grades → average",
+        "Average → enter grades → sum",
+        "Grades → display grades → no result",
+        "Number of grades → display input → grades"
+      ],
+      "answer": "A",
+      "explanation": "This is the structure shown in the textbook's average example.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-082",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why is the IPO chart useful before writing a program?",
+      "options": [
+        "It visually organizes what enters, what happens and what is produced",
+        "It replaces all programming languages",
+        "It guarantees the hardware will work",
+        "It eliminates the need to understand the problem"
+      ],
+      "answer": "A",
+      "explanation": "The chart provides a clear tabular representation of the problem's inputs, processing and outputs.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-083",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A system receives a temperature and applies a conversion formula. The conversion formula belongs in:",
+      "options": [
+        "Input",
+        "Process",
+        "Output",
+        "Environment"
+      ],
+      "answer": "B",
+      "explanation": "A formula applied to input is part of processing.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-084",
+      "chapter": 2,
+      "topic": "2.5 Input-Processing-Output (I-P-O) Chart",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A user enters four ages; the system calculates total age and average age and displays both. Which is the best Output entry?",
+      "options": [
+        "Four ages",
+        "Add and divide",
+        "Total age and average age",
+        "User name"
+      ],
+      "answer": "C",
+      "explanation": "Both total age and average age are the information required to be displayed.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-085",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Using computation to solve problems requires the ability to think in a certain way called:",
+      "options": [
+        "Computational thinking",
+        "Graphic design",
+        "Networking",
+        "Data storage"
+      ],
+      "answer": "A",
+      "explanation": "The textbook calls this way of thinking computational thinking.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-086",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Computational thinking encourages learners to define a solution that is:",
+      "options": [
+        "Repeatable",
+        "Random",
+        "Impossible to automate",
+        "Dependent on one instance only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook emphasizes defining a repeatable solution for similar problems.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-087",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "The goal is not only to solve one instance of a problem but to create a system that can solve:",
+      "options": [
+        "All instances of a similar problem",
+        "Only the first instance",
+        "No instances",
+        "Only unrelated problems"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says computational thinking aims at an automated system for all similar instances.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-088",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Computational thinking can be thought of as an extension of:",
+      "options": [
+        "Logical thinking",
+        "Counting only",
+        "Flowcharts only",
+        "Programming syntax"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes computational thinking as an extension of logical thinking.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-089",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is NOT one of the four properties of computational thinking in Unit 2?",
+      "options": [
+        "Decomposition",
+        "Abstraction",
+        "Pattern Recognition",
+        "Hardware Engineering"
+      ],
+      "answer": "D",
+      "explanation": "The four properties are decomposition, abstraction, pattern recognition and algorithm design.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-090",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Decomposition means:",
+      "options": [
+        "Breaking a large problem into smaller manageable problems",
+        "Removing every detail",
+        "Finding only a pattern",
+        "Writing code immediately"
+      ],
+      "answer": "A",
+      "explanation": "Decomposition breaks a larger problem into smaller sub-problems.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-091",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "The smaller parts created by decomposition are called:",
+      "options": [
+        "Sub-problems",
+        "Outputs",
+        "Nodes",
+        "Processes"
+      ],
+      "answer": "A",
+      "explanation": "The textbook refers to the smaller problems as sub-problems.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-092",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Abstraction focuses on:",
+      "options": [
+        "Removing unnecessary details and identifying essential information",
+        "Adding every possible detail",
+        "Counting choices",
+        "Drawing only circles"
+      ],
+      "answer": "A",
+      "explanation": "Abstraction removes unnecessary details so essential information can be identified.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-093",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Pattern Recognition means examining a problem for:",
+      "options": [
+        "Patterns or similarities with previously solved problems",
+        "Only errors",
+        "Hardware components",
+        "Input devices"
+      ],
+      "answer": "A",
+      "explanation": "Pattern recognition looks for patterns or similarities between previously solved problems.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-094",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Algorithm Design involves:",
+      "options": [
+        "Creating a step-by-step plan of the solution",
+        "Removing the input",
+        "Drawing a concept map only",
+        "Counting combinations"
+      ],
+      "answer": "A",
+      "explanation": "Algorithm design is the actual designing of the solution as a step-by-step plan.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-095",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In the computer-game example, identifying where to go and how to complete a level illustrates:",
+      "options": [
+        "Decomposition",
+        "Abstraction",
+        "Pattern recognition",
+        "Output"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses these as decomposition tasks in its game example.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-096",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In the game example, the location of the exit and enemies are treated as:",
+      "options": [
+        "Necessary information",
+        "Unnecessary information",
+        "Outputs only",
+        "Counting choices"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies the exit and enemy locations as necessary information.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-097",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In the game example, weather is treated as:",
+      "options": [
+        "Unnecessary information",
+        "Input only",
+        "A sub-problem",
+        "A pattern"
+      ],
+      "answer": "A",
+      "explanation": "Weather is explicitly given as unnecessary information in the example.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-098",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Handling six enemies as if they were a single enemy illustrates:",
+      "options": [
+        "Pattern Recognition",
+        "Abstraction",
+        "Evaluation",
+        "Counting"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives this as the pattern-recognition example.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-099",
+      "chapter": 2,
+      "topic": "2.6 Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A student identifies the essential details of a game level, ignores weather, and then creates movement steps. Which sequence of properties is best represented?",
+      "options": [
+        "Abstraction → Algorithm Design",
+        "Counting → Decision",
+        "Output → Input",
+        "Evaluation → Search"
+      ],
+      "answer": "A",
+      "explanation": "Removing unnecessary details is abstraction, followed by creating movement steps as algorithm design.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-100",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Logical thinking involves analyzing a situation using:",
+      "options": [
+        "Reason",
+        "Random guesses",
+        "Only memory",
+        "Only programming syntax"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines logical thinking as analyzing situations using reason.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-101",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Logical thinking aims to reach decisions that are:",
+      "options": [
+        "Sensible",
+        "Random",
+        "Always numerical",
+        "Independent of evidence"
+      ],
+      "answer": "A",
+      "explanation": "Logical thinking uses reason to reach sensible decisions.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-102",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Situation analysis in logical thinking requires gathering:",
+      "options": [
+        "Relevant facts",
+        "Every possible fact regardless of relevance",
+        "Only opinions",
+        "Only output"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says situation analysis requires gathering relevant facts.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-103",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In the textbook example, seeing water on the floor at home requires:",
+      "options": [
+        "Reasoning based on evidence and facts",
+        "Guessing without evidence",
+        "Writing a program immediately",
+        "Counting the water"
+      ],
+      "answer": "A",
+      "explanation": "The example illustrates the need for reasoning based on evidence and facts.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-104",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "If 'Islamabad is a city' and 'Cities have a mayor' are facts, the textbook infers that:",
+      "options": [
+        "Islamabad has a mayor or equivalent",
+        "Islamabad is not a city",
+        "Cities have no mayors",
+        "Every city is Islamabad"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives this as an example of inference from facts.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-105",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Why does the textbook caution that computers using logic does not mean they think logically?",
+      "options": [
+        "Computers cannot perform logical thinking unless programmed to do so",
+        "Computers never use logic",
+        "Computers cannot process instructions",
+        "Computers do not use data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that computers themselves cannot perform logical thinking unless they are programmed to do so.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-106",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Algorithmic thinking is described as a way of getting to a:",
+      "options": [
+        "Solution",
+        "Network",
+        "Memory unit",
+        "Graphical interface"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes algorithmic thinking as a way of getting to a solution.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-107",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Algorithmic thinking involves identifying steps and implementing them in a:",
+      "options": [
+        "Logical and efficient manner",
+        "Random manner",
+        "Purely visual manner",
+        "Manual-only manner"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses the phrase logical and efficient manner.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-108",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Algorithmic thinking can involve breaking complex problems into:",
+      "options": [
+        "Smaller manageable parts",
+        "More complex problems",
+        "Random inputs",
+        "Only outputs"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says complex problems can be broken into smaller manageable parts.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-109",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In the largest-of-three example, the first major comparison checks whether:",
+      "options": [
+        "A is larger than both B and C",
+        "B is larger than C only",
+        "C is larger than A only",
+        "All three are equal"
+      ],
+      "answer": "A",
+      "explanation": "The textbook's algorithm first checks whether A > B and A > C.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-110",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "If A is not the largest in the textbook example, the algorithm next checks:",
+      "options": [
+        "Whether B is largest",
+        "Whether the input is valid",
+        "Whether C is zero",
+        "Whether the program should restart"
+      ],
+      "answer": "A",
+      "explanation": "After A is not largest, the algorithm checks B.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-111",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "If neither A nor B is the largest in the textbook's unequal-number example, the algorithm concludes that:",
+      "options": [
+        "C is largest",
+        "A is largest",
+        "B is largest",
+        "No number is largest"
+      ],
+      "answer": "A",
+      "explanation": "With three unequal numbers, if A and B are not largest, C is largest.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-112",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Which statement best distinguishes logical thinking from algorithmic thinking as presented?",
+      "options": [
+        "Logical thinking uses reason and evidence; algorithmic thinking identifies and implements solution steps",
+        "Logical thinking is coding; algorithmic thinking is hardware",
+        "They are unrelated",
+        "Algorithmic thinking avoids problem solving"
+      ],
+      "answer": "A",
+      "explanation": "The textbook presents logical thinking around reason/evidence and algorithmic thinking around step-based problem solving.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-113",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why are algorithmic thinking skills useful according to the textbook?",
+      "options": [
+        "They help develop better problem-solving ability",
+        "They eliminate the need for solutions",
+        "They make computers think independently",
+        "They replace all programming languages"
+      ],
+      "answer": "A",
+      "explanation": "The textbook connects algorithmic thinking skills with becoming a better problem solver.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-114",
+      "chapter": 2,
+      "topic": "2.7 Principles of Computational Thinking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A student lists relevant facts, reasons from them, then creates efficient ordered steps to solve the situation. Which two principles are being combined?",
+      "options": [
+        "Logical thinking and algorithmic thinking",
+        "Counting and search",
+        "IPO and concept mapping",
+        "Abstraction and hardware engineering"
+      ],
+      "answer": "A",
+      "explanation": "The first part uses evidence-based reasoning; the second uses ordered solution steps.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-115",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "After completely understanding a problem, the next stage is to:",
+      "options": [
+        "Design a solution",
+        "Skip directly to output",
+        "Ignore requirements",
+        "Delete the problem"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says the next stage after understanding the problem is solution design.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-116",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In solution design, the goal is to define how software will meet the problem's:",
+      "options": [
+        "Requirements and objectives",
+        "Hardware colour and size",
+        "Network address only",
+        "Printer settings"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines solution design in terms of requirements and objectives.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-117",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which two methods are given for designing a solution?",
+      "options": [
+        "Flowcharts and Concept Maps",
+        "RAM and ROM",
+        "Search and Counting",
+        "Input and Output"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists flowcharts and concept maps.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-118",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A flowchart is a diagrammatic representation of an:",
+      "options": [
+        "Algorithm",
+        "Input device",
+        "Operating system",
+        "Memory unit"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines a flowchart as a diagrammatic representation of an algorithm.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-119",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A flowchart describes:",
+      "options": [
+        "Operations required to solve a given problem",
+        "Only the final answer",
+        "Only input values",
+        "Only programming language syntax"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says a flowchart describes the operations required to solve a problem.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-120",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why do programmers draw flowcharts before writing programs?",
+      "options": [
+        "They help analyze and find solutions and make programming easier",
+        "They replace all programming languages",
+        "They prevent the need for testing",
+        "They automatically compile code"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that flowcharts help analyze solutions and make it easier to write programs.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-121",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A flowchart is useful for communicating a problem-solving method to:",
+      "options": [
+        "Other people",
+        "Only the computer",
+        "Only the printer",
+        "Only the operating system"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly mentions communication of the method to other people.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-122",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Flowcharts can help in finding and removing:",
+      "options": [
+        "Logical errors",
+        "All hardware faults",
+        "Network cables",
+        "Memory chips"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that flowcharts help find and remove logical errors.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-123",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Before drawing a flowchart, which requirement should be determined first among the listed items?",
+      "options": [
+        "Start of the flowchart",
+        "Printer model",
+        "Programming language",
+        "Computer brand"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists the start of the flowchart among the requirements to determine before drawing it.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-124",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What shape represents the start/end of a flowchart in the textbook?",
+      "options": [
+        "Oval",
+        "Rectangle",
+        "Diamond",
+        "Parallelogram"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses an oval for the start and end.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-125",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What shape represents input in the textbook's flowchart symbols?",
+      "options": [
+        "Parallelogram",
+        "Oval",
+        "Rectangle",
+        "Diamond"
+      ],
+      "answer": "A",
+      "explanation": "Input is represented by a parallelogram.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-126",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What shape represents processing?",
+      "options": [
+        "Rectangle",
+        "Oval",
+        "Diamond",
+        "Parallelogram"
+      ],
+      "answer": "A",
+      "explanation": "Processing is represented by a rectangle.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-127",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What shape represents a decision?",
+      "options": [
+        "Diamond",
+        "Oval",
+        "Rectangle",
+        "Parallelogram"
+      ],
+      "answer": "A",
+      "explanation": "A decision is represented by a diamond.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-128",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "The textbook says which control structures may be considered when making a flowchart decision?",
+      "options": [
+        "Sequence, repetition and selection",
+        "Input, output and storage",
+        "RAM, ROM and cache",
+        "Search, count and sort"
+      ],
+      "answer": "A",
+      "explanation": "The textbook names sequence, repetition and selection as control structures for decision making.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-129",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "For printing a student's letter grade according to marks, the textbook gives which control structure as an example?",
+      "options": [
+        "Selection",
+        "Only sequence",
+        "Only repetition",
+        "No control structure"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says selection is used to check the mark range and print the corresponding grade.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-130",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which shape represents output in the textbook?",
+      "options": [
+        "Parallelogram",
+        "Diamond",
+        "Rectangle",
+        "Oval"
+      ],
+      "answer": "A",
+      "explanation": "Output is represented with a parallelogram as well.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-131",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "A flowchart may have multiple ends because it can contain:",
+      "options": [
+        "Multiple decision points",
+        "Multiple keyboards",
+        "Multiple printers",
+        "Multiple CPUs"
+      ],
+      "answer": "A",
+      "explanation": "The textbook notes that multiple decision points can lead to multiple ends.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-132",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "For finding the area of a triangle, the textbook uses which formula?",
+      "options": [
+        "(Base × Height) / 2",
+        "Base + Height",
+        "Base × Height × 2",
+        "Base / Height"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives Area = (Base × Height) / 2.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-133",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which software is identified as a tool for drawing flowcharts and other diagrams?",
+      "options": [
+        "Microsoft Visio",
+        "CmapTools",
+        "Mind Manager",
+        "LARP only"
+      ],
+      "answer": "A",
+      "explanation": "Microsoft Visio is described as a tool for drawing flowcharts and other diagrams.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-134",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In Microsoft Visio, after selecting the Flowchart category, the textbook instructs the user to:",
+      "options": [
+        "Double-click Basic Flowchart",
+        "Open a database",
+        "Start a compiler",
+        "Choose a network driver"
+      ],
+      "answer": "A",
+      "explanation": "The stated sequence includes double-clicking Basic Flowchart.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-135",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In Microsoft Visio, relevant flowchart symbols are added by:",
+      "options": [
+        "Dragging them onto the drawing",
+        "Typing code into a compiler",
+        "Scanning a barcode",
+        "Printing the diagram"
+      ],
+      "answer": "A",
+      "explanation": "The textbook instructs users to drag relevant symbols and place them on the drawing.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-136",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "LARP stands for:",
+      "options": [
+        "Logics of Algorithms and Resolution of Problems",
+        "Logical Applications for Rapid Programming",
+        "Language and Rules for Programs",
+        "Logic Algorithms for Runtime Processing"
+      ],
+      "answer": "A",
+      "explanation": "The textbook expands LARP as Logics of Algorithms and Resolution of Problems.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-137",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "According to the textbook, LARP is a programming language for:",
+      "options": [
+        "Rapid development of prototypes",
+        "Database management only",
+        "Hardware manufacturing",
+        "Image editing"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes LARP as a language for rapid development of prototypes.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-138",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why is LARP relatively easy for non-programmers to understand according to the textbook?",
+      "options": [
+        "It uses semi-natural syntax",
+        "It has no algorithms",
+        "It uses only machine language",
+        "It cannot represent flowcharts"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says LARP uses semi-natural syntax, making it easy for non-programmers to understand.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-139",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "LARP also allows algorithms to be expressed as:",
+      "options": [
+        "Flowcharts",
+        "Databases",
+        "Spreadsheets only",
+        "Audio files"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that LARP allows algorithms to be expressed as flowcharts.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-140",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A concept map is a graphical tool that represents:",
+      "options": [
+        "Concepts and relationships between them",
+        "Only numerical calculations",
+        "Only program code",
+        "Only input devices"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines a concept map as representing concepts and relationships between them.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-141",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Concept maps can help with activities ranging from:",
+      "options": [
+        "Brainstorming to decision-making",
+        "Printing to scanning",
+        "Booting to shutting down",
+        "Searching to counting only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says concept maps can help from brainstorming to decision-making.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-142",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "In a concept map, concepts may be represented as:",
+      "options": [
+        "Boxes or circles",
+        "Only rectangles",
+        "Only diamonds",
+        "Only ovals"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that concepts are represented as boxes or circles.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-143",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "The lines or arrows in a concept map are labeled with:",
+      "options": [
+        "Linking words and phrases",
+        "Programming commands only",
+        "Numbers only",
+        "File names only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says the links are labeled with linking words and phrases.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-144",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which pair is given as software tools for concept mapping?",
+      "options": [
+        "CmapTools and Mind Manager",
+        "Microsoft Visio and LARP",
+        "Windows and Linux",
+        "HTML and CSS"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives CmapTools and Mind Manager as concept-mapping tools.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-145",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "In the water-cycle concept map, water turning into vapor is called:",
+      "options": [
+        "Evaporation",
+        "Condensation",
+        "Precipitation",
+        "Collection"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies evaporation as water turning into vapor.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-146",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "In the water-cycle concept map, water vapor cooling to form clouds is:",
+      "options": [
+        "Condensation",
+        "Evaporation",
+        "Collection",
+        "Precipitation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines condensation as water vapor cooling to form clouds.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-147",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "In the water-cycle concept map, rain, snow, sleet or hail falling from clouds is:",
+      "options": [
+        "Precipitation",
+        "Collection",
+        "Condensation",
+        "Evaporation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies this stage as precipitation.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-148",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "In the water-cycle concept map, water gathering in rivers, lakes and oceans is:",
+      "options": [
+        "Collection",
+        "Evaporation",
+        "Condensation",
+        "Precipitation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook calls this stage collection.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-149",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which is a main area in the textbook's concept map for Video Game Development?",
+      "options": [
+        "Game Design",
+        "Weather Forecasting",
+        "Banking",
+        "Networking Devices"
+      ],
+      "answer": "A",
+      "explanation": "Game Design is one of the main concepts shown in the video-game-development map.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-150",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which of the following is listed under Game Design in the video-game-development concept map?",
+      "options": [
+        "Gameplay Mechanics",
+        "Database Security",
+        "Memory Management",
+        "Network Protocols"
+      ],
+      "answer": "A",
+      "explanation": "Gameplay Mechanics is listed under Game Design.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-151",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which activity is listed under Testing in the video-game-development concept map?",
+      "options": [
+        "Bug Fixing",
+        "Evaporation",
+        "Level Encoding",
+        "Data Transmission"
+      ],
+      "answer": "A",
+      "explanation": "Bug Fixing is one of the Testing subtopics.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    },
+    {
+      "id": "CH2-MCQ-152",
+      "chapter": 2,
+      "topic": "2.8 Methods to Design a Solution",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "A student wants to show how several ideas are connected rather than show the ordered operations of an algorithm. Which method is more suitable according to Unit 2?",
+      "options": [
+        "Concept map",
+        "Flowchart",
+        "IPO chart",
+        "Counting problem"
+      ],
+      "answer": "A",
+      "explanation": "Concept maps represent concepts and relationships, whereas flowcharts represent algorithmic operations.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 2"
+    }
+  ]
+}

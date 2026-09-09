@@ -69,6 +69,7 @@ function deleteQuestion(id) { UI.deleteQuestion(id); }
 function filterQuestions() { UI.filterQuestions(); }
 function showCreateAssignmentModal() { UI.showCreateAssignmentModal(); }
 function updateAssignmentQuestionList() { UI.updateAssignmentQuestionList(); }
+function updateAssignmentSubjects() { UI.updateAssignmentSubjects(); }
 function saveAssignment(e) { UI.saveAssignment(e); }
 function editAssignment(i) { UI.editAssignment(i); }
 function deleteAssignment(i) { UI.deleteAssignment(i); }
@@ -76,6 +77,7 @@ function showAssignmentStatus(i) { UI.showAssignmentStatus(i); }
 function hideAssignmentStatus() { UI.hideAssignmentStatus(); }
 function showAddTeacherModal() { UI.showAddTeacherModal(); }
 function toggleCTClassField() { UI.toggleCTClassField(); }
+function toggleClassSubjects(cid) { UI.toggleClassSubjects(cid); }
 function saveTeacher(e) { UI.saveTeacher(e); }
 function editTeacher(id) { UI.editTeacher(id); }
 function deleteTeacher(id) { UI.deleteTeacher(id); }

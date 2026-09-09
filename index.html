@@ -439,7 +439,7 @@
                 </div>
                 <div class="form-row">
                     <label>Class</label>
-                    <select id="amClass" required></select>
+                    <select id="amClass" onchange="updateAssignmentSubjects()" required></select>
                 </div>
                 <div class="form-row">
                     <label>Due Date</label>
@@ -496,22 +496,9 @@
                     <input type="text" id="tmName" placeholder="e.g., Muhammad Khan" required>
                 </div>
                 <div class="form-row">
-                    <label>Subjects (teach checkboxes)</label>
-                    <div id="tmSubjectsList" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:5px;">
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-subject-cb" value="Computer Science"> CS</label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-subject-cb" value="Physics"> Physics</label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-subject-cb" value="Chemistry"> Chemistry</label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-subject-cb" value="Biology"> Biology</label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-subject-cb" value="Mathematics"> Maths</label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-subject-cb" value="English"> English</label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-subject-cb" value="Urdu"> Urdu</label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-subject-cb" value="Islamiyat"> Islamiyat</label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-subject-cb" value="Pakistan Studies"> Pak Studies</label>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <label>Assigned Classes</label>
-                    <div id="tmClassesList" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:5px;"></div>
+                    <label>Assign Classes &amp; Subjects</label>
+                    <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Select a class, then check which subjects this teacher teaches in that class.</p>
+                    <div id="tmClassSubjectMap" style="margin-top:8px;"></div>
                 </div>
                 <div class="form-row">
                     <label>Role</label>

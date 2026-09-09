@@ -1,0 +1,2593 @@
+{
+  "chapter": 4,
+  "chapterTitle": "Data and Analysis",
+  "subject": "Computer Science",
+  "grade": 9,
+  "source": "NBF Grade 9 Computer Science, Unit 4",
+  "questions": [
+    {
+      "id": "CH4-MCQ-001",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is data analytics?",
+      "options": [
+        "The process of examining raw data to draw conclusions",
+        "Data analytics",
+        "Data storage",
+        "Data hiding"
+      ],
+      "answer": "A",
+      "explanation": "Data analytics examines raw data to draw conclusions about the information it contains.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-002",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which goal of data analytics is stated in the textbook?",
+      "options": [
+        "Transforming raw data into actionable knowledge",
+        "Replacing all human decision-making",
+        "Storing every file permanently",
+        "Converting all data into images"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that data analytics transforms raw data into actionable knowledge for decision-making, process improvement, and problem solving.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-003",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which two broad forms of data can data analytics work with?",
+      "options": [
+        "Quantitative and qualitative data",
+        "Primary and secondary memory",
+        "Ordinal and nominal databases",
+        "Public and private networks"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that data analytics can involve both quantitative and qualitative data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-004",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A student records the temperature every hour and creates a graph to see how it changed during the day. What is the student mainly doing?",
+      "options": [
+        "Using data analysis to find a pattern or trend",
+        "Creating a database management system",
+        "Collecting only secondary data",
+        "Converting continuous data into nominal data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses hourly temperature and a graph as an example of data analysis used to identify a trend.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-005",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which techniques are mentioned as useful for analyzing data?",
+      "options": [
+        "Mathematical calculations, statistical techniques, and charts",
+        "Only interviews and questionnaires",
+        "Only programming languages",
+        "Only sensors and IoT devices"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically mentions mathematical calculations, statistical techniques, and charts.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-006",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "How are data analytics and data science related according to the textbook?",
+      "options": [
+        "Data analytics examines data for conclusions, while data science combines several disciplines to extract knowledge and insights",
+        "They are exactly the same term",
+        "Data analytics stores data while data science only collects it",
+        "Data science is a type of database"
+      ],
+      "answer": "A",
+      "explanation": "Data analytics focuses on examining raw data, while data science is an interdisciplinary field using mathematics, statistics, data analysis, and machine learning.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-007",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is data science?",
+      "options": [
+        "An interdisciplinary field using mathematics, statistics, data analysis, and machine learning to extract knowledge and insights",
+        "A method used only to store files",
+        "A type of computer hardware",
+        "A technique used only for drawing charts"
+      ],
+      "answer": "A",
+      "explanation": "This is the textbook's definition of data science.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-008",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why is data science described as a pipeline from data to insights?",
+      "options": [
+        "It uses data to find patterns and produce knowledge for informed decisions",
+        "It sends data physically through cables",
+        "It converts every dataset into a database",
+        "It removes the need for statistics"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that data science moves from data to insights and uses those insights for informed decisions and real-world problems.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-009",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which of the following is an example of a real-world problem area where data science can be used?",
+      "options": [
+        "Healthcare",
+        "Only keyboard repair",
+        "Only printer installation",
+        "Only computer assembly"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists medical, education, scientific research, and business among real-world problem areas.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-010",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which set contains only key concepts of data science identified in the textbook?",
+      "options": [
+        "Data, statistics and probability, mathematics, machine learning",
+        "Keyboard, mouse, monitor, printer",
+        "CPU, RAM, ROM, cache",
+        "HTML, CSS, JavaScript, browser"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies these as foundational concepts/components of data science.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-011",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How does the textbook define a dataset?",
+      "options": [
+        "A structured or processed collection of data usually associated with a unique body of work",
+        "A single numerical value",
+        "A computer program used to analyze images",
+        "A device used to collect data"
+      ],
+      "answer": "A",
+      "explanation": "A dataset is defined in the textbook as a structured or processed collection of data associated with a unique body of work.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-012",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A collection of brain CT scans of brain-tumor patients is used to evaluate common patterns. What does this collection represent?",
+      "options": [
+        "A dataset",
+        "A nominal category",
+        "A summary statistic",
+        "A data visualization"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives a collection of brain CT scans as an example of a dataset.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-013",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "According to the textbook, statistics is mainly concerned with:",
+      "options": [
+        "The analysis of the frequency of past events",
+        "Predicting the exact future with certainty",
+        "Storing data in tables",
+        "Creating artificial neural networks"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes statistics as analysis of the frequency of past events.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-014",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "According to the textbook, probability is used to:",
+      "options": [
+        "Predict the likelihood of future events",
+        "Store historical records",
+        "Create charts only",
+        "Classify data as nominal"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes probability as predicting the likelihood of future events.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-015",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which statement correctly distinguishes statistics and probability in the textbook's treatment?",
+      "options": [
+        "Statistics analyzes past-event frequency, while probability predicts likelihood of future events",
+        "Statistics stores data, while probability deletes data",
+        "Statistics creates databases, while probability creates datasets",
+        "Statistics is qualitative, while probability is always nominal"
+      ],
+      "answer": "A",
+      "explanation": "This distinction follows the textbook's definitions.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-016",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A data scientist uses mathematical methods to turn complex data into clear results for decision-making. Which foundational concept is being applied?",
+      "options": [
+        "Mathematics",
+        "Data mining",
+        "Nominal data",
+        "Data collection"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that mathematics helps solve problems, optimize model performance, and interpret complex data into clear results.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-017",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Machine learning is described as:",
+      "options": [
+        "A branch of Artificial Intelligence and computer science that uses data and algorithms to imitate human learning",
+        "A method of printing charts",
+        "A type of database table",
+        "A source of secondary data"
+      ],
+      "answer": "A",
+      "explanation": "This is the textbook's description of machine learning.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-018",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which statement best describes the relationship between deep learning and machine learning?",
+      "options": [
+        "Deep learning is a subset of machine learning",
+        "Machine learning is a subset of deep learning",
+        "They are unrelated fields",
+        "Deep learning is a type of database"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly describes deep learning as a subset of machine learning.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-019",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Deep learning emphasizes imitation of human brain behavior by using:",
+      "options": [
+        "Artificial neural networks",
+        "Relational tables",
+        "Questionnaires",
+        "Cloud storage only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook links deep learning with artificial neural networks.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-020",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is the main focus of data mining?",
+      "options": [
+        "Discovering patterns and relationships in existing datasets",
+        "Collecting data directly from respondents",
+        "Designing physical storage devices",
+        "Creating operating systems"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines data mining as a subset of data science focused primarily on discovering patterns and relationships in existing datasets.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-021",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Compared with data science, data mining uses:",
+      "options": [
+        "A more limited set of techniques and tools",
+        "No datasets",
+        "Only primary data",
+        "Only audio data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that the usage of techniques and tools is limited in data mining compared with data science.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-022",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is data visualization?",
+      "options": [
+        "Graphical representation of data using charts, plots, infographics, and animations",
+        "The storage of data in a database",
+        "The collection of original data",
+        "The prediction of future events only"
+      ],
+      "answer": "A",
+      "explanation": "This matches the textbook definition of data visualization.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-023",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A school groups survey results and displays them with charts so patterns are easier to understand. Which concept is most directly involved?",
+      "options": [
+        "Data visualization",
+        "Data mining",
+        "Probability",
+        "Data storage"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that graphical displays help communicate complex data relationships and insights.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-024",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Predictive analysis uses data to:",
+      "options": [
+        "Predict future trends and events based on historical data",
+        "Create only nominal categories",
+        "Store files in a database",
+        "Collect data through interviews"
+      ],
+      "answer": "A",
+      "explanation": "This is the textbook's definition of predictive analysis.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-025",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A business studies previous sales records to forecast next year's revenue. Which data science concept is being used?",
+      "options": [
+        "Predictive analysis",
+        "Data visualization only",
+        "Nominal classification",
+        "Data storage"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives forecasting next year's revenue as an example of a business problem that can be addressed through data science and predictive analysis.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-026",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Natural Language Processing (NLP) enables computers to:",
+      "options": [
+        "Understand, interpret, and generate human language",
+        "Store data in relational tables",
+        "Measure temperature continuously",
+        "Detect only numerical outliers"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines NLP as the ability of computers to understand, interpret, and generate human language.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-027",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which is an example of NLP given in the textbook?",
+      "options": [
+        "Sentiment analysis",
+        "Hard-disk formatting",
+        "Barcode printing",
+        "CPU cooling"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists language translation, text summarization, and sentiment analysis as NLP tasks.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-028",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A company analyzes customer reviews to understand opinions about its products. Which NLP-related use is most appropriate?",
+      "options": [
+        "Sentiment analysis",
+        "Predictive maintenance",
+        "Data storage",
+        "Data warehousing"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies sentiment analysis as a common NLP use and discusses analysis of reviews and opinions.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-029",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why can data science help solve real-world problems?",
+      "options": [
+        "It extracts patterns, knowledge, and insights that can support informed decisions",
+        "It eliminates the need to collect data",
+        "It converts every problem into a hardware problem",
+        "It only produces decorative graphs"
+      ],
+      "answer": "A",
+      "explanation": "The textbook connects data science insights with informed decisions and solving real-world problems.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-030",
+      "chapter": 4,
+      "topic": "4.1 Data and Analysis",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A supermarket wants to know which products should be stocked in larger quantities during particular months. It analyzes sales data and identifies seasonal patterns. Which combination best fits the textbook's approach?",
+      "options": [
+        "Data science and predictive analysis",
+        "Only data storage and nominal data",
+        "Only NLP and questionnaires",
+        "Only data mining without analysis"
+      ],
+      "answer": "A",
+      "explanation": "The supermarket case in the textbook uses sales data, analysis of patterns, graphs, and predictive analysis to guide stocking decisions.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-031",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What are the two main types of data identified in data science?",
+      "options": [
+        "Qualitative and quantitative",
+        "Primary and secondary",
+        "Structured and unstructured only",
+        "Public and private"
+      ],
+      "answer": "A",
+      "explanation": "The textbook mainly classifies data into qualitative (categorical) and quantitative (numeric).",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-032",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Qualitative or categorical data describes objects or groups that can be:",
+      "options": [
+        "Labeled according to a category",
+        "Always measured continuously",
+        "Only represented by decimals",
+        "Stored only in databases"
+      ],
+      "answer": "A",
+      "explanation": "Qualitative data is described by categories or labels rather than numerical values.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-033",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A survey records students' favorite colors as red, blue, or green. What type of data is this?",
+      "options": [
+        "Qualitative or categorical data",
+        "Quantitative data",
+        "Continuous data",
+        "Ratio-scaled data"
+      ],
+      "answer": "A",
+      "explanation": "Colors are categorical examples in the textbook.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-034",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Qualitative data is further divided into:",
+      "options": [
+        "Ordinal and nominal data",
+        "Discrete and continuous data",
+        "Interval and ratio data",
+        "Primary and secondary data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook divides qualitative data into ordinal and nominal data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-035",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What distinguishes ordinal data?",
+      "options": [
+        "It has a specific order or ranking",
+        "It has no categories",
+        "It must always have a true zero",
+        "It cannot be labeled"
+      ],
+      "answer": "A",
+      "explanation": "Ordinal data has a meaningful order or ranking.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-036",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "Test grades such as low, medium, and high are best treated in the textbook's classification as:",
+      "options": [
+        "Ordinal data",
+        "Nominal data",
+        "Continuous data",
+        "Ratio-scaled data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives test grades as an example of ordinal data.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-037",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Nominal data is characterized by:",
+      "options": [
+        "Mutually exclusive categories with no meaningful order",
+        "A true zero point",
+        "Equal numerical intervals",
+        "An unlimited number of measurements"
+      ],
+      "answer": "A",
+      "explanation": "Nominal categories cannot be ordered meaningfully.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-038",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A dataset records transport choices as car, bus, and train. What type is this?",
+      "options": [
+        "Nominal data",
+        "Ordinal data",
+        "Continuous data",
+        "Ratio-scaled data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives car, bus, and train as examples of nominal data.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-039",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which statement correctly compares ordinal and nominal data?",
+      "options": [
+        "Ordinal data has a meaningful order; nominal data does not",
+        "Both always have a true zero",
+        "Nominal data is always numerical",
+        "Ordinal data cannot be categorized"
+      ],
+      "answer": "A",
+      "explanation": "This is the textbook's distinction between the two categorical types.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-040",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Quantitative or numerical data deals with:",
+      "options": [
+        "Numeric values that can be computed mathematically",
+        "Only descriptive labels",
+        "Only pictures and sounds",
+        "Only mutually exclusive categories"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines quantitative data in terms of numeric values that can be computed mathematically.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-041",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Quantitative data is divided into:",
+      "options": [
+        "Discrete and continuous data",
+        "Ordinal and nominal data",
+        "Primary and secondary data",
+        "Structured and unstructured data only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook divides quantitative data into discrete and continuous data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-042",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which data can take certain countable values and cannot be subdivided into smaller units?",
+      "options": [
+        "Discrete data",
+        "Continuous data",
+        "Nominal data",
+        "Interval data"
+      ],
+      "answer": "A",
+      "explanation": "This is the textbook's definition of discrete data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-043",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "The number of computers in each department of a company is an example of:",
+      "options": [
+        "Discrete data",
+        "Continuous data",
+        "Ordinal data",
+        "Nominal data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists the number of computers in departments as an example of discrete data.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-044",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Continuous data refers to:",
+      "options": [
+        "An unspecified number of possible measurements between two realistic points",
+        "Only values that can be counted as whole numbers",
+        "Categories without order",
+        "Data collected only through surveys"
+      ],
+      "answer": "A",
+      "explanation": "This matches the textbook's description of continuous data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-045",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Freezer temperature measured at many possible values is an example of:",
+      "options": [
+        "Continuous data",
+        "Discrete data",
+        "Nominal data",
+        "Ordinal data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives freezer temperature as an example of continuous data.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-046",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Continuous data is further divided into:",
+      "options": [
+        "Interval scaled data and ratio scaled data",
+        "Nominal and ordinal data",
+        "Primary and secondary data",
+        "Structured and unstructured data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies interval and ratio scaled data as subdivisions of continuous data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-047",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which feature is associated with interval scaled data?",
+      "options": [
+        "Equal differences between consecutive measurements but no true zero",
+        "A true zero representing absence of the quantity",
+        "Only categorical labels",
+        "Values that cannot be compared"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that interval data has equal differences but no true zero point.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-048",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Why is 0°C an example used to distinguish interval data?",
+      "options": [
+        "0°C does not mean the absence of temperature",
+        "0°C means there is no temperature",
+        "Celsius temperature is nominal data",
+        "Temperature cannot be measured"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that 0°C or 0°F does not mean absence of temperature.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-049",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which feature distinguishes ratio scaled data from interval scaled data?",
+      "options": [
+        "Ratio scaled data has a true zero point",
+        "Ratio data cannot be added or subtracted",
+        "Ratio data has no meaningful differences",
+        "Ratio data contains only categories"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that ratio scaled data has a true zero point.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-050",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A measurement of 0 kg means absence of weight. According to the textbook, this is an example of:",
+      "options": [
+        "Ratio scaled data",
+        "Interval scaled data",
+        "Nominal data",
+        "Ordinal data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses 0 kg as an example of a true zero in ratio scaled data.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-051",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is data collection?",
+      "options": [
+        "The process of collecting information from relevant sources to find a solution to a statistical enquiry",
+        "The process of deleting old data",
+        "The process of drawing only graphs",
+        "The process of predicting without data"
+      ],
+      "answer": "A",
+      "explanation": "This is the textbook's definition of data collection.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-052",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is the first and foremost step in a statistical investigation?",
+      "options": [
+        "Data collection",
+        "Data visualization",
+        "Data storage",
+        "Data mining"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly states that data collection is the first and foremost step in a statistical investigation.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-053",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "easy",
+      "question": "The two broad categories of data collection methods are:",
+      "options": [
+        "Primary and secondary",
+        "Ordinal and nominal",
+        "Discrete and continuous",
+        "Interval and ratio"
+      ],
+      "answer": "A",
+      "explanation": "The textbook divides data collection into primary and secondary methods.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-054",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Primary data is collected:",
+      "options": [
+        "Directly from the data source or through direct interaction with the respondent",
+        "Only from old research papers",
+        "Only from websites",
+        "Only from government records"
+      ],
+      "answer": "A",
+      "explanation": "Primary data is original data collected directly from the source or respondent.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-055",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A researcher asks shopkeepers questions and records their responses for a new study. This is:",
+      "options": [
+        "Primary data collection",
+        "Secondary data collection",
+        "Data visualization",
+        "Data storage"
+      ],
+      "answer": "A",
+      "explanation": "Direct interaction with respondents is a primary data collection method.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-056",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is a primary data collection method listed in the textbook?",
+      "options": [
+        "Experiment",
+        "Online database",
+        "Government record",
+        "Past research study"
+      ],
+      "answer": "A",
+      "explanation": "Experiments are listed among primary data collection methods.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-057",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which set contains only primary data collection methods from the textbook?",
+      "options": [
+        "Surveys, interviews, observations, experiments",
+        "Online databases, books, websites",
+        "Government records, social media posts, past studies",
+        "Published sources, online databases, public data"
+      ],
+      "answer": "A",
+      "explanation": "These are all listed as primary methods.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-058",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A respondent is:",
+      "options": [
+        "A person from whom the statistical information required for an enquiry is collected",
+        "A person who designs a database",
+        "A device that stores data",
+        "A chart used for visualization"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines a respondent as the person from whom statistical information is collected.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-059",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Secondary data is collected using:",
+      "options": [
+        "Existing data collected by someone else for some purpose",
+        "Only direct interviews",
+        "Only new experiments",
+        "Only sensors"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines secondary data collection in this way.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-060",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A student uses information from a published research paper for a project. This is an example of:",
+      "options": [
+        "Secondary data",
+        "Primary data",
+        "Continuous data",
+        "Ordinal data"
+      ],
+      "answer": "A",
+      "explanation": "Published research papers are listed as secondary data sources.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-061",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which set contains only secondary data sources listed in the textbook?",
+      "options": [
+        "Online databases, government records, social media posts, past research studies",
+        "Interviews, experiments, sensors, focus groups",
+        "Biometric devices, observations, questionnaires, interviews",
+        "Experiments, IoT devices, sensors, focus groups"
+      ],
+      "answer": "A",
+      "explanation": "The first set consists of textbook-listed secondary sources.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-062",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is the main difference between a dataset and a database?",
+      "options": [
+        "A dataset is a structured collection associated with a unique body of work, while a database can contain multiple datasets or tables",
+        "A database is always smaller than a dataset",
+        "A dataset is hardware while a database is software",
+        "They are exactly the same"
+      ],
+      "answer": "A",
+      "explanation": "The textbook distinguishes a dataset from a database organized into multiple datasets or tables.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-063",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does DBMS stand for?",
+      "options": [
+        "Database Management System",
+        "Data Backup Memory System",
+        "Digital Business Management Software",
+        "Database Machine Storage"
+      ],
+      "answer": "A",
+      "explanation": "The textbook expands DBMS as Database Management System.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-064",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What is the role of a DBMS?",
+      "options": [
+        "It provides a platform to create, modify, and retrieve data between the database and end user",
+        "It converts continuous data into ordinal data",
+        "It only creates charts",
+        "It collects data only through interviews"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes DBMS as the interface between the database and end user for creating, modifying, and retrieving data.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-065",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which statement correctly compares relational and non-relational databases?",
+      "options": [
+        "Relational databases store data in tables, while non-relational databases can use forms such as key-value pairs, column families, or graphs",
+        "Relational databases cannot store data",
+        "Non-relational databases must always use tables",
+        "Both are identical in structure"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives these distinctions and examples of DBMS for both types.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-066",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An online shopping site needs tables for products, customers, and orders. What is the most appropriate role of a database?",
+      "options": [
+        "Managing product, customer, and order information",
+        "Displaying only decorative graphics",
+        "Replacing all customer interaction",
+        "Measuring temperature"
+      ],
+      "answer": "A",
+      "explanation": "The textbook's online shopping example uses a database to manage products, customers, and orders.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-067",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "medium",
+      "question": "A supermarket uses database information to place products with shorter shelf lives where customers can access them easily. What does this illustrate?",
+      "options": [
+        "The role of database information in supporting data-driven decisions",
+        "The difference between ordinal and nominal data",
+        "The use of NLP for translation",
+        "The history of Hadoop"
+      ],
+      "answer": "A",
+      "explanation": "The supermarket case shows database information being used by data science to guide product placement.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-068",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is a data storage method listed in the textbook?",
+      "options": [
+        "Cloud based data storage",
+        "Speech recognition",
+        "Sentiment analysis",
+        "Focus group"
+      ],
+      "answer": "A",
+      "explanation": "Cloud based data storage is one of the listed data storage methods.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-069",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which set contains only data storage methods listed in the textbook?",
+      "options": [
+        "Relational/NoSQL databases, data warehouse, distributed file systems, cloud based data storage",
+        "Surveys, interviews, experiments, focus groups",
+        "Charts, graphs, maps, dashboards",
+        "Machine learning, deep learning, NLP"
+      ],
+      "answer": "A",
+      "explanation": "These five methods are listed in the textbook's data storage section.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-070",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is the purpose of data visualization?",
+      "options": [
+        "To obtain meaningful insight, trends, and patterns from data",
+        "To collect primary data only",
+        "To replace all databases",
+        "To create hardware components"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines data visualization as graphical representation used to get meaningful insight, trends, and patterns.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-071",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which is a visual element used in data visualization?",
+      "options": [
+        "Dashboard",
+        "Questionnaire",
+        "Biometric device",
+        "Database management system"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists charts, graphs, maps, figures, and dashboards as visual elements.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-072",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A class plots survey results using charts and graphs and then draws conclusions. Which textbook activity does this most closely represent?",
+      "options": [
+        "Data visualization",
+        "Data storage",
+        "Database creation",
+        "Data collection only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook activity asks students to plot survey data using charts and graphs and draw conclusions.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-073",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does summary statistics provide?",
+      "options": [
+        "Information about data in a sample that helps understand its values",
+        "Only a list of data sources",
+        "Only future predictions",
+        "Only a database structure"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes summary statistics as information about a sample that helps understand values better.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-074",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which can be included in summary statistics according to the textbook?",
+      "options": [
+        "Total number of values, minimum, maximum, mean, and standard deviation",
+        "Only the file name",
+        "Only the data source",
+        "Only the largest category"
+      ],
+      "answer": "A",
+      "explanation": "These measures are explicitly mentioned in the textbook.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-075",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is an outlier?",
+      "options": [
+        "An unusual data point significantly different from other values in a dataset",
+        "The average value of a dataset",
+        "A type of database",
+        "A data collection method"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines outliers as unusual points significantly different from other values.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-076",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "One value in a dataset is much higher than all other values. What should it be considered first?",
+      "options": [
+        "A possible outlier",
+        "A nominal category",
+        "A database table",
+        "A primary source"
+      ],
+      "answer": "A",
+      "explanation": "A value significantly different from the others may be an outlier.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-077",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is a trend?",
+      "options": [
+        "A pattern or direction in data over time or across categories",
+        "A single unusual value",
+        "A storage method",
+        "A database table"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines trends as patterns or directions in data over time or across categories.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-078",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A graph shows temperature increasing throughout the day. What does the graph demonstrate?",
+      "options": [
+        "A trend",
+        "A database",
+        "A respondent",
+        "A nominal category"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives increase or decrease in temperature as an example of a trend.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-079",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does distribution of values describe?",
+      "options": [
+        "How data points are spread out across the dataset",
+        "How data is collected from respondents",
+        "How databases are linked",
+        "How future events are predicted"
+      ],
+      "answer": "A",
+      "explanation": "This matches the textbook's definition of distribution of values.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-080",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why are summary statistics needed?",
+      "options": [
+        "They provide a quick overview and help understand data cleaning, preprocessing, feature selection, and visualization",
+        "They eliminate the need for data collection",
+        "They convert all data into qualitative form",
+        "They make every dataset smaller"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists these benefits of summary statistics.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-081",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A teacher has a dataset with a minimum, maximum, mean, and one unusually high value. Which combination of concepts would help interpret it according to the textbook?",
+      "options": [
+        "Summary statistics, outlier detection, and distribution analysis",
+        "Only data collection and interviews",
+        "Only nominal classification",
+        "Only database storage"
+      ],
+      "answer": "A",
+      "explanation": "The textbook links summary statistics with understanding values, outliers, trends, and distribution.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-082",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What are the three Vs of big data?",
+      "options": [
+        "Volume, Velocity, Variety",
+        "Value, Vision, Version",
+        "Virtual, Visual, Variable",
+        "Volume, Value, Validation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies Volume, Velocity, and Variety as the three Vs of big data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-083",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In big data, Volume refers to:",
+      "options": [
+        "The amount of data",
+        "The speed at which data is received",
+        "The formats of data",
+        "The accuracy of data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines Volume as the amount of data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-084",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In big data, Velocity refers to:",
+      "options": [
+        "The speed at which data is received",
+        "The amount of data",
+        "The number of categories",
+        "The reliability of a database"
+      ],
+      "answer": "A",
+      "explanation": "Velocity is the fast rate at which data is received.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-085",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "In big data, Variety refers to:",
+      "options": [
+        "The different formats and types of available data",
+        "The speed of processing only",
+        "The amount of data only",
+        "The number of users only"
+      ],
+      "answer": "A",
+      "explanation": "Variety refers to the different formats and types of data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-086",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A system receives data continuously from smart products and must evaluate it in real time. Which V is most directly involved?",
+      "options": [
+        "Velocity",
+        "Volume",
+        "Variety",
+        "Nominal"
+      ],
+      "answer": "A",
+      "explanation": "Real-time and fast data receipt are characteristics of Velocity in the textbook.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-087",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A company stores text, images, videos, JSON, and XML from many sources. Which V is especially relevant?",
+      "options": [
+        "Variety",
+        "Velocity",
+        "Volume only",
+        "Ordinal"
+      ],
+      "answer": "A",
+      "explanation": "The textbook associates Variety with different formats, including unstructured and semi-structured data.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-088",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why may big data require additional preprocessing?",
+      "options": [
+        "Because unstructured and semi-structured data require processing to derive meaningful insight",
+        "Because all big data is already perfectly structured",
+        "Because big data contains no useful information",
+        "Because databases cannot store numbers"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that unstructured and semi-structured data require additional preprocessing for meaningful insight.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-089",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why can traditional data processing software be inadequate for big data?",
+      "options": [
+        "The datasets can be so voluminous and complex that traditional software cannot manage them",
+        "Traditional software can process only small text files",
+        "Big data contains no structured information",
+        "Traditional software cannot display numbers"
+      ],
+      "answer": "A",
+      "explanation": "This is stated directly in the textbook's description of big data.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-090",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "When did the term big data emerge according to the textbook?",
+      "options": [
+        "In the early 2000s",
+        "In the 1960s",
+        "In the 1980s",
+        "After 2020"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that the term emerged in the early 2000s to describe exponential data growth.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-091",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which development around 2005 helped store and manage huge data?",
+      "options": [
+        "Hadoop",
+        "NLP",
+        "A dashboard",
+        "A questionnaire"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that Hadoop was developed in 2005 and helped store and manage huge data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-092",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What was Hadoop described as?",
+      "options": [
+        "An open-source framework created specifically to store and analyze big datasets",
+        "A type of nominal data",
+        "A data collection questionnaire",
+        "A graphical chart"
+      ],
+      "answer": "A",
+      "explanation": "This is how the textbook describes Hadoop.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-093",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "medium",
+      "question": "Why did the growth of Facebook, YouTube, and other online services contribute to the recognition of big data?",
+      "options": [
+        "They generated very large amounts of user data",
+        "They eliminated the need for data analysis",
+        "They converted all data to paper",
+        "They stopped data collection"
+      ],
+      "answer": "A",
+      "explanation": "The textbook notes that around 2005 people recognized how much data users generated through online services.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-094",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How did the Internet of Things contribute to big data growth?",
+      "options": [
+        "More connected objects and devices gathered data about usage patterns and product performance",
+        "It stopped devices from collecting data",
+        "It converted all data into printed documents",
+        "It removed the need for machine learning"
+      ],
+      "answer": "A",
+      "explanation": "The textbook connects IoT devices with increasing data generation.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-095",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is an advantage of big data?",
+      "options": [
+        "Product development based on customer needs and wants",
+        "Eliminating all data quality problems",
+        "Preventing all data growth",
+        "Removing the need for cybersecurity"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists product development as an advantage of big data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-096",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A company analyzes customer data to anticipate demand for a new product. Which big-data benefit is being used?",
+      "options": [
+        "Product development",
+        "Data integration challenge",
+        "Data storage failure",
+        "Nominal classification"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that big data can help anticipate customer demand and support product development.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-097",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is predictive maintenance?",
+      "options": [
+        "A proactive strategy using existing data to predict when equipment or machinery may fail",
+        "A method of collecting primary data",
+        "A type of data visualization",
+        "A method of classifying colors"
+      ],
+      "answer": "A",
+      "explanation": "This is the textbook's definition of predictive maintenance.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-098",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A factory analyzes machine data and receives an alert before a machine is likely to fail. What does this illustrate?",
+      "options": [
+        "Predictive maintenance",
+        "Nominal data",
+        "Secondary data collection",
+        "NLP"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes predictive maintenance as identifying potential equipment problems before they happen.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-099",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How can big data improve customer experience or satisfaction?",
+      "options": [
+        "By gathering information from sources such as social media, web visits, and call logs",
+        "By removing all customer records",
+        "By avoiding analysis of customer behavior",
+        "By using only paper questionnaires"
+      ],
+      "answer": "A",
+      "explanation": "These sources are specifically mentioned in the textbook's discussion of customer experience.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-100",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Big data analytics identifies suspicious patterns and anomalies to detect fraudulent activities. Which benefit is this?",
+      "options": [
+        "Fraud and compliance",
+        "Product development",
+        "Data visualization",
+        "Data collection"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that suspicious patterns and anomalies can help detect fraud and enhance cybersecurity.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-101",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is listed as a big-data challenge?",
+      "options": [
+        "Data quality",
+        "Predictive maintenance",
+        "Product development",
+        "Customer satisfaction"
+      ],
+      "answer": "A",
+      "explanation": "Data quality is one of the challenges identified in the textbook.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-102",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How can poor data quality affect big-data analysis?",
+      "options": [
+        "It may lead to errors, inefficiency, and misleading insight",
+        "It always improves predictions",
+        "It eliminates the need for preprocessing",
+        "It guarantees correct decisions"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states these consequences of poor-quality data.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-103",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why is data security and privacy a challenge in big data?",
+      "options": [
+        "Protecting massive datasets from unauthorized access is difficult",
+        "Big data contains no personal information",
+        "Security is unnecessary for large datasets",
+        "Only small datasets require protection"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies protection and privacy of massive datasets as a challenge.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-104",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why is rapid growth of data a challenge?",
+      "options": [
+        "Systems must continue to handle increasing amounts of data",
+        "Data stops growing after collection",
+        "Rapid growth makes all data qualitative",
+        "It removes the need for storage"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that making systems able to handle continuously growing data is challenging.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-105",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What does big-data tool selection involve as a challenge?",
+      "options": [
+        "Ensuring compatibility and seamless interaction among different tools and platforms",
+        "Choosing the largest hard disk only",
+        "Collecting data through interviews",
+        "Converting all data into ordinal form"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies compatibility and interaction between tools and platforms as a challenge.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-106",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is meant by data integration as a big-data challenge?",
+      "options": [
+        "Creating harmony among diverse data formats and structures",
+        "Deleting duplicate charts",
+        "Collecting only primary data",
+        "Using only one data format"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes data integration as creating harmony among diverse formats and structures.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-107",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which business domain is explicitly listed as an application area of big data?",
+      "options": [
+        "Healthcare",
+        "Only agriculture",
+        "Only gaming",
+        "Only education"
+      ],
+      "answer": "A",
+      "explanation": "Healthcare is one of the five business domains listed in the textbook's big-data application section.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-108",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Wearable devices and sensors send patient data in real time to electronic health records. Which big-data application is illustrated?",
+      "options": [
+        "Healthcare",
+        "Manufacturing",
+        "Government taxation",
+        "Media advertising"
+      ],
+      "answer": "A",
+      "explanation": "This is directly described in the textbook's healthcare example.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-109",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A media company studies viewer patterns to predict what audiences want to see and target advertisements. What is this an example of?",
+      "options": [
+        "Big data in media and entertainment",
+        "Big data in healthcare",
+        "Big data in manufacturing",
+        "Data collection by sensors only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that media houses use big data to analyze viewer patterns, target audiences, and support content monetization.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-110",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "IoT devices generate continuous data, and analytics of this data helps provide personalized customer experiences. Which application is this?",
+      "options": [
+        "Big data with Internet of Things (IoT)",
+        "Big data in government",
+        "Big data in healthcare only",
+        "Summary statistics"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that big data is essential for unlocking the potential of IoT by analyzing the massive data generated by IoT devices.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-111",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A factory uses data to predict machine maintenance, track faults, improve energy efficiency, and plan supplies. Which area does this describe?",
+      "options": [
+        "Manufacturing",
+        "Media and entertainment",
+        "Healthcare",
+        "Government only"
+      ],
+      "answer": "A",
+      "explanation": "These are listed advantages and applications of big data in manufacturing.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-112",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How can big data help governments?",
+      "options": [
+        "It can help understand citizens' needs, combat fraud, minimize errors, and improve operations",
+        "It can only be used for entertainment",
+        "It prevents governments from using data",
+        "It is limited to product development"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists these government benefits.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-113",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which is listed among the wider applications of big data?",
+      "options": [
+        "Weather forecasting",
+        "Keyboard design",
+        "Operating-system installation",
+        "Printer repair"
+      ],
+      "answer": "A",
+      "explanation": "Weather forecasting is explicitly listed among big-data applications.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-114",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which pairing correctly matches a big-data application with its textbook use?",
+      "options": [
+        "Manufacturing — predictive maintenance",
+        "Media — patient health records",
+        "Healthcare — supply planning only",
+        "Government — viewer pattern analysis"
+      ],
+      "answer": "A",
+      "explanation": "Predictive maintenance and process improvement are discussed under manufacturing, while the other pairings mismatch the textbook examples.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-115",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A hospital wants to use wearable-sensor data to detect health risks early, but it also needs to protect patient information. Which combination best reflects the textbook?",
+      "options": [
+        "Healthcare application plus data security and privacy challenge",
+        "Manufacturing application plus product development benefit only",
+        "Media application plus nominal data",
+        "Government application plus data visualization only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes healthcare benefits from wearable and sensor data and separately identifies security and privacy as a major big-data challenge.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-116",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "An organization receives huge amounts of text, images, and videos rapidly from many sources and must process them for useful insights. Which combination of big-data characteristics is most evident?",
+      "options": [
+        "Volume, Velocity, and Variety",
+        "Only Volume",
+        "Only Variety",
+        "Only Velocity"
+      ],
+      "answer": "A",
+      "explanation": "The situation combines amount of data, rapid receipt, and multiple formats—the three Vs.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-117",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A business has excellent analytics tools but its data contains many errors and incompatible formats. Which challenges from the textbook should it address first?",
+      "options": [
+        "Data quality and data integration",
+        "Product development and customer satisfaction",
+        "Predictive maintenance and fraud detection",
+        "Volume and NLP only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies poor data quality and difficulty integrating diverse formats as distinct challenges.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-118",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A manufacturer wants to reduce unexpected machine failures. It analyzes existing machine data to estimate when failure may occur. Why is this more than simple data storage?",
+      "options": [
+        "The analysis turns existing data into a prediction that supports proactive maintenance",
+        "Storage alone predicts failure automatically",
+        "The data becomes nominal data",
+        "It is only a data collection method"
+      ],
+      "answer": "A",
+      "explanation": "Predictive maintenance requires analyzing existing data to predict likely failure before it happens.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-119",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A school wants original information about students' study habits and asks them questions directly. Which method is most suitable?",
+      "options": [
+        "Survey or questionnaire",
+        "Past research study",
+        "Government record",
+        "Online database"
+      ],
+      "answer": "A",
+      "explanation": "Surveys and questionnaires are listed as primary data collection methods and collect original information directly from respondents.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-120",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A researcher uses an existing government record rather than collecting new responses. What kind of data source is this?",
+      "options": [
+        "Secondary data",
+        "Primary data",
+        "Continuous data",
+        "Ordinal data"
+      ],
+      "answer": "A",
+      "explanation": "Government and institutional records are listed as secondary data sources.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-121",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which storage method is particularly associated with keeping data across distributed systems in the textbook list?",
+      "options": [
+        "Distributed file systems",
+        "Focus groups",
+        "Surveys",
+        "Dashboards"
+      ],
+      "answer": "A",
+      "explanation": "Distributed file systems are explicitly listed as a data storage method.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-122",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A dataset contains customer satisfaction levels: satisfied, neutral, and dissatisfied. Why is ordinal data the best classification?",
+      "options": [
+        "The categories have a meaningful order or ranking",
+        "The categories have no order",
+        "The values must have a true zero",
+        "The data must be continuous measurements"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses satisfaction-type ordered categories as an example of ordinal data and defines ordinal data by meaningful order.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-123",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A dataset records both the number of tickets sold and the temperature at which each sale occurred. How should these two variables be classified?",
+      "options": [
+        "Number of tickets: discrete; temperature: continuous",
+        "Number of tickets: continuous; temperature: discrete",
+        "Both are nominal",
+        "Both are ordinal"
+      ],
+      "answer": "A",
+      "explanation": "Counts such as tickets sold are discrete, while measurements such as temperature are continuous.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-124",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which data type can be added, subtracted, and compared according to the textbook?",
+      "options": [
+        "Interval scaled data",
+        "Nominal data only",
+        "Ordinal data only",
+        "Categorical labels only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that interval scaled data can be added, subtracted, and compared.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-125",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which data type has a true zero point according to the textbook?",
+      "options": [
+        "Ratio scaled data",
+        "Interval scaled data",
+        "Nominal data",
+        "Ordinal data"
+      ],
+      "answer": "A",
+      "explanation": "A true zero is a defining feature of ratio scaled data in the textbook.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-126",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A student uses an online database containing previously collected information for a research task. How should the source be classified?",
+      "options": [
+        "Secondary data source",
+        "Primary data source",
+        "Continuous data",
+        "Ordinal data"
+      ],
+      "answer": "A",
+      "explanation": "Online databases are listed as secondary data sources.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-127",
+      "chapter": 4,
+      "topic": "4.2 Data types in Data Science",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A data scientist wants to explain a dataset's minimum, maximum, mean, unusual values, and overall spread. Which textbook concepts are most useful together?",
+      "options": [
+        "Summary statistics, outliers, and distribution",
+        "Only nominal data and interviews",
+        "Only database tables",
+        "Only primary data collection"
+      ],
+      "answer": "A",
+      "explanation": "The textbook connects summary statistics with understanding values, outliers, and distribution.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-128",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which big-data V is concerned with the amount of data rather than its speed or format?",
+      "options": [
+        "Volume",
+        "Velocity",
+        "Variety",
+        "Validation"
+      ],
+      "answer": "A",
+      "explanation": "Volume refers to the amount of data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-129",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which big-data V is most closely associated with unstructured text, images, and videos appearing alongside structured data?",
+      "options": [
+        "Variety",
+        "Velocity",
+        "Volume",
+        "Validity"
+      ],
+      "answer": "A",
+      "explanation": "Variety concerns the different formats and types of data, including unstructured text, images, and videos.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-130",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An IoT device must evaluate incoming information immediately while operating in real time. Which characteristic is most important?",
+      "options": [
+        "Velocity",
+        "Volume only",
+        "Nominal classification",
+        "Data quality only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook associates real-time evaluation and fast receipt of data with Velocity.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-131",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why can big data create more opportunities for machine learning according to the textbook?",
+      "options": [
+        "Its huge size provides more data for finding patterns and obtaining better results",
+        "It removes the need for algorithms",
+        "It contains only numerical data",
+        "It prevents data analysis"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that huge data provides more opportunities for machine learning and better results.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-132",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A media company analyzes viewer patterns to improve advertising and content monetization. Which benefit is most directly supported?",
+      "options": [
+        "Improved audience targeting and revenue opportunities",
+        "Predictive maintenance",
+        "Patient diagnosis",
+        "Tax compliance only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that media companies use viewer patterns to target audiences, advertising, and content monetization, increasing revenues.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-133",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A government uses big-data analytics to combat fraud and reduce system errors. Which textbook benefit is illustrated?",
+      "options": [
+        "Improved government operations and services",
+        "Product development",
+        "Customer experience in media",
+        "Machine maintenance"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says government analytics can combat fraud, minimize system errors, reduce costs, and improve services.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-134",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A company wants to combine customer records from several systems that use different data formats. Which challenge is most directly involved?",
+      "options": [
+        "Data integration",
+        "Predictive maintenance",
+        "Customer satisfaction",
+        "Product development"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes data integration as creating harmony among diverse data formats and structures.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-135",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A business must choose tools that work together without compatibility problems. Which challenge is being addressed?",
+      "options": [
+        "Big data tool selection",
+        "Data quality",
+        "Rapid growth of data",
+        "Product development"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies compatibility and seamless interaction among tools and platforms under big-data tool selection.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    },
+    {
+      "id": "CH4-MCQ-136",
+      "chapter": 4,
+      "topic": "4.3 Big Data",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "difficult",
+      "question": "A company wants to anticipate customer demand for a new product by analyzing past and current product attributes. Which benefit is it using?",
+      "options": [
+        "Product development",
+        "Data security and privacy",
+        "Data integration",
+        "Rapid growth management"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that big data can support product development by anticipating customer demand and building predictive models.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 4"
+    }
+  ]
+}
