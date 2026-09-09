@@ -153,14 +153,21 @@ function saveAll() {
 }
 
 function saveToFirestore() {
-    if (typeof db === "undefined") return;
-    if (principalAccount) db.collection("teachers").doc("PRINCIPAL").set(principalAccount).catch(function() {});
-    for (var i = 0; i < studentAccounts.length; i++) db.collection("students").doc(studentAccounts[i].id).set(studentAccounts[i]).catch(function() {});
-    for (var i = 0; i < classes.length; i++) db.collection("classes").doc(classes[i].id).set(classes[i]).catch(function() {});
-    for (var i = 0; i < questions.length; i++) db.collection("questions").doc(questions[i].id).set(questions[i]).catch(function() {});
-    for (var i = 0; i < assignments.length; i++) db.collection("assignments").doc(assignments[i].id || ("a-" + i)).set(assignments[i]).catch(function() {});
-    for (var i = 0; i < teachers.length; i++) db.collection("teachers").doc(teachers[i].id).set(teachers[i]).catch(function() {});
-    for (var i = 0; i < allAttempts.length; i++) db.collection("attempts").doc(allAttempts[i].attemptId || allAttempts[i].timestamp || ("att-" + i)).set(allAttempts[i]).catch(function() {});
+    if (typeof db === "undefined") { console.warn("Firestore not available"); return; }
+    if (principalAccount) db.collection("teachers").doc("PRINCIPAL").set(principalAccount).catch(function(e) { console.error("Firestore PRINCIPAL save error:", e); });
+    for (var i = 0; i < studentAccounts.length; i++) db.collection("students").doc(studentAccounts[i].id).set(studentAccounts[i]).catch(function(e) { console.error("Firestore student save error:", e); });
+    for (var i = 0; i < classes.length; i++) db.collection("classes").doc(classes[i].id).set(classes[i]).catch(function(e) { console.error("Firestore class save error:", e); });
+    for (var i = 0; i < questions.length; i++) db.collection("questions").doc(questions[i].id).set(questions[i]).catch(function(e) { console.error("Firestore question save error:", e); });
+    for (var i = 0; i < assignments.length; i++) db.collection("assignments").doc(assignments[i].id || ("a-" + i)).set(assignments[i]).catch(function(e) { console.error("Firestore assignment save error:", e); });
+    for (var i = 0; i < teachers.length; i++) db.collection("teachers").doc(teachers[i].id).set(teachers[i]).catch(function(e) { console.error("Firestore teacher save error:", e); });
+    for (var i = 0; i < allAttempts.length; i++) db.collection("attempts").doc(allAttempts[i].attemptId || allAttempts[i].timestamp || ("att-" + i)).set(allAttempts[i]).catch(function(e) { console.error("Firestore attempt save error:", e); });
+}
+
+function saveTeacherToFirestore(teacherObj, callback) {
+    if (typeof db === "undefined") { if (callback) callback(false); return; }
+    db.collection("teachers").doc(teacherObj.id).set(teacherObj)
+        .then(function() { if (callback) callback(true); })
+        .catch(function(e) { console.error("Firestore single teacher save error:", e); if (callback) callback(false); });
 }
 
 function loadFromFirestore(callback) {
@@ -228,15 +235,17 @@ function loadFromFirestore(callback) {
                     firestoreTeachers.push(d);
                 }
             });
+            console.log("Firestore teachers loaded:", firestoreTeachers.map(function(t) { return t.id; }));
             var localById = {};
             for (var i = 0; i < teachers.length; i++) localById[teachers[i].id] = teachers[i];
             for (var i = 0; i < firestoreTeachers.length; i++) localById[firestoreTeachers[i].id] = firestoreTeachers[i];
             teachers = [];
             for (var id in localById) teachers.push(localById[id]);
+            console.log("Merged teachers:", teachers.map(function(t) { return t.id; }));
             localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
         }
         done();
-    }).catch(function() { done(); });
+    }).catch(function(e) { console.error("Firestore teachers load error:", e); done(); });
 }
 
 function refreshAssignmentsFromFirestore(callback) {

@@ -495,22 +495,23 @@
                     <input type="text" id="tmName" placeholder="e.g., Muhammad Khan" required>
                 </div>
                 <div class="form-row">
-                    <label>Assign Classes &amp; Subjects</label>
-                    <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Select a class, then check which subjects this teacher teaches in that class.</p>
-                    <div id="tmClassSubjectMap" style="margin-top:8px;"></div>
-                </div>
-                <div class="form-row">
-                    <label>Role</label>
-                    <div style="display:flex;gap:15px;margin-top:5px;">
-                        <label style="display:flex;align-items:center;gap:5px;font-weight:normal;">
-                            <input type="checkbox" id="tmIsClassTeacher" onchange="toggleCTClassField()"> Class Teacher
-                        </label>
+                    <label>Class &amp; Subject</label>
+                    <div style="display:flex;gap:6px;margin-top:4px;">
+                        <select id="tmCsClass" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;"></select>
+                        <select id="tmCsSubject" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;"></select>
+                        <button type="button" class="action-btn" onclick="addCsPair()" style="white-space:nowrap;">+ Add</button>
                     </div>
-                    <p style="font-size:11px;color:var(--text-muted);margin-top:4px;">Class teacher = responsible for the class (attendance, reports). Subject teacher = teaches subject only.</p>
+                </div>
+                <div id="tmCsPairs" style="margin-top:4px;"></div>
+                <div class="form-row" style="margin-top:10px;">
+                    <label>Role</label>
+                    <label style="display:flex;align-items:center;gap:5px;font-weight:normal;margin-top:4px;">
+                        <input type="checkbox" id="tmIsClassTeacher" onchange="toggleCTClassField()"> Class Teacher
+                    </label>
                 </div>
                 <div id="tmClassTeacherField" class="form-row" style="display:none;">
                     <label>Class Teacher Of</label>
-                    <div id="tmClassTeacherList" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:5px;"></div>
+                    <select id="tmClassTeacherSelect" style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;margin-top:4px;"></select>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>

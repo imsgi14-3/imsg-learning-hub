@@ -1624,64 +1624,87 @@ var UI = (function() {
         c.innerHTML = h + '</tbody></table>';
     }
 
+    var csPairs = [];
+
+    function initCsDropdowns() {
+        var classSel = $("tmCsClass");
+        var subSel = $("tmCsSubject");
+        if (!classSel || !subSel) return;
+        classSel.innerHTML = '<option value="">Select class</option>';
+        for (var i = 0; i < classes.length; i++) {
+            classSel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
+        }
+        var allSubjects = ["Computer Science", "Physics", "Chemistry", "Biology", "Mathematics", "English", "Urdu", "Islamiyat", "Pakistan Studies"];
+        var subjectLabels = { "Computer Science": "CS", "Physics": "Physics", "Chemistry": "Chemistry", "Biology": "Biology", "Mathematics": "Maths", "English": "English", "Urdu": "Urdu", "Islamiyat": "Islamiyat", "Pakistan Studies": "Pak Studies" };
+        subSel.innerHTML = '<option value="">Select subject</option>';
+        for (var i = 0; i < allSubjects.length; i++) {
+            subSel.innerHTML += '<option value="' + allSubjects[i] + '">' + (subjectLabels[allSubjects[i]] || allSubjects[i]) + '</option>';
+        }
+    }
+
+    function renderCsPairs() {
+        var c = $("tmCsPairs");
+        if (!c) return;
+        if (csPairs.length === 0) { c.innerHTML = ""; return; }
+        var h = '<table style="width:100%;font-size:12px;border-collapse:collapse;"><tbody>';
+        for (var i = 0; i < csPairs.length; i++) {
+            var className = csPairs[i].className || csPairs[i].classId;
+            h += '<tr style="background:var(--bg-tertiary,#e2e8f0);border-radius:4px;">';
+            h += '<td style="padding:5px 8px;border-radius:4px 0 0 4px;"><strong>' + className + '</strong></td>';
+            h += '<td style="padding:5px 8px;">' + csPairs[i].subject + '</td>';
+            h += '<td style="padding:5px 8px;text-align:right;border-radius:0 4px 4px 0;"><button type="button" onclick="removeCsPair(' + i + ')" style="background:none;border:none;color:var(--error,#ef4444);cursor:pointer;font-size:14px;">&times;</button></td>';
+            h += '</tr>';
+        }
+        h += '</tbody></table>';
+        c.innerHTML = h;
+    }
+
+    function addCsPair() {
+        var classSel = $("tmCsClass");
+        var subSel = $("tmCsSubject");
+        var classId = classSel.value;
+        var subject = subSel.value;
+        if (!classId || !subject) { alert("Select both class and subject."); return; }
+        for (var i = 0; i < csPairs.length; i++) {
+            if (csPairs[i].classId === classId && csPairs[i].subject === subject) { alert("Already added."); return; }
+        }
+        var className = classSel.options[classSel.selectedIndex].text;
+        csPairs.push({ classId: classId, className: className, subject: subject });
+        renderCsPairs();
+        toggleCTClassField();
+        classSel.value = "";
+        subSel.value = "";
+    }
+
+    function removeCsPair(idx) {
+        csPairs.splice(idx, 1);
+        renderCsPairs();
+        toggleCTClassField();
+    }
+
+    function getCsPairsMap() {
+        var map = {};
+        for (var i = 0; i < csPairs.length; i++) {
+            if (!map[csPairs[i].classId]) map[csPairs[i].classId] = [];
+            if (map[csPairs[i].classId].indexOf(csPairs[i].subject) === -1) map[csPairs[i].classId].push(csPairs[i].subject);
+        }
+        return map;
+    }
+
     function toggleCTClassField() {
         var isCT = $("tmIsClassTeacher").checked;
         $("tmClassTeacherField").style.display = isCT ? "block" : "none";
         if (isCT) {
-            var checked = document.querySelectorAll("#tmClassSubjectMap .tm-cs-class-cb:checked");
-            var sel = $("tmClassTeacherList");
-            sel.innerHTML = "";
-            for (var i = 0; i < checked.length; i++) {
-                sel.innerHTML += '<label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;"><input type="checkbox" class="tm-ctof-cb" value="' + checked[i].value + '"' + (checked[i].dataset.wasct === "true" ? " checked" : "") + '> ' + checked[i].dataset.name + '</label>';
+            var sel = $("tmClassTeacherSelect");
+            sel.innerHTML = '<option value="">Select class</option>';
+            var added = {};
+            for (var i = 0; i < csPairs.length; i++) {
+                if (!added[csPairs[i].classId]) {
+                    added[csPairs[i].classId] = true;
+                    sel.innerHTML += '<option value="' + csPairs[i].classId + '">' + csPairs[i].className + '</option>';
+                }
             }
         }
-    }
-
-    function toggleClassSubjects(classId) {
-        var panel = $("tm-cs-subjects-" + classId);
-        if (panel) panel.style.display = panel.style.display === "none" ? "block" : "none";
-        toggleCTClassField();
-    }
-
-    function renderClassSubjectMap(classSubjects) {
-        classSubjects = classSubjects || {};
-        var c = $("tmClassSubjectMap");
-        if (!c) return;
-        var allSubjects = ["Computer Science", "Physics", "Chemistry", "Biology", "Mathematics", "English", "Urdu", "Islamiyat", "Pakistan Studies"];
-        var subjectLabels = { "Computer Science": "CS", "Physics": "Physics", "Chemistry": "Chemistry", "Biology": "Biology", "Mathematics": "Maths", "English": "English", "Urdu": "Urdu", "Islamiyat": "Islamiyat", "Pakistan Studies": "Pak Studies" };
-        var h = "";
-        for (var i = 0; i < classes.length; i++) {
-            var cl = classes[i];
-            var checkedSubjects = classSubjects[cl.id] || [];
-            var isOpen = checkedSubjects.length > 0;
-            h += '<div style="background:var(--bg-tertiary,#e2e8f0);border-radius:8px;padding:10px 12px;margin-bottom:8px;">';
-            h += '<label style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:13px;cursor:pointer;">';
-            h += '<input type="checkbox" class="tm-cs-class-cb" value="' + cl.id + '" data-name="' + cl.name + '" data-wasct="' + (checkedSubjects.length > 0 ? "true" : "false") + '"' + (isOpen ? " checked" : "") + ' onchange="toggleClassSubjects(\'' + cl.id + '\')"> ' + cl.name;
-            h += '</label>';
-            h += '<div id="tm-cs-subjects-' + cl.id + '" style="display:' + (isOpen ? "flex" : "none") + ';flex-wrap:wrap;gap:6px;margin-top:8px;padding-left:24px;">';
-            for (var j = 0; j < allSubjects.length; j++) {
-                var sub = allSubjects[j];
-                var subChecked = checkedSubjects.indexOf(sub) !== -1;
-                h += '<label style="display:flex;align-items:center;gap:3px;font-weight:normal;font-size:12px;background:var(--bg-card,#fff);padding:4px 8px;border-radius:4px;border:1px solid var(--border,#d1d5db);cursor:pointer;">';
-                h += '<input type="checkbox" class="tm-cs-subject-cb" data-class="' + cl.id + '" value="' + sub + '"' + (subChecked ? " checked" : "") + '> ' + (subjectLabels[sub] || sub);
-                h += '</label>';
-            }
-            h += '</div></div>';
-        }
-        c.innerHTML = h;
-    }
-
-    function getTeacherClassSubjects() {
-        var map = {};
-        var classCbs = document.querySelectorAll("#tmClassSubjectMap .tm-cs-class-cb:checked");
-        for (var i = 0; i < classCbs.length; i++) {
-            var cid = classCbs[i].value;
-            var subCbs = document.querySelectorAll('#tm-cs-subjects-' + cid + ' .tm-cs-subject-cb:checked');
-            var subs = [];
-            for (var j = 0; j < subCbs.length; j++) subs.push(subCbs[j].value);
-            if (subs.length > 0) map[cid] = subs;
-        }
-        return map;
     }
 
     function showAddTeacherModal() {
@@ -1690,7 +1713,9 @@ var UI = (function() {
         $("tmIsClassTeacher").checked = false;
         $("tmClassTeacherField").style.display = "none";
         $("teacherModalTitle").textContent = "Add Teacher";
-        renderClassSubjectMap({});
+        csPairs = [];
+        renderCsPairs();
+        initCsDropdowns();
         $("teacherModal").classList.add("active");
         $("modalOverlay").classList.add("active");
     }
@@ -1699,15 +1724,27 @@ var UI = (function() {
         var t = null;
         for (var i = 0; i < teachers.length; i++) { if (teachers[i].id === tid) { t = teachers[i]; break; } }
         if (!t) return;
+        initCsDropdowns();
         $("tmEditId").value = t.id;
         $("tmName").value = t.name;
         var cs = t.classSubjects || {};
         if (Object.keys(cs).length === 0 && t.subjects && t.classes) {
             for (var i = 0; i < t.classes.length; i++) cs[t.classes[i]] = t.subjects.slice();
         }
-        renderClassSubjectMap(cs);
+        csPairs = [];
+        for (var cid in cs) {
+            var className = cid;
+            for (var k = 0; k < classes.length; k++) { if (classes[k].id === cid) { className = classes[k].name; break; } }
+            for (var j = 0; j < cs[cid].length; j++) {
+                csPairs.push({ classId: cid, className: className, subject: cs[cid][j] });
+            }
+        }
+        renderCsPairs();
         $("tmIsClassTeacher").checked = t.isClassTeacher === true;
         toggleCTClassField();
+        if (t.isClassTeacher && t.classTeacherOf && t.classTeacherOf.length > 0) {
+            $("tmClassTeacherSelect").value = t.classTeacherOf[0];
+        }
         $("teacherModalTitle").textContent = "Edit Teacher";
         $("teacherModal").classList.add("active");
         $("modalOverlay").classList.add("active");
@@ -1716,7 +1753,9 @@ var UI = (function() {
     function deleteTeacher(tid) {
         if (!confirm("Delete this teacher?")) return;
         teachers = teachers.filter(function(t) { return t.id !== tid; });
-        saveAll(); renderPrincipalTeachers();
+        saveAll();
+        if (typeof db !== "undefined") db.collection("teachers").doc(tid).delete().catch(function(e) { console.error("Firestore teacher delete error:", e); });
+        renderPrincipalTeachers();
     }
 
     function exportTeachers() {
@@ -1751,7 +1790,7 @@ var UI = (function() {
         e.preventDefault();
         var editId = $("tmEditId").value;
         var name = $("tmName").value.trim();
-        var classSubjects = getTeacherClassSubjects();
+        var classSubjects = getCsPairsMap();
         var classIds = Object.keys(classSubjects);
         var allSubjects = [];
         for (var cid in classSubjects) {
@@ -1760,11 +1799,14 @@ var UI = (function() {
             }
         }
         var isClassTeacher = $("tmIsClassTeacher").checked;
-        var ctOfCbs = document.querySelectorAll(".tm-ctof-cb:checked");
         var classTeacherOf = [];
-        for (var i = 0; i < ctOfCbs.length; i++) classTeacherOf.push(ctOfCbs[i].value);
+        if (isClassTeacher) {
+            var ctVal = $("tmClassTeacherSelect").value;
+            if (ctVal) classTeacherOf.push(ctVal);
+        }
         if (classIds.length === 0) { alert("Please assign at least one class with subjects."); return; }
         if (allSubjects.length === 0) { alert("Please select at least one subject for the assigned class(es)."); return; }
+        var teacherObj = null;
         if (editId) {
             for (var i = 0; i < teachers.length; i++) {
                 if (teachers[i].id === editId) {
@@ -1777,18 +1819,24 @@ var UI = (function() {
                     teachers[i].isSubjectTeacher = true;
                     teachers[i].isClassTeacher = isClassTeacher;
                     teachers[i].classTeacherOf = classTeacherOf;
+                    teacherObj = teachers[i];
                     break;
                 }
             }
         } else {
             var tid = generateTeacherId(name);
             var password = generateRandomPassword();
-            teachers.push({ id: tid, name: name, classSubjects: classSubjects, subjects: allSubjects, subject: allSubjects[0] || "", classes: classIds, classId: classIds[0] || "", password: password, isSubjectTeacher: true, isClassTeacher: isClassTeacher, classTeacherOf: classTeacherOf, createdAt: Date.now() });
-            var email = tid.toLowerCase() + "@imsg.edu.pk";
-            Auth.loginFirebaseAuth(email, password, function() {});
+            teacherObj = { id: tid, name: name, classSubjects: classSubjects, subjects: allSubjects, subject: allSubjects[0] || "", classes: classIds, classId: classIds[0] || "", password: password, isSubjectTeacher: true, isClassTeacher: isClassTeacher, classTeacherOf: classTeacherOf, createdAt: Date.now() };
+            teachers.push(teacherObj);
             alert("Teacher added!\n\nID: " + tid + "\nPassword: " + password + "\n\nShare these with the teacher.");
         }
-        saveAll(); closeModal(); renderPrincipalTeachers();
+        saveAll();
+        if (teacherObj) {
+            saveTeacherToFirestore(teacherObj, function(ok) {
+                if (!ok) alert("Warning: Teacher saved locally but cloud sync failed. Data may not appear on other devices.");
+            });
+        }
+        closeModal(); renderPrincipalTeachers();
     }
 
     function renderPrincipalStudents() {
@@ -2269,7 +2317,8 @@ var UI = (function() {
         renderPrincipalClasses: renderPrincipalClasses,
         renderPrincipalTeachers: renderPrincipalTeachers,
         toggleCTClassField: toggleCTClassField,
-        toggleClassSubjects: toggleClassSubjects,
+        addCsPair: addCsPair,
+        removeCsPair: removeCsPair,
         showAddTeacherModal: showAddTeacherModal,
         editTeacher: editTeacher,
         deleteTeacher: deleteTeacher,

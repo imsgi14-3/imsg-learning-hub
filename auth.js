@@ -96,11 +96,12 @@ var Auth = (function() {
             id = document.getElementById("teacherId").value.trim().toLowerCase();
             password = document.getElementById("teacherPassword").value;
             if (!id || !password) { loginMsg.style.display = "block"; loginMsg.textContent = "Please enter Teacher ID and Password."; return; }
+            console.log("Teacher login attempt, id:", id, "teachers count:", teachers.length, "teacher ids:", teachers.map(function(t) { return t.id; }));
             var teacher = null;
             for (var i = 0; i < teachers.length; i++) {
                 if (teachers[i].id === id) { teacher = teachers[i]; break; }
             }
-            if (!teacher) { loginMsg.style.display = "block"; loginMsg.textContent = "Teacher ID not found."; return; }
+            if (!teacher) { loginMsg.style.display = "block"; loginMsg.textContent = "Teacher ID not found."; console.warn("Teacher not found:", id, "available:", teachers.map(function(t) { return t.id; })); return; }
             if (teacher.password !== password) { loginMsg.style.display = "block"; loginMsg.textContent = "Incorrect password."; return; }
             var tClasses = teacher.classes || (teacher.classId ? [teacher.classId] : []);
             var tSubjects = teacher.subjects || (teacher.subject ? [teacher.subject] : []);
@@ -123,11 +124,12 @@ var Auth = (function() {
             id = document.getElementById("teacherId").value.trim().toLowerCase();
             password = document.getElementById("teacherPassword").value;
             if (!id || !password) { loginMsg.style.display = "block"; loginMsg.textContent = "Please enter Teacher ID and Password."; return; }
+            console.log("ClassTeacher login attempt, id:", id, "teachers count:", teachers.length);
             var teacher = null;
             for (var i = 0; i < teachers.length; i++) {
                 if (teachers[i].id === id) { teacher = teachers[i]; break; }
             }
-            if (!teacher) { loginMsg.style.display = "block"; loginMsg.textContent = "Teacher ID not found."; return; }
+            if (!teacher) { loginMsg.style.display = "block"; loginMsg.textContent = "Teacher ID not found."; console.warn("ClassTeacher not found:", id, "available:", teachers.map(function(t) { return t.id; })); return; }
             if (teacher.password !== password) { loginMsg.style.display = "block"; loginMsg.textContent = "Incorrect password."; return; }
             var ctOf = teacher.classTeacherOf || (teacher.isClassTeacher && teacher.classId ? [teacher.classId] : []);
             var ctClassId = ctOf.length > 0 ? ctOf[0] : (teacher.classes || [teacher.classId || ""])[0];
