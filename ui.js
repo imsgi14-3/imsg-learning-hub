@@ -2144,24 +2144,29 @@ var UI = (function() {
     function renderPrincipalAnalytics() {
         var c = $("principalAnalyticsContent");
         if (!c) return;
-        refreshAdminData(function() {
-            var ta = allAttempts.length;
-            var avg = ta > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / ta : 0;
-            var best = ta > 0 ? Math.max.apply(null, allAttempts.map(function(a) { return a.percentage; })) : 0;
-            var h = '<div class="overview-cards">' +
-                '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + ta + '</div><div class="card-label">Total Attempts</div></div>' +
-                '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average Score</div></div>' +
-                '<div class="overview-card students"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best Score</div></div>' +
-                '<div class="overview-card questions"><div class="card-icon">&#128218;</div><div class="card-value">' + questions.length + '</div><div class="card-label">Total Questions</div></div>' +
-                '</div>';
-            h += renderStudentRankings();
-            h += renderTopicAnalysis();
-            h += renderQuestionAccuracy();
-            h += renderProgressOverTime();
-            h += renderSubjectPerformance();
-            h += renderDifficultyAnalysis();
-            c.innerHTML = h;
-        });
+        renderPrincipalAnalyticsContent();
+        refreshAdminData(function() { renderPrincipalAnalyticsContent(); });
+    }
+
+    function renderPrincipalAnalyticsContent() {
+        var c = $("principalAnalyticsContent");
+        if (!c) return;
+        var ta = allAttempts.length;
+        var avg = ta > 0 ? allAttempts.reduce(function(s, a) { return s + a.percentage; }, 0) / ta : 0;
+        var best = ta > 0 ? Math.max.apply(null, allAttempts.map(function(a) { return a.percentage; })) : 0;
+        var h = '<div class="overview-cards">' +
+            '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + ta + '</div><div class="card-label">Total Attempts</div></div>' +
+            '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average Score</div></div>' +
+            '<div class="overview-card students"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best Score</div></div>' +
+            '<div class="overview-card questions"><div class="card-icon">&#128218;</div><div class="card-value">' + questions.length + '</div><div class="card-label">Total Questions</div></div>' +
+            '</div>';
+        h += renderStudentRankings();
+        h += renderTopicAnalysis();
+        h += renderQuestionAccuracy();
+        h += renderProgressOverTime();
+        h += renderSubjectPerformance();
+        h += renderDifficultyAnalysis();
+        c.innerHTML = h;
     }
 
     function renderStudentRankings() {
