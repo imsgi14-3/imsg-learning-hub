@@ -1717,6 +1717,35 @@ var UI = (function() {
         saveAll(); renderPrincipalTeachers();
     }
 
+    function exportTeachers() {
+        if (teachers.length === 0) { alert("No teachers to export."); return; }
+        var header = "ID,Name,Password,Role,Class-Subjects,Login Email\n";
+        var rows = "";
+        for (var i = 0; i < teachers.length; i++) {
+            var t = teachers[i];
+            var role = t.isClassTeacher ? "Class Teacher" : "Subject Teacher";
+            var cs = t.classSubjects || {};
+            var csParts = [];
+            for (var cid in cs) {
+                var className = cid;
+                for (var k = 0; k < classes.length; k++) {
+                    if (classes[k].id === cid) { className = classes[k].name; break; }
+                }
+                csParts.push(className + ": " + cs[cid].join("/"));
+            }
+            var csText = csParts.join("; ");
+            var email = t.id.toLowerCase() + "@imsg.edu.pk";
+            rows += '"' + t.id + '","' + t.name + '","' + (t.password || "") + '","' + role + '","' + csText + '","' + email + '"\n';
+        }
+        var blob = new Blob([header + rows], { type: "text/csv;charset=utf-8;" });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = "teachers-login-info.csv";
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+
     function saveTeacher(e) {
         e.preventDefault();
         var editId = $("tmEditId").value;
@@ -2243,6 +2272,7 @@ var UI = (function() {
         showAddTeacherModal: showAddTeacherModal,
         editTeacher: editTeacher,
         deleteTeacher: deleteTeacher,
+        exportTeachers: exportTeachers,
         saveTeacher: saveTeacher,
         renderPrincipalStudents: renderPrincipalStudents,
         showStudentPassword: showStudentPassword,

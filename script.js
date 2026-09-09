@@ -81,6 +81,7 @@ function toggleClassSubjects(cid) { UI.toggleClassSubjects(cid); }
 function saveTeacher(e) { UI.saveTeacher(e); }
 function editTeacher(id) { UI.editTeacher(id); }
 function deleteTeacher(id) { UI.deleteTeacher(id); }
+function exportTeachers() { UI.exportTeachers(); }
 function showCreateStudentModal() { UI.showCreateStudentModal(); }
 function updateStudentPreview() { UI.updateStudentPreview(); }
 function saveStudentAccount(e) { UI.saveStudentAccount(e); }
