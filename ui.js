@@ -224,7 +224,7 @@ var UI = (function() {
             studentAttempts[sid]++;
         }
         var bars = [];
-        for (var sid in studentAttempts) bars.push({ label: sid, value: studentAttempts[sid] });
+        for (var sid in studentAttempts) bars.push({ label: getStudentName(sid), value: studentAttempts[sid] });
         bars.sort(function(a, b) { return b.value - a.value; });
         if (bars.length === 0) return "";
         var maxVal = bars[0].value;
@@ -1258,15 +1258,21 @@ var UI = (function() {
         var cl = null;
         for (var i = 0; i < classes.length; i++) { if (classes[i].id === cid) { cl = classes[i]; break; } }
         if (!cl) return;
-        refreshAttemptsFromFirestore(function() {
-            var ca = [];
-            for (var i = 0; i < allAttempts.length; i++) {
-                var sId = allAttempts[i].studentId;
-                for (var j = 0; j < studentAccounts.length; j++) {
-                    if (studentAccounts[j].id === sId && studentAccounts[j].classId === cid) { ca.push(allAttempts[i]); break; }
-                }
+        renderClassAnalyticsContent(cid);
+        refreshAttemptsFromFirestore(function() { renderClassAnalyticsContent(cid); });
+    }
+
+    function renderClassAnalyticsContent(cid) {
+        var c = $("classAnalyticsContent");
+        if (!c) return;
+        var ca = [];
+        for (var i = 0; i < allAttempts.length; i++) {
+            var sId = allAttempts[i].studentId;
+            for (var j = 0; j < studentAccounts.length; j++) {
+                if (studentAccounts[j].id === sId && studentAccounts[j].classId === cid) { ca.push(allAttempts[i]); break; }
             }
-            if (ca.length === 0) { c.innerHTML = '<div class="chart-section"><p style="color:var(--text-muted);text-align:center;padding:20px;">No quiz attempts for this class yet.</p></div>'; return; }
+        }
+        if (ca.length === 0) { c.innerHTML = '<div class="chart-section"><p style="color:var(--text-muted);text-align:center;padding:20px;">No quiz attempts for this class yet.</p></div>'; return; }
             var avg = 0; var best = 0;
             for (var i = 0; i < ca.length; i++) { avg += ca[i].percentage; if (ca[i].percentage > best) best = ca[i].percentage; }
             avg = avg / ca.length;
@@ -1312,7 +1318,6 @@ var UI = (function() {
             }
             h += renderTeacherDeepAnalytics(ca);
             c.innerHTML = h;
-        });
     }
 
     function showCTTab(tab) {
@@ -2257,6 +2262,18 @@ var UI = (function() {
         return h;
     }
 
+    function getStudentName(studentId) {
+        for (var j = 0; j < studentAccounts.length; j++) { if (studentAccounts[j].id === studentId) return studentAccounts[j].name; }
+        for (var j = 0; j < classes.length; j++) {
+            if (classes[j].students) {
+                for (var k = 0; k < classes[j].students.length; k++) {
+                    if (classes[j].students[k].id === studentId) return classes[j].students[k].name;
+                }
+            }
+        }
+        return studentId;
+    }
+
     function renderStudentRankingsFromAttempts(attempts) {
         if (attempts.length === 0) return '';
         var studentStats = {};
@@ -2270,8 +2287,7 @@ var UI = (function() {
         }
         var ranked = [];
         for (var sid in studentStats) {
-            var name = sid;
-            for (var j = 0; j < studentAccounts.length; j++) { if (studentAccounts[j].id === sid) { name = studentAccounts[j].name; break; } }
+            var name = getStudentName(sid);
             ranked.push({ id: sid, name: name, avg: studentStats[sid].sum / studentStats[sid].attempts, best: studentStats[sid].best, attempts: studentStats[sid].attempts });
         }
         ranked.sort(function(a, b) { return b.avg - a.avg; });
@@ -2656,6 +2672,8 @@ var UI = (function() {
             showPrincipalTab("school");
         }
         history.pushState({ page: "dashboard" }, "", "#dashboard");
+        var syncBtn = $("syncBtn");
+        if (syncBtn) syncBtn.style.display = (role === "principal" || role === "teacher" || role === "classteacher") ? "inline-block" : "none";
     }
 
     function manualRefresh() {
