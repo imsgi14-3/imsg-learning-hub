@@ -347,15 +347,10 @@ var UI = (function() {
         html += '<h3>' + subject + ' — Chapter ' + chapterNum + '</h3>';
         html += '<p>' + chapterQuestions.length + ' questions &bull; ' + numTopics + ' topics</p>';
         html += '<div class="quiz-mode-grid">';
-        html += '<div class="quiz-mode-card quiz-mode-random" onclick="launchRandomQuiz(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\')">';
-        html += '<div class="quiz-mode-icon">&#127922;</div>';
-        html += '<h4>Random Quiz</h4>';
-        html += '<p>' + Math.min(15, chapterQuestions.length) + ' questions &bull; 20 min<br>Mixed topics from this chapter</p>';
-        html += '</div>';
         html += '<div class="quiz-mode-card" onclick="showTopicPicker(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\')">';
         html += '<div class="quiz-mode-icon">&#9889;</div>';
         html += '<h4>Quick Practice</h4>';
-        html += '<p>15 questions &bull; 20 min<br>Pick a topic to revise</p>';
+        html += '<p>' + Math.min(20, chapterQuestions.length) + ' questions &bull; 30 min<br>Pick a topic or random mix</p>';
         html += '</div>';
         html += '<div class="quiz-mode-card" onclick="launchChapterMode(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\', \'test\')">';
         html += '<div class="quiz-mode-icon">&#128218;</div>';
@@ -394,15 +389,16 @@ var UI = (function() {
         html += '<h3>&#9889; Quick Practice — Pick a Topic</h3>';
         html += '<p>Choose a topic from Chapter ' + chapterNum + '</p>';
         html += '<div class="quiz-mode-grid">';
+        html += '<div class="quiz-mode-card quiz-mode-random" onclick="launchRandomQuiz(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\')">';
+        html += '<div class="quiz-mode-icon">&#127922;</div>';
+        html += '<div class="mode-title">Random Topics</div>';
+        html += '<div class="mode-desc">' + Math.min(20, chapterQuestions.length) + ' questions &bull; 30 min<br>Mixed topics from this chapter</div></div>';
         var topicKeys = Object.keys(topics).sort();
         for (var i = 0; i < topicKeys.length; i++) {
             html += '<div class="quiz-mode-card" onclick="launchTopicPractice(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\', \'' + topicKeys[i].replace(/'/g, "\\'") + '\')">';
             html += '<div class="mode-title">' + topicKeys[i] + '</div>';
             html += '<div class="mode-desc">' + topics[topicKeys[i]] + ' questions</div></div>';
         }
-        html += '<div class="quiz-mode-card" onclick="launchTopicPractice(' + chapterNum + ', \'' + subject.replace(/'/g, "\\'") + '\', \'all\')">';
-        html += '<div class="mode-title">All Topics</div>';
-        html += '<div class="mode-desc">' + chapterQuestions.length + ' questions</div></div>';
         html += '</div>';
         panel.innerHTML = html;
     }
@@ -632,7 +628,7 @@ var UI = (function() {
             byTopic[t].push(filtered[i]);
         }
         var topicKeys = Object.keys(byTopic);
-        var count = Math.min(15, filtered.length);
+        var count = Math.min(20, filtered.length);
         var selected = [];
         var perTopic = Math.max(1, Math.floor(count / topicKeys.length));
         for (var i = 0; i < topicKeys.length && selected.length < count; i++) {
@@ -651,7 +647,7 @@ var UI = (function() {
             while (selected.length < count && remaining.length > 0) selected.push(remaining.shift());
         }
         selected = shuffleArray(selected);
-        startQuizUI(selected, 20, "random", subject, chapterNum);
+        startQuizUI(selected, 30, "random", subject, chapterNum);
     }
 
     function startQuizUI(selected, timeMinutes, mode, subject, chapter, aId) {
