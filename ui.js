@@ -692,11 +692,15 @@ var UI = (function() {
         for (var i = 0; i < assignments.length; i++) { if (assignments[i].id === aid) { a = assignments[i]; break; } }
         if (!a || a.questions.length === 0) { alert("This assignment has no questions."); return; }
         var activeQuizQuestions = [];
+        var missing = 0;
         for (var i = 0; i < a.questions.length; i++) {
+            var found = false;
             for (var j = 0; j < questions.length; j++) {
-                if (questions[j].id === a.questions[i]) { activeQuizQuestions.push(questions[j]); break; }
+                if (questions[j].id === a.questions[i]) { activeQuizQuestions.push(questions[j]); found = true; break; }
             }
+            if (!found) missing++;
         }
+        if (missing > 0) console.warn("Assignment " + a.title + ": " + missing + " questions not found in question bank.");
         activeQuizQuestions = shuffleArray(activeQuizQuestions);
         if (activeQuizQuestions.length === 0) { alert("Assignment questions not found."); return; }
         startQuizUI(activeQuizQuestions, 60, "assignment", a.subject, "all", aid);
@@ -946,7 +950,11 @@ var UI = (function() {
         for (var i = 0; i < my.length; i++) {
             var a = my[i], cl = null;
             for (var j = 0; j < classes.length; j++) { if (classes[j].id === a.classId) { cl = classes[j]; break; } }
-            h += '<tr><td>' + a.title + '</td><td>' + a.subject + '</td><td>' + (cl ? cl.name : "N/A") + '</td><td>' + a.dueDate + '</td><td>' + a.questions.length + '</td><td><button onclick="editAssignment(\'' + a.id + '\')" class="action-btn">Edit</button> <button onclick="showAssignmentStatus(\'' + a.id + '\')" class="action-btn">Status</button> <button onclick="deleteAssignment(\'' + a.id + '\')" class="action-btn danger">Delete</button></td></tr>';
+            var validCount = 0;
+            for (var q = 0; q < a.questions.length; q++) {
+                for (var r = 0; r < questions.length; r++) { if (questions[r].id === a.questions[q]) { validCount++; break; } }
+            }
+            h += '<tr><td>' + a.title + '</td><td>' + a.subject + '</td><td>' + (cl ? cl.name : "N/A") + '</td><td>' + a.dueDate + '</td><td>' + validCount + ' / ' + a.questions.length + '</td><td><button onclick="editAssignment(\'' + a.id + '\')" class="action-btn">Edit</button> <button onclick="showAssignmentStatus(\'' + a.id + '\')" class="action-btn">Status</button> <button onclick="deleteAssignment(\'' + a.id + '\')" class="action-btn danger">Delete</button></td></tr>';
         }
         c.innerHTML = h + '</tbody></table>';
     }
@@ -1753,8 +1761,13 @@ var UI = (function() {
     function deleteTeacher(tid) {
         if (!confirm("Delete this teacher?")) return;
         teachers = teachers.filter(function(t) { return t.id !== tid; });
+        var removed = [];
+        assignments = assignments.filter(function(a) { if (a.createdBy === tid) { removed.push(a.id); return false; } return true; });
         saveAll();
-        if (typeof db !== "undefined") db.collection("teachers").doc(tid).delete().catch(function(e) { console.error("Firestore teacher delete error:", e); });
+        if (typeof db !== "undefined") {
+            db.collection("teachers").doc(tid).delete().catch(function(e) { console.error("Firestore teacher delete error:", e); });
+            for (var i = 0; i < removed.length; i++) db.collection("assignments").doc(removed[i]).delete().catch(function() {});
+        }
         renderPrincipalTeachers();
     }
 
