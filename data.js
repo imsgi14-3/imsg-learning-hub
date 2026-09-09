@@ -118,6 +118,14 @@ function loadData() {
             }
         }
         t.isSubjectTeacher = true;
+        if (/^T-\d+$/i.test(t.id) && t.name) {
+            var oldId = t.id;
+            var newId = generateTeacherId(t.name);
+            t.id = newId;
+            for (var j = 0; j < assignments.length; j++) {
+                if (assignments[j].createdBy === oldId) assignments[j].createdBy = newId;
+            }
+        }
     }
     if (migrated) localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
     if (teachers.length > 0) localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
@@ -209,6 +217,14 @@ function loadFromFirestore(callback) {
                         }
                     }
                     d.isSubjectTeacher = true;
+                    if (/^T-\d+$/i.test(d.id) && d.name) {
+                        var oldId = d.id;
+                        d.id = generateTeacherId(d.name);
+                        for (var j = 0; j < assignments.length; j++) {
+                            if (assignments[j].createdBy === oldId) assignments[j].createdBy = d.id;
+                        }
+                        if (typeof db !== "undefined") db.collection("teachers").doc(oldId).delete().catch(function() {});
+                    }
                     teachers.push(d);
                 }
             });
