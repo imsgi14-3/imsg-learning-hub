@@ -68,8 +68,10 @@ function editQuestion(id) { UI.editQuestion(id); }
 function deleteQuestion(id) { UI.deleteQuestion(id); }
 function filterQuestions() { UI.filterQuestions(); }
 function showCreateAssignmentModal() { UI.showCreateAssignmentModal(); }
-function updateAssignmentQuestionList() { UI.updateAssignmentQuestionList(); }
+function updateAssignmentTopics() { UI.updateAssignmentTopics(); }
 function updateAssignmentSubjects() { UI.updateAssignmentSubjects(); }
+function updateAssignmentAvailableCount() { UI.updateAssignmentAvailableCount(); }
+function previewAssignmentQuestions() { UI.previewAssignmentQuestions(); }
 function saveAssignment(e) { UI.saveAssignment(e); }
 function editAssignment(i) { UI.editAssignment(i); }
 function deleteAssignment(i) { UI.deleteAssignment(i); }

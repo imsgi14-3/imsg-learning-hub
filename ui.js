@@ -946,7 +946,7 @@ var UI = (function() {
             if (match) my.push(a);
         }
         if (my.length === 0) { c.innerHTML = "<p>No assignments for your classes/subjects.</p>"; return; }
-        var h = '<table><thead><tr><th>Title</th><th>Subject</th><th>Class</th><th>Due Date</th><th>Questions</th><th>Actions</th></tr></thead><tbody>';
+        var h = '<table><thead><tr><th>Title</th><th>Subject</th><th>Class</th><th>Chapter</th><th>Due Date</th><th>Questions</th><th>Actions</th></tr></thead><tbody>';
         for (var i = 0; i < my.length; i++) {
             var a = my[i], cl = null;
             for (var j = 0; j < classes.length; j++) { if (classes[j].id === a.classId) { cl = classes[j]; break; } }
@@ -954,7 +954,9 @@ var UI = (function() {
             for (var q = 0; q < a.questions.length; q++) {
                 for (var r = 0; r < questions.length; r++) { if (questions[r].id === a.questions[q]) { validCount++; break; } }
             }
-            h += '<tr><td>' + a.title + '</td><td>' + a.subject + '</td><td>' + (cl ? cl.name : "N/A") + '</td><td>' + a.dueDate + '</td><td>' + validCount + ' / ' + a.questions.length + '</td><td><button onclick="editAssignment(\'' + a.id + '\')" class="action-btn">Edit</button> <button onclick="showAssignmentStatus(\'' + a.id + '\')" class="action-btn">Status</button> <button onclick="deleteAssignment(\'' + a.id + '\')" class="action-btn danger">Delete</button></td></tr>';
+            var chInfo = a.chapter ? ("Ch " + a.chapter) : "All";
+            if (a.topic) chInfo += " — " + (a.topic.length > 30 ? a.topic.substring(0, 30) + "..." : a.topic);
+            h += '<tr><td>' + a.title + '</td><td>' + a.subject + '</td><td>' + (cl ? cl.name : "N/A") + '</td><td style="font-size:12px;">' + chInfo + '</td><td>' + a.dueDate + '</td><td>' + validCount + ' / ' + a.questions.length + '</td><td><button onclick="editAssignment(\'' + a.id + '\')" class="action-btn">Edit</button> <button onclick="showAssignmentStatus(\'' + a.id + '\')" class="action-btn">Status</button> <button onclick="deleteAssignment(\'' + a.id + '\')" class="action-btn danger">Delete</button></td></tr>';
         }
         c.innerHTML = h + '</tbody></table>';
     }
@@ -1011,6 +1013,13 @@ var UI = (function() {
         $("assignmentForm").reset();
         $("amAssignmentId").value = "";
         $("amModalTitle").textContent = "Create Assignment";
+        $("amDiffEasy").value = 30;
+        $("amDiffMedium").value = 40;
+        $("amDiffHard").value = 30;
+        $("amQuestionCount").value = 20;
+        $("amPreviewList").innerHTML = "";
+        $("amAvailableCount").textContent = "0";
+        $("amDiffMsg").textContent = "";
         var user = Auth.getUser();
         var cs = (user && user.classSubjects) ? user.classSubjects : {};
         var myClassIds = (user && user.classes) ? user.classes : [];
@@ -1024,7 +1033,7 @@ var UI = (function() {
             }
         }
         updateAssignmentSubjects();
-        updateAssignmentQuestionList();
+        updateAssignmentTopics();
         $("assignmentModal").classList.add("active");
         $("modalOverlay").classList.add("active");
     }
@@ -1044,26 +1053,136 @@ var UI = (function() {
             opt.style.display = (allowed.length === 0 || allowed.indexOf(opt.value) !== -1) ? "" : "none";
         }
         if (allowed.indexOf(current) === -1 && allowed.length > 0) subSel.value = allowed[0];
+        updateAssignmentTopics();
     }
 
-    function updateAssignmentQuestionList() {
-        var c = $("amQuestionSelector");
-        if (!c) return;
-        var st = ($("amQSearch").value || "").toLowerCase();
+    function updateAssignmentTopics() {
         var sub = $("amSubject").value;
-        var f = [];
+        var chapterSel = $("amChapter");
+        var topicSel = $("amTopic");
+        var currentChapter = chapterSel.value;
+        var currentTopic = topicSel.value;
+        chapterSel.innerHTML = '<option value="">Select chapter</option>';
+        topicSel.innerHTML = '<option value="">All topics</option>';
+        if (!sub || !subjectsData[sub]) { $("amAvailableCount").textContent = "0"; return; }
+        var chapters = subjectsData[sub].chapters || [];
+        for (var i = 0; i < chapters.length; i++) {
+            chapterSel.innerHTML += '<option value="' + chapters[i].num + '">Ch ' + chapters[i].num + ': ' + chapters[i].title + '</option>';
+        }
+        if (currentChapter) chapterSel.value = currentChapter;
+        var chNum = parseInt(chapterSel.value);
+        if (!isNaN(chNum)) {
+            for (var i = 0; i < chapters.length; i++) {
+                if (chapters[i].num === chNum && chapters[i].topics) {
+                    for (var j = 0; j < chapters[i].topics.length; j++) {
+                        topicSel.innerHTML += '<option value="' + chapters[i].topics[j] + '">' + chapters[i].topics[j] + '</option>';
+                    }
+                    break;
+                }
+            }
+        }
+        if (currentTopic) topicSel.value = currentTopic;
+        updateAssignmentAvailableCount();
+    }
+
+    function getAvailableAssignmentQuestions() {
+        var sub = $("amSubject").value;
+        var chNum = parseInt($("amChapter").value);
+        var topic = $("amTopic").value;
+        var result = [];
         for (var i = 0; i < questions.length; i++) {
             var q = questions[i];
-            var qtxt = (q.text || q.question || "").toLowerCase();
-            if (q.subject === sub && (!st || qtxt.indexOf(st) !== -1 || q.id.toLowerCase().indexOf(st) !== -1)) f.push(q);
+            if (q.subject !== sub) continue;
+            if (!isNaN(chNum) && q.chapter != chNum) continue;
+            if (topic && q.topic !== topic) continue;
+            result.push(q);
         }
-        if (f.length === 0) { c.innerHTML = "<p>No questions found for this subject.</p>"; return; }
-        var h = '<div class="question-select-list">';
-        for (var i = 0; i < f.length; i++) {
-            var txt = (f[i].text || f[i].question || "").substring(0, 60);
-            h += '<label class="question-select-item"><input type="checkbox" class="am-q-checkbox" value="' + f[i].id + '"> <strong>' + f[i].id + '</strong> - ' + txt + '... (' + f[i].difficulty + ')</label>';
+        return result;
+    }
+
+    function updateAssignmentAvailableCount() {
+        var available = getAvailableAssignmentQuestions();
+        $("amAvailableCount").textContent = available.length;
+        var count = parseInt($("amQuestionCount").value) || 0;
+        if (count > available.length) {
+            $("amDiffMsg").textContent = "Warning: only " + available.length + " questions match. Will select all.";
+            $("amDiffMsg").style.color = "var(--error,#ef4444)";
+        } else {
+            $("amDiffMsg").textContent = "";
         }
-        c.innerHTML = h + '</div>';
+    }
+
+    function autoSelectAssignmentQuestions() {
+        var available = getAvailableAssignmentQuestions();
+        var total = parseInt($("amQuestionCount").value) || 20;
+        var easyPct = parseInt($("amDiffEasy").value) || 0;
+        var medPct = parseInt($("amDiffMedium").value) || 0;
+        var hardPct = parseInt($("amDiffHard").value) || 0;
+        var pctTotal = easyPct + medPct + hardPct;
+        if (pctTotal !== 100 && pctTotal > 0) {
+            easyPct = Math.round(easyPct / pctTotal * 100);
+            medPct = Math.round(medPct / pctTotal * 100);
+            hardPct = 100 - easyPct - medPct;
+        }
+        var mode = "straight";
+        var radios = document.querySelectorAll('input[name="amMode"]');
+        for (var i = 0; i < radios.length; i++) { if (radios[i].checked) mode = radios[i].value; }
+        var easyQs = [], medQs = [], hardQs = [];
+        for (var i = 0; i < available.length; i++) {
+            var d = available[i].difficulty;
+            if (d === "easy") easyQs.push(available[i]);
+            else if (d === "medium" || d === "avg") medQs.push(available[i]);
+            else hardQs.push(available[i]);
+        }
+        easyQs = shuffleArray(easyQs);
+        medQs = shuffleArray(medQs);
+        hardQs = shuffleArray(hardQs);
+        var easyCount = Math.round(total * easyPct / 100);
+        var medCount = Math.round(total * medPct / 100);
+        var hardCount = total - easyCount - medCount;
+        var selected = [];
+        selected = selected.concat(easyQs.slice(0, easyCount));
+        selected = selected.concat(medQs.slice(0, medCount));
+        selected = selected.concat(hardQs.slice(0, hardCount));
+        if (mode === "straight") {
+            selected = selected.filter(function(q) { return q.mode === "straight"; });
+        } else if (mode === "scenario") {
+            selected = selected.filter(function(q) { return q.mode === "scenario"; });
+        }
+        if (selected.length < total) {
+            var remaining = [];
+            var selectedIds = {};
+            for (var i = 0; i < selected.length; i++) selectedIds[selected[i].id] = true;
+            for (var i = 0; i < available.length; i++) {
+                if (selectedIds[available[i].id]) continue;
+                if (mode === "straight" && available[i].mode !== "straight") continue;
+                if (mode === "scenario" && available[i].mode !== "scenario") continue;
+                remaining.push(available[i]);
+            }
+            remaining = shuffleArray(remaining);
+            selected = selected.concat(remaining.slice(0, total - selected.length));
+        }
+        selected = shuffleArray(selected);
+        return selected.slice(0, total);
+    }
+
+    function previewAssignmentQuestions() {
+        var selected = autoSelectAssignmentQuestions();
+        var c = $("amPreviewList");
+        if (selected.length === 0) { c.innerHTML = "<p>No questions match the criteria.</p>"; return; }
+        var h = '<div style="font-size:12px;">';
+        for (var i = 0; i < selected.length; i++) {
+            var q = selected[i];
+            var txt = (q.text || q.question || "").substring(0, 80);
+            var diffColor = q.difficulty === "easy" ? "#22c55e" : (q.difficulty === "medium" ? "#f59e0b" : "#ef4444");
+            h += '<div style="padding:4px 8px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;">';
+            h += '<span style="color:' + diffColor + ';font-weight:700;font-size:11px;">' + q.difficulty.charAt(0).toUpperCase() + '</span>';
+            h += '<span style="font-weight:600;">' + q.id + '</span>';
+            h += '<span style="flex:1;color:var(--text-muted);">' + txt + '...</span>';
+            h += '</div>';
+        }
+        h += '</div>';
+        c.innerHTML = h;
     }
 
     function editAssignment(aid) {
@@ -1075,7 +1194,21 @@ var UI = (function() {
         $("amSubject").value = a.subject;
         $("amClass").value = a.classId;
         $("amDueDate").value = a.dueDate;
+        $("amQuestionCount").value = a.questions ? a.questions.length : 20;
         $("amModalTitle").textContent = "Edit Assignment";
+        if (a.chapter) $("amChapter").value = a.chapter;
+        if (a.topic) $("amTopic").value = a.topic;
+        if (a.difficulty) {
+            $("amDiffEasy").value = a.difficulty.easy || 30;
+            $("amDiffMedium").value = a.difficulty.medium || 40;
+            $("amDiffHard").value = a.difficulty.hard || 30;
+        }
+        if (a.mode) {
+            var radios = document.querySelectorAll('input[name="amMode"]');
+            for (var i = 0; i < radios.length; i++) {
+                radios[i].checked = radios[i].value === a.mode;
+            }
+        }
         var user = Auth.getUser();
         var cs = (user && user.classSubjects) ? user.classSubjects : {};
         var myClassIds = (user && user.classes) ? user.classes : [];
@@ -1088,14 +1221,9 @@ var UI = (function() {
                 csEl.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
             }
         }
-        csEl.value = a.classId;
         updateAssignmentSubjects();
-        $("amSubject").value = a.subject;
-        updateAssignmentQuestionList();
-        for (var i = 0; i < a.questions.length; i++) {
-            var cbs = document.querySelectorAll('.am-q-checkbox');
-            for (var j = 0; j < cbs.length; j++) { if (cbs[j].value === a.questions[i]) cbs[j].checked = true; }
-        }
+        updateAssignmentTopics();
+        previewAssignmentQuestions();
         $("assignmentModal").classList.add("active");
         $("modalOverlay").classList.add("active");
     }
@@ -1109,11 +1237,14 @@ var UI = (function() {
     function saveAssignment(e) {
         e.preventDefault();
         var id = $("amAssignmentId").value;
+        var selected = autoSelectAssignmentQuestions();
+        if (selected.length === 0) { alert("No questions match the selected criteria."); return; }
         var sel = [];
-        var cbs = document.querySelectorAll(".am-q-checkbox:checked");
-        for (var i = 0; i < cbs.length; i++) sel.push(cbs[i].value);
-        if (sel.length === 0) { alert("Please select at least one question."); return; }
-        var d = { id: id || "ASSIGN-" + Date.now(), title: $("amTitleInput").value, subject: $("amSubject").value, classId: $("amClass").value, dueDate: $("amDueDate").value, questions: sel, createdBy: Auth.getUser() ? Auth.getUser().id : "unknown", createdAt: new Date().toISOString() };
+        for (var i = 0; i < selected.length; i++) sel.push(selected[i].id);
+        var mode = "straight";
+        var radios = document.querySelectorAll('input[name="amMode"]');
+        for (var i = 0; i < radios.length; i++) { if (radios[i].checked) mode = radios[i].value; }
+        var d = { id: id || "ASSIGN-" + Date.now(), title: $("amTitleInput").value, subject: $("amSubject").value, classId: $("amClass").value, dueDate: $("amDueDate").value, questions: sel, chapter: $("amChapter").value || null, topic: $("amTopic").value || null, count: sel.length, difficulty: { easy: parseInt($("amDiffEasy").value) || 0, medium: parseInt($("amDiffMedium").value) || 0, hard: parseInt($("amDiffHard").value) || 0 }, mode: mode, createdBy: Auth.getUser() ? Auth.getUser().id : "unknown", createdAt: new Date().toISOString() };
         if (id) { for (var i = 0; i < assignments.length; i++) { if (assignments[i].id === id) { assignments[i] = d; break; } } }
         else assignments.push(d);
         saveAll(); closeModal(); renderAssignments();
@@ -2305,8 +2436,10 @@ var UI = (function() {
         saveQuestion: saveQuestion,
         renderAssignments: renderAssignments,
         showCreateAssignmentModal: showCreateAssignmentModal,
-        updateAssignmentQuestionList: updateAssignmentQuestionList,
+        updateAssignmentTopics: updateAssignmentTopics,
         updateAssignmentSubjects: updateAssignmentSubjects,
+        updateAssignmentAvailableCount: updateAssignmentAvailableCount,
+        previewAssignmentQuestions: previewAssignmentQuestions,
         editAssignment: editAssignment,
         deleteAssignment: deleteAssignment,
         saveAssignment: saveAssignment,

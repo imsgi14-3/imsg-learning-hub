@@ -427,8 +427,12 @@
                     <input type="text" id="amTitleInput" placeholder="e.g., Chapter 1 Quiz" required>
                 </div>
                 <div class="form-row">
+                    <label>Class</label>
+                    <select id="amClass" onchange="updateAssignmentSubjects()" required></select>
+                </div>
+                <div class="form-row">
                     <label>Subject</label>
-                    <select id="amSubject" onchange="updateAssignmentQuestionList()" required>
+                    <select id="amSubject" onchange="updateAssignmentTopics()" required>
                         <option value="Computer Science">Computer Science</option>
                         <option value="Physics">Physics</option>
                         <option value="Chemistry">Chemistry</option>
@@ -437,19 +441,61 @@
                     </select>
                 </div>
                 <div class="form-row">
-                    <label>Class</label>
-                    <select id="amClass" onchange="updateAssignmentSubjects()" required></select>
+                    <label>Chapter</label>
+                    <select id="amChapter" onchange="updateAssignmentTopics()" required>
+                        <option value="">Select chapter</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Topic <span style="font-weight:normal;color:var(--text-muted);">(optional — leave blank for all topics)</span></label>
+                    <select id="amTopic" onchange="updateAssignmentAvailableCount()">
+                        <option value="">All topics</option>
+                    </select>
                 </div>
                 <div class="form-row">
                     <label>Due Date</label>
                     <input type="date" id="amDueDate" required>
                 </div>
-                <div class="form-row full">
-                    <label>Select Questions from Bank</label>
-                    <div class="question-selector-search">
-                        <input type="text" id="amQSearch" placeholder="Search questions..." oninput="updateAssignmentQuestionList()">
+                <div class="form-row">
+                    <label>Number of Questions</label>
+                    <input type="number" id="amQuestionCount" min="1" max="100" value="20" oninput="updateAssignmentAvailableCount()" required>
+                </div>
+                <div class="form-row">
+                    <label>Difficulty Distribution</label>
+                    <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;">
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                            <span style="color:#22c55e;">&#9679;</span> Easy
+                            <input type="number" id="amDiffEasy" min="0" max="100" value="30" style="width:50px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                            <span style="color:#f59e0b;">&#9679;</span> Medium
+                            <input type="number" id="amDiffMedium" min="0" max="100" value="40" style="width:50px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                            <span style="color:#ef4444;">&#9679;</span> Hard
+                            <input type="number" id="amDiffHard" min="0" max="100" value="30" style="width:50px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                        </label>
                     </div>
-                    <div id="amQuestionSelector" class="question-selector"></div>
+                    <p id="amDiffMsg" style="font-size:11px;color:var(--text-muted);margin-top:4px;"></p>
+                </div>
+                <div class="form-row">
+                    <label>Question Mode</label>
+                    <div style="display:flex;gap:15px;margin-top:4px;">
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                            <input type="radio" name="amMode" value="straight" checked> Straight
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                            <input type="radio" name="amMode" value="scenario"> Scenario
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                            <input type="radio" name="amMode" value="mixed"> Mixed (70/30)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <label>Available Questions: <strong id="amAvailableCount">0</strong></label>
+                    <button type="button" class="action-btn" onclick="previewAssignmentQuestions()" style="margin-bottom:8px;">Preview Selection</button>
+                    <div id="amPreviewList" style="max-height:200px;overflow-y:auto;"></div>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
