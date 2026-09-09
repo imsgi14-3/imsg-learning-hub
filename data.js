@@ -171,17 +171,17 @@ function saveTeacherToFirestore(teacherObj, callback) {
 }
 
 function loadFromFirestore(callback) {
-    if (typeof db === "undefined") { if (callback) callback(); return; }
+    if (typeof db === "undefined") { console.warn("Firestore not available for refresh"); if (callback) callback(); return; }
     var loaded = 0, total = 6;
     function done() { loaded++; if (loaded >= total && callback) callback(); }
     db.collection("students").get().then(function(snap) {
         if (snap.size > 0) { studentAccounts = []; snap.forEach(function(doc) { studentAccounts.push(doc.data()); }); localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts)); }
         done();
-    }).catch(function() { done(); });
+    }).catch(function(e) { console.error("Firestore students load error:", e); done(); });
     db.collection("classes").get().then(function(snap) {
         if (snap.size > 0) { classes = []; snap.forEach(function(doc) { classes.push(doc.data()); }); localStorage.setItem(CLASSES_KEY, JSON.stringify(classes)); }
         done();
-    }).catch(function() { done(); });
+    }).catch(function(e) { console.error("Firestore classes load error:", e); done(); });
     db.collection("questions").get().then(function(snap) {
         if (snap.size > 0) {
             var byId = {};
@@ -196,11 +196,11 @@ function loadFromFirestore(callback) {
             localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
         }
         done();
-    }).catch(function() { done(); });
+    }).catch(function(e) { console.error("Firestore questions load error:", e); done(); });
     db.collection("assignments").get().then(function(snap) {
         if (snap.size > 0) { assignments = []; snap.forEach(function(doc) { assignments.push(doc.data()); }); localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments)); }
         done();
-    }).catch(function() { done(); });
+    }).catch(function(e) { console.error("Firestore assignments load error:", e); done(); });
     db.collection("attempts").get().then(function(snap) {
         if (snap.size > 0) { allAttempts = []; snap.forEach(function(doc) { allAttempts.push(doc.data()); }); localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts)); }
         done();
@@ -269,8 +269,9 @@ function refreshAttemptsFromFirestore(callback) {
 }
 
 function refreshAllData(callback) {
-    if (typeof db === "undefined") { if (callback) callback(); return; }
+    if (typeof db === "undefined") { console.warn("Firestore not available for refresh"); if (callback) callback(); return; }
     loadFromFirestore(function() {
+        console.log("Refresh complete. Teachers:", teachers.length, "Classes:", classes.length, "Students:", studentAccounts.length);
         var user = null;
         try { user = JSON.parse(localStorage.getItem("learningHub_user")); } catch(e) {}
         if (user && user.user) {
