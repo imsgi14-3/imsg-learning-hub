@@ -2376,7 +2376,7 @@ var UI = (function() {
         } else if (role === "parent") {
             $("parentDashboard").style.display = "block";
             $("parentDisplayName").textContent = user ? user.name : "Parent";
-            $("loggedUser").textContent = user ? user.name : "Parent";
+            $("loggedUser").textContent = user ? user.name + " (Parent)" : "Parent";
             showParentTab("progress");
         } else if (role === "principal") {
             $("principalDashboard").style.display = "block";
@@ -2384,6 +2384,29 @@ var UI = (function() {
             $("loggedUser").textContent = user ? user.name + " (Admin)" : "Admin";
             showPrincipalTab("school");
         }
+        history.pushState({ page: "dashboard" }, "", "#dashboard");
+        refreshAllData(function() {
+            var freshUser = null;
+            try { freshUser = JSON.parse(localStorage.getItem("learningHub_user")); } catch(e) {}
+            if (freshUser && freshUser.user) {
+                Auth.loginAs(freshUser.role, freshUser.user);
+                var u = freshUser.user;
+                if (role === "teacher") {
+                    $("teacherDisplayName").textContent = u.name || "Teacher";
+                    var ts = (u.subjects) ? u.subjects : (u.subject ? [u.subject] : []);
+                    $("teacherSubjectDisplay").textContent = ts.join(", ") || "N/A";
+                    showTeacherTab("classes");
+                } else if (role === "classteacher") {
+                    $("ctDisplayName").textContent = u.name || "Class Teacher";
+                    showCTTab("overview");
+                } else if (role === "student") {
+                    $("studentDisplayName").textContent = u.name || "Student";
+                } else if (role === "parent") {
+                    $("parentDisplayName").textContent = u.name || "Parent";
+                }
+            }
+        });
+    }
         history.pushState({ page: "dashboard" }, "", "#dashboard");
     }
 

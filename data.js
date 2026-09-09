@@ -268,6 +268,40 @@ function refreshAttemptsFromFirestore(callback) {
     }).catch(function() { if (callback) callback(); });
 }
 
+function refreshAllData(callback) {
+    if (typeof db === "undefined") { if (callback) callback(); return; }
+    loadFromFirestore(function() {
+        var user = null;
+        try { user = JSON.parse(localStorage.getItem("learningHub_user")); } catch(e) {}
+        if (user && user.user) {
+            var role = user.role;
+            var u = user.user;
+            if (role === "teacher" || role === "classteacher") {
+                for (var i = 0; i < teachers.length; i++) {
+                    if (teachers[i].id === u.id) {
+                        u.classSubjects = teachers[i].classSubjects || u.classSubjects;
+                        u.subjects = teachers[i].subjects || u.subjects;
+                        u.classes = teachers[i].classes || u.classes;
+                        u.classId = teachers[i].classId || u.classId;
+                        u.isClassTeacher = teachers[i].isClassTeacher;
+                        u.classTeacherOf = teachers[i].classTeacherOf || u.classTeacherOf;
+                        break;
+                    }
+                }
+            } else if (role === "student") {
+                for (var i = 0; i < studentAccounts.length; i++) {
+                    if (studentAccounts[i].id === u.id) {
+                        u.classId = studentAccounts[i].classId || u.classId;
+                        break;
+                    }
+                }
+            }
+            localStorage.setItem("learningHub_user", JSON.stringify({ role: role, user: u }));
+        }
+        if (callback) callback();
+    });
+}
+
 function shuffleArray(arr) {
     var a = arr.slice();
     for (var i = a.length - 1; i > 0; i--) {
