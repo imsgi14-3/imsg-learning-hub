@@ -2429,9 +2429,13 @@ var UI = (function() {
         for (var i = 0; i < attempts.length; i++) {
             var a = attempts[i];
             var ts = a.timestamp;
-            if (ts && typeof ts === "object" && ts.toDate) ts = ts.toDate().toISOString();
-            else if (ts && typeof ts === "object") ts = String(ts);
-            var date = ts ? ts.substring(0, 10) : null;
+            var date = null;
+            if (ts) {
+                if (typeof ts === "string") date = ts.substring(0, 10);
+                else if (typeof ts === "object" && ts.toDate) date = ts.toDate().toISOString().substring(0, 10);
+                else if (typeof ts === "object" && ts.seconds) date = new Date(ts.seconds * 1000).toISOString().substring(0, 10);
+                else if (typeof ts === "number") date = new Date(ts).toISOString().substring(0, 10);
+            }
             if (!date) continue;
             if (!dailyStats[date]) dailyStats[date] = { sum: 0, count: 0 };
             dailyStats[date].sum += a.percentage;
