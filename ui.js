@@ -2739,26 +2739,29 @@ var UI = (function() {
     function manualRefresh() {
         var role = Auth.getRole();
         lastRefreshTime = 0;
-        refreshAllData(function() {
-            var freshUser = null;
-            try { freshUser = JSON.parse(localStorage.getItem("learningHub_user")); } catch(e) {}
-            if (freshUser && freshUser.user) {
-                var u = freshUser.user;
-                if (role === "teacher" || role === "classteacher") {
-                    for (var i = 0; i < teachers.length; i++) {
-                        if (teachers[i].id === u.id) {
-                            u.classSubjects = teachers[i].classSubjects || u.classSubjects;
-                            u.subjects = teachers[i].subjects || u.subjects;
-                            u.classes = teachers[i].classes || u.classes;
-                            u.classTeacherOf = teachers[i].classTeacherOf || u.classTeacherOf;
-                            break;
+        saveToFirestore();
+        setTimeout(function() {
+            refreshAllData(function() {
+                var freshUser = null;
+                try { freshUser = JSON.parse(localStorage.getItem("learningHub_user")); } catch(e) {}
+                if (freshUser && freshUser.user) {
+                    var u = freshUser.user;
+                    if (role === "teacher" || role === "classteacher") {
+                        for (var i = 0; i < teachers.length; i++) {
+                            if (teachers[i].id === u.id) {
+                                u.classSubjects = teachers[i].classSubjects || u.classSubjects;
+                                u.subjects = teachers[i].subjects || u.subjects;
+                                u.classes = teachers[i].classes || u.classes;
+                                u.classTeacherOf = teachers[i].classTeacherOf || u.classTeacherOf;
+                                break;
+                            }
                         }
                     }
+                    Auth.loginAs(role, u);
+                    showDashboard();
                 }
-                Auth.loginAs(role, u);
-                showDashboard();
-            }
-        });
+            });
+        }, 2000);
     }
 
     var api = {
