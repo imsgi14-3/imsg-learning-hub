@@ -707,6 +707,18 @@ var UI = (function() {
     }
 
     function showTeacherTab(tab) {
+        var user = Auth.getUser();
+        if (user) {
+            var tSubs = (user.subjects && user.subjects.length > 0) ? user.subjects : [];
+            if (tSubs.length === 0 && user.classSubjects) {
+                for (var cid in user.classSubjects) {
+                    for (var si = 0; si < user.classSubjects[cid].length; si++) {
+                        if (tSubs.indexOf(user.classSubjects[cid][si]) === -1) tSubs.push(user.classSubjects[cid][si]);
+                    }
+                }
+            }
+            $("teacherSubjectDisplay").textContent = tSubs.join(", ") || "N/A";
+        }
         var map = { classes: 0, questionbank: 1, assignments: 2, analytics: 3 };
         var ids = ["teacherClassesTab", "teacherQuestionBankTab", "teacherAssignmentsTab", "teacherAnalyticsTab"];
         for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) el.style.display = "none"; }
