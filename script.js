@@ -91,6 +91,7 @@ function saveStudentAccount(e) { UI.saveStudentAccount(e); }
 function editStudentAccount(id) { UI.editStudentAccount(id); }
 function deleteStudentAccount(id) { UI.deleteStudentAccount(id); }
 function showStudentPassword(id) { UI.showStudentPassword(id); }
+function resetStudentPassword(id) { UI.resetStudentPassword(id); }
 function refreshStudentLists() { UI.refreshStudentLists(); }
 function showCreateClassModal() { UI.showCreateClassModal(); }
 function saveClass(e) { UI.saveClass(e); }

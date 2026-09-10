@@ -2046,6 +2046,7 @@ var UI = (function() {
             h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + (s.fatherName || "-") + '</td><td>' + className + '</td><td>' + (s.rollNo || "-") + '</td><td>' + s.password + '</td>' +
                 '<td><button onclick="editStudentAccount(\'' + s.id + '\')" class="action-btn">Edit</button> ' +
                 '<button onclick="showStudentPassword(\'' + s.id + '\')" class="action-btn">Show Pass</button> ' +
+                '<button onclick="resetStudentPassword(\'' + s.id + '\')" class="action-btn">Reset Pass</button> ' +
                 '<button onclick="deleteStudentAccount(\'' + s.id + '\')" class="action-btn danger">Delete</button></td></tr>';
         }
         c.innerHTML = h + '</tbody></table>';
@@ -2058,6 +2059,20 @@ var UI = (function() {
                 return;
             }
         }
+    }
+
+    function resetStudentPassword(sid) {
+        var student = null;
+        for (var i = 0; i < studentAccounts.length; i++) {
+            if (studentAccounts[i].id === sid) { student = studentAccounts[i]; break; }
+        }
+        if (!student) return;
+        var newPass = generateRandomPassword();
+        if (!confirm("Reset password for " + student.name + " (" + sid + ")?\n\nNew password: " + newPass)) return;
+        student.password = newPass;
+        saveAll();
+        renderPrincipalStudents();
+        alert("Password reset!\n\nID: " + sid + "\nNew Password: " + newPass);
     }
 
     function exportStudentCredentials() {
