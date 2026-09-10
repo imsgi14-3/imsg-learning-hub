@@ -2799,7 +2799,6 @@ var UI = (function() {
         startPractice: startPractice,
         startAssignmentQuiz: startAssignmentQuiz,
         showTeacherTab: showTeacherTab,
-        populateAnalyticsClassSelect: populateAnalyticsClassSelect,
         renderClasses: renderClasses,
         editClass: editClass,
         deleteClass: deleteClass,
