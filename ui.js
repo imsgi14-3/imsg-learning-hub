@@ -2651,7 +2651,14 @@ var UI = (function() {
         } else if (role === "teacher") {
             $("teacherDashboard").style.display = "block";
             $("teacherDisplayName").textContent = user ? user.name : "Teacher";
-            var tSubs = (user && user.subjects) ? user.subjects : (user && user.subject ? [user.subject] : []);
+            var tSubs = (user && user.subjects && user.subjects.length > 0) ? user.subjects : [];
+            if (tSubs.length === 0 && user && user.classSubjects) {
+                for (var cid in user.classSubjects) {
+                    for (var si = 0; si < user.classSubjects[cid].length; si++) {
+                        if (tSubs.indexOf(user.classSubjects[cid][si]) === -1) tSubs.push(user.classSubjects[cid][si]);
+                    }
+                }
+            }
             $("teacherSubjectDisplay").textContent = tSubs.join(", ") || "N/A";
             $("loggedUser").textContent = user ? user.name + " (Teacher)" : "Teacher";
             showTeacherTab("classes");
