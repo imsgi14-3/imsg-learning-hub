@@ -2428,7 +2428,10 @@ var UI = (function() {
         var dailyStats = {};
         for (var i = 0; i < attempts.length; i++) {
             var a = attempts[i];
-            var date = a.timestamp ? a.timestamp.substring(0, 10) : null;
+            var ts = a.timestamp;
+            if (ts && typeof ts === "object" && ts.toDate) ts = ts.toDate().toISOString();
+            else if (ts && typeof ts === "object") ts = String(ts);
+            var date = ts ? ts.substring(0, 10) : null;
             if (!date) continue;
             if (!dailyStats[date]) dailyStats[date] = { sum: 0, count: 0 };
             dailyStats[date].sum += a.percentage;
