@@ -105,7 +105,8 @@ function confirmStudentExcelImport() { UI.confirmStudentExcelImport(); }
 function exportStudentCredentials() { UI.exportStudentCredentials(); }
 function doExportCredentials() { UI.doExportCredentials(); }
 function closeModal() { UI.closeModal(); }
-function loadClassAnalytics() { UI.loadClassAnalytics(); }
+function loadClassAnalytics(cid) { UI.loadClassAnalytics(cid); }
+function showClassCards() { UI.showClassCards(); }
 function markAttendance() { UI.markAttendance(); }
 function saveAttendance(e) { UI.saveAttendance(e); }
 function dashboardsHide() { UI.dashboardsHide(); }

@@ -167,10 +167,9 @@
             </div>
             <div id="teacherAnalyticsTab" class="tab-content" style="display:none;">
                 <h3>&#128200; Class Analytics</h3>
-                <select id="analyticsClassSelect" onchange="loadClassAnalytics()">
-                    <option value="">Select a class</option>
-                </select>
-                <div id="classAnalyticsContent"></div>
+                <div id="teacherClassCards"></div>
+                <div id="classAnalyticsContent" style="display:none;"></div>
+                <button id="backToClassCards" class="action-btn" style="display:none;margin-bottom:16px;" onclick="showClassCards()">&#8592; Back to Classes</button>
             </div>
         </div>
 

@@ -740,20 +740,61 @@ var UI = (function() {
             renderQuestions();
         }
         else if (tab === "assignments") { $("teacherAssignmentsTab").style.display = "block"; renderAssignments(); }
-        else if (tab === "analytics") { $("teacherAnalyticsTab").style.display = "block"; populateAnalyticsClassSelect(); }
+        else if (tab === "analytics") { $("teacherAnalyticsTab").style.display = "block"; showClassCards(); }
     }
 
-    function populateAnalyticsClassSelect() {
-        var sel = $("analyticsClassSelect");
-        if (!sel) return;
+    function showClassCards() {
+        var cards = $("teacherClassCards");
+        var content = $("classAnalyticsContent");
+        var back = $("backToClassCards");
+        if (cards) cards.style.display = "block";
+        if (content) { content.style.display = "none"; content.innerHTML = ""; }
+        if (back) back.style.display = "none";
+        renderTeacherClassCards();
+    }
+
+    function renderTeacherClassCards() {
+        var c = $("teacherClassCards");
+        if (!c) return;
         var user = Auth.getUser();
         var myClassIds = (user && user.classes) ? user.classes : [];
-        sel.innerHTML = '<option value="">Select a class</option>';
+        if (myClassIds.length === 0) { c.innerHTML = "<p>No classes assigned yet.</p>"; return; }
+        var h = '<div class="overview-cards">';
         for (var i = 0; i < classes.length; i++) {
-            if (myClassIds.length === 0 || myClassIds.indexOf(classes[i].id) !== -1) {
-                sel.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
+            if (myClassIds.indexOf(classes[i].id) === -1) continue;
+            var cid = classes[i].id;
+            var cname = classes[i].name;
+            var studentCount = 0;
+            for (var j = 0; j < studentAccounts.length; j++) {
+                if (studentAccounts[j].classId === cid) studentCount++;
             }
+            var ca = [];
+            for (var j = 0; j < allAttempts.length; j++) {
+                for (var k = 0; k < studentAccounts.length; k++) {
+                    if (studentAccounts[k].id === allAttempts[j].studentId && studentAccounts[k].classId === cid) { ca.push(allAttempts[j]); break; }
+                }
+            }
+            var avg = 0;
+            if (ca.length > 0) { for (var j = 0; j < ca.length; j++) avg += ca[j].percentage; avg = (avg / ca.length).toFixed(0); }
+            h += '<div class="overview-card" style="cursor:pointer;" onclick="loadClassAnalytics(\'' + cid + '\')">' +
+                '<div class="card-icon">&#128218;</div>' +
+                '<div class="card-value">' + cname + '</div>' +
+                '<div class="card-label">' + studentCount + ' Students &bull; ' + ca.length + ' Attempts &bull; Avg: ' + avg + '%</div>' +
+                '</div>';
         }
+        h += '</div>';
+        c.innerHTML = h;
+    }
+
+    function loadClassAnalytics(cid) {
+        var cards = $("teacherClassCards");
+        var content = $("classAnalyticsContent");
+        var back = $("backToClassCards");
+        if (cards) cards.style.display = "none";
+        if (content) content.style.display = "block";
+        if (back) back.style.display = "inline-block";
+        renderClassAnalyticsContent(cid);
+        refreshAttemptsFromFirestore(function() { renderClassAnalyticsContent(cid); });
     }
 
     function renderClasses() {
