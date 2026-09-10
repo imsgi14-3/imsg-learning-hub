@@ -1898,6 +1898,7 @@ var UI = (function() {
     function deleteTeacher(tid) {
         if (!confirm("Delete this teacher?")) return;
         teachers = teachers.filter(function(t) { return t.id !== tid; });
+        if (deletedIds.indexOf(tid) === -1) deletedIds.push(tid);
         var removed = [];
         assignments = assignments.filter(function(a) { if (a.createdBy === tid) { removed.push(a.id); return false; } return true; });
         saveAll();
@@ -2137,6 +2138,7 @@ var UI = (function() {
         for (var i = 0; i < studentAccounts.length; i++) {
             if (studentAccounts[i].id === sid) { studentAccounts.splice(i, 1); break; }
         }
+        if (deletedIds.indexOf(sid) === -1) deletedIds.push(sid);
         saveAll();
         refreshStudentLists();
     }

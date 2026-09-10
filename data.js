@@ -9,10 +9,12 @@ var studentAccounts = [];
 var principalAccount = { id: "ADMIN-001", name: "Principal", password: "yyJwe6sY", createdAt: Date.now() };
 var pendingImportData = [];
 var pendingStudentExcelData = [];
+var deletedIds = [];
 
 var ATTEMPTS_KEY = "learningHub_attempts";
 var QUESTIONS_KEY = "learningHub_questions";
 var CLASSES_KEY = "learningHub_classes";
+var DELETED_KEY = "learningHub_deleted";
 var ASSIGNMENTS_KEY = "learningHub_assignments";
 var TEACHERS_KEY = "learningHub_teachers";
 var ATTENDANCE_KEY = "learningHub_attendance";
@@ -99,6 +101,7 @@ function loadData() {
     allAttempts = JSON.parse(localStorage.getItem(ATTEMPTS_KEY)) || [];
     conceptStats = JSON.parse(localStorage.getItem(CONCEPTS_KEY)) || {};
     studentAccounts = JSON.parse(localStorage.getItem(STUDENTS_KEY)) || [];
+    deletedIds = JSON.parse(localStorage.getItem(DELETED_KEY)) || [];
     var migrated = false;
     for (var i = 0; i < questions.length; i++) {
         if (!questions[i].subject) { questions[i].subject = "Computer Science"; migrated = true; }
@@ -178,7 +181,7 @@ function loadFromFirestore(callback) {
         if (snap.size > 0) {
             var merged = {};
             for (var i = 0; i < studentAccounts.length; i++) merged[studentAccounts[i].id] = studentAccounts[i];
-            snap.forEach(function(doc) { var d = doc.data(); if (!merged[d.id]) merged[d.id] = d; });
+            snap.forEach(function(doc) { var d = doc.data(); if (!merged[d.id] && deletedIds.indexOf(d.id) === -1) merged[d.id] = d; });
             studentAccounts = [];
             for (var key in merged) studentAccounts.push(merged[key]);
             localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
@@ -189,7 +192,7 @@ function loadFromFirestore(callback) {
         if (snap.size > 0) {
             var merged = {};
             for (var i = 0; i < classes.length; i++) merged[classes[i].id] = classes[i];
-            snap.forEach(function(doc) { var d = doc.data(); if (!merged[d.id]) merged[d.id] = d; });
+            snap.forEach(function(doc) { var d = doc.data(); if (!merged[d.id] && deletedIds.indexOf(d.id) === -1) merged[d.id] = d; });
             classes = [];
             for (var key in merged) classes.push(merged[key]);
             localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
@@ -215,7 +218,7 @@ function loadFromFirestore(callback) {
         if (snap.size > 0) {
             var merged = {};
             for (var i = 0; i < assignments.length; i++) merged[assignments[i].id || ("a-" + i)] = assignments[i];
-            snap.forEach(function(doc) { var d = doc.data(); var key = d.id || doc.id; if (!merged[key]) merged[key] = d; });
+            snap.forEach(function(doc) { var d = doc.data(); var key = d.id || doc.id; if (!merged[key] && deletedIds.indexOf(key) === -1) merged[key] = d; });
             assignments = [];
             for (var key in merged) assignments.push(merged[key]);
             localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments));
@@ -266,7 +269,9 @@ function loadFromFirestore(callback) {
             console.log("Firestore teachers loaded:", firestoreTeachers.map(function(t) { return t.id; }));
             var localById = {};
             for (var i = 0; i < teachers.length; i++) localById[teachers[i].id] = teachers[i];
-            for (var i = 0; i < firestoreTeachers.length; i++) localById[firestoreTeachers[i].id] = firestoreTeachers[i];
+            for (var i = 0; i < firestoreTeachers.length; i++) {
+                if (deletedIds.indexOf(firestoreTeachers[i].id) === -1) localById[firestoreTeachers[i].id] = firestoreTeachers[i];
+            }
             teachers = [];
             for (var id in localById) teachers.push(localById[id]);
             console.log("Merged teachers:", teachers.map(function(t) { return t.id; }));
