@@ -42,6 +42,7 @@ All modules must be independent and flexible. A bug or rewrite in one module mus
 5. **Data merging, not replacing:** When loading from Firestore, merge with local data. Never wipe local data when Firestore returns empty or fails.
 
 6. **No silent failures on save:** If a save operation fails, inform the user. Never silently lose data.
+7. **Verify before committing:** Before finalizing any change, check for possible errors — missing references in return objects, stale function calls, brace mismatches, undefined variables, and broken function signatures. Verify the full program flow still works (login → dashboard → tabs → actions).
 
 ## Current application flow
 ```text
