@@ -294,9 +294,14 @@ function refreshAssignmentsFromFirestore(callback) {
 function refreshAttemptsFromFirestore(callback) {
     if (typeof db === "undefined") { if (callback) callback(); return; }
     db.collection("attempts").get().then(function(snap) {
-        allAttempts = [];
-        snap.forEach(function(doc) { allAttempts.push(doc.data()); });
-        localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
+        if (snap.size > 0) {
+            var merged = {};
+            for (var i = 0; i < allAttempts.length; i++) merged[allAttempts[i].attemptId || allAttempts[i].timestamp] = allAttempts[i];
+            snap.forEach(function(doc) { var d = doc.data(); var key = d.attemptId || d.timestamp || doc.id; if (!merged[key]) merged[key] = d; });
+            allAttempts = [];
+            for (var key in merged) allAttempts.push(merged[key]);
+            localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
+        }
         if (callback) callback();
     }).catch(function() { if (callback) callback(); });
 }
