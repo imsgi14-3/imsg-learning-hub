@@ -2866,6 +2866,8 @@ var UI = (function() {
         confirmStudentExcelImport: confirmStudentExcelImport,
         closeModal: closeModal,
         renderBar: renderBar,
-        renderDonut: renderDonut
+        renderDonut: renderDonut,
+        showClassCards: showClassCards,
+        loadClassAnalytics: loadClassAnalytics
     };
 })();
