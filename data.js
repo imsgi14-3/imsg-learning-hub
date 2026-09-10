@@ -175,11 +175,25 @@ function loadFromFirestore(callback) {
     var loaded = 0, total = 6;
     function done() { loaded++; if (loaded >= total && callback) callback(); }
     db.collection("students").get().then(function(snap) {
-        if (snap.size > 0) { studentAccounts = []; snap.forEach(function(doc) { studentAccounts.push(doc.data()); }); localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts)); }
+        if (snap.size > 0) {
+            var merged = {};
+            for (var i = 0; i < studentAccounts.length; i++) merged[studentAccounts[i].id] = studentAccounts[i];
+            snap.forEach(function(doc) { var d = doc.data(); if (!merged[d.id]) merged[d.id] = d; });
+            studentAccounts = [];
+            for (var key in merged) studentAccounts.push(merged[key]);
+            localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
+        }
         done();
     }).catch(function(e) { console.error("Firestore students load error:", e); done(); });
     db.collection("classes").get().then(function(snap) {
-        if (snap.size > 0) { classes = []; snap.forEach(function(doc) { classes.push(doc.data()); }); localStorage.setItem(CLASSES_KEY, JSON.stringify(classes)); }
+        if (snap.size > 0) {
+            var merged = {};
+            for (var i = 0; i < classes.length; i++) merged[classes[i].id] = classes[i];
+            snap.forEach(function(doc) { var d = doc.data(); if (!merged[d.id]) merged[d.id] = d; });
+            classes = [];
+            for (var key in merged) classes.push(merged[key]);
+            localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
+        }
         done();
     }).catch(function(e) { console.error("Firestore classes load error:", e); done(); });
     db.collection("questions").get().then(function(snap) {
@@ -198,11 +212,25 @@ function loadFromFirestore(callback) {
         done();
     }).catch(function(e) { console.error("Firestore questions load error:", e); done(); });
     db.collection("assignments").get().then(function(snap) {
-        if (snap.size > 0) { assignments = []; snap.forEach(function(doc) { assignments.push(doc.data()); }); localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments)); }
+        if (snap.size > 0) {
+            var merged = {};
+            for (var i = 0; i < assignments.length; i++) merged[assignments[i].id || ("a-" + i)] = assignments[i];
+            snap.forEach(function(doc) { var d = doc.data(); var key = d.id || doc.id; if (!merged[key]) merged[key] = d; });
+            assignments = [];
+            for (var key in merged) assignments.push(merged[key]);
+            localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments));
+        }
         done();
     }).catch(function(e) { console.error("Firestore assignments load error:", e); done(); });
     db.collection("attempts").get().then(function(snap) {
-        if (snap.size > 0) { allAttempts = []; snap.forEach(function(doc) { allAttempts.push(doc.data()); }); localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts)); }
+        if (snap.size > 0) {
+            var merged = {};
+            for (var i = 0; i < allAttempts.length; i++) merged[allAttempts[i].attemptId || allAttempts[i].timestamp] = allAttempts[i];
+            snap.forEach(function(doc) { var d = doc.data(); var key = d.attemptId || d.timestamp || doc.id; if (!merged[key]) merged[key] = d; });
+            allAttempts = [];
+            for (var key in merged) allAttempts.push(merged[key]);
+            localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
+        }
         done();
     }).catch(function() { done(); });
     db.collection("teachers").get().then(function(snap) {
