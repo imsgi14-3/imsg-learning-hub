@@ -2864,6 +2864,7 @@ var UI = (function() {
         saveTeacher: saveTeacher,
         renderPrincipalStudents: renderPrincipalStudents,
         showStudentPassword: showStudentPassword,
+        resetStudentPassword: resetStudentPassword,
         exportStudentCredentials: exportStudentCredentials,
         doExportCredentials: doExportCredentials,
         showCreateStudentModal: showCreateStudentModal,
