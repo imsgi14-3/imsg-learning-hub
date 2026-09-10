@@ -2763,7 +2763,7 @@ var UI = (function() {
         });
     }
 
-    return {
+    var api = {
         $: $,
         dashboardsHide: dashboardsHide,
         showLogin: showLogin,
@@ -2869,4 +2869,6 @@ var UI = (function() {
         showClassCards: showClassCards,
         loadClassAnalytics: loadClassAnalytics
     };
+    for (var k in api) { if (typeof api[k] === "undefined") delete api[k]; }
+    return api;
 })();
