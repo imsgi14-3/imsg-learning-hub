@@ -2298,11 +2298,11 @@ var UI = (function() {
     function renderTeacherDeepAnalytics(attempts) {
         if (!attempts) attempts = [];
         var h = '';
-        h += renderStudentRankingsFromAttempts(attempts);
-        h += renderTopicAnalysisFromAttempts(attempts);
-        h += renderQuestionAccuracyFromAttempts(attempts);
-        h += renderProgressFromAttempts(attempts);
-        h += renderDifficultyFromAttempts(attempts);
+        try { h += renderStudentRankingsFromAttempts(attempts); } catch(e) {}
+        try { h += renderTopicAnalysisFromAttempts(attempts); } catch(e) {}
+        try { h += renderQuestionAccuracyFromAttempts(attempts); } catch(e) {}
+        try { h += renderProgressFromAttempts(attempts); } catch(e) {}
+        try { h += renderDifficultyFromAttempts(attempts); } catch(e) {}
         return h;
     }
 
@@ -2430,12 +2430,14 @@ var UI = (function() {
             var a = attempts[i];
             var ts = a.timestamp;
             var date = null;
-            if (ts) {
-                if (typeof ts === "string") date = ts.substring(0, 10);
-                else if (typeof ts === "object" && ts.toDate) date = ts.toDate().toISOString().substring(0, 10);
-                else if (typeof ts === "object" && ts.seconds) date = new Date(ts.seconds * 1000).toISOString().substring(0, 10);
-                else if (typeof ts === "number") date = new Date(ts).toISOString().substring(0, 10);
-            }
+            try {
+                if (ts) {
+                    if (typeof ts === "string") date = ts.substring(0, 10);
+                    else if (typeof ts === "object" && ts.toDate) date = ts.toDate().toISOString().substring(0, 10);
+                    else if (typeof ts === "object" && ts.seconds) date = new Date(ts.seconds * 1000).toISOString().substring(0, 10);
+                    else if (typeof ts === "number") date = new Date(ts).toISOString().substring(0, 10);
+                }
+            } catch(e) { date = null; }
             if (!date) continue;
             if (!dailyStats[date]) dailyStats[date] = { sum: 0, count: 0 };
             dailyStats[date].sum += a.percentage;
