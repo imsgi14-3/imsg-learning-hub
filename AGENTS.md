@@ -28,6 +28,21 @@ The owner is a Computer Science teacher learning development through this projec
 - Inspect the actual repository before changing code.
 - The actual source code is authoritative if these notes differ from it.
 
+## Module independence rule
+All modules must be independent and flexible. A bug or rewrite in one module must NOT affect other modules. Follow these rules:
+
+1. **Each module is self-contained.** UI module, Auth module, Data module, Quiz module, QuestionLoader — each handles its own logic. Do not let one module's internals leak into another.
+
+2. **Backend (Firestore) must never block frontend.** All Firestore calls must have try-catch and fallback to local data. If Firestore fails, the app must still work locally.
+
+3. **UI module safety:** When adding/removing functions from the UI module's return object, always ensure the function exists. The module now filters undefined exports automatically, but developers should still verify.
+
+4. **Error isolation:** Use try-catch around each rendering section (e.g., analytics sub-sections). One failing chart must not kill the entire dashboard.
+
+5. **Data merging, not replacing:** When loading from Firestore, merge with local data. Never wipe local data when Firestore returns empty or fails.
+
+6. **No silent failures on save:** If a save operation fails, inform the user. Never silently lose data.
+
 ## Current application flow
 ```text
 HOME / DASHBOARD
