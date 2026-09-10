@@ -1303,17 +1303,6 @@ var UI = (function() {
         saveAll(); closeModal(); renderAssignments();
     }
 
-    function loadClassAnalytics() {
-        var cid = $("analyticsClassSelect").value;
-        var c = $("classAnalyticsContent");
-        if (!c) return;
-        if (!cid) { c.innerHTML = "<p>Select a class to view analytics.</p>"; return; }
-        var cl = null;
-        for (var i = 0; i < classes.length; i++) { if (classes[i].id === cid) { cl = classes[i]; break; } }
-        if (!cl) return;
-        renderClassAnalyticsContent(cid);
-        refreshAttemptsFromFirestore(function() { renderClassAnalyticsContent(cid); });
-    }
 
     function renderClassAnalyticsContent(cid) {
         var c = $("classAnalyticsContent");
