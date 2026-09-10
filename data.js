@@ -421,7 +421,7 @@ function generateTeacherId(name) {
         base = name.toLowerCase().replace(/[^a-z]/g, "");
     }
     if (base.length < 2) base = "teacher";
-    var num = 1;
+    var num = teachers.length + 1;
     var id = base + "t" + (num < 10 ? "0" : "") + num;
     for (var i = 0; i < teachers.length; i++) {
         if (teachers[i].id === id) { num++; id = base + "t" + (num < 10 ? "0" : "") + num; i = -1; }
