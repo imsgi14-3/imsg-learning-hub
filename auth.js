@@ -113,6 +113,7 @@ var Auth = (function() {
                 document.getElementById("loginPage").style.display = "none";
                 document.getElementById("logoutBar").style.display = "flex";
                 document.getElementById("homeBtn").style.display = "inline-block";
+                var sb = document.getElementById("syncBtn"); if (sb) sb.style.display = "inline-block";
                 document.getElementById("loggedUser").textContent = teacher.name + " (Teacher)";
                 dashboardsHide();
                 document.getElementById("teacherDashboard").style.display = "block";
@@ -143,6 +144,7 @@ var Auth = (function() {
                 document.getElementById("loginPage").style.display = "none";
                 document.getElementById("logoutBar").style.display = "flex";
                 document.getElementById("homeBtn").style.display = "inline-block";
+                var sb = document.getElementById("syncBtn"); if (sb) sb.style.display = "inline-block";
                 document.getElementById("loggedUser").textContent = teacher.name + " (Class Teacher)";
                 dashboardsHide();
                 document.getElementById("classTeacherDashboard").style.display = "block";
@@ -186,6 +188,7 @@ var Auth = (function() {
                 document.getElementById("loginPage").style.display = "none";
                 document.getElementById("logoutBar").style.display = "flex";
                 document.getElementById("homeBtn").style.display = "inline-block";
+                var sb = document.getElementById("syncBtn"); if (sb) sb.style.display = "inline-block";
                 document.getElementById("loggedUser").textContent = principalAccount.name + " (Admin)";
                 dashboardsHide();
                 document.getElementById("principalDashboard").style.display = "block";
