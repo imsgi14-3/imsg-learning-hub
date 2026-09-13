@@ -2716,6 +2716,24 @@ var UI = (function() {
         $("homeBtn").style.display = "inline-block";
         var role = Auth.getRole();
         var user = Auth.getUser();
+        loadFromFirestore(function() {
+            if (role === "teacher" || role === "classteacher") {
+                for (var i = 0; i < teachers.length; i++) {
+                    if (teachers[i].id === user.id) {
+                        user.classSubjects = teachers[i].classSubjects || user.classSubjects;
+                        user.subjects = teachers[i].subjects || user.subjects;
+                        user.classes = teachers[i].classes || user.classes;
+                        user.classTeacherOf = teachers[i].classTeacherOf || user.classTeacherOf;
+                        break;
+                    }
+                }
+            }
+            Auth.loginAs(role, user);
+            renderDashboard(role, user);
+        });
+    }
+
+    function renderDashboard(role, user) {
         if (role === "student") {
             $("studentDashboard").style.display = "block";
             $("studentDisplayName").textContent = user ? user.name : "Student";
