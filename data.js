@@ -152,7 +152,6 @@ function saveAll() {
     localStorage.setItem(CONCEPTS_KEY, JSON.stringify(conceptStats));
     localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
     if (principalAccount) localStorage.setItem("learningHub_principal", JSON.stringify(principalAccount));
-    saveToFirestore();
 }
 
 function saveToFirestore() {
