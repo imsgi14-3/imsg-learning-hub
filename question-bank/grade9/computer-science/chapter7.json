@@ -1,288 +1,2331 @@
 {
   "chapter": 7,
-  "chapterTitle": "Website Development",
+  "chapterTitle": "Entrepreneurship",
   "subject": "Computer Science",
   "grade": 9,
   "source": "NBF Grade 9 Computer Science, Unit 7",
+  "sections": [
+    "7.1 You Will be Your Own Boss!",
+    "7.2 Cost of Production + Overheads + Profit = Selling Price",
+    "7.3 Devising a Business Plan"
+  ],
   "questions": [
     {
       "id": "CH7-MCQ-001",
       "chapter": 7,
-      "topic": "7.1 Introduction to Web Development",
+      "topic": "7.1.1 The Concept of Entrepreneurship",
       "type": "mcq",
       "mode": "straight",
       "difficulty": "easy",
-      "question": "What does HTML stand for?",
-      "options": ["Hyper Text Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyper Transfer Markup Language"],
+      "question": "What is the process of creating an enterprise called?",
+      "options": [
+        "Entrepreneurship",
+        "Depreciation",
+        "Market research",
+        "Budgeting"
+      ],
       "answer": "A",
-      "explanation": "HTML stands for Hyper Text Markup Language, the standard language for creating web pages.",
+      "explanation": "The textbook defines entrepreneurship as the process of creating an enterprise.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-002",
       "chapter": 7,
-      "topic": "7.1 Introduction to Web Development",
+      "topic": "7.1.1 The Concept of Entrepreneurship",
       "type": "mcq",
-      "mode": "straight",
+      "mode": "understanding",
       "difficulty": "easy",
-      "question": "Which language is used to style web pages?",
-      "options": ["HTML", "CSS", "JavaScript", "Python"],
-      "answer": "B",
-      "explanation": "CSS (Cascading Style Sheets) is used to style and layout web pages.",
-      "bloom": "Remembering",
+      "question": "Which activity is part of entrepreneurship according to the textbook?",
+      "options": [
+        "Taking risks and making necessary investments",
+        "Avoiding all uncertainty",
+        "Only purchasing finished goods",
+        "Only managing computer hardware"
+      ],
+      "answer": "A",
+      "explanation": "Entrepreneurship involves taking risks, making investments under uncertainty, innovating, planning, and making decisions.",
+      "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-003",
       "chapter": 7,
-      "topic": "7.1 Introduction to Web Development",
+      "topic": "7.1.1 The Concept of Entrepreneurship",
       "type": "mcq",
-      "mode": "straight",
-      "difficulty": "easy",
-      "question": "Which language adds interactivity to web pages?",
-      "options": ["HTML", "CSS", "JavaScript", "SQL"],
-      "answer": "C",
-      "explanation": "JavaScript is used to add interactivity and dynamic behavior to web pages.",
-      "bloom": "Remembering",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why is entrepreneurship described as requiring a composite skill?",
+      "options": [
+        "It combines many qualities and traits",
+        "It requires only financial knowledge",
+        "It depends only on land ownership",
+        "It eliminates the need for planning"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes entrepreneurship as a mix of many qualities and traits.",
+      "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-004",
       "chapter": 7,
-      "topic": "7.2 HTML Basics",
+      "topic": "7.1.1 The Concept of Entrepreneurship",
       "type": "mcq",
-      "mode": "straight",
-      "difficulty": "easy",
-      "question": "Which HTML tag is used for the largest heading?",
-      "options": ["<h6>", "<heading>", "<h1>", "<head>"],
-      "answer": "C",
-      "explanation": "<h1> defines the largest heading in HTML. Headings go from <h1> (largest) to <h6> (smallest).",
-      "bloom": "Remembering",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An individual identifies a business opportunity, invests resources despite uncertainty, and plans decisions to increase production. Which concept is illustrated?",
+      "options": [
+        "Entrepreneurship",
+        "Depreciation",
+        "Market saturation",
+        "Cash flow"
+      ],
+      "answer": "A",
+      "explanation": "Taking calculated risks, investing, planning, innovating, and making decisions to increase production are features of entrepreneurship.",
+      "bloom": "Applying",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-005",
       "chapter": 7,
-      "topic": "7.2 HTML Basics",
+      "topic": "7.1.1 The Concept of Entrepreneurship",
       "type": "mcq",
-      "mode": "straight",
+      "mode": "comparison",
       "difficulty": "medium",
-      "question": "Which tag creates a hyperlink?",
-      "options": ["<link>", "<a>", "<href>", "<url>"],
-      "answer": "B",
-      "explanation": "The <a> (anchor) tag is used to create hyperlinks. Example: <a href='url'>Click here</a>.",
-      "bloom": "Remembering",
+      "question": "Which pair represents factors that an entrepreneur may bring together for production?",
+      "options": [
+        "Capital, labor and land",
+        "Passwords, browsers and websites",
+        "Customers, passwords and printers",
+        "Files, folders and monitors"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically mentions capital, labor, and land as factors of production.",
+      "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-006",
       "chapter": 7,
-      "topic": "7.2 HTML Basics",
+      "topic": "7.1.1 The Concept of Entrepreneurship",
       "type": "mcq",
-      "mode": "straight",
+      "mode": "understanding",
       "difficulty": "medium",
-      "question": "Which attribute of the <a> tag specifies the destination URL?",
-      "options": ["src", "href", "link", "url"],
-      "answer": "B",
-      "explanation": "The href attribute specifies the URL the link points to.",
+      "question": "Which intangible ability is mentioned as part of entrepreneurship?",
+      "options": [
+        "Mobilizing scientific and technological advances",
+        "Repairing every computer personally",
+        "Avoiding government agencies",
+        "Eliminating all business risks"
+      ],
+      "answer": "A",
+      "explanation": "The textbook includes the ability to mobilize scientific and technological advances among intangible factors.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-007",
       "chapter": 7,
-      "topic": "7.2 HTML Basics",
+      "topic": "7.1.1 The Concept of Entrepreneurship",
       "type": "mcq",
       "mode": "straight",
       "difficulty": "easy",
-      "question": "Which tag inserts an image?",
-      "options": ["<image>", "<img>", "<pic>", "<src>"],
-      "answer": "B",
-      "explanation": "The <img> tag is used to embed images. Example: <img src='photo.jpg' alt='description'>.",
+      "question": "Besides investment and innovation, what does entrepreneurship involve?",
+      "options": [
+        "Planning and decision-making",
+        "Only advertising",
+        "Only hiring workers",
+        "Only buying equipment"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly includes planning and taking decisions.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-008",
       "chapter": 7,
-      "topic": "7.3 CSS Basics",
+      "topic": "7.1.1 The Concept of Entrepreneurship",
       "type": "mcq",
-      "mode": "straight",
-      "difficulty": "easy",
-      "question": "How do you change the text color to red in CSS?",
-      "options": ["text-color: red;", "font-color: red;", "color: red;", "foreground: red;"],
-      "answer": "C",
-      "explanation": "The CSS property 'color' changes the text color. Example: color: red;",
-      "bloom": "Remembering",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A prospective business owner researches licenses, approvals and finance before launching. Which part of entrepreneurship does this reflect?",
+      "options": [
+        "Preparing necessary conditions for the enterprise",
+        "Avoiding investment",
+        "Eliminating production factors",
+        "Reducing customer demand"
+      ],
+      "answer": "A",
+      "explanation": "The textbook notes acquiring required licenses, approvals and finance as part of entrepreneurship.",
+      "bloom": "Applying",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-009",
       "chapter": 7,
-      "topic": "7.3 CSS Basics",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
       "type": "mcq",
       "mode": "straight",
-      "difficulty": "medium",
-      "question": "Which CSS property changes the background color?",
-      "options": ["bg-color", "background-color", "back-color", "bgcolor"],
-      "answer": "B",
-      "explanation": "The background-color property sets the background color of an element.",
+      "difficulty": "easy",
+      "question": "Who is an entrepreneur?",
+      "options": [
+        "A person who starts or owns, organizes and manages a business while taking financial risks for profit",
+        "A person who only buys products",
+        "A person who avoids all business decisions",
+        "A person who only works for government"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes an entrepreneur as a person who starts or owns, organizes and manages a business while taking financial risks for profit.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-010",
       "chapter": 7,
-      "topic": "7.3 CSS Basics",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
       "type": "mcq",
-      "mode": "straight",
+      "mode": "understanding",
       "difficulty": "medium",
-      "question": "Which CSS selector targets elements with a specific class?",
-      "options": ["#classname", ".classname", "classname", "*classname"],
-      "answer": "B",
-      "explanation": "A dot (.) prefix selects elements by class name. Example: .myClass { color: blue; }.",
-      "bloom": "Remembering",
+      "question": "What does an entrepreneur do with economic resources according to the textbook?",
+      "options": [
+        "Shifts them from lower to higher productivity and greater yield",
+        "Keeps them unused",
+        "Moves them only into government offices",
+        "Uses them only for personal entertainment"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes entrepreneurs as shifting economic resources toward higher productivity and greater yield.",
+      "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-011",
       "chapter": 7,
-      "topic": "7.3 CSS Basics",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
       "type": "mcq",
       "mode": "straight",
-      "difficulty": "medium",
-      "question": "Which CSS selector targets an element by its ID?",
-      "options": [".idname", "#idname", "idname", "@idname"],
-      "answer": "B",
-      "explanation": "A hash (#) prefix selects an element by its ID. Example: #myId { font-size: 20px; }.",
+      "difficulty": "easy",
+      "question": "Which characteristic means that entrepreneurs feel personally responsible for the outcomes of their ventures?",
+      "options": [
+        "Desire for responsibility",
+        "Future orientation",
+        "High level of energy",
+        "Skill at organizing"
+      ],
+      "answer": "A",
+      "explanation": "Desire for responsibility refers to personal responsibility for venture outcomes.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-012",
       "chapter": 7,
-      "topic": "7.4 JavaScript Basics",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
       "type": "mcq",
-      "mode": "straight",
-      "difficulty": "easy",
-      "question": "How do you display a message box in JavaScript?",
-      "options": ["console.log()", "alert()", "print()", "display()"],
-      "answer": "B",
-      "explanation": "The alert() function displays a popup message box in the browser.",
-      "bloom": "Remembering",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "How does the textbook characterize an entrepreneur's approach to risk?",
+      "options": [
+        "Calculated and moderate rather than wild",
+        "Completely risk-free",
+        "Wild and unlimited",
+        "Avoiding every possible risk"
+      ],
+      "answer": "A",
+      "explanation": "Entrepreneurs are described as calculated risk takers who prefer moderate risk.",
+      "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-013",
       "chapter": 7,
-      "topic": "7.4 JavaScript Basics",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
       "type": "mcq",
-      "mode": "straight",
+      "mode": "application",
       "difficulty": "medium",
-      "question": "Which keyword declares a variable in JavaScript?",
-      "options": ["var", "int", "string", "dim"],
+      "question": "A startup founder performs several jobs because resources are limited and accepts responsibility for making the business succeed. Which characteristic is shown?",
+      "options": [
+        "Self-reliance",
+        "Future orientation",
+        "Value of achievement over money",
+        "Desire for immediate feedback"
+      ],
       "answer": "A",
-      "explanation": "In JavaScript, 'var' (or 'let'/'const') is used to declare variables.",
-      "bloom": "Remembering",
+      "explanation": "The textbook links performing multiple roles and accepting responsibility with self-reliance.",
+      "bloom": "Applying",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-014",
       "chapter": 7,
-      "topic": "7.4 JavaScript Basics",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
       "type": "mcq",
-      "mode": "straight",
+      "mode": "understanding",
       "difficulty": "medium",
-      "question": "Which method selects an HTML element by its ID in JavaScript?",
-      "options": ["document.getElement(id)", "document.getElementById()", "document.findElement()", "document.select()"],
-      "answer": "B",
-      "explanation": "document.getElementById('id') returns the element with the specified ID.",
-      "bloom": "Remembering",
+      "question": "Which characteristic is associated with focusing intently on a singular long-term goal?",
+      "options": [
+        "Determination",
+        "Skill at organizing",
+        "High level of energy",
+        "Future orientation"
+      ],
+      "answer": "A",
+      "explanation": "Determination is described as the ability to focus intently on achieving a long-term goal.",
+      "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-015",
       "chapter": 7,
-      "topic": "7.5 Web Page Structure",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
       "type": "mcq",
-      "mode": "straight",
-      "difficulty": "easy",
-      "question": "Which HTML tag contains the visible content of a web page?",
-      "options": ["<head>", "<body>", "<html>", "<title>"],
-      "answer": "B",
-      "explanation": "The <body> tag contains all the visible content of an HTML page.",
-      "bloom": "Remembering",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A business owner constantly asks customers and workers how the business is performing and uses their responses to set higher standards. Which characteristic is this?",
+      "options": [
+        "Desire for immediate feedback",
+        "Moderate risk",
+        "Self-reliance",
+        "Future orientation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says entrepreneurs constantly seek feedback and use it to set higher performance standards.",
+      "bloom": "Applying",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-016",
       "chapter": 7,
-      "topic": "7.5 Web Page Structure",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
       "type": "mcq",
       "mode": "straight",
-      "difficulty": "medium",
-      "question": "Which tag defines a paragraph in HTML?",
-      "options": ["<para>", "<p>", "<text>", "<pg>"],
-      "answer": "B",
-      "explanation": "The <p> tag defines a paragraph element in HTML.",
+      "difficulty": "easy",
+      "question": "Which characteristic describes entrepreneurs who search for opportunities and focus on what they might do tomorrow?",
+      "options": [
+        "Future orientation",
+        "Desire for responsibility",
+        "Self-reliance",
+        "Determination"
+      ],
+      "answer": "A",
+      "explanation": "Future orientation means looking ahead and searching for opportunities.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-017",
       "chapter": 7,
-      "topic": "7.2 HTML Basics",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
       "type": "mcq",
-      "mode": "scenario",
+      "mode": "application",
       "difficulty": "medium",
-      "question": "Sara wants to create a link that opens in a new tab. Which attribute should she add?",
-      "options": ["target='_new'", "target='_blank'", "open='new'", "window='new'"],
-      "answer": "B",
-      "explanation": "The target='_blank' attribute opens the link in a new browser tab/window.",
+      "question": "An entrepreneur deliberately combines suitable people with suitable jobs to turn a business vision into reality. Which characteristic is demonstrated?",
+      "options": [
+        "Skill at organizing",
+        "Preference for moderate risk",
+        "High level of energy",
+        "Desire for immediate feedback"
+      ],
+      "answer": "A",
+      "explanation": "Skill at organizing involves putting the right people together to accomplish tasks.",
       "bloom": "Applying",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-018",
       "chapter": 7,
-      "topic": "7.3 CSS Basics",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
       "type": "mcq",
-      "mode": "scenario",
-      "difficulty": "hard",
-      "question": "Aisha wants to center a heading horizontally. Which CSS property achieves this?",
-      "options": ["text-align: center;", "align: center;", "center: true;", "margin: auto;"],
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "According to the textbook, what is often a primary motivating force for entrepreneurs?",
+      "options": [
+        "Achievement",
+        "Avoiding responsibility",
+        "Reducing customer contact",
+        "Eliminating uncertainty"
+      ],
       "answer": "A",
-      "explanation": "text-align: center; centers inline content horizontally within its parent element.",
-      "bloom": "Applying",
+      "explanation": "The textbook says achievement appears to be the primary motivating force, with money serving as a symbol of achievement.",
+      "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-019",
       "chapter": 7,
-      "topic": "7.4 JavaScript Basics",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
       "type": "mcq",
-      "mode": "scenario",
-      "difficulty": "hard",
-      "question": "Hassan wants to change the text of a paragraph when a button is clicked. Which method should he use?",
-      "options": ["element.innerHTML", "element.setText()", "element.text()", "element.change()"],
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which is a benefit of entrepreneurship identified by the textbook?",
+      "options": [
+        "Greater control over one's life",
+        "Guaranteed income",
+        "No decision-making responsibility",
+        "No possibility of stress"
+      ],
       "answer": "A",
-      "explanation": "innerHTML (or textContent) can be used to change the content of an HTML element dynamically.",
-      "bloom": "Applying",
+      "explanation": "Benefits include control over one's life, making a difference, self-fulfillment, profits, contribution to society, and doing enjoyable work.",
+      "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     },
     {
       "id": "CH7-MCQ-020",
       "chapter": 7,
-      "topic": "7.1 Introduction to Web Development",
+      "topic": "7.1.2 Whatis an Entrepreneur?",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which is a drawback of entrepreneurship?",
+      "options": [
+        "Uncertainty of income",
+        "Guaranteed success",
+        "Shorter working hours in every case",
+        "No financial risk"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists uncertainty of income among the drawbacks.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-021",
+      "chapter": 7,
+      "topic": "7.1.2 Whatis an Entrepreneur?",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "A new entrepreneur accepts long hours, financial uncertainty and complete decision-making responsibility because they want to build their own venture. Which textbook view best fits this situation?",
+      "options": [
+        "It reflects both the benefits and drawbacks of entrepreneurship",
+        "It proves entrepreneurship has no risks",
+        "It shows entrepreneurs avoid responsibility",
+        "It means the venture is already successful"
+      ],
+      "answer": "A",
+      "explanation": "The textbook presents independence and achievement as benefits while also identifying uncertainty, hard work, stress and responsibility as drawbacks.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-022",
+      "chapter": 7,
+      "topic": "7.1.3 What is Design Thinking?",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How many phases does the textbook identify in design thinking?",
+      "options": [
+        "Five",
+        "Three",
+        "Four",
+        "Six"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies five phases.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-023",
+      "chapter": 7,
+      "topic": "7.1.3 What is Design Thinking?",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is the first phase of design thinking?",
+      "options": [
+        "Empathize",
+        "Define",
+        "Ideate",
+        "Prototype"
+      ],
+      "answer": "A",
+      "explanation": "Empathize is the first of the five phases listed.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-024",
+      "chapter": 7,
+      "topic": "7.1.3 What is Design Thinking?",
+      "type": "mcq",
+      "mode": "process",
+      "difficulty": "medium",
+      "question": "Which sequence correctly represents the five design thinking phases?",
+      "options": [
+        "Empathize → Define → Ideate → Prototype → Test",
+        "Define → Empathize → Prototype → Test → Ideate",
+        "Ideate → Define → Empathize → Test → Prototype",
+        "Prototype → Ideate → Define → Empathize → Test"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives the sequence Empathize, Define, Ideate, Prototype, and Test.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-025",
+      "chapter": 7,
+      "topic": "7.1.3 What is Design Thinking?",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What is the purpose of the Empathize phase?",
+      "options": [
+        "Understand the user's needs and challenges",
+        "Build the final product",
+        "Set the selling price",
+        "Calculate depreciation"
+      ],
+      "answer": "A",
+      "explanation": "Empathize focuses on understanding users and their needs through observation and interviews.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-026",
+      "chapter": 7,
+      "topic": "7.1.3 What is Design Thinking?",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A team observes users and interviews them to understand their needs before deciding what problem to solve. Which phase is this?",
+      "options": [
+        "Empathize",
+        "Define",
+        "Prototype",
+        "Test"
+      ],
+      "answer": "A",
+      "explanation": "Observation and interviews to understand users' needs are part of Empathize.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-027",
+      "chapter": 7,
+      "topic": "7.1.3 What is Design Thinking?",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What happens during the Define phase?",
+      "options": [
+        "The problem is defined using insights gathered about users",
+        "A final product is sold",
+        "Costs are calculated",
+        "Competitors are hired"
+      ],
+      "answer": "A",
+      "explanation": "Define follows Empathize and uses gathered insights to define the problem.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-028",
+      "chapter": 7,
+      "topic": "7.1.3 What is Design Thinking?",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A team brainstorms many possible solutions to a clearly stated problem. Which design thinking phase are they using?",
+      "options": [
+        "Ideate",
+        "Empathize",
+        "Define",
+        "Test"
+      ],
+      "answer": "A",
+      "explanation": "Ideate is the phase in which many creative ideas are generated.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-029",
+      "chapter": 7,
+      "topic": "7.1.3 What is Design Thinking?",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A team turns its most promising idea into a simple sample model before trying it with users. Which phase is this?",
+      "options": [
+        "Prototype",
+        "Define",
+        "Empathize",
+        "Ideate"
+      ],
+      "answer": "A",
+      "explanation": "Prototype involves building a sample model for testing.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-030",
+      "chapter": 7,
+      "topic": "7.1.3 What is Design Thinking?",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "After users try a sample model, the team collects their feedback and improves the solution. Which phase is most directly involved?",
+      "options": [
+        "Test",
+        "Empathize",
+        "Ideate",
+        "Define"
+      ],
+      "answer": "A",
+      "explanation": "Test involves testing prototypes with real users, collecting feedback, and refining the solution.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-031",
+      "chapter": 7,
+      "topic": "7.1.3 What is Design Thinking?",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "hard",
+      "question": "Why is design thinking described as iterative and non-linear?",
+      "options": [
+        "Stages can be repeated and the team can return to an earlier stage",
+        "Each stage must be completed only once",
+        "The process never uses user feedback",
+        "The stages must always be performed independently"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that stages can be carried out in parallel, repeated, and revisited.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-032",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is one primary goal of a business plan?",
+      "options": [
+        "To guide entrepreneurs as they launch a business",
+        "To eliminate every competitor",
+        "To guarantee profit",
+        "To replace all employees"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says a primary goal is to guide entrepreneurs as they launch their businesses.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-033",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "How can a business plan help an entrepreneur financially?",
+      "options": [
+        "It can help acquire necessary financing and attract capital",
+        "It guarantees a government loan",
+        "It removes all production costs",
+        "It makes customers pay in advance"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies financing and attracting capital as important purposes of a business plan.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-034",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which function of a business plan helps an entrepreneur identify the main dangers facing a venture?",
+      "options": [
+        "Determining principal risks",
+        "Writing a company slogan",
+        "Listing computer hardware",
+        "Selecting a password"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says a business plan provides a way to determine the principal risks facing the venture.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-035",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A new business compares its actual results with the performance it had planned to achieve. Which purpose of a business plan is being used?",
+      "options": [
+        "Comparing actual results against targeted performance",
+        "Finding a computer virus",
+        "Designing a logo",
+        "Choosing an operating system"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies this comparison as a function of a business plan.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-036",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "A business plan is best described as what?",
+      "options": [
+        "A written summary of a proposed venture and its operational, financial and marketing details",
+        "A list of customer passwords",
+        "A software license",
+        "A product advertisement only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines a business plan as a written summary covering the proposed venture, operational and financial details, marketing opportunities and strategy, and managers' skills and abilities.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-037",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why is a business plan called an entrepreneur's road map?",
+      "options": [
+        "It describes the direction, goals, desired position and how the business intends to get there",
+        "It gives driving directions to customers",
+        "It replaces market research",
+        "It only records past sales"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses the road-map idea to describe the business direction, goals and intended path.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-038",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "A potential entrepreneur writes down a business idea in specific detail and discovers weaknesses that were not obvious before. Which benefit of business planning does this illustrate?",
+      "options": [
+        "Looking at the business idea realistically",
+        "Guaranteeing immediate success",
+        "Avoiding all research",
+        "Eliminating the need for a business model"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says planning forces a potential entrepreneur to examine the idea in the light of reality by putting it into specific detail.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-039",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which tool is identified in the textbook as useful for preparing a business plan?",
+      "options": [
+        "MS Word",
+        "A calculator only",
+        "A music player",
+        "A video game"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that MS Word is a good tool for preparing a business plan.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-040",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
       "type": "mcq",
       "mode": "straight",
       "difficulty": "medium",
-      "question": "What is the correct order of including HTML, CSS, and JavaScript in a web page?",
-      "options": ["JavaScript first, then CSS, then HTML", "HTML first, then CSS, then JavaScript", "CSS first, then JavaScript, then HTML", "Order doesn't matter"],
-      "answer": "B",
-      "explanation": "HTML defines structure, CSS styles it, and JavaScript adds behavior — typically loaded in this order.",
+      "question": "Which software is described as a spreadsheet program in the SoftMaker Office suite?",
+      "options": [
+        "PlanMaker",
+        "Canva",
+        "WordPress",
+        "LivePlan"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies PlanMaker as a spreadsheet program in the SoftMaker Office suite.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-041",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which software is described as providing tools to create a business plan and present it to investors?",
+      "options": [
+        "PlanWrite",
+        "WordPress",
+        "Canva",
+        "PlanMaker"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes PlanWrite as a tool for creating a business plan and presenting it to investors.",
       "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-042",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which platform is described as a versatile online app for creating graphics, videos and social media content?",
+      "options": [
+        "Canva",
+        "PlanMaker",
+        "PlanWrite",
+        "LivePlan"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes Canva as a free-to-use online app for graphics, videos and social media content.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-043",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which tool is described as a website creation tool and an open-source content management system?",
+      "options": [
+        "WordPress",
+        "LivePlan",
+        "PlanWrite",
+        "PlanMaker"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes WordPress as a leading website creation tool and open-source content management system.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-044",
+      "chapter": 7,
+      "topic": "7.1.4 Developing a Business Plan",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An entrepreneur wants pre-loaded business-plan templates and step-by-step instructions for each section. Which software described in the textbook best matches this need?",
+      "options": [
+        "Business Plan Pro (LivePlan)",
+        "PlanMaker",
+        "WordPress",
+        "Canva"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says Business Plan Pro (LivePlan) includes more than 500 templates and step-by-step instructions.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-045",
+      "chapter": 7,
+      "topic": "7.1.5 My entrepreneurial skills",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which skill category includes confidence in oneself, managing one's life and being responsible?",
+      "options": [
+        "Conducting myself",
+        "Thinking",
+        "Interacting with people",
+        "My safety and survival"
+      ],
+      "answer": "A",
+      "explanation": "These examples are listed under the skill category 'Conducting myself'.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-046",
+      "chapter": 7,
+      "topic": "7.1.5 My entrepreneurial skills",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which skill category includes creativity, problem solving and decision making?",
+      "options": [
+        "Thinking",
+        "Conducting myself",
+        "Interacting with people",
+        "My safety and survival"
+      ],
+      "answer": "A",
+      "explanation": "The textbook places creativity, solving problems and making decisions under Thinking.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-047",
+      "chapter": 7,
+      "topic": "7.1.5 My entrepreneurial skills",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A student works cooperatively and accepts people regardless of their social status or disability. Which entrepreneurial skill category does this reflect?",
+      "options": [
+        "Interacting with people",
+        "Thinking",
+        "Conducting myself",
+        "My safety and survival"
+      ],
+      "answer": "A",
+      "explanation": "Working with others and accepting others irrespective of status or disability is listed under Interacting with people.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-048",
+      "chapter": 7,
+      "topic": "7.1.5 My entrepreneurial skills",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which category includes self-preservation, first aid and drug abuse prevention?",
+      "options": [
+        "My safety and survival",
+        "Thinking",
+        "Conducting myself",
+        "Interacting with people"
+      ],
+      "answer": "A",
+      "explanation": "These skills are explicitly listed under My safety and survival.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-049",
+      "chapter": 7,
+      "topic": "7.1.6 My Ideas for small business",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "easy",
+      "question": "What should an entrepreneur first consider when looking for a small-business idea in the community?",
+      "options": [
+        "Community needs for products or services",
+        "Only personal hobbies",
+        "Only the number of employees",
+        "Only the size of the office"
+      ],
+      "answer": "A",
+      "explanation": "The textbook advises entrepreneurs to consider their community and identify its needs.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-050",
+      "chapter": 7,
+      "topic": "7.1.6 My Ideas for small business",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A community has difficulty getting a particular service. An entrepreneur studies the difficulty and designs a service to address it. Which approach from the textbook is being used?",
+      "options": [
+        "Identifying a community difficulty and finding a product or service to address it",
+        "Ignoring community needs",
+        "Choosing a business without research",
+        "Copying a competitor exactly"
+      ],
+      "answer": "A",
+      "explanation": "The textbook suggests identifying a community difficulty and determining what product or service could overcome it.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-051",
+      "chapter": 7,
+      "topic": "7.1.6 My Ideas for small business",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "hard",
+      "question": "Which set of questions best follows the textbook's approach to developing a small-business idea?",
+      "options": [
+        "What community need exists, what can address it, which skills can help, and can it become a business idea?",
+        "What is the most expensive office and which computer is newest?",
+        "How can every competitor be removed and every risk avoided?",
+        "Which product has no customers and no demand?"
+      ],
+      "answer": "A",
+      "explanation": "The textbook provides these four guiding questions for turning community needs into business ideas.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-052",
+      "chapter": 7,
+      "topic": "7.1.7 My market",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is meant by demand in the textbook?",
+      "options": [
+        "A need for a product or service by a person or group of people",
+        "The number of competitors only",
+        "The cost of equipment",
+        "The entrepreneur's salary"
+      ],
+      "answer": "A",
+      "explanation": "Demand exists when a person or group needs a product or service.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-053",
+      "chapter": 7,
+      "topic": "7.1.7 My market",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Who are customers?",
+      "options": [
+        "People who need the product or service and are willing to pay for it",
+        "All people in the country",
+        "Only business competitors",
+        "Only employees"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines customers as people who need the product or service and are willing to pay for it.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-054",
+      "chapter": 7,
+      "topic": "7.1.7 My market",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What represents the market for a product or service in the community?",
+      "options": [
+        "The number of customers in the community",
+        "The number of employees",
+        "The amount of equipment",
+        "The number of business plans"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says the number of customers in the community represents the market.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-055",
+      "chapter": 7,
+      "topic": "7.1.7 My market",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What are competitors?",
+      "options": [
+        "Business people providing similar products or services",
+        "People who buy the product",
+        "Government agencies only",
+        "Workers who manufacture unrelated goods"
+      ],
+      "answer": "A",
+      "explanation": "Competitors are business people who provide similar products or services.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-056",
+      "chapter": 7,
+      "topic": "7.1.7 My market",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A business surveys customer preferences and willingness to pay before launching a product. What is the main purpose?",
+      "options": [
+        "To estimate the size of its market",
+        "To calculate equipment depreciation only",
+        "To eliminate all competition",
+        "To write software code"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says surveys can estimate market size by studying customer needs, preferences and willingness to pay.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-057",
+      "chapter": 7,
+      "topic": "7.1.7 My market",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "hard",
+      "question": "A survey finds that customers like a product but do not want to buy it regularly. What market issue should the entrepreneur examine?",
+      "options": [
+        "Whether demand is sustainable or seasonal",
+        "Whether the computer has enough memory",
+        "Whether the business needs a new operating system",
+        "Whether workers need first aid"
+      ],
+      "answer": "A",
+      "explanation": "The textbook asks whether customers will buy regularly or seasonally or stop buying completely.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-058",
+      "chapter": 7,
+      "topic": "7.1.8 Setting My Price",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is profit according to the textbook?",
+      "options": [
+        "The difference between cost price and selling price",
+        "The difference between customers and competitors",
+        "The total number of products",
+        "The amount spent on advertising only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines profit as the difference between cost price and selling price.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-059",
+      "chapter": 7,
+      "topic": "7.1.8 Setting My Price",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which three elements should be considered when fixing a selling price?",
+      "options": [
+        "Cost of production, overheads and profit",
+        "Customers, employees and passwords",
+        "Land, browsers and software",
+        "Marketing, weather and transport only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists cost of production, overheads and profit as factors in setting the selling price.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-060",
+      "chapter": 7,
+      "topic": "7.1.8 Setting My Price",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A business calculates production costs and overheads accurately before adding a reasonable profit. What is the purpose?",
+      "options": [
+        "To make the final selling price realistic",
+        "To remove all competitors",
+        "To guarantee unlimited sales",
+        "To avoid knowing the cost price"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says accurate calculation helps make the final selling price realistic.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-061",
+      "chapter": 7,
+      "topic": "7.2 Cost of Production + Overheads + Profit = Selling Price",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which equation is given in the textbook?",
+      "options": [
+        "Cost of Production + Overheads + Profit = Selling Price",
+        "Selling Price + Profit = Cost of Production",
+        "Profit + Selling Price = Overheads",
+        "Cost of Production − Overheads = Selling Price"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly gives Cost of Production + Overheads + Profit = Selling Price.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-062",
+      "chapter": 7,
+      "topic": "7.2 Cost of Production + Overheads + Profit = Selling Price",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why should an entrepreneur calculate production costs and overheads accurately?",
+      "options": [
+        "To determine a realistic selling price",
+        "To remove the need for market research",
+        "To guarantee a fixed profit",
+        "To avoid considering labor"
+      ],
+      "answer": "A",
+      "explanation": "Accurate costs and overheads are needed to arrive at a realistic selling price.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-063",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What should be done with each component that goes into production and overheads?",
+      "options": [
+        "Calculate each part and add the costs",
+        "Ignore small costs",
+        "Count only raw materials",
+        "Count only rent"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says to calculate each part or component and add them up.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-064",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which additional costs may need to be considered besides production components?",
+      "options": [
+        "Labor and depreciation of equipment",
+        "Only advertising slogans",
+        "Only customer ages",
+        "Only competitor names"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically mentions labor and depreciation of equipment.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-065",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What does depreciation of equipment mean in the textbook's context?",
+      "options": [
+        "Equipment loses its value over time",
+        "Equipment becomes free",
+        "Equipment is sold at a higher price every year",
+        "Equipment produces no output"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains depreciation as equipment losing its value over time.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-066",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What should an entrepreneur consider when setting a worker's wage?",
+      "options": [
+        "Knowledge, contribution, experience, qualifications, basic wage rate, taxes and social security contributions",
+        "Only the worker's age",
+        "Only the business logo",
+        "Only the selling price"
+      ],
+      "answer": "A",
+      "explanation": "These factors are listed by the textbook when calculating labor cost.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-067",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A business pays workers for mixing, cooking and packaging a product. Which cost category is this?",
+      "options": [
+        "Labor costs",
+        "Raw material costs",
+        "Fixed costs only",
+        "Market demand"
+      ],
+      "answer": "A",
+      "explanation": "Wages paid to employees for production activities are labor costs.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-068",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which of the following is an example of a utility or overhead?",
+      "options": [
+        "Electricity",
+        "Chocolate",
+        "Packaging wrapper",
+        "Customer age"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives electricity and water as examples of utilities.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-069",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which of the following is listed as a fixed cost?",
+      "options": [
+        "Rent",
+        "Chocolate ingredients",
+        "Packaging per unit",
+        "Hourly production labor"
+      ],
+      "answer": "A",
+      "explanation": "Rent is given as an example of a fixed cost.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-070",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A business pays rent of Rs.500 per month and makes 500 candies per month. What rent cost per candy is shown in the textbook example?",
+      "options": [
+        "Rs.1.00",
+        "Rs.0.05",
+        "Rs.20.00",
+        "Rs.72.35"
+      ],
+      "answer": "A",
+      "explanation": "Rs.500 divided by 500 candies gives Rs.1.00 per candy.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-071",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Workers take 2 hours to make 100 candies and are paid Rs.15 per hour. What labor cost per candy is shown?",
+      "options": [
+        "Rs.0.30",
+        "Rs.1.00",
+        "Rs.5.00",
+        "Rs.15.00"
+      ],
+      "answer": "A",
+      "explanation": "Two hours × Rs.15 = Rs.30; Rs.30 ÷ 100 candies = Rs.0.30 per candy.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-072",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Utilities cost Rs.5 for a batch of 100 candies. What is the utility cost per candy?",
+      "options": [
+        "Rs.0.05",
+        "Rs.0.50",
+        "Rs.5.00",
+        "Rs.1.00"
+      ],
+      "answer": "A",
+      "explanation": "Rs.5 divided by 100 units equals Rs.0.05 per candy.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-073",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "Which combination matches the textbook's example of one candy's unit costs?",
+      "options": [
+        "Raw materials Rs.51, packaging Rs.20, labor Rs.0.30, utilities Rs.0.05 and fixed costs Rs.1.00",
+        "Raw materials Rs.20, packaging Rs.51, labor Rs.1, utilities Rs.5 and rent Rs.0.30",
+        "Raw materials Rs.72.35 only with no other costs",
+        "Raw materials Rs.36.18 and packaging Rs.108.53"
+      ],
+      "answer": "A",
+      "explanation": "These are the component values used in the textbook's total unit-cost example.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-074",
+      "chapter": 7,
+      "topic": "7.2.2 Profits",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What relationship should an entrepreneur consider when setting the level of profit?",
+      "options": [
+        "Demand for the product and available supply",
+        "Computer memory and processor speed",
+        "Employee age and office size",
+        "Number of passwords and websites"
+      ],
+      "answer": "A",
+      "explanation": "The textbook links profit decisions to the relationship between demand and available supply.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-075",
+      "chapter": 7,
+      "topic": "7.2.2 Profits",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Demand is high while available supply is limited. According to the textbook, what may happen to price and profit?",
+      "options": [
+        "They may be increased",
+        "They must become zero",
+        "They must always decrease",
+        "They cannot be changed"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says that when demand is great for available supply, price and profit may be increased.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-076",
+      "chapter": 7,
+      "topic": "7.2.2 Profits",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A business has a large supply but few customers want to buy the product. What pricing response does the textbook suggest may occur?",
+      "options": [
+        "Prices may drop",
+        "Prices must double",
+        "The business must stop all sales",
+        "Profit must become unlimited"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says that large supply with few buyers may lead to lower prices.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-077",
+      "chapter": 7,
+      "topic": "7.2.2 Profits",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why can an excessively high price caused by a large profit margin be harmful?",
+      "options": [
+        "It may dissuade customers",
+        "It guarantees market expansion",
+        "It always increases demand",
+        "It removes production costs"
+      ],
+      "answer": "A",
+      "explanation": "The textbook warns that an excessively high price can discourage customers.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-078",
+      "chapter": 7,
+      "topic": "7.2.2 Profits",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "hard",
+      "question": "A business increases sales and then reduces its profit margin so it can lower its selling price. What outcome does the textbook associate with this strategy?",
+      "options": [
+        "It can help secure and even expand the market",
+        "It guarantees lower sales",
+        "It eliminates the need for customers",
+        "It makes costs disappear"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says lower prices after reducing margins can help secure and expand the market.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-079",
+      "chapter": 7,
+      "topic": "7.2.2 Profits",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "Two products have similar costs. Product X has much greater demand than available supply, while Product Y has abundant supply and few buyers. Which pricing approach is most consistent with the textbook?",
+      "options": [
+        "X may support a higher price, while Y may require a lower price",
+        "Both must have the same price regardless of demand",
+        "Y should always have the higher price",
+        "X must always be sold below cost"
+      ],
+      "answer": "A",
+      "explanation": "The textbook connects higher demand relative to supply with possible price increases and excess supply with possible price decreases.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-080",
+      "chapter": 7,
+      "topic": "7.2.2 Profits",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What can reducing profit margins when sales increase allow an entrepreneur to do?",
+      "options": [
+        "Lower the selling price",
+        "Increase all production costs",
+        "Stop market research",
+        "Eliminate the product"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says reduced profit margins can enable a lower selling price.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-081",
+      "chapter": 7,
+      "topic": "7.3.1 Executive Summary",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which part of a business plan is described as the most critical portion?",
+      "options": [
+        "Executive summary",
+        "Budget",
+        "Product list",
+        "Target market"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes the executive summary as the most critical portion of a business plan.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-082",
+      "chapter": 7,
+      "topic": "7.3.1 Executive Summary",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "When should the executive summary be devised?",
+      "options": [
+        "After the whole business plan has been developed",
+        "Before any business idea exists",
+        "Only after the business closes",
+        "Before market research begins"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says the executive summary is developed at the end, after the whole plan has been developed.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-083",
+      "chapter": 7,
+      "topic": "7.3.1 Executive Summary",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What is the main purpose of an executive summary?",
+      "options": [
+        "To condense the entire business plan and give a general overview",
+        "To replace the entire business plan",
+        "To list only competitors",
+        "To calculate depreciation"
+      ],
+      "answer": "A",
+      "explanation": "The executive summary condenses the plan and gives readers a general overview.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-084",
+      "chapter": 7,
+      "topic": "7.3.1 Executive Summary",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which quality should an executive summary have?",
+      "options": [
+        "Concise and to the point",
+        "As long as possible",
+        "Focused only on one cost",
+        "Unrelated to the business plan"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says it should be concise, to the point and cover major aspects.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-085",
+      "chapter": 7,
+      "topic": "7.3.1 Executive Summary",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A one-page summary includes business goals, product, cost, timeline, intended audience and promotion strategy. What section is it most likely?",
+      "options": [
+        "Executive summary",
+        "SWOT analysis",
+        "Target market",
+        "Budget"
+      ],
+      "answer": "A",
+      "explanation": "These are examples of the major aspects the executive summary should cover.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-086",
+      "chapter": 7,
+      "topic": "7.3.2. You and Your Startup.",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "easy",
+      "question": "What should an entrepreneur explain about the company and team in this part of the business plan?",
+      "options": [
+        "The company, team, hierarchy, vision and goals",
+        "Only the company logo",
+        "Only the selling price",
+        "Only the office location"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says to explain the company and team, hierarchy, vision and goals.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-087",
+      "chapter": 7,
+      "topic": "7.3.2. You and Your Startup.",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "How do short-term goals differ from long-term goals in the textbook's discussion?",
+      "options": [
+        "Short-term goals show what is intended along the immediate path, while long-term goals can show future joint possibilities",
+        "Short-term goals are always more important than long-term goals",
+        "Long-term goals must be completed first",
+        "There is no difference"
+      ],
+      "answer": "A",
+      "explanation": "The textbook distinguishes immediate goals from longer-term goals and future possibilities with other parties.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-088",
+      "chapter": 7,
+      "topic": "7.3.2. You and Your Startup.",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does the S in SMART goals stand for?",
+      "options": [
+        "Specific",
+        "Simple",
+        "Social",
+        "Strategic"
+      ],
+      "answer": "A",
+      "explanation": "S stands for Specific: the goal should be precise and clear.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-089",
+      "chapter": 7,
+      "topic": "7.3.2. You and Your Startup.",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does M in SMART goals stand for?",
+      "options": [
+        "Measureable",
+        "Meaningful",
+        "Manageable",
+        "Market"
+      ],
+      "answer": "A",
+      "explanation": "The textbook spells M as Measureable and explains that goals should be quantifiable and assessable.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-090",
+      "chapter": 7,
+      "topic": "7.3.2. You and Your Startup.",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does A in SMART goals stand for?",
+      "options": [
+        "Achievable",
+        "Accurate",
+        "Automatic",
+        "Affordable"
+      ],
+      "answer": "A",
+      "explanation": "A stands for Achievable: goals should be attainable.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-091",
+      "chapter": 7,
+      "topic": "7.3.2. You and Your Startup.",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does R in SMART goals stand for in the textbook?",
+      "options": [
+        "Realistic",
+        "Reliable",
+        "Rapid",
+        "Relevant"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines R as Realistic and says goals should be convincing rather than unrealistic.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-092",
+      "chapter": 7,
+      "topic": "7.3.2. You and Your Startup.",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does T in SMART goals stand for?",
+      "options": [
+        "Time-Bound",
+        "Targeted",
+        "Technical",
+        "Tested"
+      ],
+      "answer": "A",
+      "explanation": "T stands for Time-Bound.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-093",
+      "chapter": 7,
+      "topic": "7.3.2. You and Your Startup.",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A startup says, 'We will increase monthly sales by a measurable amount within a specified period.' Which SMART qualities are most clearly represented?",
+      "options": [
+        "Measureable and Time-Bound",
+        "Only Specific",
+        "Only Realistic",
+        "Only Achievable"
+      ],
+      "answer": "A",
+      "explanation": "A quantifiable target is Measureable, and a specified period makes it Time-Bound.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-094",
+      "chapter": 7,
+      "topic": "7.3.2. You and Your Startup.",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "hard",
+      "question": "A startup sets a goal that is precise but impossible with its available resources. Which SMART quality is missing?",
+      "options": [
+        "Achievable",
+        "Specific",
+        "Time-Bound",
+        "Measureable"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says achievable goals are attainable and challenging but not impossible.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-095",
+      "chapter": 7,
+      "topic": "7.3.3. Analyze the Market",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Why is analyzing the market important before starting a business?",
+      "options": [
+        "To understand market situation and trends and cope with changing demand",
+        "To avoid all customers",
+        "To eliminate every competitor",
+        "To replace the business plan"
+      ],
+      "answer": "A",
+      "explanation": "The textbook stresses evaluating market situation and trends before starting the business.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-096",
+      "chapter": 7,
+      "topic": "7.3.3. Analyze the Market",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why should an entrepreneur keep watching changing market trends and demands?",
+      "options": [
+        "To adjust to changes in supply and demand",
+        "To avoid changing any strategy",
+        "To stop researching the market",
+        "To guarantee a fixed price"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says entrepreneurs need to keep an eye on changing trends and demands to cope with supply.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-097",
+      "chapter": 7,
+      "topic": "7.3.3. Analyze the Market",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A business continues using an old strategy even though market trends have changed. What does the textbook warn against?",
+      "options": [
+        "Following a previously devised strategy blindly",
+        "Using market research",
+        "Evaluating the market",
+        "Adjusting to demand"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly warns not to follow an already devised strategy blindly.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-098",
+      "chapter": 7,
+      "topic": "7.3.3. Analyze the Market",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which technique does the textbook recommend for evaluating a product in the context of the market?",
+      "options": [
+        "SWOT analysis",
+        "Word processing",
+        "File compression",
+        "Password testing"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies SWOT analysis as a good market-evaluation technique.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-099",
+      "chapter": 7,
+      "topic": "7.3.3. Analyze the Market",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What does a SWOT analysis examine according to the textbook?",
+      "options": [
+        "Advantages, disadvantages, possibilities and risks",
+        "Only sales and salaries",
+        "Only competitors and customers",
+        "Only product colors and shapes"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes SWOT as examining advantages, disadvantages, possibilities and risks.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-100",
+      "chapter": 7,
+      "topic": "7.3.3. Analyze the Market",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "A business identifies strong aspects of its product, skills it lacks, market opportunities and risk factors. Which tool is being applied?",
+      "options": [
+        "SWOT analysis",
+        "Executive summary",
+        "Cash-flow statement",
+        "Promotional offer"
+      ],
+      "answer": "A",
+      "explanation": "These are the areas the textbook says SWOT analysis highlights.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-101",
+      "chapter": 7,
+      "topic": "7.3.4. Enlist Products / Services.",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which part of the business plan should emphasize products or services?",
+      "options": [
+        "A major portion of the business plan",
+        "Only the final sentence",
+        "Only the executive summary",
+        "Only the budget"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that the major portion of the business plan should emphasize products or services.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-102",
+      "chapter": 7,
+      "topic": "7.3.4. Enlist Products / Services.",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Why may products or services be decomposed into smaller parts in the plan?",
+      "options": [
+        "For a deeper understanding of what is being offered",
+        "To hide the product details",
+        "To avoid describing the business",
+        "To reduce market information"
+      ],
+      "answer": "A",
+      "explanation": "The textbook suggests breaking down products or services for deeper understanding by the reader.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-103",
+      "chapter": 7,
+      "topic": "7.3.4. Enlist Products / Services.",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An entrepreneur gives relevant details about a product because they know it better than anyone else. What principle from the textbook does this reflect?",
+      "options": [
+        "The business plan should clearly reflect strong knowledge of the product",
+        "The business plan should contain no product details",
+        "Only competitors should describe the product",
+        "Product information should be avoided"
+      ],
+      "answer": "A",
+      "explanation": "The textbook emphasizes that the entrepreneur should reflect their strong knowledge of the product in the proposal.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-104",
+      "chapter": 7,
+      "topic": "7.3.5. Identify your target market.",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is the purpose of identifying a target market?",
+      "options": [
+        "To identify the clients or companies the entrepreneur wants to target and retain",
+        "To eliminate all customers",
+        "To calculate equipment depreciation",
+        "To choose a programming language"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says entrepreneurs should visualize desired clientele and target and retain them with quality service.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-105",
+      "chapter": 7,
+      "topic": "7.3.5. Identify your target market.",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which parameters are suggested as primary parts of a target-client sketch?",
+      "options": [
+        "Educational background, age brackets and geographical area",
+        "Computer model, password and file size",
+        "Profit, rent and electricity only",
+        "Product color, processor and browser"
+      ],
+      "answer": "A",
+      "explanation": "The textbook names educational background, age brackets and geographical area as primary parameters.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-106",
+      "chapter": 7,
+      "topic": "7.3.5. Identify your target market.",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A business identifies its likely customers' age range and geographical area before planning advertising. What is it doing?",
+      "options": [
+        "Identifying its target market",
+        "Calculating depreciation",
+        "Writing an executive summary",
+        "Setting a wage"
+      ],
+      "answer": "A",
+      "explanation": "Identifying customer characteristics such as age and geography helps define the target market.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-107",
+      "chapter": 7,
+      "topic": "7.3.5. Identify your target market.",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "hard",
+      "question": "Why does visualizing a desired clientele help an entrepreneur according to the textbook?",
+      "options": [
+        "It makes it easier to devise marketing and promotional strategy",
+        "It guarantees that every person will buy",
+        "It eliminates the need for quality service",
+        "It prevents revision of strategy"
+      ],
+      "answer": "A",
+      "explanation": "The textbook directly connects a clear clientele sketch with easier marketing and promotional strategy.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-108",
+      "chapter": 7,
+      "topic": "7.3.6. Precise Promotional Strategy.",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What should a promotional strategy consider besides attracting new clients?",
+      "options": [
+        "Pre-sale strategy and post-sale contacts and services",
+        "Only office rent",
+        "Only employee qualifications",
+        "Only equipment depreciation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says the entrepreneur should be clear about pre-sale strategy and post-sale contacts and services.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-109",
+      "chapter": 7,
+      "topic": "7.3.6. Precise Promotional Strategy.",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A business uses social media to reach new customers and periodically sends existing customers new promotions and offers. Which approach matches the textbook?",
+      "options": [
+        "Using social media for targeting new clientele and contacting old ones",
+        "Avoiding customers after purchase",
+        "Using only printed receipts",
+        "Stopping all promotions"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies social media as an option for targeting new clientele and periodically reaching existing ones with promotions.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-110",
+      "chapter": 7,
+      "topic": "7.3.6. Precise Promotional Strategy.",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "Which information is given as an example of a precise promotional strategy?",
+      "options": [
+        "Cost of a new product and discounts offered",
+        "Employee passwords",
+        "Computer processor speed",
+        "Office furniture color"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives product cost, discounts and upgradation cost as examples of useful promotional information.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-111",
+      "chapter": 7,
+      "topic": "7.3.6. Precise Promotional Strategy.",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "hard",
+      "question": "Why should an entrepreneur avoid including every possible piece of information in a promotional strategy?",
+      "options": [
+        "Unnecessary information may create confusion and dilute the strategy",
+        "More information always guarantees sales",
+        "Customers never need relevant information",
+        "It makes the product cheaper automatically"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says the entrepreneur should decide which information is vital and avoid information that may create confusion and dilute the strategy.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-112",
+      "chapter": 7,
+      "topic": "7.3.7. Budget",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What three things does every product and service provided take?",
+      "options": [
+        "Time, money and effort",
+        "Only money",
+        "Only labor and land",
+        "Only advertising and profit"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that every product and service takes time, money and effort.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-113",
+      "chapter": 7,
+      "topic": "7.3.7. Budget",
+      "type": "mcq",
+      "mode": "understanding",
+      "difficulty": "medium",
+      "question": "What financial reports should be available and reviewed periodically?",
+      "options": [
+        "Balance sheet, cash-flow and income reports",
+        "Only attendance reports",
+        "Only customer surveys",
+        "Only product catalogs"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically names balance sheet, cash-flow and income reports.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-114",
+      "chapter": 7,
+      "topic": "7.3.7. Budget",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A business periodically checks whether its income is positive or negative over time. Which budget-related practice is this?",
+      "options": [
+        "Reviewing financial reports",
+        "Identifying a target market",
+        "Testing a prototype",
+        "Writing an executive summary"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says financial reports should be in hand's reach and reviewed periodically.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-115",
+      "chapter": 7,
+      "topic": "7.3.7. Budget",
+      "type": "mcq",
+      "mode": "analyzing",
+      "difficulty": "hard",
+      "question": "A business has a negative income statement but has clear goals, a precise promotional strategy and experienced stakeholders who make timely decisions. What does the textbook suggest?",
+      "options": [
+        "A negative income statement can still generate profits under such conditions",
+        "The business must immediately close",
+        "Profit is impossible after a negative statement",
+        "The budget no longer matters"
+      ],
+      "answer": "A",
+      "explanation": "The textbook notes that a negative income statement can generate profits when clear goals, precise promotion and experienced decision-making are present.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-116",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "In the textbook's candy example, what is the total raw-material cost for one batch using Rs.150 sugar, Rs.800 chocolate and Rs.75 flavoring?",
+      "options": [
+        "Rs.1,025",
+        "Rs.1,025.50",
+        "Rs.1,050",
+        "Rs.975"
+      ],
+      "answer": "A",
+      "explanation": "Adding Rs.150 + Rs.800 + Rs.75 gives Rs.1,025 for one batch.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-117",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "The textbook example uses a 50% markup on a cost of Rs.72.35. What markup amount is shown?",
+      "options": [
+        "Rs.36.18",
+        "Rs.27.65",
+        "Rs.72.35",
+        "Rs.108.53"
+      ],
+      "answer": "A",
+      "explanation": "Fifty percent of Rs.72.35 is Rs.36.175, shown as Rs.36.18 after rounding.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-118",
+      "chapter": 7,
+      "topic": "7.2.1 Cost of production and overheads",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "Using the textbook's example, what selling price results from a cost of Rs.72.35 plus a 50% markup of Rs.36.18?",
+      "options": [
+        "Rs.108.53",
+        "Rs.100.00",
+        "Rs.72.35",
+        "Rs.36.18"
+      ],
+      "answer": "A",
+      "explanation": "The example adds Rs.72.35 and Rs.36.18 to get Rs.108.53.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-119",
+      "chapter": 7,
+      "topic": "7.3.7. Budget",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "If 1,000 candies are sold at Rs.100 each, what revenue is calculated in the textbook example?",
+      "options": [
+        "Rs.100,000",
+        "Rs.72,350",
+        "Rs.27,650",
+        "Rs.108,530"
+      ],
+      "answer": "A",
+      "explanation": "Revenue is 1,000 × Rs.100 = Rs.100,000.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-120",
+      "chapter": 7,
+      "topic": "7.3.7. Budget",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "If 1,000 candies each cost Rs.72.35 to produce, what cost of goods sold is shown in the textbook?",
+      "options": [
+        "Rs.72,350",
+        "Rs.100,000",
+        "Rs.27,650",
+        "Rs.72.35"
+      ],
+      "answer": "A",
+      "explanation": "Cost of goods sold is 1,000 × Rs.72.35 = Rs.72,350.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-121",
+      "chapter": 7,
+      "topic": "7.3.7. Budget",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "Using the textbook's example, what profit results from Rs.100,000 revenue and Rs.72,350 cost of goods sold?",
+      "options": [
+        "Rs.27,650",
+        "Rs.72,350",
+        "Rs.100,000",
+        "Rs.36,180"
+      ],
+      "answer": "A",
+      "explanation": "The example calculates profit as Rs.100,000 − Rs.72,350 = Rs.27,650.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 7"
+    },
+    {
+      "id": "CH7-MCQ-122",
+      "chapter": 7,
+      "topic": "7.3.7. Budget",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "hard",
+      "question": "For a selling price of Rs.100 and cost price of Rs.72.35, what profit margin percentage is shown in the textbook?",
+      "options": [
+        "27.65%",
+        "36.18%",
+        "50%",
+        "72.35%"
+      ],
+      "answer": "A",
+      "explanation": "The textbook's example gives a profit margin of 27.65% for these figures.",
+      "bloom": "Applying",
       "source": "NBF Grade 9 Computer Science, Unit 7"
     }
   ]

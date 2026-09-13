@@ -221,15 +221,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A question asks 'What subject areas of education should be focused on more?' How should it be classified by field?",
+      "question": "A school is studying low reading performance. The team first gathers relevant facts, uses them to understand the situation, and then decides what action is sensible. Which Unit 2 principle is being applied?",
       "options": [
-        "Internet",
-        "Education",
-        "Transportation",
-        "Healthcare"
+        "Logical thinking",
+        "Counting problem",
+        "Concept mapping",
+        "Flowchart drawing"
       ],
-      "answer": "B",
-      "explanation": "The question is one of the textbook's examples of an education problem.",
+      "answer": "A",
+      "explanation": "Logical thinking analyzes a situation using relevant facts and reason to reach sensible decisions.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -278,15 +278,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "Why does Unit 2 begin with general problems before identifying computing problems?",
+      "question": "A team describes a transport problem, then defines the information it will receive and the result it wants a computer to produce step-by-step. What has the team done?",
       "options": [
-        "To avoid algorithms",
-        "To establish the challenge before considering computational solutions",
-        "To teach programming syntax first",
-        "To classify all problems as decision problems"
+        "Turned a general problem into a computing problem",
+        "Turned a search problem into a counting problem",
+        "Changed processing into input",
+        "Changed an algorithm into a concept map"
       ],
-      "answer": "B",
-      "explanation": "The unit moves from understanding problems to identifying those that can be solved step-by-step using computation.",
+      "answer": "A",
+      "explanation": "A computing problem has well-defined input and desired output and can be solved step-by-step using computation.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -563,16 +563,16 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "Google Maps is identified in the textbook as an example of a:",
+      "question": "A navigation task starts with a city and requires the system to find a path to a destination. Which type of computing problem is this, and why?",
       "options": [
-        "Counting problem",
-        "Search problem",
-        "Decision problem",
-        "IPO chart"
+        "Decision, because it gives Yes/No only",
+        "Search, because it finds a path from a starting point to a goal",
+        "Counting, because it multiplies choices",
+        "IPO, because it has input and output"
       ],
       "answer": "B",
-      "explanation": "The textbook explicitly identifies Google Maps as a search problem.",
-      "bloom": "Applying",
+      "explanation": "Route finding is a search problem because a path is sought from an initial state to a goal.",
+      "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
     {
@@ -639,15 +639,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "Why can counting problems become complicated as the number of choices increases?",
+      "question": "A shop has several choices of monitors, keyboards, computers and printers. A student tries to list every complete system manually. What makes this a difficult counting task according to Unit 2?",
       "options": [
-        "There are fewer combinations",
-        "Listing all possibilities can become difficult",
-        "Counting never uses multiplication",
-        "They stop having inputs"
+        "The number of possible combinations can become large as choices increase",
+        "Counting problems do not use multiplication",
+        "Each combination becomes a decision problem",
+        "The inputs disappear when choices increase"
       ],
-      "answer": "B",
-      "explanation": "The textbook notes that counting problems can become complicated when all possibilities must be listed.",
+      "answer": "A",
+      "explanation": "Counting problems can become complicated because listing all possible combinations becomes difficult as choices increase.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -677,15 +677,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A route-finding problem asks for a path from city S to city T. Which part identifies the desired destination?",
+      "question": "In a route-finding problem, city S is where the search begins, several roads are possible moves, and city T must be reached. Which assignment of the three search elements is correct?",
       "options": [
-        "Initial state",
-        "Operations",
-        "Goal",
-        "Input"
+        "S = goal, roads = initial state, T = operations",
+        "S = initial state, roads = operations, T = goal",
+        "S = operations, roads = goal, T = initial state",
+        "S = input, roads = output, T = process"
       ],
-      "answer": "C",
-      "explanation": "The goal defines the target end condition, which here is reaching city T.",
+      "answer": "B",
+      "explanation": "The initial state is where the search starts, operations are the allowed moves, and the goal is the required destination.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -734,15 +734,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "Why is the eight-puzzle an example of a search problem?",
+      "question": "An eight-puzzle begins in one arrangement and must reach a target arrangement using only allowed slides. Which reasoning best identifies it as a search problem?",
       "options": [
-        "It requires finding moves from an initial configuration to a target configuration",
-        "It only counts tiles",
-        "It asks only a Yes/No question",
-        "It has no restrictions"
+        "The solver must find a sequence of allowed moves from an initial state to a goal",
+        "The solver only counts the numbered tiles",
+        "The answer must always be Yes or No",
+        "The puzzle has no restrictions on moves"
       ],
       "answer": "A",
-      "explanation": "The puzzle requires finding a sequence of allowed moves from an initial state to a final configuration.",
+      "explanation": "The eight-puzzle requires searching through possible states using allowed moves to reach a target configuration.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -962,15 +962,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "Why must a problem be thoroughly investigated before action is taken?",
+      "question": "A team begins designing a solution after considering only one visible part of a problem. Later, an important requirement is missed. Which earlier problem-solving step should have been done more carefully?",
       "options": [
-        "To capture all relevant aspects of the problem",
-        "To avoid defining objectives",
-        "To make the problem larger",
-        "To eliminate all inputs"
+        "Define and analyze the problem",
+        "Implement the plan",
+        "Evaluate the solution",
+        "Draw a concept map"
       ],
       "answer": "A",
-      "explanation": "The textbook says investigation is needed to capture all relevant aspects before acting.",
+      "explanation": "The problem should be thoroughly investigated so all relevant aspects are captured before action is taken.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -1000,16 +1000,16 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A complex project is divided into manageable sub-problems before plans are compared. Which problem-solving idea is being used?",
+      "question": "A school-management project is too large to handle as one task. The team divides it into smaller manageable sub-problems and then considers plans for those parts. Which approach from Unit 2 is being applied?",
       "options": [
-        "Decomposition",
-        "Evaluation",
-        "Output",
-        "Counting"
+        "The complex problem-solving approach",
+        "The simple problem-solving approach only",
+        "The counting principle",
+        "The IPO model"
       ],
       "answer": "A",
-      "explanation": "Dividing a complex problem into manageable sub-problems is decomposition.",
-      "bloom": "Applying",
+      "explanation": "For complex problems, the textbook first decomposes the problem into manageable sub-problems before identifying and selecting plans.",
+      "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
     {
@@ -1019,16 +1019,16 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A team tests its implemented solution and asks whether it achieved the intended result. Which step is this?",
+      "question": "A team has selected and designed a plan, implemented it, and now checks whether the intended result was achieved. Which sequence of stages has the team just followed?",
       "options": [
-        "Define and analyze",
-        "Select and design",
-        "Implement",
-        "Evaluate"
+        "Evaluate → select → implement",
+        "Select and design → implement → evaluate",
+        "Implement → define → decompose",
+        "Define → evaluate → select"
       ],
-      "answer": "D",
-      "explanation": "Evaluation checks whether the plan worked.",
-      "bloom": "Applying",
+      "answer": "B",
+      "explanation": "The complex problem-solving sequence places evaluation after selecting/designing the best plan and implementing it.",
+      "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
     {
@@ -1209,16 +1209,16 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A problem statement asks for length and width to calculate rectangle area. In IPO terms, length and width are:",
+      "question": "A rectangle-area program receives length and width, multiplies them, and displays the area. If only the length and width supplied by the user change while the formula stays the same, which IPO part has changed?",
       "options": [
-        "Outputs",
-        "Inputs",
-        "Processes",
-        "Goals"
+        "Input",
+        "Processing",
+        "Output",
+        "IPO model"
       ],
-      "answer": "B",
-      "explanation": "The textbook's rectangle IPO example uses length and width as inputs.",
-      "bloom": "Applying",
+      "answer": "A",
+      "explanation": "Length and width are inputs; changing their supplied values changes the input while processing remains length × width.",
+      "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
     {
@@ -1266,15 +1266,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A student enters three grades, the system sums them, divides by the number of grades, and displays the average. Which is the processing?",
+      "question": "A student-average system receives three grades, adds them, divides the sum by the number of grades, and displays the average. Which pair contains only processing steps?",
       "options": [
-        "The three grades",
-        "Sum all grades and divide by the number of grades",
-        "The displayed average",
-        "The student name"
+        "Enter the grades and display the average",
+        "Add the grades and divide the sum by the number of grades",
+        "Enter the first grade and enter the second grade",
+        "Display the average and enter the third grade"
       ],
       "answer": "B",
-      "explanation": "The textbook's example processes grades by summing and dividing by their number.",
+      "explanation": "Adding the grades and dividing their sum by their number are processing operations.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -1304,7 +1304,7 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A system has a correct formula but displays no result. Which IPO component is missing from the described behavior?",
+      "question": "A rectangle-area system correctly receives length and width and correctly calculates length × width, but the user is not shown the area. Which IPO component is incomplete?",
       "options": [
         "Input",
         "Processing",
@@ -1312,7 +1312,7 @@
         "Initial state"
       ],
       "answer": "C",
-      "explanation": "If the result is not presented, the output part is missing.",
+      "explanation": "The calculation is processing, while presenting the calculated area is the output.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -1494,15 +1494,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A student puts 'Area' in the Input column for the rectangle problem. What is the best correction?",
+      "question": "An IPO chart for rectangle area contains 'Area = Length × Width' under Input and leaves Process empty. Which correction makes the chart consistent with the textbook example?",
       "options": [
-        "Move Area to Output because it is the calculated information",
-        "Move Area to Input because it is entered",
-        "Put Area in Process because it is a number",
-        "Remove Area completely"
+        "Put Length and Width in Input and the formula in Process",
+        "Put the formula in Input and Area in Process",
+        "Put Length and Width in Output and the formula in Input",
+        "Remove the formula because IPO charts contain no processes"
       ],
       "answer": "A",
-      "explanation": "In the textbook example, length and width are inputs and area is the output.",
+      "explanation": "The textbook uses length and width as inputs and length × width as processing that produces area.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -1532,15 +1532,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A requirement is 'calculate a student's average based on grades.' Which set best matches the textbook example?",
+      "question": "A designer must create the IPO chart for the textbook's student-average example. Which complete arrangement correctly separates what is entered, what is calculated, and what is presented?",
       "options": [
-        "Grades → sum and divide by number of grades → average",
-        "Average → enter grades → sum",
-        "Grades → display grades → no result",
-        "Number of grades → display input → grades"
+        "Input: grades; Process: sum grades and divide by number of grades; Output: average",
+        "Input: average; Process: enter grades; Output: grades",
+        "Input: sum; Process: display grades; Output: number of grades",
+        "Input: average; Process: divide nothing; Output: grades"
       ],
       "answer": "A",
-      "explanation": "This is the structure shown in the textbook's average example.",
+      "explanation": "The example takes grades as input, sums and divides them during processing, and produces the average as output.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -1589,15 +1589,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A user enters four ages; the system calculates total age and average age and displays both. Which is the best Output entry?",
+      "question": "An IPO chart must accept four ages, calculate their total and average, and present both results. Which arrangement correctly assigns the three IPO parts?",
       "options": [
-        "Four ages",
-        "Add and divide",
-        "Total age and average age",
-        "User name"
+        "Input: total and average; Process: four ages; Output: addition",
+        "Input: four ages; Process: add the ages and divide by four; Output: total and average",
+        "Input: four ages; Process: display results; Output: division only",
+        "Input: average; Process: total; Output: four ages"
       ],
-      "answer": "C",
-      "explanation": "Both total age and average age are the information required to be displayed.",
+      "answer": "B",
+      "explanation": "The ages are inputs, adding and dividing are processing operations, and total and average are outputs.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -1874,15 +1874,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A student identifies the essential details of a game level, ignores weather, and then creates movement steps. Which sequence of properties is best represented?",
+      "question": "While designing a game level, a student breaks the task into manageable parts, ignores weather because it is unnecessary, notices that several enemies can be handled in the same way, and then writes movement steps. Which sequence of properties is illustrated?",
       "options": [
-        "Abstraction → Algorithm Design",
-        "Counting → Decision",
-        "Output → Input",
-        "Evaluation → Search"
+        "Decomposition → Abstraction → Pattern Recognition → Algorithm Design",
+        "Abstraction → Decomposition → Algorithm Design → Pattern Recognition",
+        "Pattern Recognition → Abstraction → Decomposition → Algorithm Design",
+        "Algorithm Design → Decomposition → Abstraction → Pattern Recognition"
       ],
       "answer": "A",
-      "explanation": "Removing unnecessary details is abstraction, followed by creating movement steps as algorithm design.",
+      "explanation": "Breaking the task apart is decomposition, removing unnecessary detail is abstraction, noticing similarities is pattern recognition, and creating ordered steps is algorithm design.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -1988,15 +1988,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "Why does the textbook caution that computers using logic does not mean they think logically?",
+      "question": "A computer produces a logical result after following instructions written by a programmer. Which conclusion agrees with the textbook?",
       "options": [
-        "Computers cannot perform logical thinking unless programmed to do so",
-        "Computers never use logic",
-        "Computers cannot process instructions",
-        "Computers do not use data"
+        "The computer is carrying out programmed logic; it does not think logically by itself",
+        "The computer must be thinking logically without programming",
+        "Computers never use logical operations",
+        "Programming is unnecessary for logical results"
       ],
       "answer": "A",
-      "explanation": "The textbook states that computers themselves cannot perform logical thinking unless they are programmed to do so.",
+      "explanation": "The textbook states that computers cannot perform logical thinking unless they are programmed to do so.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -2121,15 +2121,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "Which statement best distinguishes logical thinking from algorithmic thinking as presented?",
+      "question": "A student first examines relevant facts and uses reason to decide what makes sense. The student then turns the solution into ordered, efficient steps. Which distinction is shown?",
       "options": [
-        "Logical thinking uses reason and evidence; algorithmic thinking identifies and implements solution steps",
+        "Logical thinking handles reasoning from facts; algorithmic thinking focuses on solution steps",
         "Logical thinking is coding; algorithmic thinking is hardware",
-        "They are unrelated",
-        "Algorithmic thinking avoids problem solving"
+        "Logical thinking counts choices; algorithmic thinking draws concept maps",
+        "The two forms of thinking have exactly the same role"
       ],
       "answer": "A",
-      "explanation": "The textbook presents logical thinking around reason/evidence and algorithmic thinking around step-based problem solving.",
+      "explanation": "Logical thinking uses relevant facts and reason; algorithmic thinking identifies and implements logical, efficient solution steps.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -2159,15 +2159,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A student lists relevant facts, reasons from them, then creates efficient ordered steps to solve the situation. Which two principles are being combined?",
+      "question": "A student must determine the largest of three unequal numbers. The student first checks whether A is larger than both B and C; if not, checks B; otherwise concludes C is largest. Which principle is most directly demonstrated?",
       "options": [
-        "Logical thinking and algorithmic thinking",
-        "Counting and search",
-        "IPO and concept mapping",
-        "Abstraction and hardware engineering"
+        "Algorithmic thinking",
+        "Abstraction",
+        "Counting",
+        "Concept mapping"
       ],
       "answer": "A",
-      "explanation": "The first part uses evidence-based reasoning; the second uses ordered solution steps.",
+      "explanation": "The student follows ordered decision steps to reach a solution, illustrating algorithmic thinking.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
@@ -2748,16 +2748,16 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "In the water-cycle concept map, water turning into vapor is called:",
+      "question": "A student must communicate a solution as an ordered sequence containing a start, inputs, processing, decisions, outputs and an end. Which Unit 2 method best represents this solution?",
       "options": [
-        "Evaporation",
-        "Condensation",
-        "Precipitation",
-        "Collection"
+        "Flowchart",
+        "Concept map",
+        "Counting table",
+        "Search graph"
       ],
       "answer": "A",
-      "explanation": "The textbook identifies evaporation as water turning into vapor.",
-      "bloom": "Applying",
+      "explanation": "A flowchart represents an algorithm as a sequence of operations and can include start, input, processing, decision, output and end.",
+      "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
     {
@@ -2767,16 +2767,16 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "In the water-cycle concept map, water vapor cooling to form clouds is:",
+      "question": "A flowchart for assigning a student's letter grade must choose a mark range and then produce the corresponding grade. Which combination best fits the textbook?",
       "options": [
-        "Condensation",
-        "Evaporation",
-        "Collection",
-        "Precipitation"
+        "Sequence with a rectangle",
+        "Selection with a diamond",
+        "Repetition with an oval",
+        "Selection with a parallelogram"
       ],
-      "answer": "A",
-      "explanation": "The textbook defines condensation as water vapor cooling to form clouds.",
-      "bloom": "Applying",
+      "answer": "B",
+      "explanation": "Choosing among mark ranges is selection, and a decision is represented by a diamond.",
+      "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
     {
@@ -2786,16 +2786,16 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "In the water-cycle concept map, rain, snow, sleet or hail falling from clouds is:",
+      "question": "A designer wants to show several concepts and the relationships between them, using labelled links, rather than show the ordered operations of an algorithm. Which method is more suitable?",
       "options": [
-        "Precipitation",
-        "Collection",
-        "Condensation",
-        "Evaporation"
+        "Concept map",
+        "Flowchart",
+        "IPO chart",
+        "Counting problem"
       ],
       "answer": "A",
-      "explanation": "The textbook identifies this stage as precipitation.",
-      "bloom": "Applying",
+      "explanation": "Concept maps represent concepts and relationships using boxes or circles and labelled links, while flowcharts represent algorithmic operations.",
+      "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
     {
@@ -2805,16 +2805,16 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "In the water-cycle concept map, water gathering in rivers, lakes and oceans is:",
+      "question": "A team wants to represent the relationships among evaporation, condensation, precipitation and collection in the water cycle, rather than represent an algorithm's ordered operations. Which method should it use?",
       "options": [
-        "Collection",
-        "Evaporation",
-        "Condensation",
-        "Precipitation"
+        "Concept map",
+        "Flowchart",
+        "IPO chart only",
+        "Decision problem"
       ],
       "answer": "A",
-      "explanation": "The textbook calls this stage collection.",
-      "bloom": "Applying",
+      "explanation": "The textbook uses a concept map to represent relationships among the stages of the water cycle.",
+      "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     },
     {
@@ -2881,15 +2881,15 @@
       "type": "mcq",
       "mode": "straight",
       "difficulty": "difficult",
-      "question": "A student wants to show how several ideas are connected rather than show the ordered operations of an algorithm. Which method is more suitable according to Unit 2?",
+      "question": "A student has understood a problem and now wants to communicate its algorithm before programming, while making logical errors easier to identify. Which method and purpose are correctly matched?",
       "options": [
-        "Concept map",
-        "Flowchart",
-        "IPO chart",
-        "Counting problem"
+        "Flowchart — represent the algorithm and help find logical errors",
+        "Concept map — calculate numerical outputs",
+        "Counting problem — communicate programming syntax",
+        "IPO chart — replace every algorithm with a relationship map"
       ],
       "answer": "A",
-      "explanation": "Concept maps represent concepts and relationships, whereas flowcharts represent algorithmic operations.",
+      "explanation": "Flowcharts represent algorithms and help analyze solutions and find and remove logical errors.",
       "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 2"
     }

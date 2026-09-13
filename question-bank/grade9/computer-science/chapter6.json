@@ -1,288 +1,4011 @@
 {
   "chapter": 6,
-  "chapterTitle": "Arrays and Lists",
+  "chapterTitle": "Impacts of Computing",
   "subject": "Computer Science",
   "grade": 9,
   "source": "NBF Grade 9 Computer Science, Unit 6",
+  "sections": [
+    "6.1 Safe and Responsible Use of Computer",
+    "6.2 Responsible use of hardware and software",
+    "6.3 Safe use of digital platform",
+    "6.4 Laws to protect user privacy and intellectual.property",
+    "6.5 Computing innovation",
+    "6.6 Malicious software and Key concept",
+    "6.7 Information privacy, system security, and usability trade-offs",
+    "6.8 Disinformation and Fake News:",
+    "6.9 Social networking",
+    "6.10 Approaches to computing effects",
+    "6.11 intellectual property protection key terms"
+  ],
   "questions": [
     {
       "id": "CH6-MCQ-001",
       "chapter": 6,
-      "topic": "6.1 Introduction to Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
       "difficulty": "easy",
-      "question": "What is an array?",
-      "options": ["A collection of similar data types", "A single variable", "A function", "A loop"],
+      "question": "What is the main focus of computer safety?",
+      "options": [
+        "Protecting hardware and software components",
+        "Increasing screen brightness",
+        "Sharing passwords",
+        "Installing entertainment apps"
+      ],
       "answer": "A",
-      "explanation": "An array is a collection of elements of the same data type stored in contiguous memory locations.",
+      "explanation": "Computer safety focuses on safeguarding hardware and software components.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-002",
       "chapter": 6,
-      "topic": "6.1 Introduction to Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
       "difficulty": "easy",
-      "question": "Array indices typically start from:",
-      "options": ["0", "1", "-1", "Depends on the language"],
+      "question": "What does safe and responsible computer use help protect?",
+      "options": [
+        "Material loss, data loss, and cybersecurity risks",
+        "Only printer ink",
+        "Only internet speed",
+        "Only screen resolution"
+      ],
       "answer": "A",
-      "explanation": "In most programming languages, array indexing starts from 0.",
-      "bloom": "Remembering",
+      "explanation": "The textbook identifies material loss, data loss, and cybersecurity risks as areas of protection.",
+      "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-003",
       "chapter": 6,
-      "topic": "6.1 Introduction to Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
-      "difficulty": "medium",
-      "question": "How many elements can be stored in an array declared as `arr[10]`?",
-      "options": ["9", "10", "11", "12"],
-      "answer": "B",
-      "explanation": "An array declared with size 10 can store exactly 10 elements (indices 0 to 9).",
-      "bloom": "Understanding",
+      "difficulty": "easy",
+      "question": "Which software should be kept updated along with the operating system?",
+      "options": [
+        "Antivirus software",
+        "Only a media player",
+        "Only a calculator",
+        "Only a drawing program"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically advises updating the operating system, software, and antivirus software.",
+      "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-004",
       "chapter": 6,
-      "topic": "6.2 Array Operations",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
-      "difficulty": "easy",
-      "question": "Which operation adds an element to the end of an array?",
-      "options": ["Push", "Pop", "Shift", "Delete"],
+      "difficulty": "medium",
+      "question": "Why are computer updates important for security?",
+      "options": [
+        "They often include security protections against flaws",
+        "They remove the need for passwords",
+        "They make public Wi-Fi private",
+        "They stop all internet access"
+      ],
       "answer": "A",
-      "explanation": "Push adds an element to the end of an array.",
-      "bloom": "Remembering",
+      "explanation": "Updates frequently include security areas that help protect computer systems from flaws.",
+      "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-005",
       "chapter": 6,
-      "topic": "6.2 Array Operations",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
-      "mode": "straight",
+      "mode": "application",
       "difficulty": "medium",
-      "question": "What does the Pop operation do?",
-      "options": ["Adds element to end", "Removes last element", "Adds element to start", "Removes first element"],
-      "answer": "B",
-      "explanation": "Pop removes and returns the last element from an array.",
-      "bloom": "Understanding",
+      "question": "Which password is most consistent with the textbook's guidance?",
+      "options": [
+        "A mix of upper- and lowercase letters, numbers, and special characters",
+        "A birthday only",
+        "A first name only",
+        "A simple repeated word"
+      ],
+      "answer": "A",
+      "explanation": "The textbook recommends strong, unique passwords using mixed character types and avoiding easily guessed data.",
+      "bloom": "Applying",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-006",
       "chapter": 6,
-      "topic": "6.2 Array Operations",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
-      "difficulty": "medium",
-      "question": "To insert an element at position 2 in an array, which elements need to be shifted?",
-      "options": ["Elements at positions 0 and 1", "Elements from position 2 onwards", "Only the last element", "No shifting needed"],
-      "answer": "B",
-      "explanation": "Elements from position 2 onwards must shift right to make space for the new element.",
+      "difficulty": "easy",
+      "question": "What should a user do with online-account passwords?",
+      "options": [
+        "Keep them private and secure",
+        "Post them publicly",
+        "Share them with friends",
+        "Use the same simple password everywhere"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that passwords should never be revealed and should be kept private and secure.",
       "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-007",
       "chapter": 6,
-      "topic": "6.3 Searching in Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
       "difficulty": "easy",
-      "question": "What is linear search?",
-      "options": ["Searching from both ends", "Checking each element one by one", "Binary division search", "Random search"],
-      "answer": "B",
-      "explanation": "Linear search checks each element sequentially until the target is found or the array ends.",
+      "question": "Which additional protection does the textbook recommend for online accounts?",
+      "options": [
+        "Two-factor authentication",
+        "Disabling all security software",
+        "Using public Wi-Fi for banking",
+        "Sharing login details"
+      ],
+      "answer": "A",
+      "explanation": "The textbook recommends turning on two-factor authentication for online accounts.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-008",
       "chapter": 6,
-      "topic": "6.3 Searching in Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
-      "mode": "straight",
+      "mode": "application",
       "difficulty": "medium",
-      "question": "What is the worst-case time complexity of linear search?",
-      "options": ["O(1)", "O(log n)", "O(n)", "O(n²)"],
-      "answer": "C",
-      "explanation": "In the worst case, linear search must check every element, making it O(n).",
-      "bloom": "Remembering",
+      "question": "A message claims to be from an official organization and asks for login details through a strange link. What should the user do?",
+      "options": [
+        "Avoid the strange link and check the sender's email address",
+        "Click the link immediately",
+        "Send the login details",
+        "Forward the message to everyone"
+      ],
+      "answer": "A",
+      "explanation": "The textbook advises caution with suspicious messages, avoiding strange links, and checking the sender's address.",
+      "bloom": "Applying",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-009",
       "chapter": 6,
-      "topic": "6.3 Searching in Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
-      "difficulty": "hard",
-      "question": "Binary search requires the array to be:",
-      "options": ["Random", "Sorted", "Reversed", "Empty"],
-      "answer": "B",
-      "explanation": "Binary search works only on sorted arrays because it divides the search space based on comparison.",
+      "difficulty": "easy",
+      "question": "Why should important files be backed up?",
+      "options": [
+        "To recover them if the computer is damaged, stolen, or stops working",
+        "To make passwords public",
+        "To avoid using storage devices",
+        "To disable antivirus software"
+      ],
+      "answer": "A",
+      "explanation": "Backups help recover important files after damage, theft, or computer failure.",
       "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-010",
       "chapter": 6,
-      "topic": "6.4 Sorting Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
       "difficulty": "easy",
-      "question": "Which sorting algorithm works by repeatedly swapping adjacent elements if they are in wrong order?",
-      "options": ["Bubble Sort", "Merge Sort", "Quick Sort", "Selection Sort"],
+      "question": "Which is identified as a suitable place for a backup?",
+      "options": [
+        "An external hard drive",
+        "A suspicious email attachment",
+        "A public comment",
+        "An unknown website"
+      ],
       "answer": "A",
-      "explanation": "Bubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if needed.",
+      "explanation": "The textbook gives an external hard drive, the cloud, or another secure location as backup options.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-011",
       "chapter": 6,
-      "topic": "6.4 Sorting Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
-      "mode": "straight",
+      "mode": "comparison",
       "difficulty": "medium",
-      "question": "In Selection Sort, the array is divided into:",
-      "options": ["Two halves", "Sorted and unsorted portions", "Three parts", "Random sections"],
-      "answer": "B",
-      "explanation": "Selection Sort maintains a sorted portion at the beginning and an unsorted portion at the end.",
+      "question": "Why should public Wi-Fi be avoided for private tasks such as online banking?",
+      "options": [
+        "It is more susceptible to hackers",
+        "It always has no internet connection",
+        "It automatically deletes bank records",
+        "It makes passwords unnecessary"
+      ],
+      "answer": "A",
+      "explanation": "The textbook warns that public Wi-Fi is more susceptible to hackers for private tasks.",
       "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-012",
       "chapter": 6,
-      "topic": "6.4 Sorting Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
-      "difficulty": "hard",
-      "question": "Which sorting algorithm has the best average-case time complexity?",
-      "options": ["Bubble Sort", "Selection Sort", "Insertion Sort", "Merge Sort"],
-      "answer": "D",
-      "explanation": "Merge Sort has O(n log n) average and worst case, which is better than the O(n²) of Bubble, Selection, and Insertion Sort.",
-      "bloom": "Analyzing",
+      "difficulty": "easy",
+      "question": "Which source should be preferred for downloading apps, programs, and files?",
+      "options": [
+        "Reliable websites",
+        "Unknown websites",
+        "Random email attachments",
+        "Untrusted file-sharing sources"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says to download only from reliable websites.",
+      "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-013",
       "chapter": 6,
-      "topic": "6.5 Lists",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
-      "difficulty": "easy",
-      "question": "How does a list differ from an array?",
-      "options": ["Lists are fixed size", "Lists can grow and shrink dynamically", "Lists only store numbers", "Lists are faster"],
-      "answer": "B",
-      "explanation": "Lists can dynamically grow and shrink in size, unlike arrays which have a fixed size.",
+      "difficulty": "medium",
+      "question": "Why are unknown email attachments risky?",
+      "options": [
+        "They may contain viruses or malware",
+        "They always improve security",
+        "They automatically create backups",
+        "They make passwords stronger"
+      ],
+      "answer": "A",
+      "explanation": "The textbook warns that attachments from people you do not know may contain harmful software.",
       "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-014",
       "chapter": 6,
-      "topic": "6.5 Lists",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
-      "difficulty": "medium",
-      "question": "What is the time complexity of inserting at the beginning of an array?",
-      "options": ["O(1)", "O(n)", "O(log n)", "O(n²)"],
-      "answer": "B",
-      "explanation": "Inserting at the beginning requires shifting all existing elements, making it O(n).",
-      "bloom": "Remembering",
+      "difficulty": "easy",
+      "question": "What is the purpose of privacy settings?",
+      "options": [
+        "To limit the amount of personal information shared publicly",
+        "To make every account public",
+        "To remove all passwords",
+        "To increase public access to private data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook advises reviewing privacy settings and limiting publicly shared personal information.",
+      "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-015",
       "chapter": 6,
-      "topic": "6.6 Multidimensional Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
       "difficulty": "easy",
-      "question": "A 2D array is best visualized as:",
-      "options": ["A line", "A table with rows and columns", "A circle", "A stack"],
-      "answer": "B",
-      "explanation": "A 2D array has rows and columns, like a table or matrix.",
+      "question": "What physical security practice is recommended when leaving a computer unattended?",
+      "options": [
+        "Lock the computer",
+        "Leave it unlocked",
+        "Share the account password",
+        "Turn off all security settings"
+      ],
+      "answer": "A",
+      "explanation": "The textbook recommends locking the computer when away from it.",
       "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-016",
       "chapter": 6,
-      "topic": "6.6 Multidimensional Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
       "mode": "straight",
       "difficulty": "medium",
-      "question": "How do you access the element in row 2, column 3 of a 2D array `arr`?",
-      "options": ["arr[2][3]", "arr[3][2]", "arr(2,3)", "arr[2,3]"],
+      "question": "What is a risk of using public Wi-Fi for private data?",
+      "options": [
+        "Data may be intercepted",
+        "Data becomes automatically encrypted",
+        "Passwords become stronger",
+        "The network becomes a private network"
+      ],
       "answer": "A",
-      "explanation": "In most languages, 2D array elements are accessed using row index first, then column index: arr[row][col].",
-      "bloom": "Applying",
+      "explanation": "The textbook states that public Wi-Fi may not be secure and can leave data open to interception.",
+      "bloom": "Understanding",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-017",
       "chapter": 6,
-      "topic": "6.2 Array Operations",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
-      "mode": "scenario",
-      "difficulty": "medium",
-      "question": "Aisha has an array [10, 20, 30, 40, 50]. She wants to insert 25 at position 2. What will the array look like?",
-      "options": ["[10, 25, 20, 30, 40, 50]", "[10, 20, 25, 30, 40, 50]", "[10, 20, 30, 25, 40, 50]", "[25, 10, 20, 30, 40, 50]"],
-      "answer": "B",
-      "explanation": "Inserting 25 at position 2 shifts elements from position 2 onwards: [10, 20, 25, 30, 40, 50].",
-      "bloom": "Applying",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What can be used to encrypt a Wi-Fi connection when necessary?",
+      "options": [
+        "A virtual private network (VPN)",
+        "A barcode reader",
+        "A printer",
+        "A spreadsheet"
+      ],
+      "answer": "A",
+      "explanation": "The textbook recommends using a VPN to encrypt the Wi-Fi connection when necessary.",
+      "bloom": "Remembering",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-018",
       "chapter": 6,
-      "topic": "6.3 Searching in Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
-      "mode": "scenario",
-      "difficulty": "hard",
-      "question": "A teacher has a sorted list of 1000 student roll numbers. Which search method is most efficient?",
-      "options": ["Linear search", "Binary search", "Random search", "Sequential search"],
-      "answer": "B",
-      "explanation": "For a sorted list of 1000 elements, binary search takes at most 10 comparisons (log₂1000 ≈ 10), while linear search may need 1000.",
-      "bloom": "Analyzing",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which sign should a user look for when shopping or banking online?",
+      "options": [
+        "A secure URL beginning with https:// and a padlock symbol",
+        "A website with no security indicator",
+        "A request for unnecessary personal details",
+        "A random pop-up requesting passwords"
+      ],
+      "answer": "A",
+      "explanation": "The textbook recommends secure websites using https:// and a padlock symbol.",
+      "bloom": "Applying",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-019",
       "chapter": 6,
-      "topic": "6.1 Introduction to Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
-      "mode": "straight",
+      "mode": "application",
       "difficulty": "medium",
-      "question": "Which data structure uses LIFO (Last In, First Out)?",
-      "options": ["Queue", "Stack", "Array", "Linked List"],
-      "answer": "B",
-      "explanation": "A stack follows LIFO — the last element pushed is the first one popped.",
-      "bloom": "Remembering",
+      "question": "A student receives a suspicious pop-up requesting personal information. Which response best follows the textbook?",
+      "options": [
+        "Do not provide the information and be cautious of the request",
+        "Provide all requested information",
+        "Disable antivirus software",
+        "Share the pop-up publicly"
+      ],
+      "answer": "A",
+      "explanation": "Suspicious messages and pop-ups requesting personal information should be treated cautiously.",
+      "bloom": "Applying",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     },
     {
       "id": "CH6-MCQ-020",
       "chapter": 6,
-      "topic": "6.4 Sorting Arrays",
+      "topic": "6.1 Safe and Responsible Use of Computer",
       "type": "mcq",
-      "mode": "scenario",
-      "difficulty": "medium",
-      "question": "Hassan is sorting exam marks [85, 72, 93, 65, 88] in ascending order using Bubble Sort. After the first pass, what will the array look like?",
-      "options": ["[72, 85, 65, 88, 93]", "[65, 72, 85, 88, 93]", "[85, 72, 65, 88, 93]", "[72, 65, 85, 88, 93]"],
+      "mode": "comparison",
+      "difficulty": "difficult",
+      "question": "Which combination best represents safe computer use?",
+      "options": [
+        "Updates, strong passwords, backups, secure connections, careful downloads, and privacy settings",
+        "Public password sharing and unknown downloads",
+        "Unpatched software and unlocked computers",
+        "Public banking and suspicious attachments"
+      ],
       "answer": "A",
-      "explanation": "After first pass of Bubble Sort: [72, 85, 65, 88, 93]. The largest element (93) bubbles to the end.",
+      "explanation": "These practices collectively reflect the safety measures described in Section 6.1.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-021",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Responsible hardware use prioritizes which set of concerns?",
+      "options": [
+        "Security, sustainability, effectiveness, and ethical issues",
+        "Entertainment, advertising, and gaming only",
+        "Speed and screen color only",
+        "Price and brand only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines responsible hardware use around security, sustainability, effectiveness, and ethical issues.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-022",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How can the lifespan of hardware be extended?",
+      "options": [
+        "Correct care, preventing physical harm, and keeping devices free of dust and wreckage",
+        "Replacing devices whenever a new version appears",
+        "Leaving devices exposed to damage",
+        "Ignoring maintenance"
+      ],
+      "answer": "A",
+      "explanation": "Correct care, protection from physical harm, cleanliness, and updates can extend hardware life.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-023",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which practice can increase hardware lifespan according to the textbook?",
+      "options": [
+        "Routine software upgrades and security patches",
+        "Ignoring security patches",
+        "Installing unknown software",
+        "Using hardware for unintended purposes"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that routine software upgrades and security patches can increase hardware lifespan.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-024",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which measures help safeguard sensitive data?",
+      "options": [
+        "Encryption, strong passwords, and two-factor authentication",
+        "Public passwords and unknown downloads",
+        "Removing all access controls",
+        "Sharing personal information"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists encryption, strong passwords, and two-factor authentication for safeguarding sensitive data.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-025",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why should software and firmware updates be performed regularly?",
+      "options": [
+        "To address security flaws that could be used by malicious actors",
+        "To make hardware physically larger",
+        "To remove all backups",
+        "To make passwords public"
+      ],
+      "answer": "A",
+      "explanation": "Regular updates address security flaws that malicious actors could exploit.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-026",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "What is a sensible approach before upgrading a computer?",
+      "options": [
+        "Ask whether the upgrade is really needed and consider its environmental effect",
+        "Upgrade every time a new version appears",
+        "Ignore environmental effects",
+        "Upgrade only to create more waste"
+      ],
+      "answer": "A",
+      "explanation": "The textbook recommends considering need and environmental impact before upgrading.",
       "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-027",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why can upgrading a device simply because a new version is available be irresponsible?",
+      "options": [
+        "It can create more waste",
+        "It always improves privacy",
+        "It prevents all cyberattacks",
+        "It eliminates the need for maintenance"
+      ],
+      "answer": "A",
+      "explanation": "The textbook warns that unnecessary upgrades can create more waste.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-028",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "When can an upgrade be beneficial?",
+      "options": [
+        "When it improves device performance and keeps it safe from online threats",
+        "When it is unnecessary",
+        "When it increases electronic waste without benefit",
+        "When it disables security"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says upgrading can be good when it improves performance and security.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-029",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What should a user follow for safe hardware operation?",
+      "options": [
+        "Manufacturer guidelines for proper usage, handling, and maintenance",
+        "Random online instructions only",
+        "No safety guidance",
+        "Instructions from unknown sources"
+      ],
+      "answer": "A",
+      "explanation": "Following manufacturer guidelines helps prevent accidents and injuries.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-030",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why is proper hardware use particularly important in industrial settings?",
+      "options": [
+        "Improper use can have serious consequences",
+        "Industrial hardware needs no safety rules",
+        "Industrial devices cannot be damaged",
+        "Safety rules apply only to home computers"
+      ],
+      "answer": "A",
+      "explanation": "The textbook notes that improper hardware use can have serious consequences in industrial settings.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-031",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How should hardware be used?",
+      "options": [
+        "Only for its intended purpose",
+        "For any purpose regardless of design",
+        "Only for entertainment",
+        "Without maintenance"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly advises using hardware only for its intended purpose.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-032",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which action violates responsible hardware use when using someone else's computer?",
+      "options": [
+        "Installing software or changing settings without permission",
+        "Respecting the owner's privacy",
+        "Using authorized software",
+        "Handling the device carefully"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says not to install software or change settings without permission.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-033",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does responsible software use require?",
+      "options": [
+        "Legal compliance, ethical considerations, and awareness of broader societal impact",
+        "Ignoring licenses and laws",
+        "Using software to harm others",
+        "Sharing copyrighted software without permission"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes responsible software use as combining legal compliance, ethical considerations, and awareness of societal impact.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-034",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does observing the law in software use include?",
+      "options": [
+        "Following copyright, intellectual property laws, and software licenses",
+        "Ignoring license terms",
+        "Using cracked software",
+        "Copying software without permission"
+      ],
+      "answer": "A",
+      "explanation": "The textbook instructs users to obey copyright and intellectual property laws and respect software licenses.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-035",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is an example of unethical software use named in the textbook?",
+      "options": [
+        "Hacking someone else's computer",
+        "Using software for its intended purpose",
+        "Respecting privacy settings",
+        "Following a license"
+      ],
+      "answer": "A",
+      "explanation": "Hacking is listed as an unethical or malicious use of software.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-036",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How should software that processes personal information be used?",
+      "options": [
+        "Respect individuals' privacy rights",
+        "Publish all collected information",
+        "Ignore privacy settings",
+        "Collect information without concern"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says to respect privacy rights when software collects or processes personal information.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-037",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which intellectual property rights should responsible software users respect?",
+      "options": [
+        "Patents, trademarks, and copyrights",
+        "Only passwords",
+        "Only Wi-Fi settings",
+        "Only screen settings"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically identifies patents, trademarks, and copyrights.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-038",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What should users understand about software licensing?",
+      "options": [
+        "They should understand and obey open-source and commercial licensing requirements",
+        "Licenses can always be ignored",
+        "All software has identical terms",
+        "Licenses apply only to hardware"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says users should be aware of licensing terms, including open-source and commercial licenses.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-039",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is an example of irresponsible software use from the textbook?",
+      "options": [
+        "Using software to disseminate malware",
+        "Using licensed software appropriately",
+        "Respecting intellectual property",
+        "Reporting unauthorized use"
+      ],
+      "answer": "A",
+      "explanation": "Disseminating malware is explicitly listed as irresponsible software use.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-040",
+      "chapter": 6,
+      "topic": "6.2 Responsible use of hardware and software",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A user wants to change settings on a computer owned by another person. What is the responsible action?",
+      "options": [
+        "Obtain permission before making changes",
+        "Change settings without asking",
+        "Install any software needed",
+        "Ignore the owner's privacy"
+      ],
+      "answer": "A",
+      "explanation": "The textbook requires permission before installing software or changing settings on hardware that is not your own.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-041",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is safe use of digital platforms?",
+      "options": [
+        "Using them in a way that protects privacy, security, and well-being",
+        "Sharing all personal information",
+        "Ignoring online risks",
+        "Using every website without caution"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines safe digital-platform use as protecting privacy, security, and well-being.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-042",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which platforms are included in the discussion of safe digital use?",
+      "options": [
+        "Social media, online banking, email, and other digital services",
+        "Only offline applications",
+        "Only printers",
+        "Only computer games"
+      ],
+      "answer": "A",
+      "explanation": "The textbook discusses social media, online banking, email, and other digital services.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-043",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is a recommended practice for online data searches?",
+      "options": [
+        "Use well-known and trusted platforms",
+        "Enter sensitive personal information into every search",
+        "Use unknown sites for official information",
+        "Share credit card details with search engines"
+      ],
+      "answer": "A",
+      "explanation": "The textbook recommends trusted search platforms and avoiding unnecessary sensitive information.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-044",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is given as a generally safe source for data searches?",
+      "options": [
+        "Government websites or academic databases",
+        "Unknown pop-up pages",
+        "Unverified personal messages",
+        "Random attachments"
+      ],
+      "answer": "A",
+      "explanation": "Government websites and academic databases are listed as usually safe choices.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-045",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What should users avoid entering into search engines?",
+      "options": [
+        "Sensitive personal information such as credit card details",
+        "General search terms",
+        "Publicly available topics",
+        "Non-sensitive questions"
+      ],
+      "answer": "A",
+      "explanation": "The textbook advises against entering sensitive personal information into search engines.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-046",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "If sensitive information must be searched, what should be used?",
+      "options": [
+        "Secure and official websites",
+        "Unknown websites",
+        "Random social-media posts",
+        "Unverified links"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says to use secure and official websites when such information must be searched.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-047",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Why should social networking be used responsibly?",
+      "options": [
+        "To protect personal information, privacy, and overall online security",
+        "To make all information public",
+        "To remove privacy controls",
+        "To accept every online contact"
+      ],
+      "answer": "A",
+      "explanation": "Responsible social networking protects personal information, privacy, and security.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-048",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What type of information should users be especially careful about sharing on social networks?",
+      "options": [
+        "Financial, medical, or home-address information",
+        "Only public weather information",
+        "Only general school subjects",
+        "Only public news"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically warns about financial information, medical information, and home addresses.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-049",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which approach to social networking best follows the textbook?",
+      "options": [
+        "Share only personal information that you are comfortable sharing publicly",
+        "Share all personal information",
+        "Publish medical information openly",
+        "Post your home address publicly"
+      ],
+      "answer": "A",
+      "explanation": "Users should only share personal information they are comfortable making public.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-050",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A student is searching for information about a bank account. Which approach is safest according to the textbook?",
+      "options": [
+        "Use a secure and official website rather than entering sensitive details into a search engine",
+        "Enter account details into a search engine",
+        "Use an unknown website",
+        "Post the details on social media"
+      ],
+      "answer": "A",
+      "explanation": "Sensitive information should be handled through secure, official websites.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-051",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which pair is directly emphasized in safe digital-platform use?",
+      "options": [
+        "Privacy and security",
+        "Popularity and advertising",
+        "Gaming and graphics",
+        "Speed and storage"
+      ],
+      "answer": "A",
+      "explanation": "The section repeatedly emphasizes protecting privacy and security while using digital platforms.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-052",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why is vigilance important when using digital platforms?",
+      "options": [
+        "It helps minimize risks to digital identity and personal information",
+        "It removes the need for security",
+        "It guarantees every online claim is true",
+        "It makes passwords unnecessary"
+      ],
+      "answer": "A",
+      "explanation": "The textbook encourages users to remain vigilant and proactive in protecting digital identity and personal information.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-053",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "easy",
+      "question": "Which behavior is unsafe on a social network?",
+      "options": [
+        "Sharing your home address publicly",
+        "Limiting personal information",
+        "Protecting privacy settings",
+        "Sharing only information you are comfortable making public"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically warns against unnecessarily sharing sensitive information such as a home address.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-054",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A search result asks for a student's credit-card details before showing ordinary information. What should the student do?",
+      "options": [
+        "Avoid entering the sensitive information and use a secure, official source instead",
+        "Enter the details because search engines are always safe",
+        "Share the details publicly",
+        "Disable all privacy settings"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says ordinary searches usually do not require personal details and recommends secure official websites for sensitive information.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-055",
+      "chapter": 6,
+      "topic": "6.3 Safe use of digital platform",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "difficult",
+      "question": "Which statement best combines safe data searching and safe social networking?",
+      "options": [
+        "Use trusted search sources and limit the personal information shared online",
+        "Use unknown search sites and share private information",
+        "Enter sensitive details into search engines and publish your address",
+        "Accept all online requests and ignore privacy"
+      ],
+      "answer": "A",
+      "explanation": "Both practices reflect the textbook's emphasis on trusted sources and responsible sharing.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-056",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Why are laws protecting user privacy and intellectual property important?",
+      "options": [
+        "They protect people's rights and support a fair and progressive society",
+        "They remove all privacy rights",
+        "They encourage unauthorized copying",
+        "They prevent innovation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says these rules are crucial for protecting rights and promoting a just and progressive society.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-057",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does protection of individual rights include?",
+      "options": [
+        "Safeguarding personal information, freedom, and privacy",
+        "Sharing data without permission",
+        "Copying private information",
+        "Ignoring equality"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines protection of individual rights in terms of personal information, freedom, and privacy.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-058",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What does protection of individual rights help prevent?",
+      "options": [
+        "Misuse or sharing of personal data without permission",
+        "Authorized data use",
+        "Fair treatment",
+        "Privacy protection"
+      ],
+      "answer": "A",
+      "explanation": "It helps ensure personal data is not misused or shared without permission.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-059",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is an example of personal information that should be protected?",
+      "options": [
+        "Phone numbers and addresses",
+        "Public textbook titles",
+        "General weather reports",
+        "Public school subjects"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically mentions phone numbers, addresses, and online activities.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-060",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is prevention of unauthorized use?",
+      "options": [
+        "Stopping people from using ideas, inventions, or personal information without permission",
+        "Allowing anyone to copy work",
+        "Sharing private data freely",
+        "Removing ownership rights"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines it as stopping use of protected material or information without the rightful owner's permission.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-061",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does prevention of unauthorized use protect?",
+      "options": [
+        "Privacy and intellectual property",
+        "Only computer speed",
+        "Only screen quality",
+        "Only internet bandwidth"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly says it protects both privacy and intellectual property.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-062",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "easy",
+      "question": "Which action is unauthorized use according to the textbook?",
+      "options": [
+        "Copying someone else's book, music, or software without permission",
+        "Using your own original work",
+        "Using software according to its license",
+        "Protecting private data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives copying books, music, or software without permission as an example of unauthorized use.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-063",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A person copies a classmate's software project and publishes it as their own. Which principle is most directly violated?",
+      "options": [
+        "Prevention of unauthorized use",
+        "Safe Wi-Fi use",
+        "Hardware maintenance",
+        "Data backup"
+      ],
+      "answer": "A",
+      "explanation": "Using someone else's work without permission is unauthorized use and conflicts with intellectual property protection.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-064",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which principle protects personal online activities from being accessed without consent?",
+      "options": [
+        "Protection of individual rights",
+        "Software piracy",
+        "Cloud storage",
+        "Public sharing"
+      ],
+      "answer": "A",
+      "explanation": "The textbook includes online activities among personal details that should be protected.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-065",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Why does prevention of unauthorized use matter for original work?",
+      "options": [
+        "It helps stop others from copying or using the work without permission",
+        "It makes all work public",
+        "It removes creators' rights",
+        "It encourages piracy"
+      ],
+      "answer": "A",
+      "explanation": "The section explains that unauthorized-use prevention protects others' work from copying or use without permission.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-066",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which situation best illustrates protection of individual rights?",
+      "options": [
+        "Keeping a person's phone number from being shared without consent",
+        "Publishing a person's address without permission",
+        "Copying software without a license",
+        "Using someone else's invention without permission"
+      ],
+      "answer": "A",
+      "explanation": "Protecting personal information from unauthorized sharing directly illustrates individual-rights protection.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-067",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which situation best illustrates prevention of unauthorized use?",
+      "options": [
+        "Refusing to copy another person's software without permission",
+        "Sharing private data publicly",
+        "Using strong passwords",
+        "Backing up files"
+      ],
+      "answer": "A",
+      "explanation": "Preventing unauthorized copying of software is an example of preventing unauthorized use.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-068",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "difficult",
+      "question": "What is the relationship between privacy and intellectual property in this section?",
+      "options": [
+        "Laws can protect both personal information and creations from unauthorized use",
+        "They are unrelated",
+        "Only personal information is protected",
+        "Only physical hardware is protected"
+      ],
+      "answer": "A",
+      "explanation": "The section explains that unauthorized-use prevention protects both privacy and intellectual property.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-069",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "easy",
+      "question": "A website publishes a person's address without consent. Which protection is most relevant?",
+      "options": [
+        "Protection of individual rights",
+        "Hardware lifespan",
+        "Software licensing",
+        "Computing innovation"
+      ],
+      "answer": "A",
+      "explanation": "Personal addresses are identified as information that should not be shared or accessed without consent.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-070",
+      "chapter": 6,
+      "topic": "6.4 Laws to protect user privacy and intellectual.property",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A student wants to reuse another person's software in a project. What should the student consider first?",
+      "options": [
+        "Whether permission or appropriate rights allow the use",
+        "Whether the computer has enough RAM",
+        "Whether public Wi-Fi is available",
+        "Whether the screen is large enough"
+      ],
+      "answer": "A",
+      "explanation": "The textbook emphasizes preventing unauthorized use of others' software and intellectual property.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-071",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is computing innovation?",
+      "options": [
+        "Creating and using new or better computer processes, technologies, systems, and software",
+        "Only replacing keyboards",
+        "Only buying computers",
+        "Only using old software"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines computing innovation as creating and using new or better computing processes, technologies, systems, and software.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-072",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What areas can computing innovation improve?",
+      "options": [
+        "Hardware, software, networking, and uses of computer technology",
+        "Only printers",
+        "Only keyboards",
+        "Only entertainment"
+      ],
+      "answer": "A",
+      "explanation": "The textbook includes improvements to hardware, software, networking, and applications of computing.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-073",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is one focus of hardware advancements?",
+      "options": [
+        "Faster and more energy-efficient processors",
+        "Removing all storage",
+        "Reducing network capability",
+        "Eliminating software"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies faster and more energy-efficient processors as hardware advancements.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-074",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is another hardware advancement named in the textbook?",
+      "options": [
+        "High-capacity storage devices",
+        "Manual filing cabinets",
+        "Paper notebooks",
+        "Mechanical typewriters"
+      ],
+      "answer": "A",
+      "explanation": "High-capacity storage devices are listed among hardware advancements.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-075",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why are advanced networking technologies important in computing innovation?",
+      "options": [
+        "They provide a foundation for further innovation in software and applications",
+        "They eliminate the need for computers",
+        "They prevent communication",
+        "They make storage unnecessary"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says hardware and networking advancements provide foundations for further software and application innovation.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-076",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does software development contribute to computing innovation?",
+      "options": [
+        "Innovative software solutions that can improve user experience and efficiency",
+        "Only physical device repairs",
+        "Only paper documentation",
+        "Only manual calculations"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that software innovations can enhance user experiences and improve efficiency.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-077",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which field is mentioned as an area for specialized software applications?",
+      "options": [
+        "Artificial intelligence",
+        "Carpentry",
+        "Agriculture without computing",
+        "Handwriting"
+      ],
+      "answer": "A",
+      "explanation": "AI is specifically named among fields for specialized software applications.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-078",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which emerging technology is named in the textbook?",
+      "options": [
+        "Blockchain",
+        "Typewriter technology",
+        "Paper filing",
+        "Mechanical calculators"
+      ],
+      "answer": "A",
+      "explanation": "Blockchain is one of the emerging technologies identified in the textbook.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-079",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which group contains only emerging technologies named in the textbook?",
+      "options": [
+        "AI, blockchain, quantum computing, VR, and IoT",
+        "Printers, keyboards, mice, and scanners",
+        "Paper files, pencils, and books",
+        "Typewriters and abacuses only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists AI, blockchain, quantum computing, VR, and IoT as emerging technologies.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-080",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What do emerging technologies open up?",
+      "options": [
+        "New avenues for innovation and opportunities for new applications and industries",
+        "Only fewer applications",
+        "Only slower systems",
+        "Only paper-based work"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says emerging technologies create opportunities for new applications and industries.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-081",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is the focus of Human-Computer Interaction (HCI) innovation?",
+      "options": [
+        "Improving how humans interact with computers and digital systems",
+        "Replacing all users",
+        "Removing interfaces",
+        "Reducing accessibility"
+      ],
+      "answer": "A",
+      "explanation": "HCI innovation focuses on improving human interaction with digital systems.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-082",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is an HCI advancement mentioned in the textbook?",
+      "options": [
+        "Accessibility features",
+        "Paper filing",
+        "Mechanical storage",
+        "Manual accounting"
+      ],
+      "answer": "A",
+      "explanation": "Accessibility features are specifically identified under HCI innovation.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-083",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which technologies are integrated into everyday computing as part of HCI innovation?",
+      "options": [
+        "Natural language processing and gesture recognition",
+        "Only barcode printing",
+        "Only file compression",
+        "Only manual typing"
+      ],
+      "answer": "A",
+      "explanation": "The textbook names natural language processing and gesture recognition.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-084",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is one benefit of computing innovation?",
+      "options": [
+        "Increased productivity",
+        "Reduced access to information",
+        "Slower communication",
+        "More manual work"
+      ],
+      "answer": "A",
+      "explanation": "Increased productivity is identified as a positive outcome of computing innovation.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-085",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "How can computing innovation increase productivity in manufacturing?",
+      "options": [
+        "Robots can perform hazardous or repetitive activities",
+        "Workers must repeat all tasks manually",
+        "Computers eliminate all production",
+        "Networks prevent automation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives robots performing hazardous or repetitive activities as an example.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-086",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How can software improve organizational efficiency?",
+      "options": [
+        "It can automate accounting and other administrative work",
+        "It prevents all automation",
+        "It increases repetitive paperwork",
+        "It disables communication"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that software can automate accounting and administrative work.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-087",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How has computing improved communication?",
+      "options": [
+        "Through email, social media, video calls, and other internet platforms",
+        "By eliminating global interaction",
+        "By requiring physical mail only",
+        "By preventing collaboration"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies these internet technologies as transforming communication.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-088",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What has improved because the internet provides access to large amounts of information?",
+      "options": [
+        "Education, staying informed, and research",
+        "Only gaming",
+        "Only printing",
+        "Only hardware repair"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says information access empowers self-education, staying informed, and research.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-089",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How have computing innovations advanced medicine?",
+      "options": [
+        "Through medical imaging, drug discovery, improved diagnosis, and personalized care",
+        "By eliminating medical research",
+        "By reducing access to treatment",
+        "By replacing all doctors"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists these medical benefits of computing innovation.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-090",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which example of AI in medicine is given?",
+      "options": [
+        "Developing new cancer drugs",
+        "Printing textbooks",
+        "Managing traffic lights only",
+        "Creating music only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives AI-assisted development of new cancer drugs as an example.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-091",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How is VR described as useful in medicine?",
+      "options": [
+        "It can help people with phobias and other mental health conditions",
+        "It replaces all medical imaging",
+        "It only improves gaming",
+        "It prevents treatment"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that VR can help people with phobias and other mental health conditions.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-092",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What potential benefit do autonomous vehicles offer?",
+      "options": [
+        "Safer and more efficient transportation",
+        "Less efficient transportation by definition",
+        "No change to transportation",
+        "Only entertainment"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says autonomous vehicles have the potential to make transportation safer and more efficient.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-093",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How has computing changed entertainment?",
+      "options": [
+        "Through high-quality graphics, VR, and interactive narrative",
+        "By eliminating gaming",
+        "By removing interactivity",
+        "By reducing visual quality"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies these developments as improvements to entertainment experiences.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-094",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How has computing transformed education?",
+      "options": [
+        "Online courses and e-learning make education more accessible and flexible",
+        "It prevents global learning",
+        "It requires all students to study at one place",
+        "It eliminates self-paced learning"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says online learning expands access and allows students to study at their own pace.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-095",
+      "chapter": 6,
+      "topic": "6.5 Computing innovation",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "difficult",
+      "question": "Which combination correctly pairs a computing innovation benefit with its example?",
+      "options": [
+        "Automation—robots performing repetitive work",
+        "Education—removing online learning",
+        "Medicine—eliminating diagnosis",
+        "Communication—preventing video calls"
+      ],
+      "answer": "A",
+      "explanation": "The textbook connects automation with robots performing hazardous or repetitive tasks.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-096",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is malware?",
+      "options": [
+        "Malicious software designed to harm or exploit computers or networks",
+        "Software used only for drawing",
+        "A secure backup method",
+        "A type of keyboard"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines malware as malicious software designed to harm or exploit computers or networks.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-097",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is an example of malware named in the textbook?",
+      "options": [
+        "Ransomware",
+        "Spreadsheet",
+        "Web browser",
+        "Word processor"
+      ],
+      "answer": "A",
+      "explanation": "Computer virus, ransomware, and Trojan horse are given as malware examples.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-098",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is phishing?",
+      "options": [
+        "Tricking individuals into revealing sensitive information, often through fake emails or websites",
+        "Backing up files",
+        "Updating software",
+        "Using a secure website"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines phishing as attempts to trick people into revealing sensitive information.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-099",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A fraudulent email claims to be from a bank and asks for login credentials. What does this illustrate?",
+      "options": [
+        "Phishing",
+        "Backup",
+        "Open source",
+        "Freeware"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses a fraudulent bank email asking for login credentials as a phishing example.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-100",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is hacking?",
+      "options": [
+        "Unauthorized access or manipulation of computer systems or networks",
+        "Authorized software licensing",
+        "Data backup",
+        "Safe online shopping"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines hacking as unauthorized access or manipulation of computer systems or networks.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-101",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which situation is an example of hacking?",
+      "options": [
+        "Gaining unauthorized access to a company's database to steal information",
+        "Updating antivirus definitions",
+        "Using a licensed application",
+        "Backing up files"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives unauthorized access to a company database to steal information as an example.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-102",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is spam?",
+      "options": [
+        "Unsolicited and often irrelevant or inappropriate messages sent over the internet",
+        "A backup copy",
+        "A secure password",
+        "An open-source license"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines spam as unsolicited and often irrelevant or inappropriate internet messages.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-103",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is an example of spam?",
+      "options": [
+        "Unwanted promotional emails",
+        "A requested school email",
+        "A local backup",
+        "A software license"
+      ],
+      "answer": "A",
+      "explanation": "Unwanted promotional emails are given as an example of spam.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-104",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is spyware?",
+      "options": [
+        "Software that secretly collects user information without knowledge or consent",
+        "Software that creates backups",
+        "Software that protects passwords",
+        "Software that displays public information"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines spyware as software that secretly collects user information without knowledge or consent.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-105",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A program secretly tracks a user's online activities and sends the data to advertisers. What is this?",
+      "options": [
+        "Spyware",
+        "Freeware",
+        "Shareware",
+        "Open source"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives this exact type of tracking as an example of spyware.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-106",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is pharming?",
+      "options": [
+        "Redirecting website traffic to a fake site without the user's knowledge",
+        "Sending promotional emails",
+        "Creating a strong password",
+        "Backing up a computer"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines pharming as redirecting traffic to a fake site without the user's knowledge.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-107",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A user enters the address of a legitimate banking site but is secretly redirected to a fraudulent site. What is this?",
+      "options": [
+        "Pharming",
+        "Spam",
+        "Freeware",
+        "Hacking"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives redirection from a legitimate banking site to a fraudulent one as a pharming example.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-108",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What are cookies?",
+      "options": [
+        "Small text files stored on a user's device containing information about website interactions",
+        "Malware that always destroys files",
+        "Passwords stored on paper",
+        "Network cables"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines cookies as small text files storing information about website interactions.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-109",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What can cookies save according to the textbook?",
+      "options": [
+        "Login information or website preferences",
+        "Only antivirus definitions",
+        "Only hardware settings",
+        "Only bank passwords"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives login information and preferences as examples of what cookies may save.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-110",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is a scam?",
+      "options": [
+        "A deceptive scheme designed to trick people for financial gain or personal information",
+        "A secure payment method",
+        "A software license",
+        "A type of backup"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines scams as deceptive schemes intended to obtain financial gain or personal information.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-111",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An email claims a user won a lottery but asks for bank details to transfer the prize. What is this?",
+      "options": [
+        "A scam",
+        "A cookie",
+        "A firewall",
+        "Freeware"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives a fake lottery-prize email requesting bank details as a scam example.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-112",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is software piracy?",
+      "options": [
+        "Unauthorized copying, distribution, or use of software without proper licensing",
+        "Using freeware legally",
+        "Using open-source software according to its terms",
+        "Backing up licensed software"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines software piracy as unauthorized copying, distribution, or use without proper licensing.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-113",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Downloading a cracked version of paid software instead of purchasing it is an example of:",
+      "options": [
+        "Software piracy",
+        "Freeware",
+        "Shareware",
+        "HCI"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly gives downloading cracked paid software as an example of software piracy.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-114",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is freeware?",
+      "options": [
+        "Software that is free to use without payment",
+        "Software that must always be purchased",
+        "Software with secret source code",
+        "Software that is always malicious"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines freeware as software that is free to use without payment.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-115",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which example of freeware is given?",
+      "options": [
+        "Mozilla Firefox",
+        "WinRAR",
+        "A cracked paid program",
+        "A fraudulent website"
+      ],
+      "answer": "A",
+      "explanation": "Mozilla Firefox is given as an example of freeware.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-116",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is shareware?",
+      "options": [
+        "Software distributed on a trial basis with an option to purchase full functionality",
+        "Software that is always free",
+        "Software designed to steal data",
+        "Software with no source code"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines shareware as trial software with an option to purchase full functionality.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-117",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which example of shareware is given?",
+      "options": [
+        "WinRAR",
+        "Mozilla Firefox",
+        "Linux operating system",
+        "A banking scam"
+      ],
+      "answer": "A",
+      "explanation": "WinRAR is given as an example of shareware.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-118",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is open-source software?",
+      "options": [
+        "Software with publicly accessible source code that can be viewed, modified, and distributed",
+        "Software that must always be paid for",
+        "Software that secretly tracks users",
+        "Software distributed only as a trial"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines open source using publicly accessible source code and the ability to view, modify, and distribute it.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-119",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which example of open-source software is given?",
+      "options": [
+        "Linux operating system",
+        "WinRAR",
+        "A lottery scam",
+        "A cracked paid application"
+      ],
+      "answer": "A",
+      "explanation": "Linux is identified as an example of open-source software.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-120",
+      "chapter": 6,
+      "topic": "6.6 Malicious software and Key concept",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "difficult",
+      "question": "Which situation is most clearly phishing rather than pharming?",
+      "options": [
+        "A fake bank email asks for login credentials",
+        "A legitimate bank URL secretly redirects to a fake site",
+        "A program secretly tracks online activity",
+        "Unwanted promotional messages arrive"
+      ],
+      "answer": "A",
+      "explanation": "Phishing uses deceptive messages or websites to trick users into revealing information; secret redirection is pharming.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-121",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is information privacy?",
+      "options": [
+        "Keeping personal information safe and preventing unauthorized access",
+        "Making all information public",
+        "Deleting all passwords",
+        "Sharing data without consent"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines information privacy as keeping personal information safe from unauthorized access.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-122",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What may be required to enhance privacy?",
+      "options": [
+        "Stricter controls and restrictions on accessing and sharing information",
+        "Removing all access controls",
+        "Sharing passwords",
+        "Making all information public"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that enhanced privacy may require stricter controls and restrictions.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-123",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which is given as an example of a privacy trade-off?",
+      "options": [
+        "Using complex passwords or encryption to protect data",
+        "Removing passwords",
+        "Publishing private data",
+        "Using untrusted websites"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives complex passwords or encryption as examples of privacy protection involving stricter controls.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-124",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is system security?",
+      "options": [
+        "Measures and mechanisms that protect systems, networks, and data from unauthorized access, attacks, damage, or theft",
+        "A method of sharing passwords",
+        "A type of social network",
+        "A way to remove encryption"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines system security in these terms.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-125",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is the primary goal of system security?",
+      "options": [
+        "Confidentiality, integrity, and availability of information and resources",
+        "Public access to all data",
+        "Removing all controls",
+        "Increasing social-media use"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies confidentiality, integrity, and availability as the primary goals.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-126",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is an example of a system-security measure?",
+      "options": [
+        "Firewall",
+        "Social media post",
+        "Public Wi-Fi password",
+        "Website advertisement"
+      ],
+      "answer": "A",
+      "explanation": "Firewalls are explicitly listed as examples of system security.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-127",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which group contains examples of system security from the textbook?",
+      "options": [
+        "Firewall, encryption, antivirus software, and access control",
+        "Cookies, spam, and scams",
+        "Social media and video calls",
+        "Printers, keyboards, and scanners"
+      ],
+      "answer": "A",
+      "explanation": "These four measures are specifically listed in the textbook.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-128",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "How can stronger privacy controls affect usability?",
+      "options": [
+        "They may restrict access to and sharing of information",
+        "They always make information freely available",
+        "They remove all security",
+        "They prevent encryption"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes a trade-off in which stronger privacy can require stricter access and sharing controls.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-129",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A user adds complex passwords and encryption to protect personal data. What concept does this illustrate?",
+      "options": [
+        "Privacy trade-off",
+        "Spam",
+        "Pharming",
+        "Freeware"
+      ],
+      "answer": "A",
+      "explanation": "Complex passwords and encryption are given as examples of privacy protection involving stricter controls.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-130",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "easy",
+      "question": "A system uses a firewall and access control to protect data from unauthorized access. Which concept is illustrated?",
+      "options": [
+        "System security",
+        "Social networking",
+        "Fake news",
+        "Shareware"
+      ],
+      "answer": "A",
+      "explanation": "Firewall and access control are examples of system-security mechanisms.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-131",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "difficult",
+      "question": "Which statement best distinguishes information privacy from system security?",
+      "options": [
+        "Privacy focuses on protecting personal information, while system security protects systems, networks, and data from threats",
+        "They are exactly the same concept",
+        "Privacy concerns only hardware",
+        "System security concerns only social media"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives distinct definitions for information privacy and system security.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-132",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Why is a trade-off sometimes necessary when improving privacy?",
+      "options": [
+        "Greater privacy can require tighter access and sharing restrictions",
+        "Privacy never affects access",
+        "Security always reduces privacy",
+        "All information should remain public"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explains that stronger privacy may require stricter controls on access and sharing.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-133",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which option best protects both privacy and system security?",
+      "options": [
+        "Using encryption and access controls appropriately",
+        "Sharing passwords publicly",
+        "Removing antivirus software",
+        "Using untrusted websites"
+      ],
+      "answer": "A",
+      "explanation": "Encryption and access control are both named as protections in the section.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-134",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A school limits who can access student records and uses encryption. Which reasoning best matches the textbook?",
+      "options": [
+        "The controls strengthen privacy and system security but may restrict access for usability",
+        "The controls remove all security",
+        "The controls make the data public",
+        "The controls are unrelated to privacy"
+      ],
+      "answer": "A",
+      "explanation": "The section describes stronger controls as privacy protection and identifies encryption and access control as security measures, creating a trade-off with access.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-135",
+      "chapter": 6,
+      "topic": "6.7 Information privacy, system security, and usability trade-offs",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "difficult",
+      "question": "Which combination correctly matches concept and example?",
+      "options": [
+        "Information privacy—protecting personal information; system security—firewalls and access control",
+        "Information privacy—spam; system security—social networking",
+        "Information privacy—freeware; system security—shareware",
+        "Information privacy—pharming; system security—cookies"
+      ],
+      "answer": "A",
+      "explanation": "These matches follow the definitions and examples in Section 6.7.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-136",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is disinformation?",
+      "options": [
+        "False or misleading information deliberately spread to deceive people",
+        "Any accurate news report",
+        "A secure website",
+        "A software license"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines disinformation as false or misleading information deliberately spread to deceive.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-137",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is fake news according to the textbook?",
+      "options": [
+        "False or misleading information created to deceive people, but not necessarily with the intention of harming them",
+        "Always accurate information",
+        "Only government information",
+        "Only entertainment content"
+      ],
+      "answer": "A",
+      "explanation": "The textbook distinguishes fake news as false or misleading information not necessarily intended to harm.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-138",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "difficult",
+      "question": "What is a key distinction between disinformation and fake news in the textbook?",
+      "options": [
+        "Disinformation is deliberately spread to deceive, while fake news is not necessarily intended to harm",
+        "Fake news is always accurate",
+        "Disinformation is always harmless",
+        "There is no distinction at all"
+      ],
+      "answer": "A",
+      "explanation": "The textbook explicitly gives this distinction.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-139",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Why can disinformation and fake news spread easily?",
+      "options": [
+        "The internet makes information easy to propagate",
+        "The internet prevents sharing",
+        "Users cannot communicate online",
+        "Websites block all information"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that ease of spreading information online has led to propagation of disinformation and fake news.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-140",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What can the spread of disinformation affect?",
+      "options": [
+        "Public discourse and decision-making",
+        "Only screen brightness",
+        "Only keyboard use",
+        "Only file storage"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says these forms of false information can have serious consequences for public discourse and decision-making.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-141",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A false story is deliberately spread online to deceive readers. Which term best fits?",
+      "options": [
+        "Disinformation",
+        "Freeware",
+        "Cookie",
+        "Backup"
+      ],
+      "answer": "A",
+      "explanation": "Deliberately spreading false information to deceive matches the textbook's definition of disinformation.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-142",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A false story is created as misleading news but is not necessarily intended to harm people. Which term best fits?",
+      "options": [
+        "Fake news",
+        "Firewall",
+        "Spyware",
+        "Shareware"
+      ],
+      "answer": "A",
+      "explanation": "That description matches the textbook's definition of fake news.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-143",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which statement about fake news is supported by the textbook?",
+      "options": [
+        "It can have serious consequences for public discourse and decision-making",
+        "It has no social effect",
+        "It always improves public discussion",
+        "It cannot spread online"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that false information can seriously affect public discourse and decision-making.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-144",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Why is the distinction between disinformation and fake news useful?",
+      "options": [
+        "It helps identify whether deliberate deception is part of the described information problem",
+        "It makes all online information true",
+        "It removes the need for careful evaluation",
+        "It prevents internet use"
+      ],
+      "answer": "A",
+      "explanation": "The textbook distinguishes the terms based on the role of deliberate deception and harmful intent.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-145",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which situation most clearly represents disinformation?",
+      "options": [
+        "A person intentionally circulates a false claim to deceive people",
+        "A student reads an accurate article",
+        "A website provides a secure connection",
+        "A user backs up files"
+      ],
+      "answer": "A",
+      "explanation": "Intentional circulation of a false claim to deceive is disinformation.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-146",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "Which situation best fits fake news as defined in the textbook?",
+      "options": [
+        "Misleading information presented as news without necessarily being intended to harm",
+        "A secure banking page",
+        "An antivirus update",
+        "A licensed application"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes fake news as false or misleading information presented as news, without necessarily intending harm.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-147",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "What does the internet's ease of information sharing create in this context?",
+      "options": [
+        "A greater opportunity for disinformation and fake news to propagate",
+        "A complete stop to misinformation",
+        "Automatic verification of every claim",
+        "A guarantee of accurate news"
+      ],
+      "answer": "A",
+      "explanation": "The textbook links the ease of online information spreading with the propagation of false information.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-148",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Which is a likely consequence of widespread false information according to the textbook?",
+      "options": [
+        "Poorer public discourse and affected decision-making",
+        "Improved accuracy of all decisions",
+        "Automatic privacy protection",
+        "More secure passwords"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies serious consequences for public discourse and decision-making.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-149",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A student sees a sensational online claim and wants to understand its possible impact. Which textbook idea is most relevant?",
+      "options": [
+        "False information can influence public discourse and decision-making",
+        "False information cannot affect society",
+        "Only hardware can affect society",
+        "Online information is always verified"
+      ],
+      "answer": "A",
+      "explanation": "The textbook emphasizes the social and decision-making consequences of false information.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-150",
+      "chapter": 6,
+      "topic": "6.8 Disinformation and Fake News:",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "difficult",
+      "question": "Which comparison is most accurate according to the textbook?",
+      "options": [
+        "Disinformation involves deliberate deception; fake news is misleading information not necessarily intended to harm",
+        "Disinformation is always accurate; fake news is always harmless",
+        "Both terms mean exactly the same thing",
+        "Fake news always requires a computer virus"
+      ],
+      "answer": "A",
+      "explanation": "This directly reflects the textbook's distinction.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-151",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is social networking?",
+      "options": [
+        "Using online platforms and websites to connect with people, build relationships, share information, and communicate",
+        "Using computers without networks",
+        "Only sending printed letters",
+        "Only storing files"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines social networking in terms of online connection, relationships, sharing, and communication.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-152",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What do social networking platforms facilitate?",
+      "options": [
+        "Exchange of ideas, interests, and personal updates",
+        "Only offline meetings",
+        "Only hardware repair",
+        "Only software installation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says these platforms facilitate exchange of ideas, interests, and personal updates.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-153",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is listed as a social networking site in the textbook?",
+      "options": [
+        "Instagram",
+        "A spreadsheet application",
+        "A printer driver",
+        "An operating system"
+      ],
+      "answer": "A",
+      "explanation": "Instagram is one of the named social networking sites.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-154",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "easy",
+      "question": "Which group contains only social networking platforms named in the textbook?",
+      "options": [
+        "Facebook, Twitter, Instagram, YouTube, and WhatsApp",
+        "Linux, WinRAR, Firefox, and Windows",
+        "HTML, CSS, and JavaScript",
+        "Firewall, antivirus, and encryption"
+      ],
+      "answer": "A",
+      "explanation": "These are the social networking sites listed in the textbook.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-155",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is one harmful effect of excessive social-media use?",
+      "options": [
+        "Addiction that can negatively affect mental well-being",
+        "Guaranteed better privacy",
+        "Reduced online interaction",
+        "Improved security automatically"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that excessive use can lead to addiction and negatively affect mental well-being.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-156",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is cyberbullying?",
+      "options": [
+        "Harassing, threatening, or humiliating individuals online",
+        "Backing up data",
+        "Using an online course",
+        "Installing updates"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes cyberbullying as online harassment, threats, or humiliation.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-157",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What can cyberbullying cause for victims?",
+      "options": [
+        "Severe psychological consequences",
+        "Improved mental well-being",
+        "Automatic account security",
+        "Better privacy"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that cyberbullying can have severe psychological consequences.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-158",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What privacy issue can social networks create?",
+      "options": [
+        "They may collect large amounts of personal data without users' full awareness or consent",
+        "They never collect data",
+        "They automatically delete personal data",
+        "They prevent all data breaches"
+      ],
+      "answer": "A",
+      "explanation": "The textbook discusses extensive data collection and possible lack of awareness or consent.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-159",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What can happen to personal data collected by social networks?",
+      "options": [
+        "It can be misused or exposed in security breaches",
+        "It becomes impossible to access",
+        "It is always deleted immediately",
+        "It automatically becomes anonymous"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that collected data can be misused or exposed in breaches.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-160",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How can social media contribute to misinformation?",
+      "options": [
+        "It can spread false information rapidly",
+        "It prevents all sharing",
+        "It verifies every post automatically",
+        "It blocks all news"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says social media can rapidly spread false information and conspiracy theories.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-161",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "Why can social networking contribute to the spread of fake news?",
+      "options": [
+        "Users can easily share information with their networks",
+        "Users cannot share information",
+        "Every post is always verified",
+        "Only newspapers can post online"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says social networks make it incredibly easy to share information.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-162",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is one benefit of rapid information sharing on social networks?",
+      "options": [
+        "Important news can spread quickly",
+        "All information becomes accurate",
+        "Privacy is guaranteed",
+        "Cyberbullying ends"
+      ],
+      "answer": "A",
+      "explanation": "The textbook notes that easy sharing can be beneficial for spreading important news.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-163",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What limitation do social networks often have regarding information accuracy?",
+      "options": [
+        "They may not have mechanisms to verify all shared information",
+        "They verify every post perfectly",
+        "They prevent users from posting",
+        "They never host news"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says social networks often lack mechanisms to verify the accuracy of shared information.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-164",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Are fact-checking programs on some platforms foolproof?",
+      "options": [
+        "No, they may not catch all instances of fake news",
+        "Yes, they catch every false story",
+        "They do not exist anywhere",
+        "They automatically remove all misinformation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that fact-checking programs are not foolproof.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-165",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is a positive impact of social networking highlighted by the textbook's exercise material?",
+      "options": [
+        "Increased connectivity and networking opportunities",
+        "Reduced communication",
+        "Less access to information",
+        "Elimination of collaboration"
+      ],
+      "answer": "A",
+      "explanation": "The exercise material identifies increased connectivity and networking opportunities as a beneficial effect.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-166",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "How can social networking positively affect businesses and entrepreneurs?",
+      "options": [
+        "It can provide marketing, customer engagement, and networking opportunities",
+        "It decreases visibility",
+        "It prevents customer feedback",
+        "It eliminates networking"
+      ],
+      "answer": "A",
+      "explanation": "The textbook exercise identifies marketing, customer engagement, and networking as benefits.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-167",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "medium",
+      "question": "Which combination represents major harmful effects of social networking from the textbook?",
+      "options": [
+        "Addiction, cyberbullying, privacy concerns, and rapid misinformation",
+        "Only improved communication and education",
+        "Only faster payments",
+        "Only better medical imaging"
+      ],
+      "answer": "A",
+      "explanation": "These harmful effects are discussed in Section 6.9.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-168",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A social platform makes it easy for users to share a false story to thousands of people. What two ideas from the textbook are involved?",
+      "options": [
+        "Social networking and the rapid spread of fake news",
+        "Hardware lifespan and backups",
+        "Freeware and shareware",
+        "HCI and quantum computing"
+      ],
+      "answer": "A",
+      "explanation": "The textbook directly discusses social networking's role in spreading fake news and misinformation.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-169",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A platform offers connectivity but also collects user data and allows harmful posts to spread. Which interpretation best matches the textbook?",
+      "options": [
+        "Social networking can provide communication benefits while also creating privacy, cyberbullying, and misinformation risks",
+        "Social networking has only benefits",
+        "Social networking has no effect on privacy",
+        "Social networking prevents misinformation"
+      ],
+      "answer": "A",
+      "explanation": "The textbook presents both opportunities and harmful effects of social networking.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-170",
+      "chapter": 6,
+      "topic": "6.9 Social networking",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "difficult",
+      "question": "Which statement best captures the overall textbook view of social networking?",
+      "options": [
+        "It supports communication and information sharing but also creates risks such as addiction, cyberbullying, privacy issues, and fake news",
+        "It is entirely harmful",
+        "It is entirely safe",
+        "It has no social impact"
+      ],
+      "answer": "A",
+      "explanation": "Section 6.9 describes both positive uses and multiple harmful effects.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-171",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which areas are included in the textbook's approaches to computing effects?",
+      "options": [
+        "Personal, ethical, social, economic, and cultural practices",
+        "Only hardware and software",
+        "Only education and gaming",
+        "Only networking"
+      ],
+      "answer": "A",
+      "explanation": "The section states that computing has deeply affected personal, ethical, social, economic, and cultural practices.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-172",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How does computing affect personal practices?",
+      "options": [
+        "It helps manage tasks, communication, entertainment, learning, work, health monitoring, and digital payments",
+        "It prevents communication",
+        "It removes access to services",
+        "It only supports gaming"
+      ],
+      "answer": "A",
+      "explanation": "The textbook lists these personal conveniences and services.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-173",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which is a personal benefit of computing mentioned in the textbook?",
+      "options": [
+        "Online learning",
+        "Less access to services",
+        "Reduced communication",
+        "Removal of health monitoring"
+      ],
+      "answer": "A",
+      "explanation": "Online learning is explicitly listed under personal impact.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-174",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How can computing support remote work?",
+      "options": [
+        "Digital tools and services enable work to be performed remotely",
+        "It requires every worker to be physically present",
+        "It prevents communication",
+        "It eliminates digital payments"
+      ],
+      "answer": "A",
+      "explanation": "Remote work is specifically identified as a personal impact of computing.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-175",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What ethical concern grows as businesses and governments collect personal data?",
+      "options": [
+        "Privacy and cybersecurity concerns",
+        "Less need for security",
+        "No ethical issues",
+        "Reduced data use"
+      ],
+      "answer": "A",
+      "explanation": "The textbook links personal-data collection with privacy and cybersecurity concerns.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-176",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which issues highlight the need for ethical computing practices?",
+      "options": [
+        "Hacking and data breaches",
+        "Online courses and e-learning",
+        "High-quality graphics",
+        "Digital payments only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook names hacking and data breaches as ethical concerns requiring protection of information.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-177",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How has computing changed social practices?",
+      "options": [
+        "It has transformed how people connect and learn",
+        "It has eliminated communication",
+        "It has ended online education",
+        "It prevents information searching"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that computing has transformed connection and learning.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-178",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which tools make communication fast and easy according to the textbook?",
+      "options": [
+        "Social media and messaging apps",
+        "Only printed books",
+        "Only physical mail",
+        "Only offline software"
+      ],
+      "answer": "A",
+      "explanation": "Social media and messaging apps are named under social impact.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-179",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How do search engines contribute to social impact?",
+      "options": [
+        "They simplify finding information",
+        "They prevent access to information",
+        "They eliminate online learning",
+        "They block communication"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives search engines such as Google as tools that simplify finding information.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-180",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What social benefit is provided by online education?",
+      "options": [
+        "People worldwide can learn new skills anytime and anywhere",
+        "It limits learning to one location",
+        "It prevents access to education",
+        "It requires physical classrooms only"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says online education enables worldwide learning at flexible times and places.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-181",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is one economic impact of computing?",
+      "options": [
+        "Creation of new industries such as software development and e-commerce",
+        "Elimination of all jobs",
+        "No change in business",
+        "Reduction of global trade"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies new industries and job opportunities as economic impacts.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-182",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How can automation affect businesses?",
+      "options": [
+        "It can improve efficiency and reduce costs",
+        "It always increases costs",
+        "It prevents efficiency",
+        "It removes all technology"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says automation and technology improve business efficiency and reduce costs.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-183",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How does computing support global trade?",
+      "options": [
+        "By connecting businesses and customers worldwide",
+        "By preventing communication",
+        "By limiting markets to local areas",
+        "By eliminating e-commerce"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that computing enables global trade by connecting businesses and customers worldwide.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-184",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What is a cultural impact of computing?",
+      "options": [
+        "Social media can connect cultures globally and promote diversity and understanding",
+        "Computing eliminates cultural exchange",
+        "Computing prevents sharing ideas",
+        "Computing stops digital archives"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes global cultural connection, diversity, and understanding as cultural impacts.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-185",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How can digital tools help preserve traditions?",
+      "options": [
+        "Through online archives and videos",
+        "By deleting old records",
+        "By preventing cultural sharing",
+        "By removing digital media"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that digital tools help preserve traditions through online archives and videos.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-186",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What can happen as computing influences lifestyles?",
+      "options": [
+        "Local and global cultures can blend",
+        "All cultures become disconnected",
+        "Cultural communication stops",
+        "Traditions can never be recorded"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says computing can influence lifestyles by blending local and global cultures.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-187",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is the impact of computing on globalization?",
+      "options": [
+        "It connects people and businesses worldwide and enables instant communication",
+        "It isolates businesses",
+        "It prevents international trade",
+        "It eliminates cross-border communication"
+      ],
+      "answer": "A",
+      "explanation": "The textbook describes global connection and instant communication as effects of computing.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-188",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "How does computing support international trade?",
+      "options": [
+        "Through e-commerce and digital payments",
+        "By preventing transactions",
+        "By requiring only physical stores",
+        "By eliminating digital communication"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies e-commerce and digital payments as support for international trade.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-189",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What else can computing spread across borders?",
+      "options": [
+        "Ideas and cultures",
+        "Only hardware",
+        "Only passwords",
+        "Only local advertisements"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that computing spreads ideas and cultures across borders.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-190",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What has e-commerce transformed?",
+      "options": [
+        "Shopping and business",
+        "Only entertainment",
+        "Only education",
+        "Only hardware repair"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says e-commerce has transformed shopping and business.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-191",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does e-commerce allow people to do?",
+      "options": [
+        "Buy and sell products online from anywhere and anytime",
+        "Buy only from physical stores",
+        "Sell only locally",
+        "Avoid online transactions"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that e-commerce allows buying and selling online from anywhere and anytime.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-192",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How can e-commerce help businesses reach customers?",
+      "options": [
+        "It can provide access to global customers and reduce the need for physical stores",
+        "It limits customers to one street",
+        "It requires more physical stores",
+        "It prevents global sales"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies global customer reach and reduced need for physical stores.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-193",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How can computing improve e-commerce transactions?",
+      "options": [
+        "It can make transactions faster and more secure",
+        "It makes all transactions slower",
+        "It removes security",
+        "It prevents online purchases"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says computing makes transactions faster and more secure.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-194",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A business automates tasks, reduces costs, sells online worldwide, and reaches customers across borders. Which impacts are illustrated together?",
+      "options": [
+        "Economic, globalization, and e-commerce impacts",
+        "Only personal impact",
+        "Only cultural impact",
+        "Only hardware impact"
+      ],
+      "answer": "A",
+      "explanation": "These examples directly correspond to the economic, globalization, and e-commerce impacts described in the section.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-195",
+      "chapter": 6,
+      "topic": "6.10 Approaches to computing effects",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "difficult",
+      "question": "A digital archive preserves local traditions while social media connects the culture with people abroad. Which textbook concepts are combined?",
+      "options": [
+        "Cultural impact and impact on globalization",
+        "Only economic impact",
+        "Only system security",
+        "Only hardware advancement"
+      ],
+      "answer": "A",
+      "explanation": "Digital archives are discussed under cultural impact, while cross-border connection is discussed under globalization.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-196",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does intellectual property protection safeguard?",
+      "options": [
+        "Creations of the mind such as inventions, designs, and artistic works",
+        "Only computer hardware",
+        "Only passwords",
+        "Only websites"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines intellectual property protection around creations such as inventions, designs, and artistic works.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-197",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Which legal tool protects inventions?",
+      "options": [
+        "Patent",
+        "Copyright",
+        "Trademark",
+        "Cookie"
+      ],
+      "answer": "A",
+      "explanation": "The textbook identifies patents as protection for inventions.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-198",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What does a patent grant its holder?",
+      "options": [
+        "Exclusive rights to make, use, and sell an invention for a specified period",
+        "The right to copy all books",
+        "The right to use every trademark",
+        "The right to access private data"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that a patent grants exclusive rights to make, use, and sell an invention for a specified period.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-199",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What period is usually mentioned for a patent in the textbook?",
+      "options": [
+        "20 years",
+        "2 years",
+        "5 years",
+        "100 years"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says a patent usually lasts 20 years.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-200",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A person invents a new useful gadget and wants to prevent others from making or selling it without permission. Which protection is relevant?",
+      "options": [
+        "Patent",
+        "Cookie",
+        "Shareware",
+        "Spam"
+      ],
+      "answer": "A",
+      "explanation": "The textbook uses a new useful gadget as an example of a patent-protected invention.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-201",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is a trademark?",
+      "options": [
+        "A recognizable sign, design, or expression that distinguishes products or services of a source",
+        "A legal right over every invention",
+        "A backup file",
+        "A type of malware"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines a trademark as a recognizable sign, design, or expression distinguishing a source's products or services.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-202",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is an example of a trademark given in the textbook?",
+      "options": [
+        "The Apple logo",
+        "A backup drive",
+        "A phishing email",
+        "A Linux source file"
+      ],
+      "answer": "A",
+      "explanation": "The textbook gives the Apple logo as a trademark identifying Apple products.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-203",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "How do trademarks help consumers?",
+      "options": [
+        "They help consumers associate a particular quality or reputation with goods or services",
+        "They prevent all software use",
+        "They create backups",
+        "They encrypt every file"
+      ],
+      "answer": "A",
+      "explanation": "The textbook says trademarks help consumers associate quality or reputation with goods or services.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-204",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "What is copyright?",
+      "options": [
+        "A legal right giving the creator of an original work exclusive rights to its use and distribution for a limited time",
+        "A right to copy anyone's work",
+        "A type of network security",
+        "A software trial"
+      ],
+      "answer": "A",
+      "explanation": "The textbook defines copyright as an exclusive legal right over an original work for a limited time.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-205",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "easy",
+      "question": "Who automatically holds copyright to a book they write, according to the textbook?",
+      "options": [
+        "The author",
+        "Any reader",
+        "The printer only",
+        "The internet provider"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that an author who writes a book automatically holds copyright to that work.",
+      "bloom": "Remembering",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-206",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "medium",
+      "question": "What does copyright prevent others from doing without permission?",
+      "options": [
+        "Reproducing, distributing, or performing the work",
+        "Reading the work",
+        "Learning from the work",
+        "Discussing the work"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that others cannot reproduce, distribute, or perform the work without permission.",
+      "bloom": "Understanding",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-207",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "comparison",
+      "difficulty": "difficult",
+      "question": "Which pairing is correct?",
+      "options": [
+        "Patent—invention; trademark—distinctive sign; copyright—original work",
+        "Patent—social network; trademark—malware; copyright—Wi-Fi",
+        "Patent—spam; trademark—backup; copyright—firewall",
+        "Patent—cookie; trademark—phishing; copyright—shareware"
+      ],
+      "answer": "A",
+      "explanation": "These pairings follow the textbook's definitions of the three intellectual-property protections.",
+      "bloom": "Analyzing",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-208",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "A company wants to protect the distinctive symbol identifying its products. Which legal protection should it consider?",
+      "options": [
+        "Trademark",
+        "Patent",
+        "Copyright",
+        "Cookie"
+      ],
+      "answer": "A",
+      "explanation": "A trademark distinguishes products or services through a recognizable sign, design, or expression.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-209",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "application",
+      "difficulty": "medium",
+      "question": "An author wants exclusive rights over the use and distribution of a newly written book. Which protection is relevant?",
+      "options": [
+        "Copyright",
+        "Trademark",
+        "Patent",
+        "Freeware"
+      ],
+      "answer": "A",
+      "explanation": "The textbook specifically uses an author's book to illustrate copyright.",
+      "bloom": "Applying",
+      "source": "NBF Grade 9 Computer Science, Unit 6"
+    },
+    {
+      "id": "CH6-MCQ-210",
+      "chapter": 6,
+      "topic": "6.11 intellectual property protection key terms",
+      "type": "mcq",
+      "mode": "straight",
+      "difficulty": "difficult",
+      "question": "Why do patents, copyrights, and trademarks support innovation?",
+      "options": [
+        "They provide exclusive rights to creators and help prevent unauthorized use",
+        "They remove creators' rights",
+        "They encourage unauthorized copying",
+        "They make every creation public immediately"
+      ],
+      "answer": "A",
+      "explanation": "The textbook states that these legal tools provide exclusive rights, foster innovation, and prevent unauthorized use.",
+      "bloom": "Analyzing",
       "source": "NBF Grade 9 Computer Science, Unit 6"
     }
   ]
