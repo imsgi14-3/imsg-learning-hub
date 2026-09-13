@@ -2754,7 +2754,17 @@ var UI = (function() {
     function manualRefresh() {
         var role = Auth.getRole();
         lastRefreshTime = 0;
-        saveToFirestore();
+        if (role === "principal") {
+            saveToFirestore();
+        } else {
+            try {
+                if (typeof db !== "undefined") {
+                    for (var i = 0; i < allAttempts.length; i++) {
+                        if (allAttempts[i].studentId) db.collection("attempts").doc(allAttempts[i].attemptId || allAttempts[i].timestamp || ("att-" + i)).set(allAttempts[i]).catch(function() {});
+                    }
+                }
+            } catch(e) {}
+        }
         setTimeout(function() {
             refreshAllData(function() {
                 var freshUser = null;
