@@ -155,15 +155,23 @@ function saveAll() {
 }
 
 function saveToFirestore() {
-    if (typeof db === "undefined") { console.warn("Firestore not available"); return; }
-    if (principalAccount) db.collection("teachers").doc("PRINCIPAL").set(principalAccount).catch(function(e) { console.error("Firestore PRINCIPAL save error:", e); });
-    for (var i = 0; i < studentAccounts.length; i++) db.collection("students").doc(studentAccounts[i].id).set(studentAccounts[i]).catch(function(e) { console.error("Firestore student save error:", e); });
-    for (var i = 0; i < classes.length; i++) db.collection("classes").doc(classes[i].id).set(classes[i]).catch(function(e) { console.error("Firestore class save error:", e); });
-    for (var i = 0; i < questions.length; i++) db.collection("questions").doc(questions[i].id).set(questions[i]).catch(function(e) { console.error("Firestore question save error:", e); });
-    for (var i = 0; i < assignments.length; i++) db.collection("assignments").doc(assignments[i].id || ("a-" + i)).set(assignments[i]).catch(function(e) { console.error("Firestore assignment save error:", e); });
-    for (var i = 0; i < teachers.length; i++) db.collection("teachers").doc(teachers[i].id).set(teachers[i]).catch(function(e) { console.error("Firestore teacher save error:", e); });
-    for (var i = 0; i < allAttempts.length; i++) db.collection("attempts").doc(allAttempts[i].attemptId || allAttempts[i].timestamp || ("att-" + i)).set(allAttempts[i]).catch(function(e) { console.error("Firestore attempt save error:", e); });
+    if (typeof db === "undefined") { return; }
+    if (principalAccount) db.collection("teachers").doc("PRINCIPAL").set(principalAccount).catch(function() {});
+    for (var i = 0; i < studentAccounts.length; i++) db.collection("students").doc(studentAccounts[i].id).set(studentAccounts[i]).catch(function() {});
+    for (var i = 0; i < classes.length; i++) db.collection("classes").doc(classes[i].id).set(classes[i]).catch(function() {});
+    for (var i = 0; i < questions.length; i++) db.collection("questions").doc(questions[i].id).set(questions[i]).catch(function() {});
+    for (var i = 0; i < assignments.length; i++) db.collection("assignments").doc(assignments[i].id || ("a-" + i)).set(assignments[i]).catch(function() {});
+    for (var i = 0; i < teachers.length; i++) db.collection("teachers").doc(teachers[i].id).set(teachers[i]).catch(function() {});
+    for (var i = 0; i < allAttempts.length; i++) db.collection("attempts").doc(allAttempts[i].attemptId || allAttempts[i].timestamp || ("att-" + i)).set(allAttempts[i]).catch(function() {});
 }
+
+function pushStudentToFirestore(student) { try { if (typeof db !== "undefined") db.collection("students").doc(student.id).set(student); } catch(e) {} }
+function pushTeacherToFirestore(teacher) { try { if (typeof db !== "undefined") db.collection("teachers").doc(teacher.id).set(teacher); } catch(e) {} }
+function pushClassToFirestore(cls) { try { if (typeof db !== "undefined") db.collection("classes").doc(cls.id).set(cls); } catch(e) {} }
+function pushAssignmentToFirestore(a) { try { if (typeof db !== "undefined") db.collection("assignments").doc(a.id || "a-" + assignments.indexOf(a)).set(a); } catch(e) {} }
+function pushAttemptToFirestore(attempt) { try { if (typeof db !== "undefined") db.collection("attempts").doc(attempt.attemptId).set(attempt); } catch(e) {} }
+function pushQuestionToFirestore(q) { try { if (typeof db !== "undefined") db.collection("questions").doc(q.id).set(q); } catch(e) {} }
+function deleteFromFirestore(collection, id) { try { if (typeof db !== "undefined") db.collection(collection).doc(id).delete(); } catch(e) {} }
 
 function saveTeacherToFirestore(teacherObj, callback) {
     if (typeof db === "undefined") { if (callback) callback(false); return; }

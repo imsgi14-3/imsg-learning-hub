@@ -858,7 +858,7 @@ var UI = (function() {
     function deleteClass(cid) {
         if (!confirm("Delete this class?")) return;
         classes = classes.filter(function(c) { return c.id !== cid; });
-        saveAll(); renderClasses();
+        saveAll(); deleteFromFirestore("classes", cid); renderClasses();
     }
 
     function showCreateClassModal() {
@@ -875,7 +875,7 @@ var UI = (function() {
         var d = { id: cid || "CLASS-" + $("cmName").value.toUpperCase(), name: $("cmName").value, grade: parseInt($("cmGrade").value), section: $("cmSection").value, students: $("cmStudents").value.split("\n").filter(function(l) { return l.trim(); }) };
         if (cid) { for (var i = 0; i < classes.length; i++) { if (classes[i].id === cid) { classes[i] = d; break; } } }
         else classes.push(d);
-        saveAll(); closeModal(); renderClasses();
+        saveAll(); pushClassToFirestore(d); closeModal(); renderClasses();
     }
 
     function renderQuestions() {
@@ -967,7 +967,7 @@ var UI = (function() {
     function deleteQuestion(qid) {
         if (!confirm("Delete this question?")) return;
         questions = questions.filter(function(q) { return q.id !== qid; });
-        saveAll(); renderQuestions();
+        saveAll(); deleteFromFirestore("questions", qid); renderQuestions();
     }
 
     function saveQuestion(e) {
@@ -976,7 +976,7 @@ var UI = (function() {
         var d = { id: id || "Q-" + Date.now(), subject: $("qmSubject").value, grade: parseInt($("qmGrade").value), chapter: $("qmChapter").value, topic: $("qmTopic").value, type: "mcq", text: $("qmText").value, options: [$("qmOptionA").value, $("qmOptionB").value, $("qmOptionC").value, $("qmOptionD").value], answer: $("qmAnswer").value, explanation: $("qmExplanation").value, difficulty: $("qmDifficulty").value, media: $("qmMedia").value || null };
         if (id) { for (var i = 0; i < questions.length; i++) { if (questions[i].id === id) { questions[i] = d; break; } } }
         else questions.push(d);
-        saveAll(); closeModal(); renderQuestions();
+        saveAll(); pushQuestionToFirestore(d); closeModal(); renderQuestions();
     }
 
     function renderAssignments() {
@@ -1284,7 +1284,7 @@ var UI = (function() {
     function deleteAssignment(aid) {
         if (!confirm("Delete this assignment?")) return;
         assignments = assignments.filter(function(a) { return a.id !== aid; });
-        saveAll(); renderAssignments();
+        saveAll(); deleteFromFirestore("assignments", aid); renderAssignments();
     }
 
     function saveAssignment(e) {
@@ -1300,7 +1300,7 @@ var UI = (function() {
         var d = { id: id || "ASSIGN-" + Date.now(), title: $("amTitleInput").value, subject: $("amSubject").value, classId: $("amClass").value, dueDate: $("amDueDate").value, questions: sel, chapter: $("amChapter").value || null, topic: $("amTopic").value || null, count: sel.length, difficulty: { easy: parseInt($("amDiffEasy").value) || 0, medium: parseInt($("amDiffMedium").value) || 0, hard: parseInt($("amDiffHard").value) || 0 }, mode: mode, createdBy: Auth.getUser() ? Auth.getUser().id : "unknown", createdAt: new Date().toISOString() };
         if (id) { for (var i = 0; i < assignments.length; i++) { if (assignments[i].id === id) { assignments[i] = d; break; } } }
         else assignments.push(d);
-        saveAll(); closeModal(); renderAssignments();
+        saveAll(); pushAssignmentToFirestore(d); closeModal(); renderAssignments();
     }
 
 
@@ -1604,7 +1604,9 @@ var UI = (function() {
         var found = false;
         for (var i = 0; i < attendance.length; i++) { if (attendance[i].date === date) { attendance[i].records = rec; found = true; break; } }
         if (!found) attendance.push({ date: date, records: rec });
-        saveAll(); closeModal(); renderCTAttendance();
+        saveAll();
+        try { if (typeof db !== "undefined") db.collection("attendance").doc(date).set({ date: date, records: rec }); } catch(e) {}
+        closeModal(); renderCTAttendance();
     }
 
     function showParentTab(tab) {
@@ -2070,7 +2072,7 @@ var UI = (function() {
         var newPass = generateRandomPassword();
         if (!confirm("Reset password for " + student.name + " (" + sid + ")?\n\nNew password: " + newPass)) return;
         student.password = newPass;
-        saveAll();
+        saveAll(); pushStudentToFirestore(student);
         renderPrincipalStudents();
         alert("Password reset!\n\nID: " + sid + "\nNew Password: " + newPass);
     }
@@ -2164,6 +2166,7 @@ var UI = (function() {
         var classObj = null;
         for (var i = 0; i < classes.length; i++) { if (classes[i].id === classId) { classObj = classes[i]; break; } }
         if (!classObj) { alert("Invalid class selected."); return; }
+        var studentToSave = null;
         if (editId) {
             for (var i = 0; i < studentAccounts.length; i++) {
                 if (studentAccounts[i].id === editId) {
@@ -2171,6 +2174,7 @@ var UI = (function() {
                     studentAccounts[i].fatherName = fatherName;
                     studentAccounts[i].classId = classId;
                     studentAccounts[i].rollNo = rollNo;
+                    studentToSave = studentAccounts[i];
                     break;
                 }
             }
@@ -2180,12 +2184,14 @@ var UI = (function() {
                 if (studentAccounts[i].id === newId) { alert("A student with ID " + newId + " already exists in this class!"); return; }
             }
             var newPass = generateRandomPassword();
-            studentAccounts.push({ id: newId, name: name, fatherName: fatherName, classId: classId, rollNo: rollNo, password: newPass });
+            var newStudent = { id: newId, name: name, fatherName: fatherName, classId: classId, rollNo: rollNo, password: newPass };
+            studentAccounts.push(newStudent);
+            studentToSave = newStudent;
             var email = newId.toLowerCase() + "@imsg.edu.pk";
             Auth.loginFirebaseAuth(email, newPass, function() {});
             alert("Student created!\n\nID: " + newId + "\nPassword: " + newPass + "\n\nPlease share these credentials with the student.");
         }
-        saveAll();
+        saveAll(); if (studentToSave) pushStudentToFirestore(studentToSave);
         closeModal();
         refreshStudentLists();
     }
@@ -2196,7 +2202,7 @@ var UI = (function() {
             if (studentAccounts[i].id === sid) { studentAccounts.splice(i, 1); break; }
         }
         if (deletedIds.indexOf(sid) === -1) deletedIds.push(sid);
-        saveAll();
+        saveAll(); deleteFromFirestore("students", sid);
         refreshStudentLists();
     }
 
@@ -2594,6 +2600,7 @@ var UI = (function() {
             questions.push(pendingImportData[i]);
         }
         saveAll();
+        for (var j = 0; j < pendingImportData.length; j++) pushQuestionToFirestore(pendingImportData[j]);
         pendingImportData = [];
         $("importResult").style.display = "block";
         $("importPreview").style.display = "none";
@@ -2684,6 +2691,7 @@ var UI = (function() {
             studentAccounts.push(pendingStudentExcelData[i]);
         }
         saveAll();
+        for (var j = 0; j < pendingStudentExcelData.length; j++) pushStudentToFirestore(pendingStudentExcelData[j]);
         pendingStudentExcelData = [];
         closeModal();
         refreshStudentLists();
@@ -2754,39 +2762,26 @@ var UI = (function() {
     function manualRefresh() {
         var role = Auth.getRole();
         lastRefreshTime = 0;
-        if (role === "principal") {
-            saveToFirestore();
-        } else {
-            try {
-                if (typeof db !== "undefined") {
-                    for (var i = 0; i < allAttempts.length; i++) {
-                        if (allAttempts[i].studentId) db.collection("attempts").doc(allAttempts[i].attemptId || allAttempts[i].timestamp || ("att-" + i)).set(allAttempts[i]).catch(function() {});
-                    }
-                }
-            } catch(e) {}
-        }
-        setTimeout(function() {
-            refreshAllData(function() {
-                var freshUser = null;
-                try { freshUser = JSON.parse(localStorage.getItem("learningHub_user")); } catch(e) {}
-                if (freshUser && freshUser.user) {
-                    var u = freshUser.user;
-                    if (role === "teacher" || role === "classteacher") {
-                        for (var i = 0; i < teachers.length; i++) {
-                            if (teachers[i].id === u.id) {
-                                u.classSubjects = teachers[i].classSubjects || u.classSubjects;
-                                u.subjects = teachers[i].subjects || u.subjects;
-                                u.classes = teachers[i].classes || u.classes;
-                                u.classTeacherOf = teachers[i].classTeacherOf || u.classTeacherOf;
-                                break;
-                            }
+        refreshAllData(function() {
+            var freshUser = null;
+            try { freshUser = JSON.parse(localStorage.getItem("learningHub_user")); } catch(e) {}
+            if (freshUser && freshUser.user) {
+                var u = freshUser.user;
+                if (role === "teacher" || role === "classteacher") {
+                    for (var i = 0; i < teachers.length; i++) {
+                        if (teachers[i].id === u.id) {
+                            u.classSubjects = teachers[i].classSubjects || u.classSubjects;
+                            u.subjects = teachers[i].subjects || u.subjects;
+                            u.classes = teachers[i].classes || u.classes;
+                            u.classTeacherOf = teachers[i].classTeacherOf || u.classTeacherOf;
+                            break;
                         }
                     }
-                    Auth.loginAs(role, u);
-                    showDashboard();
                 }
-            });
-        }, 2000);
+                Auth.loginAs(role, u);
+                showDashboard();
+            }
+        });
     }
 
     var api = {
