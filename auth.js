@@ -84,6 +84,7 @@ var Auth = (function() {
                 document.getElementById("loginPage").style.display = "none";
                 document.getElementById("logoutBar").style.display = "flex";
                 document.getElementById("homeBtn").style.display = "inline-block";
+                var sb = document.getElementById("syncBtn"); if (sb) sb.style.display = "inline-block";
                 document.getElementById("loggedUser").textContent = found.name + " (Student)";
                 dashboardsHide();
                 document.getElementById("studentDashboard").style.display = "block";

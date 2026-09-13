@@ -2748,7 +2748,7 @@ var UI = (function() {
         }
         history.pushState({ page: "dashboard" }, "", "#dashboard");
         var syncBtn = $("syncBtn");
-        if (syncBtn) syncBtn.style.display = (role === "principal" || role === "teacher" || role === "classteacher") ? "inline-block" : "none";
+        if (syncBtn) syncBtn.style.display = "inline-block";
     }
 
     function manualRefresh() {

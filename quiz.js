@@ -258,6 +258,11 @@ var QuizEngine = (function() {
             tp.percentage = tp.total > 0 ? Number(((tp.correct / tp.total) * 100).toFixed(2)) : 0;
         }
         allAttempts.push(attempt);
+        try {
+            if (typeof db !== "undefined") {
+                db.collection("attempts").doc(attempt.attemptId).set(attempt).catch(function() {});
+            }
+        } catch(e) {}
         var uid = user ? user.id : "unknown";
         for (var i = 0; i < quizQuestions.length; i++) {
             var q = quizQuestions[i];
