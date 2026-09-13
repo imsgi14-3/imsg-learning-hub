@@ -1942,14 +1942,11 @@ var UI = (function() {
     function deleteTeacher(tid) {
         if (!confirm("Delete this teacher?")) return;
         teachers = teachers.filter(function(t) { return t.id !== tid; });
-        if (deletedIds.indexOf(tid) === -1) deletedIds.push(tid);
         var removed = [];
         assignments = assignments.filter(function(a) { if (a.createdBy === tid) { removed.push(a.id); return false; } return true; });
         saveAll();
-        if (typeof db !== "undefined") {
-            db.collection("teachers").doc(tid).delete().catch(function(e) { console.error("Firestore teacher delete error:", e); });
-            for (var i = 0; i < removed.length; i++) db.collection("assignments").doc(removed[i]).delete().catch(function() {});
-        }
+        deleteFromFirestore("teachers", tid);
+        for (var i = 0; i < removed.length; i++) deleteFromFirestore("assignments", removed[i]);
         renderPrincipalTeachers();
     }
 
