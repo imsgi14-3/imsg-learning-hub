@@ -180,8 +180,13 @@ function saveTeacherToFirestore(teacherObj, callback) {
         .catch(function(e) { console.error("Firestore single teacher save error:", e); if (callback) callback(false); });
 }
 
+var lastFirestorePull = 0;
+var PULL_COOLDOWN = 300000;
 function loadFromFirestore(callback) {
     if (typeof db === "undefined") { if (callback) callback(); return; }
+    var now = Date.now();
+    if (now - lastFirestorePull < PULL_COOLDOWN) { if (callback) callback(); return; }
+    lastFirestorePull = now;
     var loaded = 0, total = 7;
     function done() { loaded++; if (loaded >= total && callback) callback(); }
     db.collection("meta").doc("deletedIds").get().then(function(doc) {
