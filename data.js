@@ -171,7 +171,7 @@ function pushClassToFirestore(cls) { try { if (typeof db !== "undefined") db.col
 function pushAssignmentToFirestore(a) { try { if (typeof db !== "undefined") db.collection("assignments").doc(a.id || "a-" + assignments.indexOf(a)).set(a); } catch(e) {} }
 function pushAttemptToFirestore(attempt) { try { if (typeof db !== "undefined") db.collection("attempts").doc(attempt.attemptId).set(attempt); } catch(e) {} }
 function pushQuestionToFirestore(q) { try { if (typeof db !== "undefined") db.collection("questions").doc(q.id).set(q); } catch(e) {} }
-function deleteFromFirestore(collection, id) { try { if (typeof db !== "undefined") db.collection(collection).doc(id).delete(); } catch(e) {} }
+function deleteFromFirestore(collection, id) { try { if (typeof db !== "undefined") { db.collection(collection).doc(id).delete(); if (deletedIds.indexOf(id) === -1) deletedIds.push(id); localStorage.setItem(DELETED_KEY, JSON.stringify(deletedIds)); db.collection("meta").doc("deletedIds").set({ ids: deletedIds }); } } catch(e) {} }
 
 function saveTeacherToFirestore(teacherObj, callback) {
     if (typeof db === "undefined") { if (callback) callback(false); return; }
@@ -181,9 +181,17 @@ function saveTeacherToFirestore(teacherObj, callback) {
 }
 
 function loadFromFirestore(callback) {
-    if (typeof db === "undefined") { console.warn("Firestore not available for refresh"); if (callback) callback(); return; }
-    var loaded = 0, total = 6;
+    if (typeof db === "undefined") { if (callback) callback(); return; }
+    var loaded = 0, total = 7;
     function done() { loaded++; if (loaded >= total && callback) callback(); }
+    db.collection("meta").doc("deletedIds").get().then(function(doc) {
+        if (doc.exists) {
+            var remote = doc.data().ids || [];
+            for (var i = 0; i < remote.length; i++) { if (deletedIds.indexOf(remote[i]) === -1) deletedIds.push(remote[i]); }
+            localStorage.setItem(DELETED_KEY, JSON.stringify(deletedIds));
+        }
+        done();
+    }).catch(function() { done(); });
     db.collection("students").get().then(function(snap) {
         if (snap.size > 0) {
             var merged = {};
@@ -441,8 +449,16 @@ function refreshParentData(callback) {
 
 function refreshAdminData(callback) {
     if (typeof db === "undefined") { if (callback) callback(); return; }
-    var loaded = 0, total = 4;
+    var loaded = 0, total = 5;
     function done() { loaded++; if (loaded >= total && callback) callback(); }
+    db.collection("meta").doc("deletedIds").get().then(function(doc) {
+        if (doc.exists) {
+            var remote = doc.data().ids || [];
+            for (var i = 0; i < remote.length; i++) { if (deletedIds.indexOf(remote[i]) === -1) deletedIds.push(remote[i]); }
+            localStorage.setItem(DELETED_KEY, JSON.stringify(deletedIds));
+        }
+        done();
+    }).catch(function() { done(); });
     db.collection("teachers").get().then(function(snap) {
         if (snap.size > 0) {
             var firestoreTeachers = [];
