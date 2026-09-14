@@ -539,8 +539,10 @@ var Analytics = (function() {
             needsSupportPct = Number(((needsSupport / total) * 100).toFixed(1));
         }
         var dominantLevel = "Developing";
-        if (strong >= developing && strong >= needsSupport) dominantLevel = "Strong";
-        else if (needsSupport >= strong && needsSupport >= developing) dominantLevel = "Needs Support";
+        if (total > 0) {
+            if (strong >= developing && strong >= needsSupport) dominantLevel = "Strong";
+            else if (needsSupport >= strong && needsSupport >= developing) dominantLevel = "Needs Support";
+        }
         return {
             totalAttempts: total,
             strong: strong,
