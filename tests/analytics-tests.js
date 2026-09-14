@@ -718,4 +718,168 @@ function runTeacherAnalyticsFlowTests() {
 
     studentAccounts = origStudentsTA;
     allAttempts = origAttemptsTA;
+
+    TestRunner.suite("Analytics - getClassPerformanceDistribution: Basic Functionality");
+
+    var distTests = [
+        { attemptId: "d1", studentId: "s1", percentage: 90, questions: [] },
+        { attemptId: "d2", studentId: "s2", percentage: 80, questions: [] },
+        { attemptId: "d3", studentId: "s3", percentage: 65, questions: [] },
+        { attemptId: "d4", studentId: "s4", percentage: 55, questions: [] },
+        { attemptId: "d5", studentId: "s5", percentage: 40, questions: [] },
+        { attemptId: "d6", studentId: "s6", percentage: 30, questions: [] }
+    ];
+    var origAttemptsDist = allAttempts.slice();
+    allAttempts = distTests;
+
+    var dist = Analytics.getClassPerformanceDistribution(allAttempts);
+    TestRunner.assertType(dist, "object", "getClassPerformanceDistribution returns object");
+    TestRunner.assertEqual(dist.totalAttempts, 6, "Distribution: totalAttempts correct");
+    TestRunner.assertEqual(dist.strong, 2, "Distribution: strong count correct (80%+)");
+    TestRunner.assertEqual(dist.developing, 2, "Distribution: developing count correct (50-79%)");
+    TestRunner.assertEqual(dist.needsSupport, 2, "Distribution: needsSupport count correct (<50%)");
+    TestRunner.assertEqual(dist.strongPct, 33.3, "Distribution: strongPct correct");
+    TestRunner.assertEqual(dist.developingPct, 33.3, "Distribution: developingPct correct");
+    TestRunner.assertEqual(dist.needsSupportPct, 33.3, "Distribution: needsSupportPct correct");
+    TestRunner.assertEqual(dist.dominantLevel, "Strong", "Distribution: dominantLevel is Strong (tie broken by Strong)");
+
+    allAttempts = origAttemptsDist;
+
+    TestRunner.suite("Analytics - getClassPerformanceDistribution: Empty Data");
+
+    var emptyDist = Analytics.getClassPerformanceDistribution([]);
+    TestRunner.assertEqual(emptyDist.totalAttempts, 0, "Empty distribution: totalAttempts is 0");
+    TestRunner.assertEqual(emptyDist.strong, 0, "Empty distribution: strong is 0");
+    TestRunner.assertEqual(emptyDist.developing, 0, "Empty distribution: developing is 0");
+    TestRunner.assertEqual(emptyDist.needsSupport, 0, "Empty distribution: needsSupport is 0");
+    TestRunner.assertEqual(emptyDist.dominantLevel, "Developing", "Empty distribution: dominantLevel is Developing");
+
+    TestRunner.suite("Analytics - getClassPerformanceDistribution: Safe Defaults");
+
+    var safeDist = Analytics.getClassPerformanceDistribution(null);
+    TestRunner.assertEqual(safeDist.totalAttempts, 0, "Safe distribution: null handled");
+
+    var safeDist2 = Analytics.getClassPerformanceDistribution("invalid");
+    TestRunner.assertEqual(safeDist2.totalAttempts, 0, "Safe distribution: invalid handled");
+
+    TestRunner.suite("Analytics - getAssessmentComparison: Basic Functionality");
+
+    var compTests = [
+        { attemptId: "c1", studentId: "s1", percentage: 80, subject: "Math", title: "Math Quiz 1", questions: [{ correct: true }, { correct: false }] },
+        { attemptId: "c2", studentId: "s2", percentage: 70, subject: "Math", title: "Math Quiz 1", questions: [{ correct: true }, { correct: true }] },
+        { attemptId: "c3", studentId: "s1", percentage: 90, subject: "Science", title: "Science Test", questions: [{ correct: true }] }
+    ];
+    var origAttemptsComp = allAttempts.slice();
+    allAttempts = compTests;
+
+    var comp = Analytics.getAssessmentComparison(allAttempts);
+    TestRunner.assertType(comp, "object", "getAssessmentComparison returns array");
+    TestRunner.assertEqual(comp.length, 2, "Comparison: two assessments found");
+    TestRunner.assertEqual(comp[0].label, "Science Test", "Comparison: higher avg first");
+    TestRunner.assertEqual(comp[0].averagePercentage, 90, "Comparison: Science avg correct");
+    TestRunner.assertEqual(comp[1].label, "Math Quiz 1", "Comparison: Math second");
+    TestRunner.assertEqual(comp[1].averagePercentage, 75, "Comparison: Math avg correct");
+    TestRunner.assertEqual(comp[1].attempts, 2, "Comparison: Math attempts correct");
+    TestRunner.assertEqual(comp[1].totalQuestions, 4, "Comparison: Math total questions correct");
+    TestRunner.assertEqual(comp[1].correctAnswers, 3, "Comparison: Math correct answers correct");
+
+    allAttempts = origAttemptsComp;
+
+    TestRunner.suite("Analytics - getAssessmentComparison: Empty Data");
+
+    var emptyComp = Analytics.getAssessmentComparison([]);
+    TestRunner.assertType(emptyComp, "object", "Empty comparison returns array");
+    TestRunner.assertEqual(emptyComp.length, 0, "Empty comparison: no entries");
+
+    TestRunner.suite("Analytics - getAssessmentComparison: Safe Defaults");
+
+    var safeComp = Analytics.getAssessmentComparison(null);
+    TestRunner.assertEqual(safeComp.length, 0, "Safe comparison: null handled");
+
+    TestRunner.suite("TeacherAnalytics - getClassPerformanceDistribution: Integration");
+
+    var origAttemptsDistTA = allAttempts.slice();
+    var origStudentsDistTA = studentAccounts.slice();
+    studentAccounts = [
+        { id: "dist-s1", classId: "DIST-CLASS", name: "Dist Student 1" },
+        { id: "dist-s2", classId: "DIST-CLASS", name: "Dist Student 2" }
+    ];
+    allAttempts = [
+        { attemptId: "dist-a1", studentId: "dist-s1", percentage: 90, questions: [] },
+        { attemptId: "dist-a2", studentId: "dist-s2", percentage: 45, questions: [] }
+    ];
+
+    var taDist = TeacherAnalytics.getClassPerformanceDistribution({ classId: "DIST-CLASS" });
+    TestRunner.assertType(taDist, "object", "TeacherAnalytics.getClassPerformanceDistribution returns object");
+    TestRunner.assertEqual(taDist.totalAttempts, 2, "TeacherAnalytics distribution: totalAttempts correct");
+    TestRunner.assertEqual(taDist.strong, 1, "TeacherAnalytics distribution: strong correct");
+    TestRunner.assertEqual(taDist.needsSupport, 1, "TeacherAnalytics distribution: needsSupport correct");
+
+    studentAccounts = origStudentsDistTA;
+    allAttempts = origAttemptsDistTA;
+
+    TestRunner.suite("TeacherAnalytics - getAssessmentComparison: Integration");
+
+    var origAttemptsCompTA = allAttempts.slice();
+    allAttempts = [
+        { attemptId: "comp-ta1", studentId: "s1", percentage: 80, subject: "English", questions: [{ correct: true }] },
+        { attemptId: "comp-ta2", studentId: "s2", percentage: 60, subject: "English", questions: [{ correct: false }] }
+    ];
+
+    var taComp = TeacherAnalytics.getAssessmentComparison({});
+    TestRunner.assertType(taComp, "object", "TeacherAnalytics.getAssessmentComparison returns array");
+    TestRunner.assertGreaterThan(taComp.length, 0, "TeacherAnalytics comparison: has entries");
+
+    allAttempts = origAttemptsCompTA;
+
+    TestRunner.suite("Analytics - getTrendDirection: Basic Functionality");
+
+    var trendTests = [
+        { attemptId: "t1", studentId: "s1", percentage: 50, completedAt: "2026-09-01T10:00:00Z", timestamp: "2026-09-01T10:00:00Z" },
+        { attemptId: "t2", studentId: "s2", percentage: 55, completedAt: "2026-09-02T10:00:00Z", timestamp: "2026-09-02T10:00:00Z" },
+        { attemptId: "t3", studentId: "s3", percentage: 60, completedAt: "2026-09-03T10:00:00Z", timestamp: "2026-09-03T10:00:00Z" },
+        { attemptId: "t4", studentId: "s4", percentage: 65, completedAt: "2026-09-04T10:00:00Z", timestamp: "2026-09-04T10:00:00Z" }
+    ];
+    var origAttemptsTrend = allAttempts.slice();
+    allAttempts = trendTests;
+
+    var improvingTrend = Analytics.getTrendDirection(allAttempts);
+    TestRunner.assertEqual(improvingTrend, "improving", "Trend direction: improving detected");
+
+    var decliningTests = [
+        { attemptId: "d1", studentId: "s1", percentage: 80, completedAt: "2026-09-01T10:00:00Z", timestamp: "2026-09-01T10:00:00Z" },
+        { attemptId: "d2", studentId: "s2", percentage: 70, completedAt: "2026-09-02T10:00:00Z", timestamp: "2026-09-02T10:00:00Z" },
+        { attemptId: "d3", studentId: "s3", percentage: 60, completedAt: "2026-09-03T10:00:00Z", timestamp: "2026-09-03T10:00:00Z" },
+        { attemptId: "d4", studentId: "s4", percentage: 50, completedAt: "2026-09-04T10:00:00Z", timestamp: "2026-09-04T10:00:00Z" }
+    ];
+    allAttempts = decliningTests;
+    var decliningTrend = Analytics.getTrendDirection(allAttempts);
+    TestRunner.assertEqual(decliningTrend, "declining", "Trend direction: declining detected");
+
+    var stableTests = [
+        { attemptId: "s1", studentId: "s1", percentage: 70, completedAt: "2026-09-01T10:00:00Z", timestamp: "2026-09-01T10:00:00Z" },
+        { attemptId: "s2", studentId: "s2", percentage: 71, completedAt: "2026-09-02T10:00:00Z", timestamp: "2026-09-02T10:00:00Z" },
+        { attemptId: "s3", studentId: "s3", percentage: 69, completedAt: "2026-09-03T10:00:00Z", timestamp: "2026-09-03T10:00:00Z" }
+    ];
+    allAttempts = stableTests;
+    var stableTrend = Analytics.getTrendDirection(allAttempts);
+    TestRunner.assertEqual(stableTrend, "stable", "Trend direction: stable detected");
+
+    allAttempts = origAttemptsTrend;
+
+    TestRunner.suite("Analytics - getTrendDirection: Insufficient Data");
+
+    var singleTrend = Analytics.getTrendDirection([{ percentage: 70 }]);
+    TestRunner.assertEqual(singleTrend, "insufficient_data", "Trend direction: insufficient data for 1 attempt");
+
+    var emptyTrend = Analytics.getTrendDirection([]);
+    TestRunner.assertEqual(emptyTrend, "insufficient_data", "Trend direction: insufficient data for 0 attempts");
+
+    TestRunner.suite("Analytics - getTrendDirection: Safe Defaults");
+
+    var nullTrend = Analytics.getTrendDirection(null);
+    TestRunner.assertEqual(nullTrend, "insufficient_data", "Trend direction: null handled");
+
+    var invalidTrend = Analytics.getTrendDirection("invalid");
+    TestRunner.assertEqual(invalidTrend, "insufficient_data", "Trend direction: invalid handled");
 }

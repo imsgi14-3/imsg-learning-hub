@@ -1381,29 +1381,114 @@ var UI = (function() {
             h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 16px;border-radius:8px;font-size:13px;"><strong>' + modeCounts[m] + '</strong> ' + label + '</div>';
         }
         h += '</div></div>';
-        var diffCount = { excellent: 0, good: 0, needs: 0 };
-        for (var i = 0; i < ca.length; i++) {
-            if (ca[i].percentage >= 80) diffCount.excellent++;
-            else if (ca[i].percentage >= 50) diffCount.good++;
-            else diffCount.needs++;
-        }
-        var total = diffCount.excellent + diffCount.good + diffCount.needs;
-        var ePct = total > 0 ? (diffCount.excellent / total * 100) : 0;
-        var gPct = total > 0 ? (diffCount.good / total * 100) : 0;
-        h += '<div class="chart-section"><h4>&#128202; Results Distribution</h4><div class="donut-container">';
-        h += '<div class="donut-chart" style="background: conic-gradient(#10b981 0% ' + ePct + '%, #f59e0b ' + ePct + '% ' + (ePct + gPct) + '%, #ef4444 ' + (ePct + gPct) + '% 100%)">';
-        h += '<div class="donut-center"><span class="donut-value">' + total + '</span><span class="donut-label">Total</span></div></div>';
-        h += '<div class="donut-legend">';
-        h += '<div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Excellent (80%+): ' + diffCount.excellent + '</div>';
-        h += '<div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Good (50-79%): ' + diffCount.good + '</div>';
-        h += '<div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Needs Work (&lt;50%): ' + diffCount.needs + '</div>';
-        h += '</div></div></div>';
+        var dist = TeacherAnalytics.getClassPerformanceDistribution({ classId: cid });
+        h += renderClassPerformanceDistribution(dist);
+        h += renderClassAverageContext(data, dist);
         var modeColors = { practice: "#6366f1", assignment: "#f59e0b", random: "#10b981", quick: "#3b82f6", chapter: "#8b5cf6", fullbook: "#ec4899", weak: "#ef4444" };
         for (var m in modeCounts) {
             h += renderModeBarGraph(ca, m, modeLabels[m] || m, modeColors[m] || "#6366f1");
         }
+        h += renderClassAssessmentTrend(ca);
+        h += renderClassAssessmentComparison(cid);
         h += renderTeacherDeepAnalytics(ca);
         c.innerHTML = h;
+    }
+
+    function renderClassPerformanceDistribution(dist) {
+        if (!dist || dist.totalAttempts === 0) return '';
+        var h = '<div class="chart-section"><h4>&#128202; Performance Distribution</h4>';
+        h += '<div class="overview-cards" style="margin-bottom:16px;">';
+        h += '<div class="overview-card students" style="border-left-color:#10b981;"><div class="card-icon">&#127942;</div><div class="card-value" style="color:#10b981;">' + dist.strong + '</div><div class="card-label">Strong (80%+)</div></div>';
+        h += '<div class="overview-card average" style="border-left-color:#f59e0b;"><div class="card-icon">&#128218;</div><div class="card-value" style="color:#f59e0b;">' + dist.developing + '</div><div class="card-label">Developing (50-79%)</div></div>';
+        h += '<div class="overview-card quizzes" style="border-left-color:#ef4444;"><div class="card-icon">&#128683;</div><div class="card-value" style="color:#ef4444;">' + dist.needsSupport + '</div><div class="card-label">Needs Support (&lt;50%)</div></div>';
+        h += '</div>';
+        h += '<div class="bar-graph">';
+        h += '<div class="bar-graph-row">';
+        h += '<div class="bar-graph-label">Strong</div>';
+        h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + dist.strongPct + '%;background:#10b981;"><span class="bar-graph-value">' + dist.strongPct + '%</span></div></div>';
+        h += '</div>';
+        h += '<div class="bar-graph-row">';
+        h += '<div class="bar-graph-label">Developing</div>';
+        h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + dist.developingPct + '%;background:#f59e0b;"><span class="bar-graph-value">' + dist.developingPct + '%</span></div></div>';
+        h += '</div>';
+        h += '<div class="bar-graph-row">';
+        h += '<div class="bar-graph-label">Needs Support</div>';
+        h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + dist.needsSupportPct + '%;background:#ef4444;"><span class="bar-graph-value">' + dist.needsSupportPct + '%</span></div></div>';
+        h += '</div></div></div>';
+        return h;
+    }
+
+    function renderClassAverageContext(data, dist) {
+        if (!data || data.totalAttempts === 0) return '';
+        var avg = data.averagePercentage;
+        var contextText = '';
+        if (dist && dist.totalAttempts > 0) {
+            if (dist.dominantLevel === "Strong") contextText = 'Most students are performing at the Strong level.';
+            else if (dist.dominantLevel === "Needs Support") contextText = 'Most students need additional support.';
+            else contextText = 'Most students are performing at the Developing level.';
+        }
+        var avgColor = avg >= 70 ? 'var(--success)' : avg >= 50 ? 'var(--accent)' : 'var(--error)';
+        var h = '<div class="chart-section"><h4>&#128200; Class Average Context</h4>';
+        h += '<div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">';
+        h += '<div style="text-align:center;min-width:100px;">';
+        h += '<div style="font-size:2.5rem;font-weight:700;color:' + avgColor + ';">' + avg + '%</div>';
+        h += '<div style="font-size:0.85rem;color:var(--text-mid);">Class Average</div>';
+        h += '</div>';
+        h += '<div style="flex:1;min-width:200px;">';
+        if (contextText) h += '<p style="margin:0 0 8px;color:var(--text-dark);font-size:0.95rem;">' + contextText + '</p>';
+        h += '<p style="margin:0;font-size:0.8rem;color:var(--text-mid);">Based on ' + data.totalAttempts + ' assessment attempts from ' + data.uniqueStudents + ' students</p>';
+        h += '</div></div></div>';
+        return h;
+    }
+
+    function renderClassAssessmentTrend(ca) {
+        if (!ca || ca.length < 2) {
+            return '<div class="chart-section"><h4>&#128200; Performance Trend</h4><p style="color:var(--text-mid);font-size:0.9rem;">Not enough data to determine a trend. At least 2 attempts are needed.</p></div>';
+        }
+        var trendData = Analytics.getAssessmentTrend(ca);
+        var trendDirection = Analytics.getTrendDirection(ca);
+        var trendIcon = trendDirection === "improving" ? "&#128200;" : trendDirection === "declining" ? "&#128201;" : "&#128203;";
+        var trendColor = trendDirection === "improving" ? "var(--success)" : trendDirection === "declining" ? "var(--error)" : "var(--text-mid)";
+        var trendLabel = trendDirection === "improving" ? "Improving" : trendDirection === "declining" ? "Declining" : "Stable";
+        var h = '<div class="chart-section"><h4>&#128200; Performance Trend</h4>';
+        h += '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-main);border-radius:8px;margin-bottom:16px;">';
+        h += '<span style="font-size:24px;">' + trendIcon + '</span>';
+        h += '<div><div style="font-weight:600;color:' + trendColor + ';">' + trendLabel + '</div>';
+        h += '<div style="font-size:12px;color:var(--text-mid);">Based on ' + trendData.length + ' attempts</div></div></div>';
+        h += '<div class="bar-graph">';
+        var showCount = Math.min(trendData.length, 15);
+        var startIdx = Math.max(0, trendData.length - showCount);
+        for (var i = startIdx; i < trendData.length; i++) {
+            var td = trendData[i];
+            var pct = td.percentage;
+            var color = pct >= 80 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
+            var label = td.timestamp ? td.timestamp.substring(0, 10) : ('Attempt ' + (i + 1));
+            h += '<div class="bar-graph-row">';
+            h += '<div class="bar-graph-label" title="' + label + '">' + label + '</div>';
+            h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + pct + '%;background:' + color + ';"><span class="bar-graph-value">' + pct + '%</span></div></div>';
+            h += '</div>';
+        }
+        h += '</div></div>';
+        return h;
+    }
+
+    function renderClassAssessmentComparison(cid) {
+        var comparison = TeacherAnalytics.getAssessmentComparison({ classId: cid });
+        if (!comparison || comparison.length === 0) return '';
+        var h = '<div class="chart-section"><h4>&#128202; Assessment Comparison</h4>';
+        h += '<table class="history-table"><thead><tr><th>Assessment</th><th>Attempts</th><th>Avg Score</th><th>Accuracy</th></tr></thead><tbody>';
+        for (var i = 0; i < comparison.length; i++) {
+            var c = comparison[i];
+            var avgColor = c.averagePercentage >= 70 ? 'var(--success)' : c.averagePercentage >= 50 ? 'var(--accent)' : 'var(--error)';
+            h += '<tr>';
+            h += '<td style="font-weight:600;">' + c.label + '</td>';
+            h += '<td>' + c.attempts + '</td>';
+            h += '<td style="color:' + avgColor + ';font-weight:700;">' + c.averagePercentage + '%</td>';
+            h += '<td>' + c.accuracy + '%</td>';
+            h += '</tr>';
+        }
+        h += '</tbody></table></div>';
+        return h;
     }
 
     function showCTTab(tab) {

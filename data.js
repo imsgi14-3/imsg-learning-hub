@@ -865,6 +865,36 @@ var TeacherAnalytics = (function() {
         }
     }
 
+    function getClassPerformanceDistribution(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getClassPerformanceDistribution(data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getClassPerformanceDistribution error:", e);
+            return { totalAttempts: 0, strong: 0, developing: 0, needsSupport: 0, strongPct: 0, developingPct: 0, needsSupportPct: 0, dominantLevel: "Developing" };
+        }
+    }
+
+    function getAssessmentComparison(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getAssessmentComparison(data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getAssessmentComparison error:", e);
+            return [];
+        }
+    }
+
+    function getTrendDirection(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getTrendDirection(data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getTrendDirection error:", e);
+            return "stable";
+        }
+    }
+
     function getFullAnalytics(filters) {
         try {
             var data = getTeacherAnalyticsData(filters);
@@ -895,6 +925,9 @@ var TeacherAnalytics = (function() {
         getAssessmentTrend: getAssessmentTrend,
         getAtRiskStudents: getAtRiskStudents,
         getTeacherOverview: getTeacherOverview,
+        getClassPerformanceDistribution: getClassPerformanceDistribution,
+        getAssessmentComparison: getAssessmentComparison,
+        getTrendDirection: getTrendDirection,
         getFullAnalytics: getFullAnalytics
     };
 })();
