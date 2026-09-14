@@ -121,6 +121,7 @@
                 try { runQuizTests(); } catch(e) { TestRunner.suite("Quiz"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runQuestionTests(); } catch(e) { TestRunner.suite("Questions"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runAnalyticsTests(); } catch(e) { TestRunner.suite("Analytics"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                try { runTeacherAnalyticsFlowTests(); } catch(e) { TestRunner.suite("Teacher Analytics Flow"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runPersistenceTests(); } catch(e) { TestRunner.suite("Persistence"); TestRunner.assert(false, "CRASHED: " + e.message); }
             });
             showResults(result);
@@ -131,6 +132,7 @@
             var fnMap = {
                 auth: runAuthTests, students: runStudentTests, teachers: runTeacherTests,
                 quiz: runQuizTests, questions: runQuestionTests, analytics: runAnalyticsTests,
+                teacheranalyticsflow: runTeacherAnalyticsFlowTests,
                 persistence: runPersistenceTests
             };
             var result = TestRunner.run(function() {

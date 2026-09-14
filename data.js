@@ -623,6 +623,96 @@ function getStudentCountByClass(classId) {
     return count;
 }
 
+function getAttemptsForTeacher(filters) {
+    filters = filters || {};
+    var classId = filters.classId || null;
+    var teacherClasses = filters.teacherClasses || null;
+    var studentId = filters.studentId || null;
+    var subject = filters.subject || null;
+    var result = [];
+    for (var i = 0; i < allAttempts.length; i++) {
+        var a = allAttempts[i];
+        if (!a || !a.studentId) continue;
+        if (studentId && a.studentId !== studentId) continue;
+        var student = null;
+        for (var j = 0; j < studentAccounts.length; j++) {
+            if (studentAccounts[j].id === a.studentId) { student = studentAccounts[j]; break; }
+        }
+        if (classId && (!student || student.classId !== classId)) continue;
+        if (teacherClasses && teacherClasses.length > 0) {
+            if (!student || teacherClasses.indexOf(student.classId) === -1) continue;
+        }
+        if (subject) {
+            var attemptSubject = a.subject || "";
+            if (attemptSubject !== subject) continue;
+        }
+        result.push(a);
+    }
+    return result;
+}
+
+function normalizeAttemptsForAnalytics(attempts) {
+    if (!attempts || !Array.isArray(attempts)) return [];
+    var result = [];
+    for (var i = 0; i < attempts.length; i++) {
+        var a = attempts[i];
+        if (!a) continue;
+        var normalized = {
+            attemptId: a.attemptId || ("attempt-" + (a.timestamp || i)),
+            studentId: a.studentId || "unknown",
+            classId: a.classId || "",
+            subject: a.subject || "General",
+            grade: a.grade || 0,
+            score: typeof a.score === "number" ? a.score : 0,
+            total: typeof a.total === "number" ? a.total : 0,
+            percentage: typeof a.percentage === "number" ? a.percentage : 0,
+            timeSpent: typeof a.timeSpent === "number" ? a.timeSpent : 0,
+            mode: a.mode || "practice",
+            timestamp: a.timestamp || a.completedAt || "",
+            startedAt: a.startedAt || "",
+            completedAt: a.completedAt || a.timestamp || "",
+            assignmentId: a.assignmentId || "",
+            questions: [],
+            topicPerformance: a.topicPerformance || {}
+        };
+        if (a.questions && Array.isArray(a.questions)) {
+            for (var j = 0; j < a.questions.length; j++) {
+                var q = a.questions[j];
+                if (!q) continue;
+                normalized.questions.push({
+                    questionId: q.questionId || q.id || ("q-" + j),
+                    selectedAnswer: q.selectedAnswer !== undefined ? q.selectedAnswer : null,
+                    correctAnswer: q.correctAnswer || q.correctAnswerText || "",
+                    correct: typeof q.correct === "boolean" ? q.correct : false,
+                    timeUsed: typeof q.timeUsed === "number" ? q.timeUsed : 0,
+                    topic: q.topic || "General",
+                    difficulty: q.difficulty || "medium",
+                    bloom: q.bloom || "knowledge"
+                });
+            }
+        }
+        result.push(normalized);
+    }
+    return result;
+}
+
+function getTeacherAnalyticsData(filters) {
+    var attempts = getAttemptsForTeacher(filters);
+    var normalized = normalizeAttemptsForAnalytics(attempts);
+    return {
+        attempts: normalized,
+        totalAttempts: normalized.length,
+        filters: filters
+    };
+}
+
+function getTeacherClassIds(user) {
+    if (!user) return [];
+    if (user.classes && user.classes.length > 0) return user.classes;
+    if (user.classId) return [user.classId];
+    return [];
+}
+
 function processSyncQueue(callback) {
     if (typeof db === "undefined") { if (callback) callback(); return; }
     LocalDB.getSyncQueue(function(queue) {
@@ -670,3 +760,117 @@ window.addEventListener("online", function() {
 window.addEventListener("offline", function() {
     console.log("Gone offline - writes will be queued");
 });
+
+var TeacherAnalytics = (function() {
+    function getClassOverview(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getClassOverview(data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getClassOverview error:", e);
+            return { totalAttempts: 0, uniqueStudents: 0, averageScore: 0, averagePercentage: 0, completionRate: 0, totalQuestions: 0, correctAnswers: 0, incorrectAnswers: 0, accuracy: 0 };
+        }
+    }
+
+    function getStudentPerformance(studentId, filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getStudentPerformance(studentId, data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getStudentPerformance error:", e);
+            return { studentId: studentId, totalAttempts: 0, averageScore: 0, averagePercentage: 0, bestPercentage: 0, lowestPercentage: 100, totalQuestions: 0, correctAnswers: 0, incorrectAnswers: 0, accuracy: 0, recentPerformance: [], topicStrengths: [], topicWeaknesses: [] };
+        }
+    }
+
+    function getTopicMastery(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getTopicMastery(data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getTopicMastery error:", e);
+            return [];
+        }
+    }
+
+    function getQuestionStatistics(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getQuestionStatistics(data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getQuestionStatistics error:", e);
+            return [];
+        }
+    }
+
+    function getDifficultyPerformance(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getDifficultyPerformance(data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getDifficultyPerformance error:", e);
+            return [];
+        }
+    }
+
+    function getBloomPerformance(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getBloomPerformance(data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getBloomPerformance error:", e);
+            return [];
+        }
+    }
+
+    function getAssessmentTrend(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getAssessmentTrend(data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getAssessmentTrend error:", e);
+            return [];
+        }
+    }
+
+    function getAtRiskStudents(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getAtRiskStudents(data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getAtRiskStudents error:", e);
+            return [];
+        }
+    }
+
+    function getFullAnalytics(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return {
+                overview: Analytics.getClassOverview(data.attempts),
+                topicMastery: Analytics.getTopicMastery(data.attempts),
+                questionStatistics: Analytics.getQuestionStatistics(data.attempts),
+                difficultyPerformance: Analytics.getDifficultyPerformance(data.attempts),
+                bloomPerformance: Analytics.getBloomPerformance(data.attempts),
+                assessmentTrend: Analytics.getAssessmentTrend(data.attempts),
+                atRiskStudents: Analytics.getAtRiskStudents(data.attempts),
+                attempts: data.attempts,
+                totalAttempts: data.totalAttempts
+            };
+        } catch(e) {
+            console.error("TeacherAnalytics.getFullAnalytics error:", e);
+            return { overview: { totalAttempts: 0 }, topicMastery: [], questionStatistics: [], difficultyPerformance: [], bloomPerformance: [], assessmentTrend: [], atRiskStudents: [], attempts: [], totalAttempts: 0 };
+        }
+    }
+
+    return {
+        getClassOverview: getClassOverview,
+        getStudentPerformance: getStudentPerformance,
+        getTopicMastery: getTopicMastery,
+        getQuestionStatistics: getQuestionStatistics,
+        getDifficultyPerformance: getDifficultyPerformance,
+        getBloomPerformance: getBloomPerformance,
+        getAssessmentTrend: getAssessmentTrend,
+        getAtRiskStudents: getAtRiskStudents,
+        getFullAnalytics: getFullAnalytics
+    };
+})();

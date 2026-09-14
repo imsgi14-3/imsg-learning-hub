@@ -462,3 +462,141 @@ function runAnalyticsModuleTests() {
     var legacyTrend = Analytics.getAssessmentTrend([legacyAttempt]);
     TestRunner.assertEqual(legacyTrend.length, 1, "Legacy: trend works");
 }
+
+function runTeacherAnalyticsFlowTests() {
+    TestRunner.suite("Teacher Analytics Flow - Data Functions Exist");
+
+    TestRunner.assertType(getAttemptsForTeacher, "function", "getAttemptsForTeacher exists");
+    TestRunner.assertType(normalizeAttemptsForAnalytics, "function", "normalizeAttemptsForAnalytics exists");
+    TestRunner.assertType(getTeacherAnalyticsData, "function", "getTeacherAnalyticsData exists");
+    TestRunner.assertType(getTeacherClassIds, "function", "getTeacherClassIds exists");
+    TestRunner.assertType(TeacherAnalytics, "object", "TeacherAnalytics module exists");
+
+    TestRunner.suite("Teacher Analytics Flow - Test A: Attempts Reach Analytics");
+
+    var testAttempts = [
+        { attemptId: "ta1", studentId: "s1", subject: "Computer Science", score: 8, total: 10, percentage: 80, timestamp: "2026-09-01T10:00:00Z", completedAt: "2026-09-01T10:00:00Z", questions: [{ questionId: "q1", correct: true, topic: "T1", difficulty: "easy", bloom: "knowledge" }] },
+        { attemptId: "ta2", studentId: "s2", subject: "Computer Science", score: 5, total: 10, percentage: 50, timestamp: "2026-09-02T10:00:00Z", completedAt: "2026-09-02T10:00:00Z", questions: [{ questionId: "q1", correct: false, topic: "T1", difficulty: "easy", bloom: "knowledge" }] }
+    ];
+    var originalAttempts = allAttempts.slice();
+    allAttempts = testAttempts;
+    var data = getTeacherAnalyticsData({});
+    TestRunner.assertGreaterThan(data.attempts.length, 0, "Data flow: attempts retrieved");
+    TestRunner.assertEqual(data.attempts.length, 2, "Data flow: 2 attempts");
+    var overview = Analytics.getClassOverview(data.attempts);
+    TestRunner.assertEqual(overview.totalAttempts, 2, "Data flow: analytics received 2 attempts");
+    TestRunner.assertEqual(overview.averagePercentage, 65, "Data flow: analytics calculated correct average");
+    allAttempts = originalAttempts;
+
+    TestRunner.suite("Teacher Analytics Flow - Test B: Empty Data");
+
+    var emptyData = getTeacherAnalyticsData({});
+    TestRunner.assertEqual(emptyData.attempts.length, 0, "Empty data: 0 attempts");
+    var emptyOverview = Analytics.getClassOverview(emptyData.attempts);
+    TestRunner.assertEqual(emptyOverview.totalAttempts, 0, "Empty data: analytics returns 0");
+    TestRunner.assertEqual(emptyOverview.averagePercentage, 0, "Empty data: analytics returns 0 average");
+
+    TestRunner.suite("Teacher Analytics Flow - Test C: Legacy/Malformed Data");
+
+    var legacyAttempts = [
+        { attemptId: "legacy-1", studentId: "legacy-s1", score: 5, total: 10, percentage: 50, questions: [{ questionId: "q1", correct: true }] },
+        { attemptId: "legacy-2", studentId: "legacy-s2", percentage: "invalid" },
+        { attemptId: "legacy-3" },
+        null,
+        { questions: null }
+    ];
+    var origAttempts2 = allAttempts.slice();
+    allAttempts = legacyAttempts;
+    var legacyData = getTeacherAnalyticsData({});
+    TestRunner.assertType(legacyData.attempts, "object", "Legacy: data flow returns array");
+    var legacyOverview2 = Analytics.getClassOverview(legacyData.attempts);
+    TestRunner.assertType(legacyOverview2.totalAttempts, "number", "Legacy: analytics handles malformed data");
+    TestRunner.assertTrue(!isNaN(legacyOverview2.averagePercentage), "Legacy: no NaN in results");
+    allAttempts = origAttempts2;
+
+    TestRunner.suite("Teacher Analytics Flow - Test D: Teacher Scope");
+
+    var scopeAttempts = [
+        { attemptId: "sc1", studentId: "classA-s1", subject: "CS", score: 8, total: 10, percentage: 80, questions: [] },
+        { attemptId: "sc2", studentId: "classA-s2", subject: "CS", score: 7, total: 10, percentage: 70, questions: [] },
+        { attemptId: "sc3", studentId: "classB-s1", subject: "CS", score: 9, total: 10, percentage: 90, questions: [] }
+    ];
+    var origStudents = studentAccounts.slice();
+    var origAttempts3 = allAttempts.slice();
+    studentAccounts = [
+        { id: "classA-s1", classId: "CLASS-A", name: "Student 1" },
+        { id: "classA-s2", classId: "CLASS-A", name: "Student 2" },
+        { id: "classB-s1", classId: "CLASS-B", name: "Student 3" }
+    ];
+    allAttempts = scopeAttempts;
+    var classAData = getTeacherAnalyticsData({ classId: "CLASS-A" });
+    TestRunner.assertEqual(classAData.attempts.length, 2, "Scope: class filter returns 2 attempts");
+    var classAOverview = Analytics.getClassOverview(classAData.attempts);
+    TestRunner.assertEqual(classAOverview.averagePercentage, 75, "Scope: class filter calculates correct average");
+    var teacherScopeData = getTeacherAnalyticsData({ teacherClasses: ["CLASS-A"] });
+    TestRunner.assertEqual(teacherScopeData.attempts.length, 2, "Scope: teacherClasses filter works");
+    var allData = getTeacherAnalyticsData({});
+    TestRunner.assertEqual(allData.attempts.length, 3, "Scope: no filter returns all");
+    studentAccounts = origStudents;
+    allAttempts = origAttempts3;
+
+    TestRunner.suite("Teacher Analytics Flow - Test E: Backend Failure");
+
+    var failOverview = TeacherAnalytics.getClassOverview({});
+    TestRunner.assertType(failOverview, "object", "Backend fail: returns object");
+    TestRunner.assertEqual(failOverview.totalAttempts, 0, "Backend fail: safe default");
+    var failTopics = TeacherAnalytics.getTopicMastery({});
+    TestRunner.assertType(failTopics, "object", "Backend fail: topics returns array");
+    var failRisk = TeacherAnalytics.getAtRiskStudents({});
+    TestRunner.assertType(failRisk, "object", "Backend fail: atRisk returns array");
+
+    TestRunner.suite("Teacher Analytics Flow - Test F: Analytics Isolation");
+
+    TestRunner.assertType(Analytics.getClassOverview, "function", "Isolation: Analytics.getClassOverview is function");
+    TestRunner.assertType(Analytics.getStudentPerformance, "function", "Isolation: Analytics.getStudentPerformance is function");
+    TestRunner.assertType(Analytics.getTopicMastery, "function", "Isolation: Analytics.getTopicMastery is function");
+
+    var isolationAttempts = [{ attemptId: "i1", studentId: "s1", percentage: 80, questions: [{ questionId: "q1", correct: true, topic: "T1" }] }];
+    var origAttempts4 = allAttempts.slice();
+    allAttempts = isolationAttempts;
+    var isoData = getTeacherAnalyticsData({});
+    TestRunner.assertEqual(isoData.attempts.length, 1, "Isolation: data flow works");
+    var isoOverview = Analytics.getClassOverview(isoData.attempts);
+    TestRunner.assertEqual(isoOverview.totalAttempts, 1, "Isolation: analytics works on filtered data");
+    TestRunner.assertEqual(isoOverview.averagePercentage, 80, "Isolation: analytics correct");
+    allAttempts = origAttempts4;
+
+    TestRunner.suite("Teacher Analytics Flow - Normalization");
+
+    var normAttempts = [
+        { attemptId: "n1", studentId: "s1", score: 8, total: 10, percentage: 80, questions: [{ questionId: "q1", correct: true, topic: "T1" }] },
+        { attemptId: "n2", studentId: "s2" },
+        { attemptId: "n3", studentId: "s3", questions: "not-array" }
+    ];
+    var origAttempts5 = allAttempts.slice();
+    allAttempts = normAttempts;
+    var normData = getTeacherAnalyticsData({});
+    TestRunner.assertEqual(normData.attempts.length, 3, "Normalization: all attempts included");
+    TestRunner.assertEqual(normData.attempts[1].score, 0, "Normalization: missing score defaults to 0");
+    TestRunner.assertEqual(normData.attempts[1].percentage, 0, "Normalization: missing percentage defaults to 0");
+    TestRunner.assertType(normData.attempts[2].questions, "object", "Normalization: invalid questions becomes array");
+    TestRunner.assertEqual(normData.attempts[2].questions.length, 0, "Normalization: invalid questions is empty array");
+    allAttempts = origAttempts5;
+
+    TestRunner.suite("Teacher Analytics Flow - TeacherAnalytics Module");
+
+    var origAttempts6 = allAttempts.slice();
+    allAttempts = [
+        { attemptId: "ta1", studentId: "s1", subject: "CS", score: 8, total: 10, percentage: 80, timestamp: "2026-09-01T10:00:00Z", completedAt: "2026-09-01T10:00:00Z", questions: [{ questionId: "q1", correct: true, topic: "T1", difficulty: "easy", bloom: "knowledge" }] }
+    ];
+    var taOverview = TeacherAnalytics.getClassOverview({});
+    TestRunner.assertEqual(taOverview.totalAttempts, 1, "TeacherAnalytics: overview works");
+    var taTopic = TeacherAnalytics.getTopicMastery({});
+    TestRunner.assertGreaterThan(taTopic.length, 0, "TeacherAnalytics: topics works");
+    var taTrend = TeacherAnalytics.getAssessmentTrend({});
+    TestRunner.assertEqual(taTrend.length, 1, "TeacherAnalytics: trend works");
+    var taFull = TeacherAnalytics.getFullAnalytics({});
+    TestRunner.assertType(taFull.overview, "object", "TeacherAnalytics: full analytics has overview");
+    TestRunner.assertType(taFull.topicMastery, "object", "TeacherAnalytics: full analytics has topics");
+    allAttempts = origAttempts6;
+}
