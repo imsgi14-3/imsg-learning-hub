@@ -2316,7 +2316,11 @@ var UI = (function() {
     function renderTeacherDeepAnalytics(attempts) {
         if (!attempts) attempts = [];
         var h = '';
+        try { h += renderActionableInsights(attempts); } catch(e) {}
+        try { h += renderAtRiskStudents(attempts); } catch(e) {}
         try { h += renderStudentRankingsFromAttempts(attempts); } catch(e) {}
+        try { h += renderScoreTrends(attempts); } catch(e) {}
+        try { h += renderStudentEngagement(attempts); } catch(e) {}
         try { h += renderTopicAnalysisFromAttempts(attempts); } catch(e) {}
         try { h += renderQuestionAccuracyFromAttempts(attempts); } catch(e) {}
         try { h += renderProgressFromAttempts(attempts); } catch(e) {}
@@ -2509,6 +2513,247 @@ var UI = (function() {
             var acc = (d.correct / d.total * 100).toFixed(1);
             var color = acc >= 70 ? 'var(--success)' : acc >= 50 ? 'var(--accent)' : 'var(--error)';
             h += '<tr><td><span style="color:' + diffColors[diffs[i]] + ';font-weight:700;">' + diffLabels[diffs[i]] + '</span></td><td>' + d.total + '</td><td>' + d.correct + '</td><td style="color:' + color + ';font-weight:700;">' + acc + '%</td></tr>';
+        }
+        h += '</tbody></table></div>';
+        return h;
+    }
+
+    function renderAtRiskStudents(attempts) {
+        if (attempts.length === 0) return '';
+        var now = Date.now();
+        var weekMs = 7 * 24 * 60 * 60 * 1000;
+        var studentData = {};
+        for (var i = 0; i < attempts.length; i++) {
+            var a = attempts[i];
+            var sid = a.studentId;
+            if (!studentData[sid]) studentData[sid] = { scores: [], dates: [], name: getStudentName(sid) };
+            studentData[sid].scores.push(a.percentage);
+            var ts = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+            if (ts > 0) studentData[sid].dates.push(ts);
+        }
+        var atRisk = [];
+        for (var sid in studentData) {
+            var d = studentData[sid];
+            if (d.scores.length === 0) continue;
+            var totalAvg = d.scores.reduce(function(s, v) { return s + v; }, 0) / d.scores.length;
+            var lastDate = 0;
+            for (var j = 0; j < d.dates.length; j++) { if (d.dates[j] > lastDate) lastDate = d.dates[j]; }
+            var inactive = lastDate > 0 && (now - lastDate > weekMs);
+            var recentScores = d.scores.slice(-3);
+            var olderScores = d.scores.slice(0, -3);
+            var recentAvg = recentScores.reduce(function(s, v) { return s + v; }, 0) / recentScores.length;
+            var declining = false;
+            if (olderScores.length > 0) {
+                var olderAvg = olderScores.reduce(function(s, v) { return s + v; }, 0) / olderScores.length;
+                declining = recentAvg < olderAvg - 10;
+            }
+            var lowPerf = totalAvg < 50 && d.scores.length >= 2;
+            if (inactive || declining || lowPerf) {
+                var reasons = [];
+                if (inactive) reasons.push('Inactive 7+ days');
+                if (declining) reasons.push('Scores declining');
+                if (lowPerf) reasons.push('Avg below 50%');
+                atRisk.push({ id: sid, name: d.name, avg: totalAvg.toFixed(0), lastDate: lastDate, attempts: d.scores.length, reasons: reasons });
+            }
+        }
+        atRisk.sort(function(a, b) { return a.avg - b.avg; });
+        if (atRisk.length === 0) return '<div class="chart-section"><h4>&#9888;&#65039; At-Risk Students</h4><p style="color:var(--success);font-weight:600;">&#9989; No at-risk students detected. Great job!</p></div>';
+        var h = '<div class="chart-section"><h4>&#9888;&#65039; At-Risk Students (' + atRisk.length + ')</h4>';
+        h += '<div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:12px;margin-bottom:12px;font-size:13px;color:#ef4444;">These students need immediate attention. Consider reaching out or assigning extra practice.</div>';
+        h += '<table class="history-table"><thead><tr><th>Student</th><th>Avg</th><th>Attempts</th><th>Last Active</th><th>Alerts</th></tr></thead><tbody>';
+        for (var i = 0; i < atRisk.length; i++) {
+            var s = atRisk[i];
+            var lastActiveStr = s.lastDate > 0 ? Math.floor((now - s.lastDate) / (24 * 60 * 60 * 1000)) + 'd ago' : 'Never';
+            var alertBadges = '';
+            for (var j = 0; j < s.reasons.length; j++) {
+                alertBadges += '<span style="display:inline-block;background:rgba(239,68,68,0.15);color:#ef4444;font-size:11px;padding:2px 6px;border-radius:4px;margin:1px;">' + s.reasons[j] + '</span> ';
+            }
+            h += '<tr><td style="font-weight:600;">' + s.name + '</td><td style="color:#ef4444;font-weight:700;">' + s.avg + '%</td><td>' + s.attempts + '</td><td>' + lastActiveStr + '</td><td>' + alertBadges + '</td></tr>';
+        }
+        h += '</tbody></table></div>';
+        return h;
+    }
+
+    function renderActionableInsights(attempts) {
+        if (attempts.length === 0) return '';
+        var now = Date.now();
+        var dayMs = 24 * 60 * 60 * 1000;
+        var weekMs = 7 * dayMs;
+        var insights = [];
+        var studentLastDate = {};
+        var studentScores = {};
+        var topicFails = {};
+        var totalAvg = 0;
+        for (var i = 0; i < attempts.length; i++) {
+            var a = attempts[i];
+            var sid = a.studentId;
+            var ts = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+            totalAvg += a.percentage;
+            if (!studentLastDate[sid] || ts > studentLastDate[sid]) studentLastDate[sid] = ts;
+            if (!studentScores[sid]) studentScores[sid] = [];
+            studentScores[sid].push(a.percentage);
+            if (a.topicPerformance) {
+                for (var topic in a.topicPerformance) {
+                    var tp = a.topicPerformance[topic];
+                    if (!topicFails[topic]) topicFails[topic] = { correct: 0, total: 0 };
+                    topicFails[topic].correct += tp.correct;
+                    topicFails[topic].total += tp.total;
+                }
+            }
+        }
+        totalAvg = totalAvg / attempts.length;
+        var inactiveCount = 0;
+        for (var sid in studentLastDate) {
+            if (studentLastDate[sid] > 0 && (now - studentLastDate[sid] > weekMs)) inactiveCount++;
+        }
+        if (inactiveCount > 0) insights.push({ icon: '&#128680;', color: '#ef4444', text: inactiveCount + ' student' + (inactiveCount > 1 ? 's have' : ' has') + ' not practiced in over a week.' });
+        var decliningCount = 0;
+        for (var sid in studentScores) {
+            var sc = studentScores[sid];
+            if (sc.length < 3) continue;
+            var recent = sc.slice(-3).reduce(function(s, v) { return s + v; }, 0) / 3;
+            var older = sc.slice(0, -3);
+            if (older.length > 0) {
+                var oldAvg = older.reduce(function(s, v) { return s + v; }, 0) / older.length;
+                if (recent < oldAvg - 10) decliningCount++;
+            }
+        }
+        if (decliningCount > 0) insights.push({ icon: '&#128316;', color: '#f59e0b', text: decliningCount + ' student' + (decliningCount > 1 ? 's show' : ' shows') + ' declining performance. Consider checking in.' });
+        var lowAvgStudents = 0;
+        for (var sid in studentScores) {
+            var avg = studentScores[sid].reduce(function(s, v) { return s + v; }, 0) / studentScores[sid].length;
+            if (avg < 50 && studentScores[sid].length >= 2) lowAvgStudents++;
+        }
+        if (lowAvgStudents > 0) insights.push({ icon: '&#127919;', color: '#ef4444', text: lowAvgStudents + ' student' + (lowAvgStudents > 1 ? 's are' : ' is') + ' scoring below 50%. Extra practice recommended.' });
+        var weakTopics = [];
+        for (var topic in topicFails) {
+            var tf = topicFails[topic];
+            if (tf.total >= 5) {
+                var acc = (tf.correct / tf.total) * 100;
+                if (acc < 50) weakTopics.push({ name: topic, acc: acc.toFixed(0) });
+            }
+        }
+        weakTopics.sort(function(a, b) { return a.acc - b.acc; });
+        if (weakTopics.length > 0) {
+            var topicNames = weakTopics.slice(0, 3).map(function(t) { return t.name + ' (' + t.acc + '%)'; }).join(', ');
+            insights.push({ icon: '&#128218;', color: '#f59e0b', text: 'Weakest topics: ' + topicNames + '. Consider reteaching these.' });
+        }
+        if (totalAvg >= 70) insights.push({ icon: '&#127881;', color: '#22c55e', text: 'Class average is ' + totalAvg.toFixed(0) + '%. Great performance overall!' });
+        else if (totalAvg >= 50) insights.push({ icon: '&#128161;', color: '#3b82f6', text: 'Class average is ' + totalAvg.toFixed(0) + '%. Room for improvement — focus on weak topics.' });
+        else insights.push({ icon: '&#9888;&#65039;', color: '#ef4444', text: 'Class average is ' + totalAvg.toFixed(0) + '%. Significant intervention needed.' });
+        if (insights.length === 0) return '';
+        var h = '<div class="chart-section"><h4>&#128161; Insights &amp; Recommendations</h4>';
+        h += '<div style="display:flex;flex-direction:column;gap:8px;">';
+        for (var i = 0; i < insights.length; i++) {
+            h += '<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(59,130,246,0.06);border-radius:8px;padding:10px 14px;">';
+            h += '<span style="font-size:18px;flex-shrink:0;">' + insights[i].icon + '</span>';
+            h += '<span style="color:' + insights[i].color + ';font-weight:500;font-size:14px;">' + insights[i].text + '</span>';
+            h += '</div>';
+        }
+        h += '</div></div>';
+        return h;
+    }
+
+    function renderStudentEngagement(attempts) {
+        if (attempts.length === 0) return '';
+        var now = Date.now();
+        var dayMs = 24 * 60 * 60 * 1000;
+        var studentData = {};
+        for (var i = 0; i < attempts.length; i++) {
+            var a = attempts[i];
+            var sid = a.studentId;
+            var ts = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+            if (!studentData[sid]) studentData[sid] = { name: getStudentName(sid), dates: [], count: 0 };
+            studentData[sid].count++;
+            if (ts > 0) studentData[sid].dates.push(ts);
+        }
+        var rows = [];
+        for (var sid in studentData) {
+            var d = studentData[sid];
+            d.dates.sort(function(a, b) { return b - a; });
+            var lastActive = d.dates.length > 0 ? d.dates[0] : 0;
+            var daysSince = lastActive > 0 ? Math.floor((now - lastActive) / dayMs) : 999;
+            var activeDays = {};
+            for (var j = 0; j < d.dates.length; j++) {
+                var dayKey = new Date(d.dates[j]).toDateString();
+                activeDays[dayKey] = true;
+            }
+            var uniqueDays = Object.keys(activeDays).length;
+            var streak = 0;
+            if (d.dates.length > 0) {
+                var checkDate = new Date(now);
+                for (var s = 0; s < 30; s++) {
+                    var key = checkDate.toDateString();
+                    if (activeDays[key]) { streak++; checkDate = new Date(checkDate.getTime() - dayMs); }
+                    else break;
+                }
+            }
+            var status = 'inactive';
+            var statusColor = '#ef4444';
+            var statusLabel = 'Inactive';
+            if (daysSince <= 1) { status = 'active'; statusColor = '#22c55e'; statusLabel = 'Active'; }
+            else if (daysSince <= 3) { status = 'recent'; statusColor = '#f59e0b'; statusLabel = 'Recent'; }
+            rows.push({ name: d.name, count: d.count, uniqueDays: uniqueDays, streak: streak, lastActive: daysSince, statusColor: statusColor, statusLabel: statusLabel });
+        }
+        rows.sort(function(a, b) { return a.lastActive - b.lastActive; });
+        var h = '<div class="chart-section"><h4>&#128200; Student Engagement</h4>';
+        h += '<table class="history-table"><thead><tr><th>Student</th><th>Quizzes</th><th>Active Days</th><th>Streak</th><th>Last Active</th><th>Status</th></tr></thead><tbody>';
+        for (var i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            var lastStr = r.lastActive === 0 ? 'Never' : r.lastActive === 0 ? 'Today' : r.lastActive + 'd ago';
+            if (r.lastActive === 0) lastStr = 'Today';
+            else if (r.lastActive === 1) lastStr = 'Yesterday';
+            h += '<tr><td style="font-weight:600;">' + r.name + '</td><td>' + r.count + '</td><td>' + r.uniqueDays + '</td><td>' + (r.streak > 0 ? r.streak + 'd' : '-') + '</td><td>' + lastStr + '</td>';
+            h += '<td><span style="display:inline-block;background:' + r.statusColor + '20;color:' + r.statusColor + ';padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">' + r.statusLabel + '</span></td></tr>';
+        }
+        h += '</tbody></table></div>';
+        return h;
+    }
+
+    function renderScoreTrends(attempts) {
+        if (attempts.length === 0) return '';
+        var studentScores = {};
+        for (var i = 0; i < attempts.length; i++) {
+            var a = attempts[i];
+            var sid = a.studentId;
+            if (!studentScores[sid]) studentScores[sid] = { name: getStudentName(sid), scores: [] };
+            studentScores[sid].scores.push(a.percentage);
+        }
+        var trends = [];
+        for (var sid in studentScores) {
+            var d = studentScores[sid];
+            if (d.scores.length < 2) continue;
+            var mid = Math.floor(d.scores.length / 2);
+            var firstHalf = d.scores.slice(0, mid);
+            var secondHalf = d.scores.slice(mid);
+            var firstAvg = firstHalf.reduce(function(s, v) { return s + v; }, 0) / firstHalf.length;
+            var secondAvg = secondHalf.reduce(function(s, v) { return s + v; }, 0) / secondHalf.length;
+            var diff = secondAvg - firstAvg;
+            var trend = 'stable';
+            var trendIcon = '&#8594;';
+            var trendColor = '#3b82f6';
+            if (diff > 5) { trend = 'improving'; trendIcon = '&#128316;'; trendColor = '#22c55e'; }
+            else if (diff < -5) { trend = 'declining'; trendIcon = '&#128317;'; trendColor = '#ef4444'; }
+            trends.push({ name: d.name, firstAvg: firstAvg.toFixed(0), secondAvg: secondAvg.toFixed(0), diff: diff.toFixed(0), trend: trend, trendIcon: trendIcon, trendColor: trendColor, count: d.scores.length });
+        }
+        if (trends.length === 0) return '';
+        var improving = trends.filter(function(t) { return t.trend === 'improving'; }).length;
+        var declining = trends.filter(function(t) { return t.trend === 'declining'; }).length;
+        var stable = trends.filter(function(t) { return t.trend === 'stable'; }).length;
+        var h = '<div class="chart-section"><h4>&#128200; Score Trends</h4>';
+        h += '<div style="display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;">';
+        h += '<span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:600;">&#128316; Improving: ' + improving + '</span>';
+        h += '<span style="background:rgba(239,68,68,0.12);color:#ef4444;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:600;">&#128317; Declining: ' + declining + '</span>';
+        h += '<span style="background:rgba(59,130,246,0.12);color:#3b82f6;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:600;">&#8594; Stable: ' + stable + '</span>';
+        h += '</div>';
+        trends.sort(function(a, b) { return a.diff - b.diff; });
+        h += '<table class="history-table"><thead><tr><th>Student</th><th>Early Avg</th><th>Recent Avg</th><th>Change</th><th>Trend</th></tr></thead><tbody>';
+        for (var i = 0; i < trends.length; i++) {
+            var t = trends[i];
+            var changeSign = t.diff > 0 ? '+' : '';
+            h += '<tr><td style="font-weight:600;">' + t.name + '</td><td>' + t.firstAvg + '%</td><td>' + t.secondAvg + '%</td>';
+            h += '<td style="color:' + t.trendColor + ';font-weight:700;">' + changeSign + t.diff + '%</td>';
+            h += '<td><span style="font-size:16px;">' + t.trendIcon + '</span></td></tr>';
         }
         h += '</tbody></table></div>';
         return h;
