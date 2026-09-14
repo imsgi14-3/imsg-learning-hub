@@ -599,4 +599,123 @@ function runTeacherAnalyticsFlowTests() {
     TestRunner.assertType(taFull.overview, "object", "TeacherAnalytics: full analytics has overview");
     TestRunner.assertType(taFull.topicMastery, "object", "TeacherAnalytics: full analytics has topics");
     allAttempts = origAttempts6;
+
+    TestRunner.suite("Analytics - getTeacherOverview: Basic Functionality");
+
+    var overviewTests = [
+        { attemptId: "ov1", studentId: "s1", percentage: 80, score: 8, total: 10, completedAt: "2026-09-10T10:00:00Z", timestamp: "2026-09-10T10:00:00Z", questions: [{ questionId: "q1", correct: true }] },
+        { attemptId: "ov2", studentId: "s2", percentage: 60, score: 6, total: 10, completedAt: "2026-09-11T10:00:00Z", timestamp: "2026-09-11T10:00:00Z", questions: [{ questionId: "q2", correct: false }] },
+        { attemptId: "ov3", studentId: "s1", percentage: 90, score: 9, total: 10, completedAt: "2026-09-12T10:00:00Z", timestamp: "2026-09-12T10:00:00Z", questions: [{ questionId: "q3", correct: true }] }
+    ];
+    var origAttemptsOv = allAttempts.slice();
+    allAttempts = overviewTests;
+
+    var ov = Analytics.getTeacherOverview(allAttempts, 5);
+    TestRunner.assertType(ov, "object", "getTeacherOverview returns object");
+    TestRunner.assertEqual(ov.totalAttempts, 3, "getTeacherOverview: totalAttempts correct");
+    TestRunner.assertEqual(ov.uniqueStudents, 2, "getTeacherOverview: uniqueStudents correct");
+    TestRunner.assertEqual(ov.totalStudents, 5, "getTeacherOverview: totalStudents passed through");
+    TestRunner.assertGreaterThan(ov.averagePercentage, 0, "getTeacherOverview: averagePercentage calculated");
+    TestRunner.assertGreaterThan(ov.accuracy, 0, "getTeacherOverview: accuracy calculated");
+    TestRunner.assertType(ov.activeStudents, "number", "getTeacherOverview: activeStudents is number");
+    TestRunner.assertType(ov.participationRate, "number", "getTeacherOverview: participationRate is number");
+    TestRunner.assertType(ov.trendDirection, "string", "getTeacherOverview: trendDirection is string");
+
+    allAttempts = origAttemptsOv;
+
+    TestRunner.suite("Analytics - getTeacherOverview: Empty Data");
+
+    var emptyOv = Analytics.getTeacherOverview([], 0);
+    TestRunner.assertEqual(emptyOv.totalAttempts, 0, "Empty overview: totalAttempts is 0");
+    TestRunner.assertEqual(emptyOv.uniqueStudents, 0, "Empty overview: uniqueStudents is 0");
+    TestRunner.assertEqual(emptyOv.totalStudents, 0, "Empty overview: totalStudents is 0");
+    TestRunner.assertEqual(emptyOv.activeStudents, 0, "Empty overview: activeStudents is 0");
+    TestRunner.assertEqual(emptyOv.participationRate, 0, "Empty overview: participationRate is 0");
+    TestRunner.assertEqual(emptyOv.trendDirection, "stable", "Empty overview: trendDirection is stable");
+
+    TestRunner.suite("Analytics - getTeacherOverview: Active Students");
+
+    var activeTests = [
+        { attemptId: "a1", studentId: "s1", percentage: 75, completedAt: new Date().toISOString(), timestamp: new Date().toISOString(), questions: [] },
+        { attemptId: "a2", studentId: "s2", percentage: 80, completedAt: "2025-01-01T10:00:00Z", timestamp: "2025-01-01T10:00:00Z", questions: [] }
+    ];
+    var origAttemptsActive = allAttempts.slice();
+    allAttempts = activeTests;
+
+    var activeOv = Analytics.getTeacherOverview(allAttempts, 10);
+    TestRunner.assertEqual(activeOv.activeStudents, 1, "Active students: only recent student counted");
+    TestRunner.assertEqual(activeOv.participationRate, 10, "Participation rate: 1/10 = 10%");
+
+    allAttempts = origAttemptsActive;
+
+    TestRunner.suite("Analytics - getTeacherOverview: Trend Direction");
+
+    // Create declining trend
+    var decliningTests = [];
+    for (var i = 0; i < 6; i++) {
+        decliningTests.push({
+            attemptId: "dt" + i,
+            studentId: "s" + i,
+            percentage: 90 - (i * 10),
+            completedAt: "2026-09-" + (1 + i) + "T10:00:00Z",
+            timestamp: "2026-09-" + (1 + i) + "T10:00:00Z",
+            questions: []
+        });
+    }
+    var origAttemptsDecline = allAttempts.slice();
+    allAttempts = decliningTests;
+
+    var declineOv = Analytics.getTeacherOverview(allAttempts, 5);
+    TestRunner.assertEqual(declineOv.trendDirection, "declining", "Trend: declining detected");
+
+    allAttempts = origAttemptsDecline;
+
+    // Create improving trend
+    var improvingTests = [];
+    for (var i = 0; i < 6; i++) {
+        improvingTests.push({
+            attemptId: "it" + i,
+            studentId: "s" + i,
+            percentage: 40 + (i * 10),
+            completedAt: "2026-09-" + (1 + i) + "T10:00:00Z",
+            timestamp: "2026-09-" + (1 + i) + "T10:00:00Z",
+            questions: []
+        });
+    }
+    var origAttemptsImprove = allAttempts.slice();
+    allAttempts = improvingTests;
+
+    var improveOv = Analytics.getTeacherOverview(allAttempts, 5);
+    TestRunner.assertEqual(improveOv.trendDirection, "improving", "Trend: improving detected");
+
+    allAttempts = origAttemptsImprove;
+
+    TestRunner.suite("Analytics - getTeacherOverview: Safe Defaults");
+
+    var safeOv = Analytics.getTeacherOverview(null, null);
+    TestRunner.assertEqual(safeOv.totalAttempts, 0, "Safe defaults: null attempts handled");
+    TestRunner.assertEqual(safeOv.totalStudents, 0, "Safe defaults: null totalStudents handled");
+
+    var safeOv2 = Analytics.getTeacherOverview("invalid", "invalid");
+    TestRunner.assertEqual(safeOv2.totalAttempts, 0, "Safe defaults: invalid inputs handled");
+
+    TestRunner.suite("TeacherAnalytics - getTeacherOverview: Integration");
+
+    var origAttemptsTA = allAttempts.slice();
+    var origStudentsTA = studentAccounts.slice();
+    studentAccounts = [
+        { id: "ta-s1", classId: "TA-CLASS", name: "TA Student 1" },
+        { id: "ta-s2", classId: "TA-CLASS", name: "TA Student 2" }
+    ];
+    allAttempts = [
+        { attemptId: "ta-ov1", studentId: "ta-s1", percentage: 85, completedAt: new Date().toISOString(), timestamp: new Date().toISOString(), questions: [{ correct: true }] }
+    ];
+
+    var taOv = TeacherAnalytics.getTeacherOverview({ teacherClasses: ["TA-CLASS"] });
+    TestRunner.assertType(taOv, "object", "TeacherAnalytics.getTeacherOverview returns object");
+    TestRunner.assertEqual(taOv.totalAttempts, 1, "TeacherAnalytics: totalAttempts correct");
+    TestRunner.assertEqual(taOv.totalStudents, 2, "TeacherAnalytics: totalStudents from studentAccounts");
+
+    studentAccounts = origStudentsTA;
+    allAttempts = origAttemptsTA;
 }

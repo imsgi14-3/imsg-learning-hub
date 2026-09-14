@@ -20,11 +20,11 @@ Both documents are authoritative:
 
 ```text
 AGENTS.md
-    ↓
+    â†“
 Engineering rules, architecture, safety, module boundaries
 
 PROJECT_ROADMAP.md
-    ↓
+    â†“
 Product phases, milestones, features, completion criteria
 ```
 
@@ -61,23 +61,23 @@ The central educational loop is:
 
 ```text
 Question Bank
-     ↓
+     â†“
 Assessment
-     ↓
+     â†“
 Student Attempt
-     ↓
+     â†“
 Reliable Assessment Data
-     ↓
+     â†“
 Analytics Engine
-     ↓
+     â†“
 Educational Insight
-     ↓
+     â†“
 Teacher Action
-     ↓
+     â†“
 Student Improvement
-     ↓
+     â†“
 New Assessment
-     ↓
+     â†“
 New Data
 ```
 
@@ -91,13 +91,13 @@ The application must maintain clear separation between:
 
 ```text
 UI
- ↓
+ â†“
 Feature Modules
- ↓
+ â†“
 Data/Application Layer
- ↓
+ â†“
 Persistence
- ↓
+ â†“
 Backend
 ```
 
@@ -105,15 +105,15 @@ Analytics remains a separate concern:
 
 ```text
 Raw Assessment Data
-        ↓
+        â†“
    analytics.js
-        ↓
+        â†“
 Analytics Results
-        ↓
+        â†“
 Teacher / Student / Admin UI
 ```
 
-## Frontend–Backend Independence
+## Frontendâ€“Backend Independence
 
 The frontend and backend must remain loosely coupled and independently operable.
 
@@ -142,27 +142,27 @@ The dependency must be:
 
 | Phase     | Name                                         | Status     |
 | --------- | -------------------------------------------- | ---------- |
-| Phase 1   | Assessment Data Integrity                    | ✅ Complete |
-| Phase 2   | Analytics Engine                             | ✅ Complete |
-| Phase 2V  | Analytics Validation & Testing               | ✅ Complete |
-| Phase 3.1 | Teacher Analytics Data Flow                  | ✅ Complete |
-| Phase 3.2 | Teacher Analytics Overview                   | 🔵 Current  |
-| Phase 3.3 | Class Performance Analytics                  | ⏳          |
-| Phase 3.4 | Topic & Question Analytics                   | ⏳          |
-| Phase 3.5 | Student Performance Analytics                | ⏳          |
-| Phase 3.6 | Teacher Action / Insight Panel               | ⏳          |
-| Phase 4   | Teacher Insights & Recommendations           | ⏳          |
-| Phase 5   | Advanced Learning & Question Analytics       | ⏳          |
-| Phase 6   | Performance, Security & Production Hardening | ⏳          |
-| Phase 7   | Final QA, Deployment & Release               | ⏳          |
+| Phase 1   | Assessment Data Integrity                    | âœ… Complete |
+| Phase 2   | Analytics Engine                             | âœ… Complete |
+| Phase 2V  | Analytics Validation & Testing               | âœ… Complete |
+| Phase 3.1 | Teacher Analytics Data Flow                  | âœ… Complete |
+| Phase 3.2 | Teacher Analytics Overview                   | ðŸ”µ Current  |
+| Phase 3.3 | Class Performance Analytics                  | â³          |
+| Phase 3.4 | Topic & Question Analytics                   | â³          |
+| Phase 3.5 | Student Performance Analytics                | â³          |
+| Phase 3.6 | Teacher Action / Insight Panel               | â³          |
+| Phase 4   | Teacher Insights & Recommendations           | â³          |
+| Phase 5   | Advanced Learning & Question Analytics       | â³          |
+| Phase 6   | Performance, Security & Production Hardening | â³          |
+| Phase 7   | Final QA, Deployment & Release               | â³          |
 
 ---
 
-# PHASE 1 — ASSESSMENT DATA INTEGRITY
+# PHASE 1 â€” ASSESSMENT DATA INTEGRITY
 
 ## Status
 
-✅ COMPLETE
+âœ… COMPLETE
 
 ## Goal
 
@@ -214,11 +214,11 @@ Each question result should capture:
 
 ---
 
-# PHASE 2 — ANALYTICS ENGINE
+# PHASE 2 â€” ANALYTICS ENGINE
 
 ## Status
 
-✅ COMPLETE
+âœ… COMPLETE
 
 ## Goal
 
@@ -293,9 +293,9 @@ getAtRiskStudents(attempts)
 Initial mastery classification:
 
 ```text
-80–100 = Strong
-60–79  = Developing
-0–59   = Needs Support
+80â€“100 = Strong
+60â€“79  = Developing
+0â€“59   = Needs Support
 ```
 
 ### Question analytics
@@ -330,11 +330,11 @@ No machine learning or opaque predictive scoring at this stage.
 
 ---
 
-# PHASE 2V — ANALYTICS VALIDATION & TESTING
+# PHASE 2V â€” ANALYTICS VALIDATION & TESTING
 
 ## Status
 
-✅ COMPLETE
+âœ… COMPLETE
 
 ## Goal
 
@@ -369,7 +369,7 @@ Phase 2 and Phase 2V are therefore considered complete.
 
 ---
 
-# PHASE 3 — TEACHER ANALYTICS MVP
+# PHASE 3 â€” TEACHER ANALYTICS MVP
 
 ## Goal
 
@@ -385,17 +385,17 @@ The goal is:
 
 ```text
 Teacher UI
-    ↓
+    â†“
 Teacher Analytics Data Flow
-    ↓
+    â†“
 Data Layer
-    ↓
+    â†“
 Assessment Attempts
-    ↓
+    â†“
 analytics.js
-    ↓
+    â†“
 Analytics Results
-    ↓
+    â†“
 Teacher UI
 ```
 
@@ -405,11 +405,11 @@ The UI must NOT recreate analytics calculations.
 
 ---
 
-# PHASE 3.1 — TEACHER ANALYTICS DATA FLOW
+# PHASE 3.1 â€” TEACHER ANALYTICS DATA FLOW
 
 ## Status
 
-✅ COMPLETE
+âœ… COMPLETE
 
 ## Goal
 
@@ -464,11 +464,11 @@ Preferred direction:
 
 ```text
 Teacher UI
-    ↓
+    â†“
 Teacher Analytics Service/Data Flow
-    ↓
+    â†“
 data.js
-    ↓
+    â†“
 analytics.js
 ```
 
@@ -490,11 +490,11 @@ Phase 3.1 is complete when:
 
 ---
 
-# PHASE 3.2 — TEACHER ANALYTICS OVERVIEW
+# PHASE 3.2 â€” TEACHER ANALYTICS OVERVIEW
 
 ## Status
 
-🔵 CURRENT
+ðŸ”µ CURRENT
 
 ## Goal
 
@@ -531,7 +531,7 @@ Keep the first dashboard simple.
 
 ---
 
-# PHASE 3.3 — CLASS PERFORMANCE ANALYTICS
+# PHASE 3.3 â€” CLASS PERFORMANCE ANALYTICS
 
 ## Goal
 
@@ -554,7 +554,7 @@ The classification must remain transparent and based on documented thresholds.
 
 ---
 
-# PHASE 3.4 — TOPIC & QUESTION ANALYTICS
+# PHASE 3.4 â€” TOPIC & QUESTION ANALYTICS
 
 ## Goal
 
@@ -590,7 +590,7 @@ Potentially problematic questions should be identified using multiple indicators
 
 ---
 
-# PHASE 3.5 — STUDENT PERFORMANCE ANALYTICS
+# PHASE 3.5 â€” STUDENT PERFORMANCE ANALYTICS
 
 ## Goal
 
@@ -600,15 +600,15 @@ Allow teachers to drill into an individual student.
 
 ```text
 Student
- ├── Overall Performance
- ├── Average Score
- ├── Accuracy
- ├── Assessment History
- ├── Recent Trend
- ├── Topic Mastery
- ├── Strengths
- ├── Weaknesses
- └── At-Risk Indicators
+ â”œâ”€â”€ Overall Performance
+ â”œâ”€â”€ Average Score
+ â”œâ”€â”€ Accuracy
+ â”œâ”€â”€ Assessment History
+ â”œâ”€â”€ Recent Trend
+ â”œâ”€â”€ Topic Mastery
+ â”œâ”€â”€ Strengths
+ â”œâ”€â”€ Weaknesses
+ â””â”€â”€ At-Risk Indicators
 ```
 
 ## Teacher objective
@@ -623,7 +623,7 @@ The teacher should be able to answer:
 
 ---
 
-# PHASE 3.6 — TEACHER ACTION / INSIGHT PANEL
+# PHASE 3.6 â€” TEACHER ACTION / INSIGHT PANEL
 
 ## Goal
 
@@ -633,11 +633,11 @@ The system should progressively transform:
 
 ```text
 Data
- ↓
+ â†“
 Evidence
- ↓
+ â†“
 Interpretation
- ↓
+ â†“
 Suggested Action
 ```
 
@@ -681,7 +681,7 @@ Do not introduce AI-generated recommendations yet.
 
 ---
 
-# PHASE 4 — TEACHER INSIGHTS & RECOMMENDATIONS
+# PHASE 4 â€” TEACHER INSIGHTS & RECOMMENDATIONS
 
 ## Goal
 
@@ -707,7 +707,7 @@ Recommendations should explain the evidence behind them.
 
 ---
 
-# PHASE 5 — ADVANCED LEARNING & QUESTION ANALYTICS
+# PHASE 5 â€” ADVANCED LEARNING & QUESTION ANALYTICS
 
 ## Goal
 
@@ -745,7 +745,7 @@ Only introduce predictive/ML features when enough high-quality historical data e
 
 ---
 
-# PHASE 6 — PERFORMANCE, SECURITY & PRODUCTION HARDENING
+# PHASE 6 â€” PERFORMANCE, SECURITY & PRODUCTION HARDENING
 
 ## Goal
 
@@ -803,7 +803,7 @@ Validate:
 
 ---
 
-# PHASE 7 — FINAL QA, DEPLOYMENT & RELEASE
+# PHASE 7 â€” FINAL QA, DEPLOYMENT & RELEASE
 
 ## Goal
 
@@ -831,9 +831,9 @@ Verify:
 
 ```text
 Raw Data
-   ↓
+   â†“
 Analytics Engine
-   ↓
+   â†“
 Teacher Dashboard
 ```
 
@@ -845,11 +845,11 @@ Establish:
 
 ```text
 Development
-    ↓
+    â†“
 Testing
-    ↓
+    â†“
 Staging
-    ↓
+    â†“
 Production
 ```
 
@@ -874,55 +874,55 @@ The current state is:
 ```text
 Phase 1
 Assessment Data Integrity
-        ✅
-        ↓
+        âœ…
+        â†“
 Phase 2
 Analytics Engine
-        ✅
-        ↓
+        âœ…
+        â†“
 Phase 2V
 Analytics Validation
-        ✅
-        ↓
+        âœ…
+        â†“
 Phase 3.1
 Teacher Analytics Data Flow
-        ✅
-        ↓
+        âœ…
+        â†“
 Phase 3.2
 Teacher Analytics Overview
-        🔵 CURRENT
-        ↓
+        ðŸ”µ CURRENT
+        â†“
 Phase 3.3
 Class Performance Analytics
-        ⏳
-        ↓
+        â³
+        â†“
 Phase 3.4
 Topic & Question Analytics
-        ⏳
-        ↓
+        â³
+        â†“
 Phase 3.5
 Student Performance Analytics
-        ⏳
-        ↓
+        â³
+        â†“
 Phase 3.6
 Teacher Action / Insight Panel
-        ⏳
-        ↓
+        â³
+        â†“
 Phase 4
 Teacher Insights & Recommendations
-        ⏳
-        ↓
+        â³
+        â†“
 Phase 5
 Advanced Analytics
-        ⏳
-        ↓
+        â³
+        â†“
 Phase 6
 Hardening
-        ⏳
-        ↓
+        â³
+        â†“
 Phase 7
 Final QA & Release
-        ⏳
+        â³
 ```
 
 ---
@@ -983,15 +983,15 @@ First establish a clean and reliable path:
 
 ```text
 Teacher UI
-    ↓
+    â†“
 Data Layer
-    ↓
+    â†“
 Assessment Attempts
-    ↓
+    â†“
 analytics.js
-    ↓
+    â†“
 Analytics Results
-    ↓
+    â†“
 Teacher UI
 ```
 
@@ -1007,15 +1007,15 @@ Every major feature should contribute to the educational loop:
 
 ```text
 Assess
- ↓
+ â†“
 Measure
- ↓
+ â†“
 Understand
- ↓
+ â†“
 Act
- ↓
+ â†“
 Improve
- ↓
+ â†“
 Assess Again
 ```
 

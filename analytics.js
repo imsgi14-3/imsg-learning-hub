@@ -449,6 +449,79 @@ var Analytics = (function() {
         return results;
     }
 
+    function getTeacherOverview(attempts, totalStudents) {
+        attempts = safeArray(attempts);
+        totalStudents = safeNum(totalStudents, 0);
+
+        var overview = getClassOverview(attempts);
+        var trend = getAssessmentTrend(attempts);
+
+        // Calculate active students (students with attempts in last 30 days)
+        var activeStudentMap = {};
+        var thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        for (var i = 0; i < attempts.length; i++) {
+            var a = attempts[i];
+            if (!a || !a.studentId) continue;
+            var ts = a.timestamp || a.completedAt || "";
+            if (ts) {
+                var d = new Date(ts);
+                if (!isNaN(d.getTime()) && d >= thirtyDaysAgo) {
+                    activeStudentMap[a.studentId] = true;
+                }
+            }
+        }
+        var activeStudents = Object.keys(activeStudentMap).length;
+
+        // Participation rate
+        var participationRate = totalStudents > 0
+            ? Number(((activeStudents / totalStudents) * 100).toFixed(2))
+            : 0;
+
+        // Overall trend direction
+        var trendDirection = "stable";
+        if (trend.length >= 3) {
+            var recentCount = Math.min(5, Math.floor(trend.length / 2));
+            var olderCount = recentCount;
+            var recentSum = 0;
+            var olderSum = 0;
+            for (var i = 0; i < recentCount; i++) {
+                recentSum += safeNum(trend[trend.length - 1 - i].percentage);
+            }
+            for (var i = 0; i < olderCount; i++) {
+                olderSum += safeNum(trend[olderCount - 1 - i].percentage);
+            }
+            var recentAvg = recentCount > 0 ? recentSum / recentCount : 0;
+            var olderAvg = olderCount > 0 ? olderSum / olderCount : 0;
+            var diff = recentAvg - olderAvg;
+            if (diff > 3) trendDirection = "improving";
+            else if (diff < -3) trendDirection = "declining";
+        } else if (trend.length >= 2) {
+            var first = safeNum(trend[0].percentage);
+            var last = safeNum(trend[trend.length - 1].percentage);
+            var diff = last - first;
+            if (diff > 5) trendDirection = "improving";
+            else if (diff < -5) trendDirection = "declining";
+        }
+
+        return {
+            totalAttempts: overview.totalAttempts,
+            uniqueStudents: overview.uniqueStudents,
+            averageScore: overview.averageScore,
+            averagePercentage: overview.averagePercentage,
+            completionRate: overview.completionRate,
+            totalQuestions: overview.totalQuestions,
+            correctAnswers: overview.correctAnswers,
+            incorrectAnswers: overview.incorrectAnswers,
+            accuracy: overview.accuracy,
+            totalStudents: totalStudents,
+            activeStudents: activeStudents,
+            participationRate: participationRate,
+            trendDirection: trendDirection,
+            trendDataPoints: trend.length
+        };
+    }
+
     return {
         getClassOverview: getClassOverview,
         getStudentPerformance: getStudentPerformance,
@@ -457,6 +530,7 @@ var Analytics = (function() {
         getDifficultyPerformance: getDifficultyPerformance,
         getBloomPerformance: getBloomPerformance,
         getAssessmentTrend: getAssessmentTrend,
-        getAtRiskStudents: getAtRiskStudents
+        getAtRiskStudents: getAtRiskStudents,
+        getTeacherOverview: getTeacherOverview
     };
 })();

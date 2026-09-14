@@ -842,6 +842,29 @@ var TeacherAnalytics = (function() {
         }
     }
 
+    function getTeacherOverview(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            var teacherClasses = filters.teacherClasses || [];
+            var totalStudents = 0;
+            for (var i = 0; i < studentAccounts.length; i++) {
+                if (teacherClasses.indexOf(studentAccounts[i].classId) !== -1) {
+                    totalStudents++;
+                }
+            }
+            return Analytics.getTeacherOverview(data.attempts, totalStudents);
+        } catch(e) {
+            console.error("TeacherAnalytics.getTeacherOverview error:", e);
+            return {
+                totalAttempts: 0, uniqueStudents: 0, averageScore: 0,
+                averagePercentage: 0, completionRate: 0, totalQuestions: 0,
+                correctAnswers: 0, incorrectAnswers: 0, accuracy: 0,
+                totalStudents: 0, activeStudents: 0, participationRate: 0,
+                trendDirection: "stable", trendDataPoints: 0
+            };
+        }
+    }
+
     function getFullAnalytics(filters) {
         try {
             var data = getTeacherAnalyticsData(filters);
@@ -871,6 +894,7 @@ var TeacherAnalytics = (function() {
         getBloomPerformance: getBloomPerformance,
         getAssessmentTrend: getAssessmentTrend,
         getAtRiskStudents: getAtRiskStudents,
+        getTeacherOverview: getTeacherOverview,
         getFullAnalytics: getFullAnalytics
     };
 })();
