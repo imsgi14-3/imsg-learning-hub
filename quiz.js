@@ -12,6 +12,8 @@ var QuizEngine = (function() {
     var questionStartTime = 0;
     var answered = false;
     var assignmentId = "";
+    var quizStartTime = 0;
+    var questionTimes = [];
 
     function getQuizQuestions() { return quizQuestions; }
     function getUserAnswers() { return userAnswers; }
@@ -35,7 +37,9 @@ var QuizEngine = (function() {
         score = 0;
         timeLeft = quizTimeLimit;
         userAnswers = [];
+        questionTimes = [];
         answered = false;
+        quizStartTime = Date.now();
         clearTimer();
     }
 
@@ -109,6 +113,10 @@ var QuizEngine = (function() {
     }
 
     function displayQuestion() {
+        if (questionStartTime > 0) {
+            var elapsed = Math.round((Date.now() - questionStartTime) / 1000);
+            questionTimes[currentQuestion] = (questionTimes[currentQuestion] || 0) + elapsed;
+        }
         questionStartTime = Date.now();
         var q = quizQuestions[currentQuestion];
         var qNum = document.getElementById("questionNumber");
@@ -219,10 +227,24 @@ var QuizEngine = (function() {
         var fbEl = document.getElementById("feedback");
         if (fbEl) fbEl.textContent = fb;
         var user = Auth.getUser();
+        var completedAt = new Date().toISOString();
+        if (questionStartTime > 0) {
+            var lastElapsed = Math.round((Date.now() - questionStartTime) / 1000);
+            questionTimes[currentQuestion] = (questionTimes[currentQuestion] || 0) + lastElapsed;
+        }
+        var studentClassId = "";
+        if (user && user.id) {
+            for (var ci = 0; ci < studentAccounts.length; ci++) {
+                if (studentAccounts[ci].id === user.id) { studentClassId = studentAccounts[ci].classId || ""; break; }
+            }
+        }
         var attempt = {
             attemptId: "attempt-" + Date.now(),
-            timestamp: new Date().toISOString(),
+            timestamp: completedAt,
+            startedAt: quizStartTime ? new Date(quizStartTime).toISOString() : completedAt,
+            completedAt: completedAt,
             studentId: user ? user.id : "unknown",
+            classId: studentClassId,
             subject: quizQuestions[0] ? quizQuestions[0].subject : "General",
             grade: quizQuestions[0] ? quizQuestions[0].grade : 9,
             score: score,
@@ -236,17 +258,21 @@ var QuizEngine = (function() {
         };
         for (var i = 0; i < quizQuestions.length; i++) {
             var q = quizQuestions[i];
-            var selected = userAnswers[i] || null;
+            var selected = userAnswers[i] !== undefined ? userAnswers[i] : null;
             var correctIdx = "ABCD".indexOf(String(q.answer).toUpperCase());
             var correctText = (correctIdx >= 0 && q.options[correctIdx]) ? q.options[correctIdx] : q.answer;
             var isCorrect = selected === correctText;
+            var qTimeUsed = questionTimes[i] || 0;
             attempt.questions.push({
                 questionId: q.id,
                 selectedAnswer: selected,
                 correctAnswer: q.answer,
                 correctAnswerText: correctText,
                 correct: isCorrect,
-                timeUsed: 0
+                timeUsed: qTimeUsed,
+                topic: q.topic || "General",
+                difficulty: q.difficulty || "medium",
+                bloom: q.bloom || "knowledge"
             });
             var topic = q.topic || "General";
             if (!attempt.topicPerformance[topic]) attempt.topicPerformance[topic] = { correct: 0, total: 0 };
@@ -262,7 +288,7 @@ var QuizEngine = (function() {
         var uid = user ? user.id : "unknown";
         for (var i = 0; i < quizQuestions.length; i++) {
             var q = quizQuestions[i];
-            var selected = userAnswers[i] || null;
+            var selected = userAnswers[i] !== undefined ? userAnswers[i] : null;
             var correctIdx = "ABCD".indexOf(String(q.answer).toUpperCase());
             var correctText = (correctIdx >= 0 && q.options[correctIdx]) ? q.options[correctIdx] : q.answer;
             var isCorrect = selected === correctText;
@@ -304,15 +330,21 @@ var QuizEngine = (function() {
         history.pushState({ page: "review" }, "", "#review");
         var rc = document.getElementById("reviewContent");
         rc.innerHTML = "";
+        var lastAttempt = allAttempts.length > 0 ? allAttempts[allAttempts.length - 1] : null;
         for (var i = 0; i < quizQuestions.length; i++) {
             var q = quizQuestions[i];
-            var selected = userAnswers[i] || null;
+            var selected = userAnswers[i] !== undefined ? userAnswers[i] : null;
             var correctIdx = "ABCD".indexOf(String(q.answer).toUpperCase());
             var correctAnswer = (correctIdx >= 0 && q.options[correctIdx]) ? q.options[correctIdx] : q.answer;
             var isCorrect = selected === correctAnswer;
+            var qTime = (lastAttempt && lastAttempt.questions[i]) ? lastAttempt.questions[i].timeUsed : 0;
+            var qTopic = q.topic || "General";
+            var qDifficulty = q.difficulty || "medium";
+            var qBloom = q.bloom || "knowledge";
             var d = document.createElement("div");
             d.className = "review-item";
             var resultText = isCorrect ? "Correct" : "Incorrect";
+            var timeStr = qTime > 0 ? (Math.floor(qTime / 60) + ":" + (qTime % 60 < 10 ? "0" : "") + (qTime % 60)) : "N/A";
             d.innerHTML =
                 "<h3>Question " + (i + 1) + "</h3>" +
                 "<p><strong>ID:</strong> " + (q.id || "?") + "</p>" +
@@ -320,7 +352,7 @@ var QuizEngine = (function() {
                 "<p><strong>Your answer:</strong> " + (selected || "Skipped") + "</p>" +
                 "<p><strong>Correct answer:</strong> " + correctAnswer + "</p>" +
                 (q.explanation ? "<p><strong>Explanation:</strong> " + q.explanation + "</p>" : "") +
-                "<p><strong>" + resultText + "</strong></p>";
+                "<p><strong>" + resultText + "</strong> | Topic: " + qTopic + " | Difficulty: " + qDifficulty + " | Bloom: " + qBloom + " | Time: " + timeStr + "</p>";
             rc.appendChild(d);
         }
     }
@@ -364,6 +396,7 @@ var QuizEngine = (function() {
         getQuizSubject: getQuizSubject,
         getQuizChapter: getQuizChapter,
         getTimer: getTimer,
+        getAssignmentId: getAssignmentId,
         startQuiz: startQuiz,
         setTimerMinutes: setTimerMinutes,
         startTimer: startTimer,

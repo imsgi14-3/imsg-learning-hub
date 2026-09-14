@@ -1,0 +1,21 @@
+{
+  "appId": "pk.edu.imsg.learninghub",
+  "appName": "IMSG Learning Hub",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "url": "https://imsgi14-3.github.io/imsg-learning-hub/",
+    "cleartext": true,
+    "allowNavigation": ["*"]
+  },
+  "android": {
+    "allowMixedContent": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "launchShowDuration": 1500
+    }
+  }
+}

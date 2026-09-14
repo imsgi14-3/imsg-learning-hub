@@ -1,30 +1,34 @@
 window.onload = function() {
-    loadData();
-    loadFromFirestore(function() {
-        if (typeof QuestionLoader !== "undefined") {
-            QuestionLoader.loadAllChapters(function(allQs) {
-                if (allQs && allQs.length > 0) {
-                    var jsonById = {};
-                    for (var i = 0; i < allQs.length; i++) jsonById[allQs[i].id] = allQs[i];
-                    var cleaned = [];
-                    for (var i = 0; i < questions.length; i++) {
-                        if (jsonById[questions[i].id]) cleaned.push(jsonById[questions[i].id]);
-                        else if (!questions[i].subject || !questions[i].chapter) cleaned.push(questions[i]);
+    LocalDB.open(function() {
+        LocalDB.migrateFromLocalStorage();
+        loadData();
+        loadFromFirestore(function() {
+            processSyncQueue();
+            if (typeof QuestionLoader !== "undefined") {
+                QuestionLoader.loadAllChapters(function(allQs) {
+                    if (allQs && allQs.length > 0) {
+                        var jsonById = {};
+                        for (var i = 0; i < allQs.length; i++) jsonById[allQs[i].id] = allQs[i];
+                        var cleaned = [];
+                        for (var i = 0; i < questions.length; i++) {
+                            if (jsonById[questions[i].id]) cleaned.push(jsonById[questions[i].id]);
+                            else if (!questions[i].subject || !questions[i].chapter) cleaned.push(questions[i]);
+                        }
+                        for (var i = 0; i < allQs.length; i++) {
+                            var found = false;
+                            for (var j = 0; j < cleaned.length; j++) { if (cleaned[j].id === allQs[i].id) { found = true; break; } }
+                            if (!found) cleaned.push(allQs[i]);
+                        }
+                        questions = cleaned;
                     }
-                    for (var i = 0; i < allQs.length; i++) {
-                        var found = false;
-                        for (var j = 0; j < cleaned.length; j++) { if (cleaned[j].id === allQs[i].id) { found = true; break; } }
-                        if (!found) cleaned.push(allQs[i]);
-                    }
-                    questions = cleaned;
-                }
+                    Auth.restoreSession();
+                    if (Auth.isLoggedIn()) { UI.showDashboard(); }
+                });
+            } else {
                 Auth.restoreSession();
                 if (Auth.isLoggedIn()) { UI.showDashboard(); }
-            });
-        } else {
-            Auth.restoreSession();
-            if (Auth.isLoggedIn()) { UI.showDashboard(); }
-        }
+            }
+        });
     });
 };
 
@@ -124,3 +128,6 @@ function renderPrincipalClasses() { UI.renderPrincipalClasses(); }
 function renderPrincipalTeachers() { UI.renderPrincipalTeachers(); }
 function renderPrincipalStudents() { UI.renderPrincipalStudents(); }
 function renderPrincipalAnalytics() { UI.renderPrincipalAnalytics(); }
+function filterDeepAnalytics(filter, btn) { UI.filterDeepAnalytics(filter, btn); }
+function showStudentDrillDown(id) { UI.showStudentDrillDown(id); }
+function closeStudentDrillDown() { UI.closeStudentDrillDown(); }

@@ -93,15 +93,23 @@ var subjectsData = {
 };
 
 function loadData() {
-    questions = JSON.parse(localStorage.getItem(QUESTIONS_KEY)) || [];
-    classes = JSON.parse(localStorage.getItem(CLASSES_KEY)) || [];
-    assignments = JSON.parse(localStorage.getItem(ASSIGNMENTS_KEY)) || [];
-    teachers = JSON.parse(localStorage.getItem(TEACHERS_KEY)) || [];
-    attendance = JSON.parse(localStorage.getItem(ATTENDANCE_KEY)) || [];
-    allAttempts = JSON.parse(localStorage.getItem(ATTEMPTS_KEY)) || [];
-    conceptStats = JSON.parse(localStorage.getItem(CONCEPTS_KEY)) || {};
-    studentAccounts = JSON.parse(localStorage.getItem(STUDENTS_KEY)) || [];
-    deletedIds = JSON.parse(localStorage.getItem(DELETED_KEY)) || [];
+    var c = LocalDB.getCache();
+    questions = c.questions || [];
+    classes = c.classes || [];
+    assignments = c.assignments || [];
+    teachers = c.teachers || [];
+    attendance = c.attendance || [];
+    allAttempts = c.allAttempts || [];
+    conceptStats = c.conceptStats || {};
+    studentAccounts = c.studentAccounts || [];
+    deletedIds = c.deletedIds || [];
+    var principalArr = c.principalAccount;
+    if (principalArr && principalArr.length > 0) {
+        var found = false;
+        for (var i = 0; i < principalArr.length; i++) {
+            if (principalArr[i].id === "ADMIN-001") { principalAccount = principalArr[i]; found = true; break; }
+        }
+    }
     var migrated = false;
     for (var i = 0; i < questions.length; i++) {
         if (!questions[i].subject) { questions[i].subject = "Computer Science"; migrated = true; }
@@ -130,10 +138,9 @@ function loadData() {
             }
         }
     }
-    if (migrated) localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
-    if (teachers.length > 0) localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
-    var sp = JSON.parse(localStorage.getItem("learningHub_principal"));
-    if (sp && sp.id === "ADMIN-001") principalAccount = sp;
+    if (migrated) LocalDB.putAll("questions", questions);
+    if (teachers.length > 0) LocalDB.putAll("teachers", teachers);
+    if (principalAccount) LocalDB.putAll("principalAccount", [principalAccount]);
     if (classes.length === 0) {
         classes = [
             { id: "CLASS-9A", name: "9A", grade: 9, section: "A", students: [] },
@@ -143,15 +150,15 @@ function loadData() {
 }
 
 function saveAll() {
-    localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
-    localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
-    localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(assignments));
-    localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
-    localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(attendance));
-    localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
-    localStorage.setItem(CONCEPTS_KEY, JSON.stringify(conceptStats));
-    localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
-    if (principalAccount) localStorage.setItem("learningHub_principal", JSON.stringify(principalAccount));
+    LocalDB.putAll("questions", questions);
+    LocalDB.putAll("classes", classes);
+    LocalDB.putAll("assignments", assignments);
+    LocalDB.putAll("teachers", teachers);
+    LocalDB.putAll("attendance", attendance);
+    LocalDB.putAll("allAttempts", allAttempts);
+    LocalDB.putAll("conceptStats", conceptStats);
+    LocalDB.putAll("studentAccounts", studentAccounts);
+    if (principalAccount) LocalDB.putAll("principalAccount", [principalAccount]);
 }
 
 function saveToFirestore() {
@@ -165,19 +172,19 @@ function saveToFirestore() {
     for (var i = 0; i < allAttempts.length; i++) db.collection("attempts").doc(allAttempts[i].attemptId || allAttempts[i].timestamp || ("att-" + i)).set(allAttempts[i]).catch(function() {});
 }
 
-function pushStudentToFirestore(student) { try { if (typeof db !== "undefined") db.collection("students").doc(student.id).set(student); } catch(e) {} }
-function pushTeacherToFirestore(teacher) { try { if (typeof db !== "undefined") db.collection("teachers").doc(teacher.id).set(teacher); } catch(e) {} }
-function pushClassToFirestore(cls) { try { if (typeof db !== "undefined") db.collection("classes").doc(cls.id).set(cls); } catch(e) {} }
-function pushAssignmentToFirestore(a) { try { if (typeof db !== "undefined") db.collection("assignments").doc(a.id || "a-" + assignments.indexOf(a)).set(a); } catch(e) {} }
-function pushAttemptToFirestore(attempt) { try { if (typeof db !== "undefined") db.collection("attempts").doc(attempt.attemptId).set(attempt); } catch(e) {} }
-function pushQuestionToFirestore(q) { try { if (typeof db !== "undefined") db.collection("questions").doc(q.id).set(q); } catch(e) {} }
-function deleteFromFirestore(collection, id) { try { if (typeof db !== "undefined") { db.collection(collection).doc(id).delete(); if (deletedIds.indexOf(id) === -1) deletedIds.push(id); localStorage.setItem(DELETED_KEY, JSON.stringify(deletedIds)); db.collection("meta").doc("deletedIds").set({ ids: deletedIds }); } } catch(e) {} }
+function pushStudentToFirestore(student) { try { if (typeof db !== "undefined") db.collection("students").doc(student.id).set(student); } catch(e) { LocalDB.addToSyncQueue({ type: "student", action: "set", data: student }); } }
+function pushTeacherToFirestore(teacher) { try { if (typeof db !== "undefined") db.collection("teachers").doc(teacher.id).set(teacher); } catch(e) { LocalDB.addToSyncQueue({ type: "teacher", action: "set", data: teacher }); } }
+function pushClassToFirestore(cls) { try { if (typeof db !== "undefined") db.collection("classes").doc(cls.id).set(cls); } catch(e) { LocalDB.addToSyncQueue({ type: "class", action: "set", data: cls }); } }
+function pushAssignmentToFirestore(a) { try { if (typeof db !== "undefined") db.collection("assignments").doc(a.id || "a-" + assignments.indexOf(a)).set(a); } catch(e) { LocalDB.addToSyncQueue({ type: "assignment", action: "set", data: a }); } }
+function pushAttemptToFirestore(attempt) { try { if (typeof db !== "undefined") db.collection("attempts").doc(attempt.attemptId).set(attempt); } catch(e) { LocalDB.addToSyncQueue({ type: "attempt", action: "set", data: attempt }); } }
+function pushQuestionToFirestore(q) { try { if (typeof db !== "undefined") db.collection("questions").doc(q.id).set(q); } catch(e) { LocalDB.addToSyncQueue({ type: "question", action: "set", data: q }); } }
+function deleteFromFirestore(collection, id) { try { if (typeof db !== "undefined") { db.collection(collection).doc(id).delete(); if (deletedIds.indexOf(id) === -1) deletedIds.push(id); LocalDB.putAll("deletedIds", deletedIds); db.collection("meta").doc("deletedIds").set({ ids: deletedIds }); } } catch(e) { LocalDB.addToSyncQueue({ type: collection, action: "delete", data: { id: id } }); } }
 
 function saveTeacherToFirestore(teacherObj, callback) {
-    if (typeof db === "undefined") { if (callback) callback(false); return; }
+    if (typeof db === "undefined") { LocalDB.addToSyncQueue({ type: "teacher", action: "set", data: teacherObj }); if (callback) callback(false); return; }
     db.collection("teachers").doc(teacherObj.id).set(teacherObj)
         .then(function() { if (callback) callback(true); })
-        .catch(function(e) { console.error("Firestore single teacher save error:", e); if (callback) callback(false); });
+        .catch(function(e) { console.error("Firestore single teacher save error:", e); LocalDB.addToSyncQueue({ type: "teacher", action: "set", data: teacherObj }); if (callback) callback(false); });
 }
 
 var lastFirestorePull = 0;
@@ -615,3 +622,51 @@ function getStudentCountByClass(classId) {
     }
     return count;
 }
+
+function processSyncQueue(callback) {
+    if (typeof db === "undefined") { if (callback) callback(); return; }
+    LocalDB.getSyncQueue(function(queue) {
+        if (!queue || queue.length === 0) { if (callback) callback(); return; }
+        var remaining = queue.length;
+        var processed = 0;
+        function done() {
+            remaining--;
+            if (remaining <= 0) {
+                LocalDB.clearSyncQueue(function() {
+                    if (callback) callback(processed);
+                });
+            }
+        }
+        for (var i = 0; i < queue.length; i++) {
+            (function(entry) {
+                try {
+                    if (entry.action === "delete") {
+                        db.collection(entry.type).doc(entry.data.id).delete()
+                            .then(function() { processed++; done(); })
+                            .catch(function() { done(); });
+                    } else {
+                        var docId = entry.data && entry.data.id ? entry.data.id : ("sync-" + Date.now());
+                        db.collection(entry.type).doc(docId).set(entry.data)
+                            .then(function() { processed++; done(); })
+                            .catch(function() { done(); });
+                    }
+                } catch(e) { done(); }
+            })(queue[i]);
+        }
+    });
+}
+
+function checkAndProcessSync() {
+    if (typeof db !== "undefined" && navigator.onLine) {
+        processSyncQueue();
+    }
+}
+
+window.addEventListener("online", function() {
+    console.log("Back online - processing sync queue");
+    checkAndProcessSync();
+});
+
+window.addEventListener("offline", function() {
+    console.log("Gone offline - writes will be queued");
+});

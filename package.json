@@ -1,0 +1,32 @@
+{
+  "name": "learning_-hub",
+  "version": "1.0.0",
+  "description": "",
+  "main": "auth.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "npx cap sync android",
+    "open": "npx cap open android",
+    "android": "npx cap add android",
+    "sync": "npx cap sync"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imsgi14-3/imsg-learning-hub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/imsgi14-3/imsg-learning-hub/issues"
+  },
+  "homepage": "https://github.com/imsgi14-3/imsg-learning-hub#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2"
+  }
+}

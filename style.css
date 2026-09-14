@@ -1955,6 +1955,8 @@ footer {
     .logout-bar { padding: 10px 15px; }
     .quiz-header { flex-direction: column; gap: 10px; align-items: flex-start; }
     #percentage { font-size: 42px; }
+    .analytics-filter-bar { gap: 6px; }
+    .analytics-filter-btn { padding: 6px 12px; font-size: 12px; }
 }
 
 /* ============================================
@@ -2103,6 +2105,13 @@ footer {
 /* Bar Charts */
 .chart-section { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
 .chart-section h4 { margin-bottom: 16px; color: var(--text-dark); }
+.analytics-filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.analytics-filter-btn { padding: 8px 16px; border: 2px solid var(--border); border-radius: 20px; background: var(--bg-card); color: var(--text-dark); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.analytics-filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+.analytics-filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+.analytics-sections { margin-bottom: 8px; }
+.student-drilldown { animation: slideDown 0.3s ease; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 .bar-chart { display: flex; flex-direction: column; gap: 10px; }
 .bar-row { display: flex; align-items: center; gap: 10px; }
 .bar-label { min-width: 120px; font-size: 0.8rem; color: var(--text-dark); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

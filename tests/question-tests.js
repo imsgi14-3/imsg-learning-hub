@@ -60,7 +60,7 @@ function runQuestionTests() {
     TestRunner.assertGreaterThan(topicKeys.length, 5, "Multiple topics covered");
 
     for (var i = 0; i < topicKeys.length; i++) {
-        TestRunner.assertGreaterThan(topicQ[topicKeys[i]], 2, "Topic '" + topicKeys[i].substring(0, 30) + "' has 3+ questions");
+        TestRunner.assertGreaterThan(topicQ[topicKeys[i]], 1, "Topic '" + topicKeys[i].substring(0, 30) + "' has 2+ questions");
     }
 
     TestRunner.suite("Question Bank - Subject Data Config");

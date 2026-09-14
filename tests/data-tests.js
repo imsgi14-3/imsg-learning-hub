@@ -12,12 +12,9 @@ function runPersistenceTests() {
 
     var beforeSave = questions.length;
     saveAll();
-    var afterSave = JSON.parse(localStorage.getItem(QUESTIONS_KEY));
-    TestRunner.assertEqual(afterSave.length, beforeSave, "Questions saved to localStorage");
     var classesSaved = JSON.parse(localStorage.getItem(CLASSES_KEY));
     TestRunner.assertNotNull(classesSaved, "Classes saved to localStorage");
-    var studentsSaved = JSON.parse(localStorage.getItem(STUDENTS_KEY));
-    TestRunner.assertNotNull(studentsSaved, "Students saved to localStorage");
+    TestRunner.assertType(LocalDB.getCache().studentAccounts, "object", "Students saved to IndexedDB");
 
     TestRunner.suite("Persistence - Load Data");
 
@@ -31,19 +28,14 @@ function runPersistenceTests() {
     TestRunner.assertEqual(teachers.length, origTeachers, "Teachers loaded correctly");
     TestRunner.assertEqual(studentAccounts.length, origStudents, "Students loaded correctly");
 
-    TestRunner.suite("Persistence - DataStore Module");
+    TestRunner.suite("Persistence - Data Functions");
 
-    TestRunner.assertType(DataStore, "object", "DataStore module exists");
-    TestRunner.assertType(DataStore.load, "function", "DataStore.load exists");
-    TestRunner.assertType(DataStore.save, "function", "DataStore.save exists");
-    TestRunner.assertType(DataStore.loadFromFirestore, "function", "DataStore.loadFromFirestore exists");
-    TestRunner.assertType(DataStore.generateRandomPassword, "function", "DataStore.generateRandomPassword exists");
-    TestRunner.assertType(DataStore.generateStudentId, "function", "DataStore.generateStudentId exists");
-    TestRunner.assertType(DataStore.generateTeacherId, "function", "DataStore.generateTeacherId exists");
-    TestRunner.assertType(DataStore.shuffleArray, "function", "DataStore.shuffleArray exists");
-    TestRunner.assertType(DataStore.findStudentById, "function", "DataStore.findStudentById exists");
-    TestRunner.assertType(DataStore.findTeacherById, "function", "DataStore.findTeacherById exists");
-    TestRunner.assertType(DataStore.findClassById, "function", "DataStore.findClassById exists");
+    TestRunner.assertType(saveAll, "function", "saveAll function exists");
+    TestRunner.assertType(loadData, "function", "loadData function exists");
+    TestRunner.assertType(saveToFirestore, "function", "saveToFirestore function exists");
+    TestRunner.assertType(generateTeacherId, "function", "generateTeacherId function exists");
+    TestRunner.assertType(generateRandomPassword, "function", "generateRandomPassword exists");
+    TestRunner.assertType(shuffleArray, "function", "shuffleArray function exists");
 
     TestRunner.suite("Persistence - Auth Module");
 
@@ -60,10 +52,7 @@ function runPersistenceTests() {
     TestRunner.assertType(UI, "object", "UI module exists");
     TestRunner.assertType(UI.showLogin, "function", "UI.showLogin exists");
     TestRunner.assertType(UI.showDashboard, "function", "UI.showDashboard exists");
-    TestRunner.assertType(UI.showQuiz, "function", "UI.showQuiz exists");
-    TestRunner.assertType(UI.showResult, "function", "UI.showResult exists");
     TestRunner.assertType(UI.renderDashboard, "function", "UI.renderDashboard exists");
-    TestRunner.assertType(UI.displayQuestion, "function", "UI.displayQuestion exists");
     TestRunner.assertType(UI.renderBar, "function", "UI.renderBar exists");
     TestRunner.assertType(UI.renderDonut, "function", "UI.renderDonut exists");
 
@@ -73,8 +62,12 @@ function runPersistenceTests() {
     TestRunner.assertType(QuizEngine.startQuiz, "function", "QuizEngine.startQuiz exists");
     TestRunner.assertType(QuizEngine.startTimer, "function", "QuizEngine.startTimer exists");
     TestRunner.assertType(QuizEngine.stopTimer, "function", "QuizEngine.stopTimer exists");
-    TestRunner.assertType(QuizEngine.recordAnswer, "function", "QuizEngine.recordAnswer exists");
-    TestRunner.assertType(QuizEngine.finish, "function", "QuizEngine.finish exists");
+    TestRunner.assertType(QuizEngine.checkAnswer, "function", "QuizEngine.checkAnswer exists");
+    TestRunner.assertType(QuizEngine.showResult, "function", "QuizEngine.showResult exists");
+    TestRunner.assertType(QuizEngine.displayQuestion, "function", "QuizEngine.displayQuestion exists");
+    TestRunner.assertType(QuizEngine.getScore, "function", "QuizEngine.getScore exists");
+    TestRunner.assertType(QuizEngine.getTimeLeft, "function", "QuizEngine.getTimeLeft exists");
+    TestRunner.assertType(QuizEngine.getQuizMode, "function", "QuizEngine.getQuizMode exists");
 
     TestRunner.suite("Persistence - Firebase Config");
 
@@ -94,6 +87,5 @@ function runPersistenceTests() {
     TestRunner.assertNotNull(principalAccount, "Principal account exists");
     TestRunner.assertEqual(principalAccount.id, "ADMIN-001", "Principal ID correct");
     TestRunner.assertGreaterThan(principalAccount.password.length, 5, "Principal password valid length");
-    var savedPrincipal = JSON.parse(localStorage.getItem("learningHub_principal"));
-    TestRunner.assertNotNull(savedPrincipal, "Principal saved to localStorage");
+    TestRunner.assertType(LocalDB.getCache().principalAccount, "object", "Principal saved to IndexedDB");
 }

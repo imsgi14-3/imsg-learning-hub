@@ -2315,7 +2315,24 @@ var UI = (function() {
 
     function renderTeacherDeepAnalytics(attempts) {
         if (!attempts) attempts = [];
+        var practiceModes = ["practice", "weak", "random", "quick"];
+        var assessmentModes = ["test", "assignment", "chapter", "fullbook"];
+        var practiceAttempts = [];
+        var assessmentAttempts = [];
+        for (var i = 0; i < attempts.length; i++) {
+            var m = attempts[i].mode || "practice";
+            var isAssessment = false;
+            for (var j = 0; j < assessmentModes.length; j++) { if (m === assessmentModes[j]) { isAssessment = true; break; } }
+            if (isAssessment) assessmentAttempts.push(attempts[i]);
+            else practiceAttempts.push(attempts[i]);
+        }
         var h = '';
+        h += '<div class="analytics-filter-bar">';
+        h += '<button class="analytics-filter-btn active" onclick="filterDeepAnalytics(\'all\', this)">All (' + attempts.length + ')</button>';
+        h += '<button class="analytics-filter-btn" onclick="filterDeepAnalytics(\'practice\', this)">Practice (' + practiceAttempts.length + ')</button>';
+        h += '<button class="analytics-filter-btn" onclick="filterDeepAnalytics(\'assessment\', this)">Assessment (' + assessmentAttempts.length + ')</button>';
+        h += '</div>';
+        h += '<div class="analytics-sections" id="analyticsAll">';
         try { h += renderActionableInsights(attempts); } catch(e) {}
         try { h += renderAtRiskStudents(attempts); } catch(e) {}
         try { h += renderStudentRankingsFromAttempts(attempts); } catch(e) {}
@@ -2325,7 +2342,188 @@ var UI = (function() {
         try { h += renderQuestionAccuracyFromAttempts(attempts); } catch(e) {}
         try { h += renderProgressFromAttempts(attempts); } catch(e) {}
         try { h += renderDifficultyFromAttempts(attempts); } catch(e) {}
+        h += '</div>';
+        h += '<div class="analytics-sections" id="analyticsPractice" style="display:none;">';
+        try { h += renderActionableInsights(practiceAttempts); } catch(e) {}
+        try { h += renderAtRiskStudents(practiceAttempts); } catch(e) {}
+        try { h += renderStudentRankingsFromAttempts(practiceAttempts); } catch(e) {}
+        try { h += renderScoreTrends(practiceAttempts); } catch(e) {}
+        try { h += renderStudentEngagement(practiceAttempts); } catch(e) {}
+        try { h += renderTopicAnalysisFromAttempts(practiceAttempts); } catch(e) {}
+        try { h += renderQuestionAccuracyFromAttempts(practiceAttempts); } catch(e) {}
+        try { h += renderProgressFromAttempts(practiceAttempts); } catch(e) {}
+        try { h += renderDifficultyFromAttempts(practiceAttempts); } catch(e) {}
+        h += '</div>';
+        h += '<div class="analytics-sections" id="analyticsAssessment" style="display:none;">';
+        try { h += renderActionableInsights(assessmentAttempts); } catch(e) {}
+        try { h += renderAtRiskStudents(assessmentAttempts); } catch(e) {}
+        try { h += renderStudentRankingsFromAttempts(assessmentAttempts); } catch(e) {}
+        try { h += renderScoreTrends(assessmentAttempts); } catch(e) {}
+        try { h += renderStudentEngagement(assessmentAttempts); } catch(e) {}
+        try { h += renderTopicAnalysisFromAttempts(assessmentAttempts); } catch(e) {}
+        try { h += renderQuestionAccuracyFromAttempts(assessmentAttempts); } catch(e) {}
+        try { h += renderProgressFromAttempts(assessmentAttempts); } catch(e) {}
+        try { h += renderDifficultyFromAttempts(assessmentAttempts); } catch(e) {}
+        h += '</div>';
         return h;
+    }
+
+    function filterDeepAnalytics(filter, btn) {
+        var sections = ["analyticsAll", "analyticsPractice", "analyticsAssessment"];
+        for (var i = 0; i < sections.length; i++) {
+            var el = document.getElementById(sections[i]);
+            if (el) el.style.display = "none";
+        }
+        var targetId = filter === "practice" ? "analyticsPractice" : filter === "assessment" ? "analyticsAssessment" : "analyticsAll";
+        var target = document.getElementById(targetId);
+        if (target) target.style.display = "block";
+        var btns = document.querySelectorAll(".analytics-filter-btn");
+        for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+        if (btn) btn.classList.add("active");
+    }
+
+    function showStudentDrillDown(studentId) {
+        var panel = document.getElementById("studentDrillDownPanel");
+        if (!panel) return;
+        var studentAttempts = [];
+        for (var i = 0; i < allAttempts.length; i++) {
+            if (allAttempts[i].studentId === studentId) studentAttempts.push(allAttempts[i]);
+        }
+        if (studentAttempts.length === 0) { panel.innerHTML = '<div class="chart-section" style="margin-top:12px;"><p style="color:var(--text-muted);">No attempts found for this student.</p></div>'; return; }
+        var studentName = getStudentName(studentId);
+        var studentClass = "";
+        for (var i = 0; i < studentAccounts.length; i++) {
+            if (studentAccounts[i].id === studentId) { studentClass = studentAccounts[i].classId || ""; break; }
+        }
+        var className = "";
+        if (studentClass) { for (var i = 0; i < classes.length; i++) { if (classes[i].id === studentClass) { className = classes[i].name; break; } } }
+        var totalAttempts = studentAttempts.length;
+        var sum = 0; var best = 0; var totalTime = 0;
+        for (var i = 0; i < studentAttempts.length; i++) {
+            sum += studentAttempts[i].percentage;
+            if (studentAttempts[i].percentage > best) best = studentAttempts[i].percentage;
+            totalTime += studentAttempts[i].timeSpent || 0;
+        }
+        var avg = sum / totalAttempts;
+        var avgTime = totalTime / totalAttempts;
+        var topicStats = {};
+        for (var i = 0; i < studentAttempts.length; i++) {
+            var a = studentAttempts[i];
+            if (!a.topicPerformance) continue;
+            for (var topic in a.topicPerformance) {
+                var tp = a.topicPerformance[topic];
+                if (!topicStats[topic]) topicStats[topic] = { correct: 0, total: 0 };
+                topicStats[topic].correct += tp.correct;
+                topicStats[topic].total += tp.total;
+            }
+        }
+        var topics = [];
+        for (var t in topicStats) {
+            var s = topicStats[t];
+            topics.push({ name: t, correct: s.correct, total: s.total, pct: s.total > 0 ? (s.correct / s.total * 100) : 0 });
+        }
+        topics.sort(function(a, b) { return a.pct - b.pct; });
+        var diffStats = { easy: { correct: 0, total: 0 }, medium: { correct: 0, total: 0 }, hard: { correct: 0, total: 0 } };
+        for (var i = 0; i < studentAttempts.length; i++) {
+            var a = studentAttempts[i];
+            if (!a.questions) continue;
+            for (var j = 0; j < a.questions.length; j++) {
+                var q = a.questions[j];
+                var diff = q.difficulty || "medium";
+                if (!diffStats[diff]) diffStats[diff] = { correct: 0, total: 0 };
+                diffStats[diff].total++;
+                if (q.correct) diffStats[diff].correct++;
+            }
+        }
+        var modeStats = {};
+        for (var i = 0; i < studentAttempts.length; i++) {
+            var m = studentAttempts[i].mode || "practice";
+            if (!modeStats[m]) modeStats[m] = { count: 0, sum: 0 };
+            modeStats[m].count++;
+            modeStats[m].sum += studentAttempts[i].percentage;
+        }
+        var recentAttempts = studentAttempts.slice(-10).reverse();
+        var h = '<div class="chart-section student-drilldown" style="margin-top:12px;border-left:4px solid var(--primary);">';
+        h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">';
+        h += '<h4>&#128100; ' + studentName + (className ? ' — ' + className : '') + '</h4>';
+        h += '<button onclick="closeStudentDrillDown()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 12px;cursor:pointer;font-size:12px;">Close</button>';
+        h += '</div>';
+        h += '<div class="overview-cards" style="margin-bottom:16px;">';
+        h += '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + totalAttempts + '</div><div class="card-label">Attempts</div></div>';
+        h += '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average</div></div>';
+        h += '<div class="overview-card students"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best</div></div>';
+        var avgMin = Math.floor(avgTime / 60);
+        var avgSec = Math.floor(avgTime % 60);
+        h += '<div class="overview-card questions"><div class="card-icon">&#9201;</div><div class="card-value">' + avgMin + 'm ' + avgSec + 's</div><div class="card-label">Avg Time</div></div>';
+        h += '</div>';
+        if (topics.length > 0) {
+            h += '<div style="margin-bottom:16px;"><h4 style="font-size:14px;margin-bottom:8px;">&#128270; Topic Performance</h4>';
+            h += '<div class="bar-graph">';
+            for (var i = 0; i < topics.length; i++) {
+                var t = topics[i];
+                var color = t.pct >= 70 ? 'var(--success)' : t.pct >= 50 ? 'var(--accent)' : 'var(--error)';
+                var label = t.name.length > 30 ? t.name.substring(0, 30) + '...' : t.name;
+                h += '<div class="bar-graph-row">';
+                h += '<div class="bar-graph-label" title="' + t.name + '">' + label + '</div>';
+                h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + t.pct + '%;background:' + color + ';"><span class="bar-graph-value">' + t.pct.toFixed(0) + '% (' + t.correct + '/' + t.total + ')</span></div></div>';
+                h += '</div>';
+            }
+            h += '</div></div>';
+        }
+        var diffLabels = { easy: "Easy", medium: "Medium", hard: "Hard" };
+        var diffColors = { easy: "#22c55e", medium: "#f59e0b", hard: "#ef4444" };
+        var hasDiff = diffStats.easy.total > 0 || diffStats.medium.total > 0 || diffStats.hard.total > 0;
+        if (hasDiff) {
+            h += '<div style="margin-bottom:16px;"><h4 style="font-size:14px;margin-bottom:8px;">&#127919; Difficulty Breakdown</h4>';
+            h += '<table class="history-table"><thead><tr><th>Difficulty</th><th>Questions</th><th>Correct</th><th>Accuracy</th></tr></thead><tbody>';
+            var diffs = ["easy", "medium", "hard"];
+            for (var i = 0; i < diffs.length; i++) {
+                var d = diffStats[diffs[i]];
+                if (d.total === 0) continue;
+                var acc = (d.correct / d.total * 100).toFixed(1);
+                h += '<tr><td style="color:' + diffColors[diffs[i]] + ';font-weight:700;">' + diffLabels[diffs[i]] + '</td><td>' + d.total + '</td><td>' + d.correct + '</td><td>' + acc + '%</td></tr>';
+            }
+            h += '</tbody></table></div>';
+        }
+        var modeLabels = { practice: "Practice", assignment: "Assignment", random: "Random", quick: "Quick", chapter: "Chapter Test", fullbook: "Full Book", weak: "Weak Areas" };
+        var hasModes = false;
+        for (var mk in modeStats) { hasModes = true; break; }
+        if (hasModes) {
+            h += '<div style="margin-bottom:16px;"><h4 style="font-size:14px;margin-bottom:8px;">&#128202; Mode Breakdown</h4>';
+            h += '<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+            for (var m in modeStats) {
+                var ms = modeStats[m];
+                var mAvg = (ms.sum / ms.count).toFixed(0);
+                h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 14px;border-radius:8px;font-size:12px;"><strong>' + ms.count + '</strong> ' + (modeLabels[m] || m) + ' <span style="color:var(--text-muted);">(' + mAvg + '% avg)</span></div>';
+            }
+            h += '</div></div>';
+        }
+        if (recentAttempts.length > 0) {
+            h += '<div><h4 style="font-size:14px;margin-bottom:8px;">&#128197; Recent Attempts</h4>';
+            h += '<table class="history-table"><thead><tr><th>Date</th><th>Subject</th><th>Mode</th><th>Score</th><th>%</th><th>Time</th></tr></thead><tbody>';
+            for (var i = 0; i < recentAttempts.length; i++) {
+                var a = recentAttempts[i];
+                var dateStr = "?";
+                try {
+                    var ts = a.timestamp || a.completedAt;
+                    if (typeof ts === "string") dateStr = ts.substring(0, 10);
+                    else if (ts && ts.toDate) dateStr = ts.toDate().toISOString().substring(0, 10);
+                } catch(e) { dateStr = "?"; }
+                var mins = Math.floor((a.timeSpent || 0) / 60);
+                var secs = Math.floor((a.timeSpent || 0) % 60);
+                var color = a.percentage >= 80 ? 'var(--success)' : a.percentage >= 50 ? 'var(--accent)' : 'var(--error)';
+                h += '<tr><td>' + dateStr + '</td><td>' + (a.subject || "?") + '</td><td>' + (modeLabels[a.mode] || a.mode || "?") + '</td><td>' + a.score + '/' + a.total + '</td><td style="color:' + color + ';font-weight:700;">' + a.percentage + '%</td><td>' + mins + 'm ' + secs + 's</td></tr>';
+            }
+            h += '</tbody></table></div>';
+        }
+        h += '</div>';
+        panel.innerHTML = h;
+        panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function closeStudentDrillDown() {
+        var panel = document.getElementById("studentDrillDownPanel");
+        if (panel) panel.innerHTML = "";
     }
 
     function getStudentName(studentId) {
@@ -2346,10 +2544,13 @@ var UI = (function() {
         for (var i = 0; i < attempts.length; i++) {
             var a = attempts[i];
             var sid = a.studentId;
-            if (!studentStats[sid]) studentStats[sid] = { sum: 0, best: 0, attempts: 0 };
+            if (!studentStats[sid]) studentStats[sid] = { sum: 0, best: 0, attempts: 0, modes: {} };
             studentStats[sid].sum += a.percentage;
             studentStats[sid].attempts++;
             if (a.percentage > studentStats[sid].best) studentStats[sid].best = a.percentage;
+            var m = a.mode || "practice";
+            if (!studentStats[sid].modes[m]) studentStats[sid].modes[m] = 0;
+            studentStats[sid].modes[m]++;
         }
         var ranked = [];
         for (var sid in studentStats) {
@@ -2358,14 +2559,17 @@ var UI = (function() {
         }
         ranked.sort(function(a, b) { return b.avg - a.avg; });
         var h = '<div class="chart-section"><h4>&#127942; Student Rankings</h4>';
+        h += '<p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Click a student name to view detailed performance</p>';
         h += '<table class="history-table"><thead><tr><th>#</th><th>Student</th><th>Avg %</th><th>Best %</th><th>Attempts</th></tr></thead><tbody>';
         for (var i = 0; i < ranked.length; i++) {
             var r = ranked[i];
             var medal = i === 0 ? '&#129351;' : i === 1 ? '&#129352;' : i === 2 ? '&#129353;' : (i + 1);
             var color = r.avg >= 80 ? 'var(--success)' : r.avg >= 50 ? 'var(--accent)' : 'var(--error)';
-            h += '<tr><td>' + medal + '</td><td><strong>' + r.name + '</strong></td><td style="color:' + color + ';font-weight:700;">' + r.avg.toFixed(0) + '%</td><td>' + r.best + '%</td><td>' + r.attempts + '</td></tr>';
+            h += '<tr><td>' + medal + '</td><td><a href="#" onclick="showStudentDrillDown(\'' + r.id + '\');return false;" style="color:var(--primary);font-weight:700;text-decoration:none;cursor:pointer;">' + r.name + '</a></td><td style="color:' + color + ';font-weight:700;">' + r.avg.toFixed(0) + '%</td><td>' + r.best + '%</td><td>' + r.attempts + '</td></tr>';
         }
-        h += '</tbody></table></div>';
+        h += '</tbody></table>';
+        h += '<div id="studentDrillDownPanel"></div>';
+        h += '</div>';
         return h;
     }
 
@@ -3139,6 +3343,9 @@ var UI = (function() {
         deleteStudentAccount: deleteStudentAccount,
         refreshStudentLists: refreshStudentLists,
         renderPrincipalAnalytics: renderPrincipalAnalytics,
+        filterDeepAnalytics: filterDeepAnalytics,
+        showStudentDrillDown: showStudentDrillDown,
+        closeStudentDrillDown: closeStudentDrillDown,
         showExcelImportModal: showExcelImportModal,
         importExcel: importExcel,
         confirmImport: confirmImport,

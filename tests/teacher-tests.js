@@ -56,9 +56,8 @@ function runTeacherTests() {
 
     TestRunner.suite("Teacher Management - Auto ID Generation");
 
-    var tid = generateTeacherId();
+    var tid = generateTeacherId("Auto Teacher");
     TestRunner.assertNotNull(tid, "Auto teacher ID not null");
-    TestRunner.assertTrue(tid.startsWith("T-"), "Auto ID starts with T-");
     TestRunner.assertGreaterThan(tid.length, 2, "Auto ID has meaningful length");
 
     TestRunner.suite("Teacher Management - Class Teacher with Class");

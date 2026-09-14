@@ -56,8 +56,9 @@ function runAnalyticsTests() {
 
     TestRunner.suite("Analytics - Role State");
 
-    TestRunner.assertType(currentRole, (typeof currentRole), "currentRole type correct");
-    TestRunner.assertNull(currentUser, "currentUser null before login");
+    TestRunner.assertType(Auth.getRole(), "object", "Auth.getRole returns a value");
+    var userBeforeLogin = Auth.getUser();
+    TestRunner.assertTrue(userBeforeLogin === null || userBeforeLogin === undefined, "Auth.getUser null before login");
 
     TestRunner.suite("Analytics - localStorage Keys");
 

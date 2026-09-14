@@ -64,7 +64,15 @@ var TestRunner = (function() {
         passed = 0;
         failed = 0;
         total = 0;
-        testFn();
+        try {
+            testFn();
+        } catch(e) {
+            failed++;
+            total++;
+            var loc = "";
+            if (e.stack) { var lines = e.stack.split("\n"); if (lines.length > 1) loc = lines[1].trim(); }
+            results.push({ type: "fail", suite: "CRASH", test: e.message + (loc ? " @ " + loc : "") });
+        }
         return { passed: passed, failed: failed, total: total, results: results };
     }
 

@@ -1,6 +1,10 @@
 node_modules/
+android/
+www/
 .env
 *.log
+*.apk
+*.zip
 .DS_Store
 Thumbs.db
 .vscode/
