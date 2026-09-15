@@ -754,7 +754,6 @@ var UI = (function() {
         if (content) { content.style.display = "none"; content.innerHTML = ""; }
         if (back) back.style.display = "none";
         renderTeacherClassCards();
-        renderTeacherAnalyticsOverview();
     }
 
     function renderTeacherClassCards() {
@@ -889,8 +888,7 @@ var UI = (function() {
 
     function insightNavigate(target) {
         if (target === "students") {
-            var studentSelect = $("studentAnalyticsSelect");
-            if (studentSelect) studentSelect.focus();
+            showTeacherTab("students");
         } else if (target === "topics") {
             var topicSection = document.querySelector(".chart-section h4");
             if (topicSection) topicSection.scrollIntoView({ behavior: "smooth" });
