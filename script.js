@@ -115,7 +115,6 @@ function loadStudentAnalytics(cid, studentId) { UI.loadStudentAnalytics(cid, stu
 function insightNavigate(target) { UI.insightNavigate(target); }
 function recNavigate(target) { UI.recNavigate(target); }
 function showClassCards() { UI.showClassCards(); }
-function onAnalyticsClassChange(cid) { UI.onAnalyticsClassChange(cid); }
 function markAttendance() { UI.markAttendance(); }
 function saveAttendance(e) { UI.saveAttendance(e); }
 function dashboardsHide() { UI.dashboardsHide(); }

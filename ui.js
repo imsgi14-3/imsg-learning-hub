@@ -741,7 +741,7 @@ var UI = (function() {
             renderQuestions();
         }
         else if (tab === "assignments") { $("teacherAssignmentsTab").style.display = "block"; renderAssignments(); }
-        else if (tab === "analytics") { $("teacherAnalyticsTab").style.display = "block"; showClassCards(); renderTeacherAnalyticsOverview(); }
+        else if (tab === "analytics") { $("teacherAnalyticsTab").style.display = "block"; showClassCards(); }
     }
 
     var selectedAnalyticsClassId = null;
@@ -752,36 +752,13 @@ var UI = (function() {
         var content = $("classAnalyticsContent");
         var back = $("backToClassCards");
         var existingOverview = $("teacherAnalyticsOverview");
-        var classSelect = $("analyticsClassSelect");
         if (existingOverview) existingOverview.parentNode.removeChild(existingOverview);
         if (cards) cards.style.display = "block";
         if (content) { content.style.display = "none"; content.innerHTML = ""; }
         if (back) back.style.display = "none";
-        if (classSelect) {
-            var user = Auth.getUser();
-            var myClassIds = (user && user.classes) ? user.classes : [];
-            classSelect.innerHTML = '<option value="">All Classes (Overview)</option>';
-            for (var i = 0; i < classes.length; i++) {
-                if (myClassIds.indexOf(classes[i].id) !== -1) {
-                    classSelect.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
-                }
-            }
-            classSelect.value = "";
-        }
         renderTeacherClassCards();
-        renderTeacherAnalyticsOverview();
     }
 
-    function onAnalyticsClassChange(cid) {
-        selectedAnalyticsClassId = cid || null;
-        if (!cid) {
-            showClassCards();
-        } else {
-            loadClassAnalytics(cid);
-            var classSelect = $("analyticsClassSelect");
-            if (classSelect) classSelect.value = cid;
-        }
-    }
 
     function renderTeacherClassCards() {
         var c = $("teacherClassCards");
@@ -816,102 +793,6 @@ var UI = (function() {
         c.innerHTML = h;
     }
 
-
-    function renderTeacherAnalyticsOverview() {
-        var container = $("teacherClassCards");
-        if (!container) return;
-        var user = Auth.getUser();
-        var teacherClasses = (user && user.classes) ? user.classes : [];
-        if (teacherClasses.length === 0) return;
-        var existingOverview = $("teacherAnalyticsOverview");
-        if (existingOverview) existingOverview.parentNode.removeChild(existingOverview);
-        var overviewDiv = document.createElement("div");
-        overviewDiv.id = "teacherAnalyticsOverview";
-        overviewDiv.innerHTML = '<div class="chart-section"><p style="text-align:center;color:var(--text-mid);padding:20px;">Loading analytics overview...</p></div>';
-        container.parentNode.insertBefore(overviewDiv, container);
-        var overview = TeacherAnalytics.getTeacherOverview({ teacherClasses: teacherClasses });
-        renderTeacherOverviewUI(overviewDiv, overview);
-    }
-
-    function renderTeacherOverviewUI(container, data) {
-        if (!container || !data) return;
-        var h = '<div class="chart-section" style="margin-bottom:20px;">';
-        h += '<h4 style="margin-bottom:16px;font-size:16px;">&#128200; Class Overview</h4>';
-        h += '<div class="overview-cards">';
-        h += '<div class="overview-card students"><div class="card-icon">&#128100;</div><div class="card-value">' + data.totalStudents + '</div><div class="card-label">Total Students</div></div>';
-        h += '<div class="overview-card average"><div class="card-icon">&#9889;</div><div class="card-value">' + data.activeStudents + '</div><div class="card-label">Active (30d)</div></div>';
-        var partColor = data.participationRate >= 70 ? 'var(--success)' : data.participationRate >= 50 ? 'var(--accent)' : 'var(--error)';
-        h += '<div class="overview-card quizzes"><div class="card-icon">&#128202;</div><div class="card-value" style="color:' + partColor + ';">' + data.participationRate + '%</div><div class="card-label">Participation</div></div>';
-        h += '<div class="overview-card questions"><div class="card-icon">&#128221;</div><div class="card-value">' + data.totalAttempts + '</div><div class="card-label">Assessments Attempted</div></div>';
-        h += '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + data.averagePercentage + '%</div><div class="card-label">Average Score</div></div>';
-        var accColor = data.accuracy >= 70 ? 'var(--success)' : data.accuracy >= 50 ? 'var(--accent)' : 'var(--error)';
-        h += '<div class="overview-card average"><div class="card-icon">&#127919;</div><div class="card-value" style="color:' + accColor + ';">' + data.accuracy + '%</div><div class="card-label">Accuracy</div></div>';
-        h += '</div>';
-        var trendIcon = data.trendDirection === "improving" ? "&#128200;" : data.trendDirection === "declining" ? "&#128201;" : "&#128203;";
-        var trendColor = data.trendDirection === "improving" ? "var(--success)" : data.trendDirection === "declining" ? "var(--error)" : "var(--text-mid)";
-        var trendLabel = data.trendDirection === "improving" ? "Improving" : data.trendDirection === "declining" ? "Declining" : "Stable";
-        h += '<div style="margin-top:16px;padding:12px 16px;background:var(--bg-main);border-radius:8px;display:flex;align-items:center;gap:8px;">';
-        h += '<span style="font-size:20px;">' + trendIcon + '</span>';
-        h += '<div>';
-        h += '<div style="font-weight:600;color:' + trendColor + ';">Performance Trend: ' + trendLabel + '</div>';
-        h += '<div style="font-size:12px;color:var(--text-mid);">' + data.completionRate + '% completion rate &bull; ' + data.trendDataPoints + ' data points</div>';
-        h += '</div></div>';
-        h += '</div>';
-        container.innerHTML = h;
-        renderTeacherInsights(container, data);
-    }
-
-    function renderTeacherInsights(container, overviewData) {
-        if (!container) return;
-        var user = Auth.getUser();
-        var teacherClasses = (user && user.classes) ? user.classes : [];
-        var insights = TeacherAnalytics.getTeacherInsights({ teacherClasses: teacherClasses });
-        var existingInsights = container.querySelector(".insight-panel");
-        if (existingInsights) existingInsights.parentNode.removeChild(existingInsights);
-        if (!insights || insights.length === 0) {
-            var noInsightsDiv = document.createElement("div");
-            noInsightsDiv.className = "insight-panel";
-            noInsightsDiv.innerHTML = '<div class="chart-section" style="margin-top:20px;"><h4>&#10003; Teacher Insights</h4><div class="insight-card insight-ok"><span class="insight-icon">&#10003;</span><div class="insight-body"><div class="insight-message">No immediate concerns identified.</div><div class="insight-detail">Class performance is currently stable.</div></div></div></div>';
-            container.appendChild(noInsightsDiv);
-            return;
-        }
-        var h = '<div class="chart-section" style="margin-top:20px;"><h4>&#128161; Teacher Insights</h4><div class="insight-list">';
-        var categoryIcons = {
-            needs_support: "&#9888;",
-            weak_topic: "&#9888;",
-            declining: "&#128201;",
-            strong_topic: "&#10003;",
-            improving: "&#128200;"
-        };
-        var categoryColors = {
-            needs_support: "var(--error)",
-            weak_topic: "var(--warning, #f59e0b)",
-            declining: "var(--error)",
-            strong_topic: "var(--success)",
-            improving: "var(--success)"
-        };
-        for (var i = 0; i < insights.length; i++) {
-            var ins = insights[i];
-            var icon = categoryIcons[ins.category] || "&#8505;";
-            var color = categoryColors[ins.category] || "var(--text-mid)";
-            var cardClass = "insight-card";
-            if (ins.category === "needs_support" || ins.category === "weak_topic" || ins.category === "declining") cardClass += " insight-warn";
-            else cardClass += " insight-ok";
-            h += '<div class="' + cardClass + '">';
-            h += '<span class="insight-icon" style="color:' + color + ';">' + icon + '</span>';
-            h += '<div class="insight-body">';
-            h += '<div class="insight-message">' + ins.message + '</div>';
-            if (ins.actionLabel) {
-                h += '<div class="insight-action"><button class="insight-link" onclick="insightNavigate(\'' + ins.actionTarget + '\')">' + ins.actionLabel + ' &rarr;</button></div>';
-            }
-            h += '</div></div>';
-        }
-        h += '</div></div>';
-        var insightDiv = document.createElement("div");
-        insightDiv.className = "insight-panel";
-        insightDiv.innerHTML = h;
-        container.appendChild(insightDiv);
-    }
 
     function insightNavigate(target) {
         if (target === "students") {
@@ -1011,12 +892,10 @@ var UI = (function() {
         var content = $("classAnalyticsContent");
         var back = $("backToClassCards");
         var existingOverview = $("teacherAnalyticsOverview");
-        var classSelect = $("analyticsClassSelect");
         if (existingOverview) existingOverview.parentNode.removeChild(existingOverview);
         if (cards) cards.style.display = "none";
         if (content) content.style.display = "block";
         if (back) back.style.display = "inline-block";
-        if (classSelect) classSelect.value = cid;
         renderClassAnalyticsContent(cid);
         refreshAttemptsFromFirestore(function() { renderClassAnalyticsContent(cid); });
     }
@@ -1537,7 +1416,35 @@ var UI = (function() {
         for (var i = 0; i < studentAccounts.length; i++) {
             if (studentAccounts[i].classId === cid) classStudents.push(studentAccounts[i]);
         }
-        var h = '<div class="chart-section"><h4>&#128100; Student Performance</h4>';
+        var h = '';
+
+        // Class-specific overview
+        var overview = TeacherAnalytics.getTeacherOverview({ classId: cid, teacherClasses: [cid] });
+        h += '<div class="chart-section" style="margin-bottom:20px;">';
+        h += '<h4 style="margin-bottom:16px;font-size:16px;">&#128200; Class Overview</h4>';
+        h += '<div class="overview-cards">';
+        h += '<div class="overview-card students"><div class="card-icon">&#128100;</div><div class="card-value">' + overview.totalStudents + '</div><div class="card-label">Total Students</div></div>';
+        h += '<div class="overview-card average"><div class="card-icon">&#9889;</div><div class="card-value">' + overview.activeStudents + '</div><div class="card-label">Active (30d)</div></div>';
+        var partColor = overview.participationRate >= 70 ? 'var(--success)' : overview.participationRate >= 50 ? 'var(--accent)' : 'var(--error)';
+        h += '<div class="overview-card quizzes"><div class="card-icon">&#128202;</div><div class="card-value" style="color:' + partColor + ';">' + overview.participationRate + '%</div><div class="card-label">Participation</div></div>';
+        h += '<div class="overview-card questions"><div class="card-icon">&#128221;</div><div class="card-value">' + overview.totalAttempts + '</div><div class="card-label">Assessments Attempted</div></div>';
+        h += '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + overview.averagePercentage + '%</div><div class="card-label">Average Score</div></div>';
+        var accColor = overview.accuracy >= 70 ? 'var(--success)' : overview.accuracy >= 50 ? 'var(--accent)' : 'var(--error)';
+        h += '<div class="overview-card average"><div class="card-icon">&#127919;</div><div class="card-value" style="color:' + accColor + ';">' + overview.accuracy + '%</div><div class="card-label">Accuracy</div></div>';
+        h += '</div>';
+        var trendIcon = overview.trendDirection === "improving" ? "&#128200;" : overview.trendDirection === "declining" ? "&#128201;" : "&#128203;";
+        var trendColor = overview.trendDirection === "improving" ? "var(--success)" : overview.trendDirection === "declining" ? "var(--error)" : "var(--text-mid)";
+        var trendLabel = overview.trendDirection === "improving" ? "Improving" : overview.trendDirection === "declining" ? "Declining" : "Stable";
+        h += '<div style="margin-top:16px;padding:12px 16px;background:var(--bg-main);border-radius:8px;display:flex;align-items:center;gap:8px;">';
+        h += '<span style="font-size:20px;">' + trendIcon + '</span>';
+        h += '<div>';
+        h += '<div style="font-weight:600;color:' + trendColor + ';">Performance Trend: ' + trendLabel + '</div>';
+        h += '<div style="font-size:12px;color:var(--text-mid);">' + overview.completionRate + '% completion rate &bull; ' + overview.trendDataPoints + ' data points</div>';
+        h += '</div></div>';
+        h += '</div>';
+
+        // Student Performance section
+        h += '<div class="chart-section"><h4>&#128100; Student Performance</h4>';
         h += '<p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:12px;">Select a student to view detailed performance analytics</p>';
         h += '<select id="studentAnalyticsSelect" onchange="loadStudentAnalytics(\'' + cid + '\', this.value)" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:200px;background:var(--bg-card);">';
         h += '<option value="">-- Select Student --</option>';
@@ -1583,8 +1490,60 @@ var UI = (function() {
         h += renderClassDifficultQuestions(cid);
         h += renderTeacherDeepAnalytics(ca);
         c.innerHTML = h;
+
+        // Class-specific Teacher Insights
+        renderClassTeacherInsights(c, cid);
+
         var recs = TeacherAnalytics.getRecommendations({ classId: cid });
         renderRecommendationsPanel(c, recs, "Recommendations for This Class");
+    }
+
+    function renderClassTeacherInsights(container, cid) {
+        if (!container) return;
+        var insights = TeacherAnalytics.getTeacherInsights({ teacherClasses: [cid] });
+        if (!insights || insights.length === 0) {
+            var noInsightsDiv = document.createElement("div");
+            noInsightsDiv.className = "insight-panel";
+            noInsightsDiv.innerHTML = '<div class="chart-section" style="margin-top:20px;"><h4>&#128161; Teacher Insights</h4><div class="insight-card insight-ok"><span class="insight-icon">&#10003;</span><div class="insight-body"><div class="insight-message">No immediate concerns identified.</div><div class="insight-detail">No sufficient assessment data for insights.</div></div></div></div>';
+            container.appendChild(noInsightsDiv);
+            return;
+        }
+        var h = '<div class="chart-section" style="margin-top:20px;"><h4>&#128161; Teacher Insights</h4><div class="insight-list">';
+        var categoryIcons = {
+            needs_support: "&#9888;",
+            weak_topic: "&#9888;",
+            declining: "&#128201;",
+            strong_topic: "&#10003;",
+            improving: "&#128200;"
+        };
+        var categoryColors = {
+            needs_support: "var(--error)",
+            weak_topic: "var(--warning, #f59e0b)",
+            declining: "var(--error)",
+            strong_topic: "var(--success)",
+            improving: "var(--success)"
+        };
+        for (var i = 0; i < insights.length; i++) {
+            var ins = insights[i];
+            var icon = categoryIcons[ins.category] || "&#8505;";
+            var color = categoryColors[ins.category] || "var(--text-mid)";
+            var cardClass = "insight-card";
+            if (ins.category === "needs_support" || ins.category === "weak_topic" || ins.category === "declining") cardClass += " insight-warn";
+            else cardClass += " insight-ok";
+            h += '<div class="' + cardClass + '">';
+            h += '<span class="insight-icon" style="color:' + color + ';">' + icon + '</span>';
+            h += '<div class="insight-body">';
+            h += '<div class="insight-message">' + ins.message + '</div>';
+            if (ins.actionLabel) {
+                h += '<div class="insight-action"><button class="insight-link" onclick="insightNavigate(\'' + ins.actionTarget + '\')">' + ins.actionLabel + ' &rarr;</button></div>';
+            }
+            h += '</div></div>';
+        }
+        h += '</div></div>';
+        var insightDiv = document.createElement("div");
+        insightDiv.className = "insight-panel";
+        insightDiv.innerHTML = h;
+        container.appendChild(insightDiv);
     }
 
     function loadStudentAnalytics(cid, studentId) {
@@ -4023,7 +3982,6 @@ var UI = (function() {
         renderBar: renderBar,
         renderDonut: renderDonut,
         showClassCards: showClassCards,
-        onAnalyticsClassChange: onAnalyticsClassChange,
         loadClassAnalytics: loadClassAnalytics,
         loadStudentAnalytics: loadStudentAnalytics,
         insightNavigate: insightNavigate,
