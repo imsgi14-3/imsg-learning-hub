@@ -744,17 +744,43 @@ var UI = (function() {
         else if (tab === "analytics") { $("teacherAnalyticsTab").style.display = "block"; showClassCards(); renderTeacherAnalyticsOverview(); }
     }
 
+    var selectedAnalyticsClassId = null;
+
     function showClassCards() {
+        selectedAnalyticsClassId = null;
         var cards = $("teacherClassCards");
         var content = $("classAnalyticsContent");
         var back = $("backToClassCards");
         var existingOverview = $("teacherAnalyticsOverview");
+        var classSelect = $("analyticsClassSelect");
         if (existingOverview) existingOverview.parentNode.removeChild(existingOverview);
         if (cards) cards.style.display = "block";
         if (content) { content.style.display = "none"; content.innerHTML = ""; }
         if (back) back.style.display = "none";
+        if (classSelect) {
+            var user = Auth.getUser();
+            var myClassIds = (user && user.classes) ? user.classes : [];
+            classSelect.innerHTML = '<option value="">All Classes (Overview)</option>';
+            for (var i = 0; i < classes.length; i++) {
+                if (myClassIds.indexOf(classes[i].id) !== -1) {
+                    classSelect.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
+                }
+            }
+            classSelect.value = "";
+        }
         renderTeacherClassCards();
         renderTeacherAnalyticsOverview();
+    }
+
+    function onAnalyticsClassChange(cid) {
+        selectedAnalyticsClassId = cid || null;
+        if (!cid) {
+            showClassCards();
+        } else {
+            loadClassAnalytics(cid);
+            var classSelect = $("analyticsClassSelect");
+            if (classSelect) classSelect.value = cid;
+        }
     }
 
     function renderTeacherClassCards() {
@@ -889,8 +915,15 @@ var UI = (function() {
 
     function insightNavigate(target) {
         if (target === "students") {
-            var studentSelect = $("studentAnalyticsSelect");
-            if (studentSelect) studentSelect.focus();
+            if (selectedAnalyticsClassId) {
+                showTeacherTab("students");
+                var classFilter = $("teacherStudentsClassFilter");
+                if (classFilter) classFilter.value = selectedAnalyticsClassId;
+                filterStudentTable("teacherStudents");
+            } else {
+                var studentSelect = $("studentAnalyticsSelect");
+                if (studentSelect) studentSelect.focus();
+            }
         } else if (target === "topics") {
             var topicSection = document.querySelector(".chart-section h4");
             if (topicSection) topicSection.scrollIntoView({ behavior: "smooth" });
@@ -973,14 +1006,17 @@ var UI = (function() {
     }
 
     function loadClassAnalytics(cid) {
+        selectedAnalyticsClassId = cid;
         var cards = $("teacherClassCards");
         var content = $("classAnalyticsContent");
         var back = $("backToClassCards");
         var existingOverview = $("teacherAnalyticsOverview");
+        var classSelect = $("analyticsClassSelect");
         if (existingOverview) existingOverview.parentNode.removeChild(existingOverview);
         if (cards) cards.style.display = "none";
         if (content) content.style.display = "block";
         if (back) back.style.display = "inline-block";
+        if (classSelect) classSelect.value = cid;
         renderClassAnalyticsContent(cid);
         refreshAttemptsFromFirestore(function() { renderClassAnalyticsContent(cid); });
     }
@@ -3987,6 +4023,7 @@ var UI = (function() {
         renderBar: renderBar,
         renderDonut: renderDonut,
         showClassCards: showClassCards,
+        onAnalyticsClassChange: onAnalyticsClassChange,
         loadClassAnalytics: loadClassAnalytics,
         loadStudentAnalytics: loadStudentAnalytics,
         insightNavigate: insightNavigate,

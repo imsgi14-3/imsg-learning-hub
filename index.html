@@ -173,6 +173,11 @@
             </div>
             <div id="teacherAnalyticsTab" class="tab-content" style="display:none;">
                 <h3>&#128200; Class Analytics</h3>
+                <div style="margin-bottom:16px;">
+                    <select id="analyticsClassSelect" onchange="onAnalyticsClassChange(this.value)" style="padding:10px 14px;border:2px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-card);min-width:200px;">
+                        <option value="">All Classes (Overview)</option>
+                    </select>
+                </div>
                 <div id="teacherClassCards"></div>
                 <div id="classAnalyticsContent" style="display:none;"></div>
                 <button id="backToClassCards" class="action-btn" style="display:none;margin-bottom:16px;" onclick="showClassCards()">&#8592; Back to Classes</button>
