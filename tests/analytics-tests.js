@@ -882,4 +882,116 @@ function runTeacherAnalyticsFlowTests() {
 
     var invalidTrend = Analytics.getTrendDirection("invalid");
     TestRunner.assertEqual(invalidTrend, "insufficient_data", "Trend direction: invalid handled");
+
+    TestRunner.suite("Analytics - getTopicMastery: Basic Functionality");
+
+    var topicTests = [
+        { attemptId: "tm1", studentId: "s1", questions: [
+            { questionId: "q1", topic: "Algorithms", correct: true },
+            { questionId: "q2", topic: "Algorithms", correct: false },
+            { questionId: "q3", topic: "Data Structures", correct: true }
+        ]},
+        { attemptId: "tm2", studentId: "s2", questions: [
+            { questionId: "q1", topic: "Algorithms", correct: true },
+            { questionId: "q4", topic: "Networks", correct: false },
+            { questionId: "q5", topic: "Networks", correct: false }
+        ]}
+    ];
+    var origAttemptsTopic = allAttempts.slice();
+    allAttempts = topicTests;
+
+    var topics = Analytics.getTopicMastery(allAttempts);
+    TestRunner.assertType(topics, "object", "getTopicMastery returns array");
+    TestRunner.assertEqual(topics.length, 3, "Topic mastery: 3 topics found");
+    TestRunner.assertEqual(topics[0].topic, "Data Structures", "Topic mastery: strongest topic first");
+    TestRunner.assertEqual(topics[0].masteryLevel, "Strong", "Topic mastery: Data Structures is Strong");
+    TestRunner.assertEqual(topics[2].topic, "Networks", "Topic mastery: weakest topic last");
+    TestRunner.assertEqual(topics[2].masteryLevel, "Needs Support", "Topic mastery: Networks is Needs Support");
+
+    allAttempts = origAttemptsTopic;
+
+    TestRunner.suite("Analytics - getTopicMastery: Empty Data");
+
+    var emptyTopics = Analytics.getTopicMastery([]);
+    TestRunner.assertType(emptyTopics, "object", "Empty topic mastery returns array");
+    TestRunner.assertEqual(emptyTopics.length, 0, "Empty topic mastery: no topics");
+
+    TestRunner.suite("Analytics - getTopicMastery: Safe Defaults");
+
+    var nullTopics = Analytics.getTopicMastery(null);
+    TestRunner.assertEqual(nullTopics.length, 0, "Safe topic mastery: null handled");
+
+    TestRunner.suite("Analytics - getQuestionStatistics: Basic Functionality");
+
+    var qStatsTests = [
+        { attemptId: "qs1", studentId: "s1", questions: [
+            { questionId: "Q-EASY", topic: "Basics", correct: true, difficulty: "easy", timeUsed: 10 },
+            { questionId: "Q-EASY", topic: "Basics", correct: true, difficulty: "easy", timeUsed: 12 },
+            { questionId: "Q-HARD", topic: "Algorithms", correct: false, difficulty: "hard", timeUsed: 45 },
+            { questionId: "Q-HARD", topic: "Algorithms", correct: false, difficulty: "hard", timeUsed: 50 }
+        ]},
+        { attemptId: "qs2", studentId: "s2", questions: [
+            { questionId: "Q-EASY", topic: "Basics", correct: true, difficulty: "easy", timeUsed: 8 },
+            { questionId: "Q-HARD", topic: "Algorithms", correct: true, difficulty: "hard", timeUsed: 40 }
+        ]}
+    ];
+    var origAttemptsQStats = allAttempts.slice();
+    allAttempts = qStatsTests;
+
+    var qStats = Analytics.getQuestionStatistics(allAttempts);
+    TestRunner.assertType(qStats, "object", "getQuestionStatistics returns array");
+    TestRunner.assertEqual(qStats.length, 2, "Question stats: 2 questions found");
+    TestRunner.assertEqual(qStats[0].questionId, "Q-HARD", "Question stats: hardest question first");
+    TestRunner.assertEqual(qStats[0].accuracy, 33.33, "Question stats: Q-HARD accuracy correct");
+    TestRunner.assertEqual(qStats[0].attempts, 3, "Question stats: Q-HARD attempts correct");
+    TestRunner.assertEqual(qStats[1].questionId, "Q-EASY", "Question stats: easiest question second");
+    TestRunner.assertEqual(qStats[1].accuracy, 100, "Question stats: Q-EASY accuracy correct");
+
+    allAttempts = origAttemptsQStats;
+
+    TestRunner.suite("Analytics - getQuestionStatistics: Empty Data");
+
+    var emptyQStats = Analytics.getQuestionStatistics([]);
+    TestRunner.assertType(emptyQStats, "object", "Empty question stats returns array");
+    TestRunner.assertEqual(emptyQStats.length, 0, "Empty question stats: no questions");
+
+    TestRunner.suite("Analytics - getQuestionStatistics: Safe Defaults");
+
+    var nullQStats = Analytics.getQuestionStatistics(null);
+    TestRunner.assertEqual(nullQStats.length, 0, "Safe question stats: null handled");
+
+    var malformedQStats = Analytics.getQuestionStatistics([{ questions: [null, { questionId: "q1" }, { noQuestionId: true }] }]);
+    TestRunner.assertEqual(malformedQStats.length, 1, "Malformed question stats: only valid question counted");
+
+    TestRunner.suite("TeacherAnalytics - getTopicMastery: Integration");
+
+    var origAttemptsTopicTA = allAttempts.slice();
+    allAttempts = [
+        { attemptId: "tm-ta1", studentId: "s1", questions: [
+            { questionId: "q1", topic: "Algorithms", correct: true },
+            { questionId: "q2", topic: "Networks", correct: false }
+        ]}
+    ];
+
+    var taTopics = TeacherAnalytics.getTopicMastery({});
+    TestRunner.assertType(taTopics, "object", "TeacherAnalytics.getTopicMastery returns array");
+    TestRunner.assertGreaterThan(taTopics.length, 0, "TeacherAnalytics topic mastery: has entries");
+
+    allAttempts = origAttemptsTopicTA;
+
+    TestRunner.suite("TeacherAnalytics - getQuestionStatistics: Integration");
+
+    var origAttemptsQTA = allAttempts.slice();
+    allAttempts = [
+        { attemptId: "qs-ta1", studentId: "s1", questions: [
+            { questionId: "Q-TEST", topic: "Basics", correct: false, timeUsed: 20 },
+            { questionId: "Q-TEST", topic: "Basics", correct: false, timeUsed: 25 }
+        ]}
+    ];
+
+    var taQStats = TeacherAnalytics.getQuestionStatistics({});
+    TestRunner.assertType(taQStats, "object", "TeacherAnalytics.getQuestionStatistics returns array");
+    TestRunner.assertGreaterThan(taQStats.length, 0, "TeacherAnalytics question stats: has entries");
+
+    allAttempts = origAttemptsQTA;
 }

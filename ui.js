@@ -1390,6 +1390,8 @@ var UI = (function() {
         }
         h += renderClassAssessmentTrend(ca);
         h += renderClassAssessmentComparison(cid);
+        h += renderClassTopicMastery(cid);
+        h += renderClassDifficultQuestions(cid);
         h += renderTeacherDeepAnalytics(ca);
         c.innerHTML = h;
     }
@@ -1485,6 +1487,119 @@ var UI = (function() {
             h += '<td>' + c.attempts + '</td>';
             h += '<td style="color:' + avgColor + ';font-weight:700;">' + c.averagePercentage + '%</td>';
             h += '<td>' + c.accuracy + '%</td>';
+            h += '</tr>';
+        }
+        h += '</tbody></table></div>';
+        return h;
+    }
+
+    function renderClassTopicMastery(cid) {
+        var topics = TeacherAnalytics.getTopicMastery({ classId: cid });
+        if (!topics || topics.length === 0) {
+            return '<div class="chart-section"><h4>&#128218; Topic Mastery</h4><p style="color:var(--text-mid);font-size:0.9rem;">No topic performance data available yet.</p></div>';
+        }
+        var h = '<div class="chart-section"><h4>&#128218; Topic Mastery</h4>';
+        var needsSupport = [];
+        var developing = [];
+        var strong = [];
+        for (var i = 0; i < topics.length; i++) {
+            if (topics[i].masteryLevel === "Needs Support") needsSupport.push(topics[i]);
+            else if (topics[i].masteryLevel === "Developing") developing.push(topics[i]);
+            else strong.push(topics[i]);
+        }
+        if (needsSupport.length > 0) {
+            h += '<div style="margin-bottom:16px;">';
+            h += '<div style="font-size:0.85rem;font-weight:600;color:#ef4444;margin-bottom:8px;">&#128683; Needs Most Attention</div>';
+            for (var i = 0; i < needsSupport.length; i++) {
+                var t = needsSupport[i];
+                h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;padding:8px 12px;background:#fef2f2;border-radius:8px;">';
+                h += '<div style="flex:1;min-width:0;">';
+                h += '<div style="font-weight:600;font-size:0.9rem;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + t.topic + '">' + t.topic + '</div>';
+                h += '<div style="font-size:0.75rem;color:var(--text-mid);">' + t.correctAnswers + '/' + t.totalQuestions + ' correct</div>';
+                h += '</div>';
+                h += '<div style="text-align:right;min-width:60px;">';
+                h += '<div style="font-weight:700;color:#ef4444;font-size:0.95rem;">' + t.accuracy + '%</div>';
+                h += '</div>';
+                h += '</div>';
+                h += '<div style="height:4px;background:var(--bg-tertiary,#e2e8f0);border-radius:2px;margin-bottom:12px;">';
+                h += '<div style="height:100%;width:' + t.accuracy + '%;background:#ef4444;border-radius:2px;"></div>';
+                h += '</div>';
+            }
+            h += '</div>';
+        }
+        if (developing.length > 0) {
+            h += '<div style="margin-bottom:16px;">';
+            h += '<div style="font-size:0.85rem;font-weight:600;color:#f59e0b;margin-bottom:8px;">&#128218; Developing</div>';
+            for (var i = 0; i < developing.length; i++) {
+                var t = developing[i];
+                h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;padding:8px 12px;background:#fffbeb;border-radius:8px;">';
+                h += '<div style="flex:1;min-width:0;">';
+                h += '<div style="font-weight:600;font-size:0.9rem;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + t.topic + '">' + t.topic + '</div>';
+                h += '<div style="font-size:0.75rem;color:var(--text-mid);">' + t.correctAnswers + '/' + t.totalQuestions + ' correct</div>';
+                h += '</div>';
+                h += '<div style="text-align:right;min-width:60px;">';
+                h += '<div style="font-weight:700;color:#f59e0b;font-size:0.95rem;">' + t.accuracy + '%</div>';
+                h += '</div>';
+                h += '</div>';
+                h += '<div style="height:4px;background:var(--bg-tertiary,#e2e8f0);border-radius:2px;margin-bottom:12px;">';
+                h += '<div style="height:100%;width:' + t.accuracy + '%;background:#f59e0b;border-radius:2px;"></div>';
+                h += '</div>';
+            }
+            h += '</div>';
+        }
+        if (strong.length > 0) {
+            h += '<div>';
+            h += '<div style="font-size:0.85rem;font-weight:600;color:#10b981;margin-bottom:8px;">&#127942; Strong</div>';
+            for (var i = 0; i < strong.length; i++) {
+                var t = strong[i];
+                h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;padding:8px 12px;background:#ecfdf5;border-radius:8px;">';
+                h += '<div style="flex:1;min-width:0;">';
+                h += '<div style="font-weight:600;font-size:0.9rem;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + t.topic + '">' + t.topic + '</div>';
+                h += '<div style="font-size:0.75rem;color:var(--text-mid);">' + t.correctAnswers + '/' + t.totalQuestions + ' correct</div>';
+                h += '</div>';
+                h += '<div style="text-align:right;min-width:60px;">';
+                h += '<div style="font-weight:700;color:#10b981;font-size:0.95rem;">' + t.accuracy + '%</div>';
+                h += '</div>';
+                h += '</div>';
+                h += '<div style="height:4px;background:var(--bg-tertiary,#e2e8f0);border-radius:2px;margin-bottom:12px;">';
+                h += '<div style="height:100%;width:' + t.accuracy + '%;background:#10b981;border-radius:2px;"></div>';
+                h += '</div>';
+            }
+            h += '</div>';
+        }
+        h += '</div>';
+        return h;
+    }
+
+    function renderClassDifficultQuestions(cid) {
+        var questions = TeacherAnalytics.getQuestionStatistics({ classId: cid });
+        if (!questions || questions.length === 0) {
+            return '<div class="chart-section"><h4>&#10067; Difficult Questions</h4><p style="color:var(--text-mid);font-size:0.9rem;">No question data available yet.</p></div>';
+        }
+        var difficult = [];
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].accuracy < 60 && questions[i].attempts >= 2) {
+                difficult.push(questions[i]);
+            }
+        }
+        if (difficult.length === 0) {
+            return '<div class="chart-section"><h4>&#10067; Difficult Questions</h4><p style="color:var(--text-mid);font-size:0.9rem;">No questions identified as difficult (all above 60% accuracy or insufficient attempts).</p></div>';
+        }
+        var h = '<div class="chart-section"><h4>&#10067; Difficult Questions</h4>';
+        h += '<p style="font-size:0.8rem;color:var(--text-mid);margin-bottom:12px;">Questions with less than 60% accuracy and at least 2 responses</p>';
+        h += '<table class="history-table"><thead><tr><th>Question</th><th>Topic</th><th>Accuracy</th><th>Responses</th><th>Avg Time</th></tr></thead><tbody>';
+        for (var i = 0; i < difficult.length; i++) {
+            var q = difficult[i];
+            var shortId = q.questionId.length > 20 ? q.questionId.substring(0, 17) + '...' : q.questionId;
+            var accColor = q.accuracy < 40 ? '#ef4444' : q.accuracy < 50 ? '#f97316' : '#f59e0b';
+            var avgTime = q.averageTimeUsed > 0 ? Math.round(q.averageTimeUsed) + 's' : 'N/A';
+            var topicLabel = q.topic || 'General';
+            h += '<tr>';
+            h += '<td style="font-weight:600;font-size:0.85rem;" title="' + q.questionId + '">' + shortId + '</td>';
+            h += '<td style="font-size:0.85rem;">' + topicLabel + '</td>';
+            h += '<td style="color:' + accColor + ';font-weight:700;">' + q.accuracy + '%</td>';
+            h += '<td>' + q.attempts + '</td>';
+            h += '<td>' + avgTime + '</td>';
             h += '</tr>';
         }
         h += '</tbody></table></div>';
