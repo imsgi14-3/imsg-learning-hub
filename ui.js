@@ -2002,6 +2002,10 @@ var UI = (function() {
         var showClass = options.showClass !== false;
         var showReset = options.showReset || false;
         var filterId = options.filterId || "";
+        var user = Auth.getUser();
+        var isSubjectTeacher = user && user.role === "teacher";
+        var showEditDelete = options.showEditDelete !== false && !isSubjectTeacher;
+        var showPassword = options.showPassword !== false && !isSubjectTeacher;
 
         var h = '';
         h += '<div class="student-filter-bar">';
@@ -2027,9 +2031,9 @@ var UI = (function() {
         h += '</div>';
 
         h += '<table id="' + filterId + 'Table"><thead><tr>';
-        h += '<th>ID</th><th>Name</th><th>Father Name</th>';
+        h += '<th>Name</th>';
         if (showClass) h += '<th>Class</th>';
-        h += '<th>Roll No</th><th>Password</th><th>Status</th><th>Attempts</th><th>Average</th><th>Actions</th>';
+        h += '<th>Attempts</th><th>Average</th><th>Actions</th>';
         h += '</tr></thead><tbody>';
 
         var found = false;
@@ -2041,25 +2045,36 @@ var UI = (function() {
             var avg = sa.length > 0 ? sa.reduce(function(sum, a) { return sum + a.percentage; }, 0) / sa.length : 0;
             var st = getStudentStatus(s.id);
             h += '<tr data-class="' + (s.classId || '') + '" data-status="' + st.status + '" data-name="' + (s.name || '').toLowerCase() + '" data-id="' + (s.id || '').toLowerCase() + '">';
-            h += '<td>' + s.id + '</td>';
             h += '<td>' + s.name + '</td>';
-            h += '<td>' + (s.fatherName || "-") + '</td>';
             if (showClass) h += '<td>' + getStudentClassName(s.classId) + '</td>';
-            h += '<td>' + (s.rollNo || "-") + '</td>';
-            h += '<td><code>' + s.password + '</code></td>';
-            h += '<td><span style="color:' + st.color + ';font-weight:600;">' + st.label + '</span></td>';
             h += '<td>' + sa.length + '</td>';
             h += '<td>' + avg.toFixed(1) + '%</td>';
             h += '<td>';
-            h += '<button onclick="editStudentAccount(\'' + s.id + '\')" class="action-btn">Edit</button> ';
-            if (showReset) h += '<button onclick="resetStudentPassword(\'' + s.id + '\')" class="action-btn">Reset Pass</button> ';
-            h += '<button onclick="deleteStudentAccount(\'' + s.id + '\')" class="action-btn danger">Delete</button>';
+            h += '<button onclick="openStudentPerformanceFromStudents(\'' + s.id + '\', \'' + (s.classId || '') + '\')" class="action-btn">Performance &rarr;</button> ';
+            if (showEditDelete) {
+                h += '<button onclick="editStudentAccount(\'' + s.id + '\')" class="action-btn">Edit</button> ';
+                h += '<button onclick="deleteStudentAccount(\'' + s.id + '\')" class="action-btn danger">Delete</button>';
+            }
             h += '</td></tr>';
         }
         if (!found) { c.innerHTML = "<p>No students yet.</p>"; return; }
         h += '</tbody></table>';
         c.innerHTML = h;
     }
+
+    window.openStudentPerformanceFromStudents = function(studentId, classId) {
+        showTeacherTab("analytics");
+        if (classId) {
+            loadClassAnalytics(classId);
+            setTimeout(function() {
+                var select = $("studentAnalyticsSelect");
+                if (select) {
+                    select.value = studentId;
+                    loadStudentAnalytics(classId, studentId);
+                }
+            }, 300);
+        }
+    };
 
     window.filterStudentTable = function(filterId) {
         var searchEl = $(filterId + "Search");
@@ -2960,9 +2975,7 @@ var UI = (function() {
         h += '<div class="analytics-sections" id="analyticsAll">';
         try { h += renderActionableInsights(attempts); } catch(e) {}
         try { h += renderAtRiskStudents(attempts); } catch(e) {}
-        try { h += renderStudentRankingsFromAttempts(attempts); } catch(e) {}
         try { h += renderScoreTrends(attempts); } catch(e) {}
-        try { h += renderStudentEngagement(attempts); } catch(e) {}
         try { h += renderTopicAnalysisFromAttempts(attempts); } catch(e) {}
         try { h += renderQuestionAccuracyFromAttempts(attempts); } catch(e) {}
         try { h += renderProgressFromAttempts(attempts); } catch(e) {}
@@ -2971,9 +2984,7 @@ var UI = (function() {
         h += '<div class="analytics-sections" id="analyticsPractice" style="display:none;">';
         try { h += renderActionableInsights(practiceAttempts); } catch(e) {}
         try { h += renderAtRiskStudents(practiceAttempts); } catch(e) {}
-        try { h += renderStudentRankingsFromAttempts(practiceAttempts); } catch(e) {}
         try { h += renderScoreTrends(practiceAttempts); } catch(e) {}
-        try { h += renderStudentEngagement(practiceAttempts); } catch(e) {}
         try { h += renderTopicAnalysisFromAttempts(practiceAttempts); } catch(e) {}
         try { h += renderQuestionAccuracyFromAttempts(practiceAttempts); } catch(e) {}
         try { h += renderProgressFromAttempts(practiceAttempts); } catch(e) {}
@@ -2982,9 +2993,7 @@ var UI = (function() {
         h += '<div class="analytics-sections" id="analyticsAssessment" style="display:none;">';
         try { h += renderActionableInsights(assessmentAttempts); } catch(e) {}
         try { h += renderAtRiskStudents(assessmentAttempts); } catch(e) {}
-        try { h += renderStudentRankingsFromAttempts(assessmentAttempts); } catch(e) {}
         try { h += renderScoreTrends(assessmentAttempts); } catch(e) {}
-        try { h += renderStudentEngagement(assessmentAttempts); } catch(e) {}
         try { h += renderTopicAnalysisFromAttempts(assessmentAttempts); } catch(e) {}
         try { h += renderQuestionAccuracyFromAttempts(assessmentAttempts); } catch(e) {}
         try { h += renderProgressFromAttempts(assessmentAttempts); } catch(e) {}
