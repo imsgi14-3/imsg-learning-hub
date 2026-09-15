@@ -754,6 +754,7 @@ var UI = (function() {
         if (content) { content.style.display = "none"; content.innerHTML = ""; }
         if (back) back.style.display = "none";
         renderTeacherClassCards();
+        renderTeacherAnalyticsOverview();
     }
 
     function renderTeacherClassCards() {
@@ -1526,23 +1527,6 @@ var UI = (function() {
         h += '<div class="overview-card average"><div class="card-icon">&#127919;</div><div class="card-value">' + data.accuracy + '%</div><div class="card-label">Accuracy</div></div>';
         h += '<div class="overview-card students"><div class="card-icon">&#128100;</div><div class="card-value">' + data.uniqueStudents + '</div><div class="card-label">Students</div></div>';
         h += '</div>';
-        var classInsights = TeacherAnalytics.getTeacherInsights({ classId: cid });
-        if (classInsights && classInsights.length > 0) {
-            var insightH = '<div class="chart-section" style="margin-top:20px;"><h4>&#128161; Teacher Insights</h4><div class="insight-list">';
-            var catIcons = { needs_support: "&#9888;", weak_topic: "&#9888;", declining: "&#128201;", strong_topic: "&#10003;", improving: "&#128200;" };
-            var catColors = { needs_support: "var(--error)", weak_topic: "var(--warning, #f59e0b)", declining: "var(--error)", strong_topic: "var(--success)", improving: "var(--success)" };
-            for (var ci = 0; ci < classInsights.length; ci++) {
-                var ins = classInsights[ci];
-                var ic = catIcons[ins.category] || "&#8505;";
-                var icol = catColors[ins.category] || "var(--text-mid)";
-                var cc = (ins.category === "needs_support" || ins.category === "weak_topic" || ins.category === "declining") ? "insight-card insight-warn" : "insight-card insight-ok";
-                insightH += '<div class="' + cc + '"><span class="insight-icon" style="color:' + icol + ';">' + ic + '</span><div class="insight-body"><div class="insight-message">' + ins.message + '</div>';
-                if (ins.actionLabel) insightH += '<div class="insight-action"><button class="insight-link" onclick="insightNavigate(\'' + ins.actionTarget + '\')">' + ins.actionLabel + ' &rarr;</button></div>';
-                insightH += '</div></div>';
-            }
-            insightH += '</div></div>';
-            h += insightH;
-        }
         h += '<div class="chart-section"><h4>&#128202; Attempt Types</h4><div style="display:flex;gap:12px;flex-wrap:wrap;">';
         var modeLabels = { practice: "Practice", assignment: "Assignment", random: "Random Quiz", quick: "Quick Practice", chapter: "Chapter Test", fullbook: "Full Book Test", weak: "Weak Areas" };
         for (var m in modeCounts) {
