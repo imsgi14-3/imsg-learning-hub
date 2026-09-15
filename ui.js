@@ -888,7 +888,8 @@ var UI = (function() {
 
     function insightNavigate(target) {
         if (target === "students") {
-            showTeacherTab("students");
+            var studentSelect = $("studentAnalyticsSelect");
+            if (studentSelect) studentSelect.focus();
         } else if (target === "topics") {
             var topicSection = document.querySelector(".chart-section h4");
             if (topicSection) topicSection.scrollIntoView({ behavior: "smooth" });
