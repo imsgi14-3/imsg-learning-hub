@@ -146,12 +146,12 @@ The dependency must be:
 | Phase 2   | Analytics Engine                             | âœ… Complete |
 | Phase 2V  | Analytics Validation & Testing               | âœ… Complete |
 | Phase 3.1 | Teacher Analytics Data Flow                  | âœ… Complete |
-| Phase 3.2 | Teacher Analytics Overview                   | ðŸ”µ Current  |
-| Phase 3.3 | Class Performance Analytics                  | â³          |
-| Phase 3.4 | Topic & Question Analytics                   | â³          |
-| Phase 3.5 | Student Performance Analytics                | â³          |
-| Phase 3.6 | Teacher Action / Insight Panel               | â³          |
-| Phase 4   | Teacher Insights & Recommendations           | â³          |
+| Phase 3.2 | Teacher Analytics Overview                   | âœ… Complete |
+| Phase 3.3 | Class Performance Analytics                  | âœ… Complete |
+| Phase 3.4 | Topic & Question Analytics                   | âœ… Complete |
+| Phase 3.5 | Student Performance Analytics                | âœ… Complete |
+| Phase 3.6 | Teacher Action / Insight Panel               | âœ… Complete |
+| Phase 4   | Teacher Insights & Recommendations           | ðŸ"µ Current  |
 | Phase 5   | Advanced Learning & Question Analytics       | â³          |
 | Phase 6   | Performance, Security & Production Hardening | â³          |
 | Phase 7   | Final QA, Deployment & Release               | â³          |
@@ -875,51 +875,51 @@ The current state is:
 Phase 1
 Assessment Data Integrity
         âœ…
-        â†“
+        â†"
 Phase 2
 Analytics Engine
         âœ…
-        â†“
+        â†"
 Phase 2V
 Analytics Validation
         âœ…
-        â†“
+        â†"
 Phase 3.1
 Teacher Analytics Data Flow
         âœ…
-        â†“
+        â†"
 Phase 3.2
 Teacher Analytics Overview
-        ðŸ”µ CURRENT
-        â†“
+        âœ…
+        â†"
 Phase 3.3
 Class Performance Analytics
-        â³
-        â†“
+        âœ…
+        â†"
 Phase 3.4
 Topic & Question Analytics
-        â³
-        â†“
+        âœ…
+        â†"
 Phase 3.5
 Student Performance Analytics
-        â³
-        â†“
+        âœ…
+        â†"
 Phase 3.6
 Teacher Action / Insight Panel
-        â³
-        â†“
+        âœ…
+        â†"
 Phase 4
 Teacher Insights & Recommendations
-        â³
-        â†“
+        ðŸ"µ CURRENT
+        â†"
 Phase 5
 Advanced Analytics
         â³
-        â†“
+        â†"
 Phase 6
 Hardening
         â³
-        â†“
+        â†"
 Phase 7
 Final QA & Release
         â³
@@ -973,29 +973,19 @@ Do not automatically start the next phase.
 The immediate task is:
 
 ```text
-PHASE 3.1
-Teacher Analytics Data Flow
+PHASE 4
+Teacher Insights & Recommendations
 ```
 
-Do not build the complete teacher dashboard yet.
+The teacher analytics MVP (Phases 3.1–3.6) is complete. The next phase expands teacher decision support with:
 
-First establish a clean and reliable path:
-
-```text
-Teacher UI
-    â†“
-Data Layer
-    â†“
-Assessment Attempts
-    â†“
-analytics.js
-    â†“
-Analytics Results
-    â†“
-Teacher UI
-```
-
-After Phase 3.1 is completed and tested, proceed to Phase 3.2.
+* Reteaching recommendations
+* Intervention groups
+* Revision recommendations
+* Weak-topic prioritization
+* Student support recommendations
+* Question review recommendations
+* Intervention tracking
 
 ---
 
