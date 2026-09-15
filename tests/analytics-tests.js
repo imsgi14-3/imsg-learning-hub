@@ -1079,4 +1079,171 @@ function runTeacherAnalyticsFlowTests() {
     TestRunner.assertGreaterThan(taSP.averagePercentage, 0, "TeacherAnalytics student: average calculated");
 
     allAttempts = origAttemptsStuTA;
+
+    TestRunner.suite("Contract - Student Isolation: Student A cannot affect Student B");
+
+    var isolationTests = [
+        { attemptId: "iso-a1", studentId: "student-A", percentage: 90, score: 9, questions: [
+            { questionId: "q1", topic: "Algorithms", correct: true },
+            { questionId: "q2", topic: "Networks", correct: true }
+        ]},
+        { attemptId: "iso-b1", studentId: "student-B", percentage: 40, score: 4, questions: [
+            { questionId: "q3", topic: "Algorithms", correct: false },
+            { questionId: "q4", topic: "Networks", correct: false }
+        ]},
+        { attemptId: "iso-b2", studentId: "student-B", percentage: 50, score: 5, questions: [
+            { attemptId: "q5", topic: "Algorithms", correct: false }
+        ]}
+    ];
+    var origAttemptsIso = allAttempts.slice();
+    allAttempts = isolationTests;
+
+    var perfA = Analytics.getStudentPerformance("student-A", allAttempts);
+    var perfB = Analytics.getStudentPerformance("student-B", allAttempts);
+    TestRunner.assertEqual(perfA.totalAttempts, 1, "Isolation: Student A has 1 attempt");
+    TestRunner.assertEqual(perfB.totalAttempts, 2, "Isolation: Student B has 2 attempts");
+    TestRunner.assertEqual(perfA.averagePercentage, 90, "Isolation: Student A average unaffected by B");
+    TestRunner.assertEqual(perfB.averagePercentage, 45, "Isolation: Student B average unaffected by A");
+    TestRunner.assertEqual(perfA.topicStrengths.length, 2, "Isolation: Student A strengths from A only");
+    TestRunner.assertEqual(perfB.topicWeaknesses.length, 2, "Isolation: Student B weaknesses from B only");
+
+    allAttempts = origAttemptsIso;
+
+    TestRunner.suite("Contract - Empty Attempts: Returns safe predictable result");
+
+    var emptyContract = Analytics.getStudentPerformance("any-student", []);
+    TestRunner.assertEqual(emptyContract.studentId, "any-student", "Empty contract: studentId preserved");
+    TestRunner.assertEqual(emptyContract.totalAttempts, 0, "Empty contract: totalAttempts is 0");
+    TestRunner.assertEqual(emptyContract.averagePercentage, 0, "Empty contract: averagePercentage is 0");
+    TestRunner.assertEqual(emptyContract.bestPercentage, 0, "Empty contract: bestPercentage is 0");
+    TestRunner.assertEqual(emptyContract.lowestPercentage, 100, "Empty contract: lowestPercentage is 100");
+    TestRunner.assertEqual(emptyContract.topicStrengths.length, 0, "Empty contract: no strengths");
+    TestRunner.assertEqual(emptyContract.topicWeaknesses.length, 0, "Empty contract: no weaknesses");
+    TestRunner.assertEqual(emptyContract.recentPerformance.length, 0, "Empty contract: no recent performance");
+
+    TestRunner.suite("Contract - Null Student ID: Returns safe result");
+
+    var nullContract = Analytics.getStudentPerformance(null, [{ percentage: 80 }]);
+    TestRunner.assertEqual(nullContract.studentId, null, "Null student: studentId is null");
+    TestRunner.assertEqual(nullContract.totalAttempts, 0, "Null student: totalAttempts is 0");
+
+    TestRunner.suite("Contract - Legacy Attempt: Missing fields do not crash");
+
+    var legacyTests = [
+        { attemptId: "leg1", studentId: "legacy-stu" },
+        { studentId: "legacy-stu", score: 5, total: 10 },
+        { attemptId: "leg3", studentId: "legacy-stu", percentage: 75 },
+        { attemptId: "leg4", studentId: "legacy-stu", percentage: 80, questions: null },
+        { attemptId: "leg5", studentId: "legacy-stu", percentage: 60, questions: [null] }
+    ];
+    var origAttemptsLegacy = allAttempts.slice();
+    allAttempts = legacyTests;
+
+    var legacyPerf = Analytics.getStudentPerformance("legacy-stu", allAttempts);
+    TestRunner.assertType(legacyPerf, "object", "Legacy: returns object without crashing");
+    TestRunner.assertGreaterThan(legacyPerf.totalAttempts, 0, "Legacy: counted valid attempts");
+
+    allAttempts = origAttemptsLegacy;
+
+    TestRunner.suite("Contract - Predictable Result Shape: All fields present");
+
+    var shapeTests = [
+        { attemptId: "sh1", studentId: "shape-stu", percentage: 70, score: 7, questions: [
+            { questionId: "q1", topic: "Topic A", correct: true }
+        ]}
+    ];
+    var origAttemptsShape = allAttempts.slice();
+    allAttempts = shapeTests;
+
+    var shape = Analytics.getStudentPerformance("shape-stu", allAttempts);
+    TestRunner.assertNotNull(shape.studentId, "Shape: studentId present");
+    TestRunner.assertType(shape.totalAttempts, "number", "Shape: totalAttempts is number");
+    TestRunner.assertType(shape.averageScore, "number", "Shape: averageScore is number");
+    TestRunner.assertType(shape.averagePercentage, "number", "Shape: averagePercentage is number");
+    TestRunner.assertType(shape.bestPercentage, "number", "Shape: bestPercentage is number");
+    TestRunner.assertType(shape.lowestPercentage, "number", "Shape: lowestPercentage is number");
+    TestRunner.assertType(shape.totalQuestions, "number", "Shape: totalQuestions is number");
+    TestRunner.assertType(shape.correctAnswers, "number", "Shape: correctAnswers is number");
+    TestRunner.assertType(shape.incorrectAnswers, "number", "Shape: incorrectAnswers is number");
+    TestRunner.assertType(shape.accuracy, "number", "Shape: accuracy is number");
+    TestRunner.assertType(shape.recentPerformance, "object", "Shape: recentPerformance is array");
+    TestRunner.assertType(shape.topicStrengths, "object", "Shape: topicStrengths is array");
+    TestRunner.assertType(shape.topicWeaknesses, "object", "Shape: topicWeaknesses is array");
+
+    allAttempts = origAttemptsShape;
+
+    TestRunner.suite("Contract - Topic Data: Only topics from source attempts");
+
+    var topicTests = [
+        { attemptId: "tp1", studentId: "topic-stu", percentage: 70, questions: [
+            { questionId: "q1", topic: "Algorithms", correct: true },
+            { questionId: "q2", topic: "Algorithms", correct: true },
+            { questionId: "q3", topic: "Networks", correct: false }
+        ]}
+    ];
+    var origAttemptsTopic = allAttempts.slice();
+    allAttempts = topicTests;
+
+    var topicPerf = Analytics.getStudentPerformance("topic-stu", allAttempts);
+    var allTopics = topicPerf.topicStrengths.concat(topicPerf.topicWeaknesses);
+    TestRunner.assertEqual(allTopics.length, 2, "Topics: only 2 topics from source attempts");
+    var topicNames = [];
+    for (var ti = 0; ti < allTopics.length; ti++) topicNames.push(allTopics[ti].topic);
+    var hasAlgorithms = topicNames.indexOf("Algorithms") !== -1;
+    var hasNetworks = topicNames.indexOf("Networks") !== -1;
+    TestRunner.assertTrue(hasAlgorithms, "Topics: Algorithms present");
+    TestRunner.assertTrue(hasNetworks, "Topics: Networks present");
+
+    allAttempts = origAttemptsTopic;
+
+    TestRunner.suite("Contract - Accuracy Calculation: Correct formula");
+
+    var accTests = [
+        { attemptId: "acc1", studentId: "acc-stu", percentage: 75, questions: [
+            { questionId: "q1", correct: true },
+            { questionId: "q2", correct: true },
+            { questionId: "q3", correct: false }
+        ]}
+    ];
+    var origAttemptsAcc = allAttempts.slice();
+    allAttempts = accTests;
+
+    var accPerf = Analytics.getStudentPerformance("acc-stu", allAttempts);
+    TestRunner.assertEqual(accPerf.totalQuestions, 3, "Accuracy: 3 total questions");
+    TestRunner.assertEqual(accPerf.correctAnswers, 2, "Accuracy: 2 correct");
+    TestRunner.assertEqual(accPerf.incorrectAnswers, 1, "Accuracy: 1 incorrect");
+    TestRunner.assertEqual(accPerf.accuracy, 66.67, "Accuracy: 66.67% correct");
+
+    allAttempts = origAttemptsAcc;
+
+    TestRunner.suite("Contract - Strength/Weakness Threshold: 70% boundary");
+
+    var thresholdTests = [
+        { attemptId: "th1", studentId: "thresh-stu", percentage: 70, questions: [
+            { questionId: "q1", topic: "Exactly70", correct: true },
+            { questionId: "q2", topic: "Exactly70", correct: true },
+            { questionId: "q3", topic: "Exactly70", correct: true },
+            { questionId: "q4", topic: "Exactly70", correct: true },
+            { questionId: "q5", topic: "Exactly70", correct: true },
+            { questionId: "q6", topic: "Exactly70", correct: true },
+            { questionId: "q7", topic: "Exactly70", correct: true },
+            { questionId: "q8", topic: "Exactly70", correct: false },
+            { questionId: "q9", topic: "Exactly70", correct: false },
+            { questionId: "q10", topic: "Exactly70", correct: false }
+        ]}
+    ];
+    var origAttemptsThresh = allAttempts.slice();
+    allAttempts = thresholdTests;
+
+    var threshPerf = Analytics.getStudentPerformance("thresh-stu", allAttempts);
+    var threshTopics = threshPerf.topicStrengths.concat(threshPerf.topicWeaknesses);
+    TestRunner.assertEqual(threshTopics.length, 1, "Threshold: one topic");
+    TestRunner.assertEqual(threshTopics[0].accuracy, 70, "Threshold: accuracy is 70%");
+    var isStrength = false;
+    for (var ti = 0; ti < threshPerf.topicStrengths.length; ti++) {
+        if (threshPerf.topicStrengths[ti].topic === "Exactly70") isStrength = true;
+    }
+    TestRunner.assertTrue(isStrength, "Threshold: 70% accuracy is classified as strength");
+
+    allAttempts = origAttemptsThresh;
 }
