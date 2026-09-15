@@ -638,6 +638,115 @@ var Analytics = (function() {
         return results;
     }
 
+    function getTeacherInsights(atRiskStudents, topicMastery, trendDirection, classOverview) {
+        atRiskStudents = safeArray(atRiskStudents);
+        topicMastery = safeArray(topicMastery);
+        trendDirection = safeStr(trendDirection, "stable");
+        classOverview = classOverview || {};
+
+        var insights = [];
+
+        var highRisk = [];
+        var mediumRisk = [];
+        for (var i = 0; i < atRiskStudents.length; i++) {
+            var s = atRiskStudents[i];
+            if (s.riskLevel === "high") highRisk.push(s);
+            else if (s.riskLevel === "medium") mediumRisk.push(s);
+        }
+        var totalNeedSupport = highRisk.length + mediumRisk.length;
+        if (totalNeedSupport > 0) {
+            var supportMsg = totalNeedSupport + " student" + (totalNeedSupport !== 1 ? "s" : "") + " need" + (totalNeedSupport === 1 ? "s" : "") + " additional support.";
+            if (highRisk.length > 0) {
+                supportMsg += " " + highRisk.length + " at high risk.";
+            }
+            insights.push({
+                category: "needs_support",
+                priority: 1,
+                message: supportMsg,
+                actionLabel: "View Students",
+                actionTarget: "students",
+                data: {
+                    count: totalNeedSupport,
+                    highRiskCount: highRisk.length,
+                    mediumRiskCount: mediumRisk.length,
+                    students: atRiskStudents
+                }
+            });
+        }
+
+        var weakTopics = [];
+        var strongTopics = [];
+        for (var i = 0; i < topicMastery.length; i++) {
+            var t = topicMastery[i];
+            if (t.masteryLevel === "Needs Support") weakTopics.push(t);
+            else if (t.masteryLevel === "Strong") strongTopics.push(t);
+        }
+        if (weakTopics.length > 0) {
+            var weakest = weakTopics[0];
+            var weakMsg = weakest.topic + " is the weakest topic (" + weakest.accuracy + "% accuracy).";
+            if (weakTopics.length > 1) {
+                weakMsg += " " + (weakTopics.length - 1) + " other topic" + (weakTopics.length > 2 ? "s" : "") + " also need support.";
+            }
+            insights.push({
+                category: "weak_topic",
+                priority: 2,
+                message: weakMsg,
+                actionLabel: "View Topics",
+                actionTarget: "topics",
+                data: {
+                    count: weakTopics.length,
+                    topics: weakTopics
+                }
+            });
+        }
+
+        if (trendDirection === "declining") {
+            insights.push({
+                category: "declining",
+                priority: 3,
+                message: "Class performance is declining across recent assessments.",
+                actionLabel: "View Performance",
+                actionTarget: "performance",
+                data: { trendDirection: trendDirection }
+            });
+        }
+
+        if (strongTopics.length > 0) {
+            var strongest = strongTopics[0];
+            var strongMsg = strongest.topic + " is a class strength (" + strongest.accuracy + "% accuracy).";
+            if (strongTopics.length > 1) {
+                strongMsg += " " + strongTopics.length + " topics performing strongly.";
+            }
+            insights.push({
+                category: "strong_topic",
+                priority: 4,
+                message: strongMsg,
+                actionLabel: "View Topics",
+                actionTarget: "topics",
+                data: {
+                    count: strongTopics.length,
+                    topics: strongTopics
+                }
+            });
+        }
+
+        if (trendDirection === "improving") {
+            insights.push({
+                category: "improving",
+                priority: 5,
+                message: "Class performance is improving across recent assessments.",
+                actionLabel: "View Performance",
+                actionTarget: "performance",
+                data: { trendDirection: trendDirection }
+            });
+        }
+
+        insights.sort(function(a, b) { return a.priority - b.priority; });
+        if (insights.length > 5) insights = insights.slice(0, 5);
+
+        return insights;
+    }
+
     return {
         getClassOverview: getClassOverview,
         getStudentPerformance: getStudentPerformance,
@@ -650,6 +759,7 @@ var Analytics = (function() {
         getTeacherOverview: getTeacherOverview,
         getClassPerformanceDistribution: getClassPerformanceDistribution,
         getTrendDirection: getTrendDirection,
-        getAssessmentComparison: getAssessmentComparison
+        getAssessmentComparison: getAssessmentComparison,
+        getTeacherInsights: getTeacherInsights
     };
 })();

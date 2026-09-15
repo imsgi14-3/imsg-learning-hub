@@ -2284,3 +2284,79 @@ footer {
     background: #e0e7ff;
     color: #3730a3;
 }
+
+.insight-panel {
+    margin-top: 20px;
+}
+
+.insight-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.insight-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius-md, 8px);
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--border, #e2e8f0);
+    transition: box-shadow 0.2s ease;
+}
+
+.insight-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.insight-card.insight-warn {
+    border-left: 3px solid var(--error, #ef4444);
+}
+
+.insight-card.insight-ok {
+    border-left: 3px solid var(--success, #10b981);
+}
+
+.insight-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.insight-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.insight-message {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-main, #1e293b);
+    line-height: 1.4;
+}
+
+.insight-detail {
+    font-size: 0.8rem;
+    color: var(--text-mid, #64748b);
+    margin-top: 4px;
+}
+
+.insight-action {
+    margin-top: 8px;
+}
+
+.insight-link {
+    background: none;
+    border: none;
+    color: var(--accent, #6366f1);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+}
+
+.insight-link:hover {
+    text-decoration: underline;
+}

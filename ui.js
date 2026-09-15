@@ -831,7 +831,74 @@ var UI = (function() {
         h += '</div></div>';
         h += '</div>';
         container.innerHTML = h;
+        renderTeacherInsights(container, data);
     }
+
+    function renderTeacherInsights(container, overviewData) {
+        if (!container) return;
+        var user = Auth.getUser();
+        var teacherClasses = (user && user.classes) ? user.classes : [];
+        var insights = TeacherAnalytics.getTeacherInsights({ teacherClasses: teacherClasses });
+        var existingInsights = container.querySelector(".insight-panel");
+        if (existingInsights) existingInsights.parentNode.removeChild(existingInsights);
+        if (!insights || insights.length === 0) {
+            var noInsightsDiv = document.createElement("div");
+            noInsightsDiv.className = "insight-panel";
+            noInsightsDiv.innerHTML = '<div class="chart-section" style="margin-top:20px;"><h4>&#10003; Teacher Insights</h4><div class="insight-card insight-ok"><span class="insight-icon">&#10003;</span><div class="insight-body"><div class="insight-message">No immediate concerns identified.</div><div class="insight-detail">Class performance is currently stable.</div></div></div></div>';
+            container.appendChild(noInsightsDiv);
+            return;
+        }
+        var h = '<div class="chart-section" style="margin-top:20px;"><h4>&#128161; Teacher Insights</h4><div class="insight-list">';
+        var categoryIcons = {
+            needs_support: "&#9888;",
+            weak_topic: "&#9888;",
+            declining: "&#128201;",
+            strong_topic: "&#10003;",
+            improving: "&#128200;"
+        };
+        var categoryColors = {
+            needs_support: "var(--error)",
+            weak_topic: "var(--warning, #f59e0b)",
+            declining: "var(--error)",
+            strong_topic: "var(--success)",
+            improving: "var(--success)"
+        };
+        for (var i = 0; i < insights.length; i++) {
+            var ins = insights[i];
+            var icon = categoryIcons[ins.category] || "&#8505;";
+            var color = categoryColors[ins.category] || "var(--text-mid)";
+            var cardClass = "insight-card";
+            if (ins.category === "needs_support" || ins.category === "weak_topic" || ins.category === "declining") cardClass += " insight-warn";
+            else cardClass += " insight-ok";
+            h += '<div class="' + cardClass + '">';
+            h += '<span class="insight-icon" style="color:' + color + ';">' + icon + '</span>';
+            h += '<div class="insight-body">';
+            h += '<div class="insight-message">' + ins.message + '</div>';
+            if (ins.actionLabel) {
+                h += '<div class="insight-action"><button class="insight-link" onclick="insightNavigate(\'' + ins.actionTarget + '\')">' + ins.actionLabel + ' &rarr;</button></div>';
+            }
+            h += '</div></div>';
+        }
+        h += '</div></div>';
+        var insightDiv = document.createElement("div");
+        insightDiv.className = "insight-panel";
+        insightDiv.innerHTML = h;
+        container.appendChild(insightDiv);
+    }
+
+    function insightNavigate(target) {
+        if (target === "students") {
+            var studentSelect = $("studentAnalyticsSelect");
+            if (studentSelect) studentSelect.focus();
+        } else if (target === "topics") {
+            var topicSection = document.querySelector(".chart-section h4");
+            if (topicSection) topicSection.scrollIntoView({ behavior: "smooth" });
+        } else if (target === "performance") {
+            var trendSection = document.querySelector(".chart-section h4");
+            if (trendSection) trendSection.scrollIntoView({ behavior: "smooth" });
+        }
+    }
+
     function loadClassAnalytics(cid) {
         var cards = $("teacherClassCards");
         var content = $("classAnalyticsContent");
@@ -3749,7 +3816,8 @@ var UI = (function() {
         renderDonut: renderDonut,
         showClassCards: showClassCards,
         loadClassAnalytics: loadClassAnalytics,
-        loadStudentAnalytics: loadStudentAnalytics
+        loadStudentAnalytics: loadStudentAnalytics,
+        insightNavigate: insightNavigate
     };
     for (var k in api) { if (typeof api[k] === "undefined") delete api[k]; }
     return api;

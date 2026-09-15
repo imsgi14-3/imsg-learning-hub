@@ -895,6 +895,20 @@ var TeacherAnalytics = (function() {
         }
     }
 
+    function getTeacherInsights(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            var atRisk = Analytics.getAtRiskStudents(data.attempts);
+            var topics = Analytics.getTopicMastery(data.attempts);
+            var trend = Analytics.getTrendDirection(data.attempts);
+            var overview = Analytics.getClassOverview(data.attempts);
+            return Analytics.getTeacherInsights(atRisk, topics, trend, overview);
+        } catch(e) {
+            console.error("TeacherAnalytics.getTeacherInsights error:", e);
+            return [];
+        }
+    }
+
     function getFullAnalytics(filters) {
         try {
             var data = getTeacherAnalyticsData(filters);
@@ -928,6 +942,7 @@ var TeacherAnalytics = (function() {
         getClassPerformanceDistribution: getClassPerformanceDistribution,
         getAssessmentComparison: getAssessmentComparison,
         getTrendDirection: getTrendDirection,
+        getTeacherInsights: getTeacherInsights,
         getFullAnalytics: getFullAnalytics
     };
 })();

@@ -1246,4 +1246,150 @@ function runTeacherAnalyticsFlowTests() {
     TestRunner.assertTrue(isStrength, "Threshold: 70% accuracy is classified as strength");
 
     allAttempts = origAttemptsThresh;
+
+    TestRunner.suite("Analytics - getTeacherInsights: Students Needing Support");
+
+    var supportAtRisk = [
+        { studentId: "risk1", riskLevel: "high", reasons: ["Low average"] },
+        { studentId: "risk2", riskLevel: "medium", reasons: ["Below average"] }
+    ];
+    var supportTopics = [
+        { topic: "Algorithms", accuracy: 85, masteryLevel: "Strong" }
+    ];
+    var supportInsights = Analytics.getTeacherInsights(supportAtRisk, supportTopics, "stable", {});
+    TestRunner.assertGreaterThan(supportInsights.length, 0, "Support insights: has entries");
+    TestRunner.assertEqual(supportInsights[0].category, "needs_support", "Support insights: first is needs_support");
+    TestRunner.assertEqual(supportInsights[0].priority, 1, "Support insights: priority 1");
+    TestRunner.assertTrue(supportInsights[0].message.indexOf("2 students") !== -1, "Support insights: message mentions 2 students");
+    TestRunner.assertTrue(supportInsights[0].message.indexOf("1 at high risk") !== -1, "Support insights: message mentions high risk");
+
+    TestRunner.suite("Analytics - getTeacherInsights: Weak Topic");
+
+    var weakAtRisk = [];
+    var weakTopics = [
+        { topic: "Networks", accuracy: 35, masteryLevel: "Needs Support" },
+        { topic: "Algorithms", accuracy: 85, masteryLevel: "Strong" }
+    ];
+    var weakInsights = Analytics.getTeacherInsights(weakAtRisk, weakTopics, "stable", {});
+    var weakInsight = null;
+    for (var wi = 0; wi < weakInsights.length; wi++) {
+        if (weakInsights[wi].category === "weak_topic") { weakInsight = weakInsights[wi]; break; }
+    }
+    TestRunner.assertNotNull(weakInsight, "Weak topic insight: found");
+    TestRunner.assertEqual(weakInsight.priority, 2, "Weak topic: priority 2");
+    TestRunner.assertTrue(weakInsight.message.indexOf("Networks") !== -1, "Weak topic: mentions weakest topic");
+    TestRunner.assertTrue(weakInsight.message.indexOf("35%") !== -1, "Weak topic: mentions accuracy");
+
+    TestRunner.suite("Analytics - getTeacherInsights: Strong Topic");
+
+    var strongAtRisk = [];
+    var strongTopics = [
+        { topic: "Programming Basics", accuracy: 92, masteryLevel: "Strong" },
+        { topic: "Algorithms", accuracy: 85, masteryLevel: "Strong" }
+    ];
+    var strongInsights = Analytics.getTeacherInsights(strongAtRisk, strongTopics, "stable", {});
+    var strongInsight = null;
+    for (var si = 0; si < strongInsights.length; si++) {
+        if (strongInsights[si].category === "strong_topic") { strongInsight = strongInsights[si]; break; }
+    }
+    TestRunner.assertNotNull(strongInsight, "Strong topic insight: found");
+    TestRunner.assertEqual(strongInsight.priority, 4, "Strong topic: priority 4");
+    TestRunner.assertTrue(strongInsight.message.indexOf("Programming Basics") !== -1, "Strong topic: mentions strongest");
+    TestRunner.assertTrue(strongInsight.message.indexOf("2 topics") !== -1, "Strong topic: mentions count");
+
+    TestRunner.suite("Analytics - getTeacherInsights: Trend");
+
+    var trendInsights1 = Analytics.getTeacherInsights([], [], "declining", {});
+    var decliningInsight = null;
+    for (var di = 0; di < trendInsights1.length; di++) {
+        if (trendInsights1[di].category === "declining") { decliningInsight = trendInsights1[di]; break; }
+    }
+    TestRunner.assertNotNull(decliningInsight, "Declining insight: found");
+    TestRunner.assertEqual(decliningInsight.priority, 3, "Declining: priority 3");
+
+    var trendInsights2 = Analytics.getTeacherInsights([], [], "improving", {});
+    var improvingInsight = null;
+    for (var ii = 0; ii < trendInsights2.length; ii++) {
+        if (trendInsights2[ii].category === "improving") { improvingInsight = trendInsights2[ii]; break; }
+    }
+    TestRunner.assertNotNull(improvingInsight, "Improving insight: found");
+    TestRunner.assertEqual(improvingInsight.priority, 5, "Improving: priority 5");
+
+    TestRunner.suite("Analytics - getTeacherInsights: Priority Order");
+
+    var priorityAtRisk = [
+        { studentId: "p1", riskLevel: "high", reasons: ["Low average"] }
+    ];
+    var priorityTopics = [
+        { topic: "Weak", accuracy: 30, masteryLevel: "Needs Support" },
+        { topic: "Strong", accuracy: 95, masteryLevel: "Strong" }
+    ];
+    var priorityInsights = Analytics.getTeacherInsights(priorityAtRisk, priorityTopics, "improving", {});
+    TestRunner.assertGreaterThan(priorityInsights.length, 1, "Priority: multiple insights");
+    var lastPriority = 0;
+    var priorityValid = true;
+    for (var pi = 0; pi < priorityInsights.length; pi++) {
+        if (priorityInsights[pi].priority < lastPriority) { priorityValid = false; break; }
+        lastPriority = priorityInsights[pi].priority;
+    }
+    TestRunner.assertTrue(priorityValid, "Priority: insights ordered by priority");
+
+    TestRunner.suite("Analytics - getTeacherInsights: Insight Limit");
+
+    var limitAtRisk = [
+        { studentId: "l1", riskLevel: "high", reasons: ["Low"] },
+        { studentId: "l2", riskLevel: "high", reasons: ["Low"] },
+        { studentId: "l3", riskLevel: "medium", reasons: ["Below"] }
+    ];
+    var limitTopics = [
+        { topic: "W1", accuracy: 20, masteryLevel: "Needs Support" },
+        { topic: "W2", accuracy: 25, masteryLevel: "Needs Support" },
+        { topic: "W3", accuracy: 30, masteryLevel: "Needs Support" },
+        { topic: "S1", accuracy: 90, masteryLevel: "Strong" },
+        { topic: "S2", accuracy: 95, masteryLevel: "Strong" },
+        { topic: "S3", accuracy: 98, masteryLevel: "Strong" }
+    ];
+    var limitInsights = Analytics.getTeacherInsights(limitAtRisk, limitTopics, "declining", {});
+    TestRunner.assertGreaterThan(limitInsights.length, 0, "Limit: has insights");
+    TestRunner.assertTrue(limitInsights.length <= 5, "Limit: max 5 insights");
+
+    TestRunner.suite("Analytics - getTeacherInsights: Empty Data");
+
+    var emptyInsights = Analytics.getTeacherInsights([], [], "stable", {});
+    TestRunner.assertEqual(emptyInsights.length, 0, "Empty: no insights");
+
+    TestRunner.suite("Analytics - getTeacherInsights: Null Inputs");
+
+    var nullInsights = Analytics.getTeacherInsights(null, null, null, null);
+    TestRunner.assertEqual(nullInsights.length, 0, "Null: no insights");
+
+    TestRunner.suite("Analytics - getTeacherInsights: Navigation Targets");
+
+    var navInsight = supportInsights[0];
+    TestRunner.assertEqual(navInsight.actionTarget, "students", "Nav: needs_support targets students");
+    TestRunner.assertNotNull(navInsight.actionLabel, "Nav: has actionLabel");
+
+    TestRunner.suite("TeacherAnalytics - getTeacherInsights: Integration");
+
+    var origInsightsAttempts = allAttempts.slice();
+    allAttempts = [
+        { attemptId: "ins1", studentId: "ins-s1", percentage: 30, questions: [
+            { questionId: "q1", topic: "Hard Topic", correct: false },
+            { questionId: "q2", topic: "Hard Topic", correct: false }
+        ]},
+        { attemptId: "ins2", studentId: "ins-s1", percentage: 25, questions: [
+            { questionId: "q3", topic: "Hard Topic", correct: false }
+        ]},
+        { attemptId: "ins3", studentId: "ins-s2", percentage: 90, questions: [
+            { questionId: "q4", topic: "Easy Topic", correct: true }
+        ]},
+        { attemptId: "ins4", studentId: "ins-s2", percentage: 95, questions: [
+            { questionId: "q5", topic: "Easy Topic", correct: true }
+        ]}
+    ];
+
+    var taInsights = TeacherAnalytics.getTeacherInsights({});
+    TestRunner.assertType(taInsights, "object", "TeacherAnalytics insights: returns array");
+
+    allAttempts = origInsightsAttempts;
 }
