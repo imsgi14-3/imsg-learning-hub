@@ -1357,8 +1357,21 @@ var UI = (function() {
         if (!c) return;
         c.innerHTML = '<div class="chart-section"><p style="text-align:center;color:var(--text-mid);padding:20px;">Loading class analytics...</p></div>';
         var data = TeacherAnalytics.getClassOverview({ classId: cid });
+        var classStudents = [];
+        for (var i = 0; i < studentAccounts.length; i++) {
+            if (studentAccounts[i].classId === cid) classStudents.push(studentAccounts[i]);
+        }
+        var h = '<div class="chart-section"><h4>&#128100; Student Performance</h4>';
+        h += '<p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:12px;">Select a student to view detailed performance analytics</p>';
+        h += '<select id="studentAnalyticsSelect" onchange="loadStudentAnalytics(\'' + cid + '\', this.value)" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:200px;background:var(--bg-card);">';
+        h += '<option value="">-- Select Student --</option>';
+        for (var i = 0; i < classStudents.length; i++) {
+            h += '<option value="' + classStudents[i].id + '">' + classStudents[i].name + '</option>';
+        }
+        h += '</select></div>';
+        h += '<div id="studentAnalyticsContent"></div>';
         if (data.totalAttempts === 0) {
-            c.innerHTML = '<div class="chart-section"><p style="color:var(--text-mid);text-align:center;padding:20px;">No quiz attempts for this class yet.</p></div>';
+            c.innerHTML = h + '<div class="chart-section"><p style="color:var(--text-mid);text-align:center;padding:20px;">No quiz attempts for this class yet.</p></div>';
             return;
         }
         var ca = getAttemptsForTeacher({ classId: cid });
@@ -1368,7 +1381,7 @@ var UI = (function() {
             if (!modeCounts[m]) modeCounts[m] = 0;
             modeCounts[m]++;
         }
-        var h = '<div class="overview-cards">';
+        h += '<div class="overview-cards">';
         h += '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + data.totalAttempts + '</div><div class="card-label">Total Attempts</div></div>';
         h += '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + data.averagePercentage + '%</div><div class="card-label">Average</div></div>';
         h += '<div class="overview-card average"><div class="card-icon">&#127919;</div><div class="card-value">' + data.accuracy + '%</div><div class="card-label">Accuracy</div></div>';
@@ -1394,6 +1407,141 @@ var UI = (function() {
         h += renderClassDifficultQuestions(cid);
         h += renderTeacherDeepAnalytics(ca);
         c.innerHTML = h;
+    }
+
+    function loadStudentAnalytics(cid, studentId) {
+        var container = $("studentAnalyticsContent");
+        if (!container) return;
+        if (!studentId) {
+            container.innerHTML = '';
+            return;
+        }
+        container.innerHTML = '<div class="chart-section"><p style="text-align:center;color:var(--text-mid);padding:20px;">Loading student analytics...</p></div>';
+        var studentName = getStudentName(studentId);
+        var perf = TeacherAnalytics.getStudentPerformance(studentId, { classId: cid });
+        renderStudentPerformanceUI(container, perf, studentName, cid);
+    }
+
+    function renderStudentPerformanceUI(container, data, studentName, cid) {
+        if (!container || !data) return;
+        if (data.totalAttempts === 0) {
+            container.innerHTML = '<div class="chart-section"><h4>&#128100; ' + studentName + '</h4><p style="color:var(--text-mid);font-size:0.9rem;">No assessment data available for this student yet.</p></div>';
+            return;
+        }
+        var avg = data.averagePercentage;
+        var perfLevel = "Developing";
+        var perfColor = "var(--accent)";
+        if (avg >= 80) { perfLevel = "Strong"; perfColor = "var(--success)"; }
+        else if (avg < 50) { perfLevel = "Needs Support"; perfColor = "var(--error)"; }
+        var h = '<div class="chart-section"><h4>&#128100; ' + studentName + '</h4>';
+        h += '<div class="overview-cards" style="margin-bottom:16px;">';
+        h += '<div class="overview-card average" style="border-left-color:' + perfColor + ';"><div class="card-icon">&#128200;</div><div class="card-value" style="color:' + perfColor + ';">' + data.averagePercentage + '%</div><div class="card-label">Average Score</div></div>';
+        h += '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + data.totalAttempts + '</div><div class="card-label">Attempts</div></div>';
+        h += '<div class="overview-card students" style="border-left-color:' + perfColor + ';"><div class="card-icon">&#127942;</div><div class="card-value" style="color:' + perfColor + ';">' + perfLevel + '</div><div class="card-label">Performance Level</div></div>';
+        h += '<div class="overview-card average"><div class="card-icon">&#127919;</div><div class="card-value">' + data.bestPercentage + '%</div><div class="card-label">Best Score</div></div>';
+        h += '</div>';
+        h += renderStudentTrend(data);
+        if (data.topicStrengths.length > 0) {
+            h += '<div class="chart-section"><h4>&#127942; Strengths</h4>';
+            h += '<div class="bar-graph">';
+            for (var i = 0; i < data.topicStrengths.length; i++) {
+                var t = data.topicStrengths[i];
+                h += '<div class="bar-graph-row">';
+                h += '<div class="bar-graph-label" title="' + t.topic + '">' + t.topic + '</div>';
+                h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + t.accuracy + '%;background:#10b981;"><span class="bar-graph-value">' + t.accuracy + '%</span></div></div>';
+                h += '</div>';
+            }
+            h += '</div></div>';
+        }
+        if (data.topicWeaknesses.length > 0) {
+            h += '<div class="chart-section"><h4>&#128683; Needs Support</h4>';
+            h += '<div class="bar-graph">';
+            for (var i = 0; i < data.topicWeaknesses.length; i++) {
+                var t = data.topicWeaknesses[i];
+                h += '<div class="bar-graph-row">';
+                h += '<div class="bar-graph-label" title="' + t.topic + '">' + t.topic + '</div>';
+                h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + t.accuracy + '%;background:#ef4444;"><span class="bar-graph-value">' + t.accuracy + '%</span></div></div>';
+                h += '</div>';
+            }
+            h += '</div></div>';
+        }
+        h += renderStudentRecentAttempts(data);
+        h += '</div>';
+        container.innerHTML = h;
+    }
+
+    function renderStudentTrend(data) {
+        var recent = data.recentPerformance;
+        if (!recent || recent.length < 2) {
+            return '<div class="chart-section"><h4>&#128200; Trend</h4><p style="color:var(--text-mid);font-size:0.9rem;">Not enough data to determine a trend. At least 2 attempts are needed.</p></div>';
+        }
+        var sorted = recent.slice().sort(function(a, b) {
+            if (!a.timestamp || !b.timestamp) return 0;
+            return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
+        });
+        var trendDirection = "stable";
+        if (sorted.length >= 3) {
+            var half = Math.floor(sorted.length / 2);
+            var recentSum = 0, olderSum = 0;
+            for (var i = half; i < sorted.length; i++) recentSum += sorted[i].percentage;
+            for (var i = 0; i < half; i++) olderSum += sorted[i].percentage;
+            var recentAvg = (sorted.length - half) > 0 ? recentSum / (sorted.length - half) : 0;
+            var olderAvg = half > 0 ? olderSum / half : 0;
+            var diff = recentAvg - olderAvg;
+            if (diff > 3) trendDirection = "improving";
+            else if (diff < -3) trendDirection = "declining";
+        } else if (sorted.length === 2) {
+            var diff = sorted[1].percentage - sorted[0].percentage;
+            if (diff > 5) trendDirection = "improving";
+            else if (diff < -5) trendDirection = "declining";
+        }
+        var trendIcon = trendDirection === "improving" ? "&#128200;" : trendDirection === "declining" ? "&#128201;" : "&#128203;";
+        var trendColor = trendDirection === "improving" ? "var(--success)" : trendDirection === "declining" ? "var(--error)" : "var(--text-mid)";
+        var trendLabel = trendDirection === "improving" ? "Improving" : trendDirection === "declining" ? "Declining" : "Stable";
+        var h = '<div class="chart-section"><h4>&#128200; Trend</h4>';
+        h += '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-main);border-radius:8px;margin-bottom:16px;">';
+        h += '<span style="font-size:24px;">' + trendIcon + '</span>';
+        h += '<div><div style="font-weight:600;color:' + trendColor + ';">' + trendLabel + '</div>';
+        h += '<div style="font-size:12px;color:var(--text-mid);">Based on ' + sorted.length + ' attempts</div></div></div>';
+        h += '<div class="bar-graph">';
+        var showCount = Math.min(sorted.length, 10);
+        var startIdx = Math.max(0, sorted.length - showCount);
+        for (var i = startIdx; i < sorted.length; i++) {
+            var td = sorted[i];
+            var pct = td.percentage;
+            var color = pct >= 80 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
+            var label = td.timestamp ? td.timestamp.substring(0, 10) : ('Attempt ' + (i + 1));
+            h += '<div class="bar-graph-row">';
+            h += '<div class="bar-graph-label" title="' + label + '">' + label + '</div>';
+            h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + pct + '%;background:' + color + ';"><span class="bar-graph-value">' + pct + '%</span></div></div>';
+            h += '</div>';
+        }
+        h += '</div></div>';
+        return h;
+    }
+
+    function renderStudentRecentAttempts(data) {
+        var recent = data.recentPerformance;
+        if (!recent || recent.length === 0) return '';
+        var sorted = recent.slice().sort(function(a, b) {
+            if (!a.timestamp || !b.timestamp) return 0;
+            return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+        });
+        var showCount = Math.min(sorted.length, 10);
+        var h = '<div class="chart-section"><h4>&#128197; Recent Attempts</h4>';
+        h += '<table class="history-table"><thead><tr><th>Date</th><th>Score</th><th>Percentage</th></tr></thead><tbody>';
+        for (var i = 0; i < showCount; i++) {
+            var a = sorted[i];
+            var dateStr = a.timestamp ? a.timestamp.substring(0, 10) : 'Unknown';
+            var pctColor = a.percentage >= 70 ? 'var(--success)' : a.percentage >= 50 ? 'var(--accent)' : 'var(--error)';
+            h += '<tr>';
+            h += '<td>' + dateStr + '</td>';
+            h += '<td>' + a.score + '/' + a.total + '</td>';
+            h += '<td style="color:' + pctColor + ';font-weight:700;">' + a.percentage + '%</td>';
+            h += '</tr>';
+        }
+        h += '</tbody></table></div>';
+        return h;
     }
 
     function renderClassPerformanceDistribution(dist) {
@@ -3600,7 +3748,8 @@ var UI = (function() {
         renderBar: renderBar,
         renderDonut: renderDonut,
         showClassCards: showClassCards,
-        loadClassAnalytics: loadClassAnalytics
+        loadClassAnalytics: loadClassAnalytics,
+        loadStudentAnalytics: loadStudentAnalytics
     };
     for (var k in api) { if (typeof api[k] === "undefined") delete api[k]; }
     return api;

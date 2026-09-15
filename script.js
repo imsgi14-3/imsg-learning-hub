@@ -111,6 +111,7 @@ function exportStudentCredentials() { UI.exportStudentCredentials(); }
 function doExportCredentials() { UI.doExportCredentials(); }
 function closeModal() { UI.closeModal(); }
 function loadClassAnalytics(cid) { UI.loadClassAnalytics(cid); }
+function loadStudentAnalytics(cid, studentId) { UI.loadStudentAnalytics(cid, studentId); }
 function showClassCards() { UI.showClassCards(); }
 function markAttendance() { UI.markAttendance(); }
 function saveAttendance(e) { UI.saveAttendance(e); }

@@ -994,4 +994,89 @@ function runTeacherAnalyticsFlowTests() {
     TestRunner.assertGreaterThan(taQStats.length, 0, "TeacherAnalytics question stats: has entries");
 
     allAttempts = origAttemptsQTA;
+
+    TestRunner.suite("Analytics - getStudentPerformance: Basic Functionality");
+
+    var studentPerfTests = [
+        { attemptId: "sp1", studentId: "stu1", percentage: 85, score: 8, questions: [
+            { questionId: "q1", topic: "Algorithms", correct: true },
+            { questionId: "q2", topic: "Networks", correct: true },
+            { questionId: "q3", topic: "Algorithms", correct: false }
+        ]},
+        { attemptId: "sp2", studentId: "stu1", percentage: 70, score: 7, questions: [
+            { questionId: "q4", topic: "Algorithms", correct: true },
+            { questionId: "q5", topic: "Networks", correct: false }
+        ]},
+        { attemptId: "sp3", studentId: "stu2", percentage: 50, score: 5, questions: [
+            { questionId: "q1", topic: "Algorithms", correct: false }
+        ]}
+    ];
+    var origAttemptsSP = allAttempts.slice();
+    allAttempts = studentPerfTests;
+
+    var sp = Analytics.getStudentPerformance("stu1", allAttempts);
+    TestRunner.assertType(sp, "object", "getStudentPerformance returns object");
+    TestRunner.assertEqual(sp.studentId, "stu1", "Student performance: correct studentId");
+    TestRunner.assertEqual(sp.totalAttempts, 2, "Student performance: 2 attempts for stu1");
+    TestRunner.assertGreaterThan(sp.averagePercentage, 0, "Student performance: averagePercentage calculated");
+    TestRunner.assertGreaterThan(sp.accuracy, 0, "Student performance: accuracy calculated");
+    TestRunner.assertType(sp.topicStrengths, "object", "Student performance: topicStrengths is array");
+    TestRunner.assertType(sp.topicWeaknesses, "object", "Student performance: topicWeaknesses is array");
+    TestRunner.assertType(sp.recentPerformance, "object", "Student performance: recentPerformance is array");
+    TestRunner.assertGreaterThan(sp.recentPerformance.length, 0, "Student performance: has recent performance entries");
+
+    allAttempts = origAttemptsSP;
+
+    TestRunner.suite("Analytics - getStudentPerformance: Empty Data");
+
+    var emptySP = Analytics.getStudentPerformance("stu1", []);
+    TestRunner.assertEqual(emptySP.totalAttempts, 0, "Empty student performance: totalAttempts is 0");
+    TestRunner.assertEqual(emptySP.topicStrengths.length, 0, "Empty student performance: no strengths");
+    TestRunner.assertEqual(emptySP.topicWeaknesses.length, 0, "Empty student performance: no weaknesses");
+
+    TestRunner.suite("Analytics - getStudentPerformance: Null Student");
+
+    var nullSP = Analytics.getStudentPerformance(null, allAttempts);
+    TestRunner.assertEqual(nullSP.totalAttempts, 0, "Null student: totalAttempts is 0");
+
+    TestRunner.suite("Analytics - getStudentPerformance: Strengths and Weaknesses");
+
+    var swTests = [
+        { attemptId: "sw1", studentId: "sw-stu", percentage: 75, questions: [
+            { questionId: "q1", topic: "Strong Topic", correct: true },
+            { questionId: "q2", topic: "Strong Topic", correct: true },
+            { questionId: "q3", topic: "Strong Topic", correct: true },
+            { questionId: "q4", topic: "Weak Topic", correct: false },
+            { questionId: "q5", topic: "Weak Topic", correct: false }
+        ]}
+    ];
+    var origAttemptsSW = allAttempts.slice();
+    allAttempts = swTests;
+
+    var sw = Analytics.getStudentPerformance("sw-stu", allAttempts);
+    TestRunner.assertGreaterThan(sw.topicStrengths.length, 0, "Strengths: has at least one strength");
+    TestRunner.assertGreaterThan(sw.topicWeaknesses.length, 0, "Weaknesses: has at least one weakness");
+    TestRunner.assertEqual(sw.topicStrengths[0].topic, "Strong Topic", "Strengths: correct topic");
+    TestRunner.assertEqual(sw.topicWeaknesses[0].topic, "Weak Topic", "Weaknesses: correct topic");
+
+    allAttempts = origAttemptsSW;
+
+    TestRunner.suite("TeacherAnalytics - getStudentPerformance: Integration");
+
+    var origAttemptsStuTA = allAttempts.slice();
+    allAttempts = [
+        { attemptId: "stu-ta1", studentId: "stu-ta-s1", percentage: 80, questions: [
+            { questionId: "q1", topic: "Algorithms", correct: true }
+        ]},
+        { attemptId: "stu-ta2", studentId: "stu-ta-s1", percentage: 60, questions: [
+            { questionId: "q2", topic: "Networks", correct: false }
+        ]}
+    ];
+
+    var taSP = TeacherAnalytics.getStudentPerformance("stu-ta-s1", {});
+    TestRunner.assertType(taSP, "object", "TeacherAnalytics.getStudentPerformance returns object");
+    TestRunner.assertEqual(taSP.totalAttempts, 2, "TeacherAnalytics student: 2 attempts");
+    TestRunner.assertGreaterThan(taSP.averagePercentage, 0, "TeacherAnalytics student: average calculated");
+
+    allAttempts = origAttemptsStuTA;
 }
