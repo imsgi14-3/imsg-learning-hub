@@ -46,6 +46,7 @@
         <button class="btn btn-primary" onclick="runSingle('quiz')">Quiz</button>
         <button class="btn btn-primary" onclick="runSingle('questions')">Questions</button>
         <button class="btn btn-primary" onclick="runSingle('analytics')">Analytics</button>
+        <button class="btn btn-primary" onclick="runSingle('recommendations')">Recommendations</button>
         <button class="btn btn-primary" onclick="runSingle('persistence')">Persistence</button>
     </div>
 
@@ -64,6 +65,7 @@
     <script src="../ui.js"></script>
     <script src="../quiz.js"></script>
     <script src="../analytics.js"></script>
+    <script src="../recommendations.js"></script>
     <script src="../questionLoader.js"></script>
     <script src="test-utils.js"></script>
     <script src="auth-tests.js"></script>
@@ -72,6 +74,7 @@
     <script src="quiz-tests.js"></script>
     <script src="question-tests.js"></script>
     <script src="analytics-tests.js"></script>
+    <script src="recommendations-tests.js"></script>
     <script src="data-tests.js"></script>
     <script>
         var appReady = false;
@@ -122,6 +125,7 @@
                 try { runQuestionTests(); } catch(e) { TestRunner.suite("Questions"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runAnalyticsTests(); } catch(e) { TestRunner.suite("Analytics"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runTeacherAnalyticsFlowTests(); } catch(e) { TestRunner.suite("Teacher Analytics Flow"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                try { runRecommendationTests(); } catch(e) { TestRunner.suite("Recommendations"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runPersistenceTests(); } catch(e) { TestRunner.suite("Persistence"); TestRunner.assert(false, "CRASHED: " + e.message); }
             });
             showResults(result);
@@ -133,6 +137,7 @@
                 auth: runAuthTests, students: runStudentTests, teachers: runTeacherTests,
                 quiz: runQuizTests, questions: runQuestionTests, analytics: runAnalyticsTests,
                 teacheranalyticsflow: runTeacherAnalyticsFlowTests,
+                recommendations: runRecommendationTests,
                 persistence: runPersistenceTests
             };
             var result = TestRunner.run(function() {

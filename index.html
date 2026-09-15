@@ -122,6 +122,7 @@
             <p class="teacher-subject">Subject: <span id="teacherSubjectDisplay"></span></p>
             <div class="dashboard-tabs">
                 <button class="tab-btn active" onclick="showTeacherTab('classes')">&#127979; My Classes</button>
+                <button class="tab-btn" onclick="showTeacherTab('students')">&#128100; Students</button>
                 <button class="tab-btn" onclick="showTeacherTab('questionbank')">&#128218; Question Bank</button>
                 <button class="tab-btn" onclick="showTeacherTab('assignments')">&#128220; Assignments</button>
                 <button class="tab-btn" onclick="showTeacherTab('analytics')">&#128200; Class Analytics</button>
@@ -129,6 +130,10 @@
             <div id="teacherClassesTab" class="tab-content active">
                 <h3>&#127979; My Classes</h3>
                 <div id="classesList"></div>
+            </div>
+            <div id="teacherStudentsTab" class="tab-content" style="display:none;">
+                <h3>&#128100; Students</h3>
+                <div id="teacherStudentsList"></div>
             </div>
             <div id="teacherQuestionBankTab" class="tab-content" style="display:none;">
                 <h3>&#128218; Question Bank</h3>
@@ -656,6 +661,7 @@
     <script src="ui.js"></script>
     <script src="quiz.js"></script>
     <script src="analytics.js"></script>
+    <script src="recommendations.js"></script>
     <script src="questionLoader.js"></script>
     <script src="script.js"></script>
     <script>

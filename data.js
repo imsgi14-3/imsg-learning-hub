@@ -909,6 +909,30 @@ var TeacherAnalytics = (function() {
         }
     }
 
+    function getRecommendations(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            var attempts = data.attempts;
+            var analyticsResults = {
+                topicMastery: Analytics.getTopicMastery(attempts),
+                atRiskStudents: Analytics.getAtRiskStudents(attempts),
+                questionStatistics: Analytics.getQuestionStatistics(attempts),
+                difficultyPerformance: Analytics.getDifficultyPerformance(attempts),
+                bloomPerformance: Analytics.getBloomPerformance(attempts),
+                trendDirection: Analytics.getTrendDirection(attempts),
+                classOverview: Analytics.getClassOverview(attempts),
+                totalAttempts: data.totalAttempts
+            };
+            if (!Recommendations.hasSufficientData(analyticsResults)) {
+                return [];
+            }
+            return Recommendations.generate(analyticsResults);
+        } catch(e) {
+            console.error("TeacherAnalytics.getRecommendations error:", e);
+            return [];
+        }
+    }
+
     function getFullAnalytics(filters) {
         try {
             var data = getTeacherAnalyticsData(filters);
@@ -943,6 +967,7 @@ var TeacherAnalytics = (function() {
         getAssessmentComparison: getAssessmentComparison,
         getTrendDirection: getTrendDirection,
         getTeacherInsights: getTeacherInsights,
+        getRecommendations: getRecommendations,
         getFullAnalytics: getFullAnalytics
     };
 })();

@@ -719,11 +719,12 @@ var UI = (function() {
             }
             $("teacherSubjectDisplay").textContent = tSubs.join(", ") || "N/A";
         }
-        var map = { classes: 0, questionbank: 1, assignments: 2, analytics: 3 };
-        var ids = ["teacherClassesTab", "teacherQuestionBankTab", "teacherAssignmentsTab", "teacherAnalyticsTab"];
+        var map = { classes: 0, students: 1, questionbank: 2, assignments: 3, analytics: 4 };
+        var ids = ["teacherClassesTab", "teacherStudentsTab", "teacherQuestionBankTab", "teacherAssignmentsTab", "teacherAnalyticsTab"];
         for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) el.style.display = "none"; }
         activateTab("#teacherDashboard", map[tab]);
         if (tab === "classes") { $("teacherClassesTab").style.display = "block"; renderClasses(); }
+        else if (tab === "students") { $("teacherStudentsTab").style.display = "block"; renderTeacherStudents(); }
         else if (tab === "questionbank") {
             $("teacherQuestionBankTab").style.display = "block";
             var user = Auth.getUser();
@@ -896,7 +897,79 @@ var UI = (function() {
         } else if (target === "performance") {
             var trendSection = document.querySelector(".chart-section h4");
             if (trendSection) trendSection.scrollIntoView({ behavior: "smooth" });
+        } else if (target === "questions") {
+            var allH4s = document.querySelectorAll(".chart-section h4");
+            for (var qi = 0; qi < allH4s.length; qi++) {
+                if (allH4s[qi].textContent && allH4s[qi].textContent.indexOf("Difficult") !== -1) {
+                    allH4s[qi].scrollIntoView({ behavior: "smooth" });
+                    break;
+                }
+            }
         }
+    }
+
+    function renderRecommendationsPanel(container, recommendations, title) {
+        if (!container) return;
+        title = title || "Teacher Recommendations";
+        var existing = container.querySelector(".recommendations-panel");
+        if (existing) existing.parentNode.removeChild(existing);
+        if (!recommendations || recommendations.length === 0) {
+            var noRecsDiv = document.createElement("div");
+            noRecsDiv.className = "recommendations-panel";
+            noRecsDiv.innerHTML = '<div class="chart-section" style="margin-top:20px;"><h4>&#128161; ' + title + '</h4><div class="rec-card rec-ok"><span class="rec-icon">&#10003;</span><div class="rec-body"><div class="rec-title">No immediate recommendations</div><div class="rec-message">Class performance is stable. Continue monitoring.</div></div></div></div>';
+            container.appendChild(noRecsDiv);
+            return;
+        }
+        var h = '<div class="chart-section" style="margin-top:20px;"><h4>&#128161; ' + title + '</h4><div class="rec-list">';
+        var typeConfig = {
+            student_support: { icon: "&#9888;", color: "var(--error)", cardClass: "rec-critical" },
+            topic_intervention: { icon: "&#9888;", color: "var(--warning, #f59e0b)", cardClass: "rec-warn" },
+            question_review: { icon: "&#128269;", color: "var(--warning, #f59e0b)", cardClass: "rec-warn" },
+            declining_performance: { icon: "&#128201;", color: "var(--error)", cardClass: "rec-critical" },
+            difficulty_review: { icon: "&#9888;", color: "var(--warning, #f59e0b)", cardClass: "rec-warn" },
+            bloom_review: { icon: "&#128218;", color: "var(--primary, #6366f1)", cardClass: "rec-info" },
+            positive_strength: { icon: "&#10003;", color: "var(--success)", cardClass: "rec-ok" },
+            improving_performance: { icon: "&#128200;", color: "var(--success)", cardClass: "rec-ok" }
+        };
+        for (var i = 0; i < recommendations.length; i++) {
+            var r = recommendations[i];
+            var cfg = typeConfig[r.type] || { icon: "&#8505;", color: "var(--text-mid)", cardClass: "rec-info" };
+            h += '<div class="rec-card ' + cfg.cardClass + '">';
+            h += '<span class="rec-icon" style="color:' + cfg.color + ';">' + cfg.icon + '</span>';
+            h += '<div class="rec-body">';
+            h += '<div class="rec-title">' + (r.title || r.type) + '</div>';
+            h += '<div class="rec-message">' + r.message + '</div>';
+            if (r.evidence && r.evidence.length > 0) {
+                h += '<div class="rec-evidence">';
+                for (var ei = 0; ei < Math.min(r.evidence.length, 3); ei++) {
+                    h += '<div class="rec-evidence-line">' + r.evidence[ei] + '</div>';
+                }
+                if (r.evidence.length > 3) {
+                    h += '<div class="rec-evidence-line rec-more">+' + (r.evidence.length - 3) + ' more</div>';
+                }
+                h += '</div>';
+            }
+            if (r.action) {
+                h += '<div class="rec-action">';
+                if (r.actionLabel) {
+                    h += '<span class="rec-action-text">' + r.action + '</span>';
+                    h += '<button class="rec-link" onclick="recNavigate(\'' + r.actionTarget + '\')">' + r.actionLabel + ' &rarr;</button>';
+                } else {
+                    h += '<span class="rec-action-text">' + r.action + '</span>';
+                }
+                h += '</div>';
+            }
+            h += '</div></div>';
+        }
+        h += '</div></div>';
+        var recDiv = document.createElement("div");
+        recDiv.className = "recommendations-panel";
+        recDiv.innerHTML = h;
+        container.appendChild(recDiv);
+    }
+
+    function recNavigate(target) {
+        insightNavigate(target);
     }
 
     function loadClassAnalytics(cid) {
@@ -1474,6 +1547,8 @@ var UI = (function() {
         h += renderClassDifficultQuestions(cid);
         h += renderTeacherDeepAnalytics(ca);
         c.innerHTML = h;
+        var recs = TeacherAnalytics.getRecommendations({ classId: cid });
+        renderRecommendationsPanel(c, recs, "Recommendations for This Class");
     }
 
     function loadStudentAnalytics(cid, studentId) {
@@ -1903,27 +1978,138 @@ var UI = (function() {
         });
     }
 
-    function renderCTStudents() {
-        var c = $("ctStudentsList");
+    function getStudentStatus(studentId) {
+        var lastAttempt = null;
+        for (var k = 0; k < allAttempts.length; k++) {
+            if (allAttempts[k].studentId === studentId) {
+                var ts = allAttempts[k].timestamp ? new Date(allAttempts[k].timestamp).getTime() : 0;
+                if (!lastAttempt || ts > lastAttempt) lastAttempt = ts;
+            }
+        }
+        if (!lastAttempt) return { status: "inactive", label: "Inactive", color: "#ef4444" };
+        var daysSince = (Date.now() - lastAttempt) / (1000 * 60 * 60 * 24);
+        if (daysSince <= 1) return { status: "active", label: "Active", color: "#22c55e" };
+        if (daysSince <= 7) return { status: "recent", label: "Recent", color: "#f59e0b" };
+        return { status: "inactive", label: "Inactive", color: "#ef4444" };
+    }
+
+    function getStudentClassName(classId) {
+        for (var j = 0; j < classes.length; j++) {
+            if (classes[j].id === classId) return classes[j].name;
+        }
+        return "N/A";
+    }
+
+    function renderStudentTable(containerId, students, options) {
+        var c = $(containerId);
         if (!c) return;
-        var user = Auth.getUser();
-        var ctClassId = user ? user.classId : null;
-        var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Father Name</th><th>Roll No</th><th>Attempts</th><th>Average</th><th>Actions</th></tr></thead><tbody>';
+        options = options || {};
+        var showClass = options.showClass !== false;
+        var showReset = options.showReset || false;
+        var filterId = options.filterId || "";
+
+        var h = '';
+        h += '<div class="student-filter-bar">';
+        h += '<input type="text" id="' + filterId + 'Search" placeholder="Search by name or ID..." oninput="filterStudentTable(\'' + filterId + '\')">';
+        if (showClass) {
+            h += '<select id="' + filterId + 'ClassFilter" onchange="filterStudentTable(\'' + filterId + '\')">';
+            h += '<option value="">All Classes</option>';
+            var classMap = {};
+            for (var i = 0; i < students.length; i++) {
+                if (students[i].classId && !classMap[students[i].classId]) {
+                    classMap[students[i].classId] = true;
+                    h += '<option value="' + students[i].classId + '">' + getStudentClassName(students[i].classId) + '</option>';
+                }
+            }
+            h += '</select>';
+        }
+        h += '<select id="' + filterId + 'StatusFilter" onchange="filterStudentTable(\'' + filterId + '\')">';
+        h += '<option value="">All Status</option>';
+        h += '<option value="active">Active</option>';
+        h += '<option value="recent">Recent</option>';
+        h += '<option value="inactive">Inactive</option>';
+        h += '</select>';
+        h += '</div>';
+
+        h += '<table id="' + filterId + 'Table"><thead><tr>';
+        h += '<th>ID</th><th>Name</th><th>Father Name</th>';
+        if (showClass) h += '<th>Class</th>';
+        h += '<th>Roll No</th><th>Password</th><th>Status</th><th>Attempts</th><th>Average</th><th>Actions</th>';
+        h += '</tr></thead><tbody>';
+
         var found = false;
-        for (var i = 0; i < studentAccounts.length; i++) {
-            var s = studentAccounts[i];
-            if (ctClassId && s.classId !== ctClassId) continue;
+        for (var i = 0; i < students.length; i++) {
+            var s = students[i];
             found = true;
             var sa = [];
             for (var k = 0; k < allAttempts.length; k++) { if (allAttempts[k].studentId === s.id) sa.push(allAttempts[k]); }
             var avg = sa.length > 0 ? sa.reduce(function(sum, a) { return sum + a.percentage; }, 0) / sa.length : 0;
-            h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + (s.fatherName || "-") + '</td><td>' + (s.rollNo || "-") + '</td><td>' + sa.length + '</td><td>' + avg.toFixed(1) + '%</td>' +
-                '<td><button onclick="editStudentAccount(\'' + s.id + '\')" class="action-btn">Edit</button> ' +
-                '<button onclick="showStudentPassword(\'' + s.id + '\')" class="action-btn">Show Pass</button> ' +
-                '<button onclick="deleteStudentAccount(\'' + s.id + '\')" class="action-btn danger">Delete</button></td></tr>';
+            var st = getStudentStatus(s.id);
+            h += '<tr data-class="' + (s.classId || '') + '" data-status="' + st.status + '" data-name="' + (s.name || '').toLowerCase() + '" data-id="' + (s.id || '').toLowerCase() + '">';
+            h += '<td>' + s.id + '</td>';
+            h += '<td>' + s.name + '</td>';
+            h += '<td>' + (s.fatherName || "-") + '</td>';
+            if (showClass) h += '<td>' + getStudentClassName(s.classId) + '</td>';
+            h += '<td>' + (s.rollNo || "-") + '</td>';
+            h += '<td><code>' + s.password + '</code></td>';
+            h += '<td><span style="color:' + st.color + ';font-weight:600;">' + st.label + '</span></td>';
+            h += '<td>' + sa.length + '</td>';
+            h += '<td>' + avg.toFixed(1) + '%</td>';
+            h += '<td>';
+            h += '<button onclick="editStudentAccount(\'' + s.id + '\')" class="action-btn">Edit</button> ';
+            if (showReset) h += '<button onclick="resetStudentPassword(\'' + s.id + '\')" class="action-btn">Reset Pass</button> ';
+            h += '<button onclick="deleteStudentAccount(\'' + s.id + '\')" class="action-btn danger">Delete</button>';
+            h += '</td></tr>';
         }
-        if (!found) { c.innerHTML = "<p>No students in your class yet.</p>"; return; }
-        c.innerHTML = h + '</tbody></table>';
+        if (!found) { c.innerHTML = "<p>No students yet.</p>"; return; }
+        h += '</tbody></table>';
+        c.innerHTML = h;
+    }
+
+    window.filterStudentTable = function(filterId) {
+        var searchEl = $(filterId + "Search");
+        var classEl = $(filterId + "ClassFilter");
+        var statusEl = $(filterId + "StatusFilter");
+        var table = $(filterId + "Table");
+        if (!table) return;
+        var search = searchEl ? searchEl.value.toLowerCase() : "";
+        var classF = classEl ? classEl.value : "";
+        var statusF = statusEl ? statusEl.value : "";
+        var rows = table.querySelectorAll("tbody tr");
+        for (var i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            var name = r.getAttribute("data-name") || "";
+            var sid = r.getAttribute("data-id") || "";
+            var cls = r.getAttribute("data-class") || "";
+            var stat = r.getAttribute("data-status") || "";
+            var show = true;
+            if (search && name.indexOf(search) === -1 && sid.indexOf(search) === -1) show = false;
+            if (classF && cls !== classF) show = false;
+            if (statusF && stat !== statusF) show = false;
+            r.style.display = show ? "" : "none";
+        }
+    };
+
+    function renderCTStudents() {
+        var user = Auth.getUser();
+        var ctClassId = user ? user.classId : null;
+        var filtered = [];
+        for (var i = 0; i < studentAccounts.length; i++) {
+            if (ctClassId && studentAccounts[i].classId !== ctClassId) continue;
+            filtered.push(studentAccounts[i]);
+        }
+        renderStudentTable("ctStudentsList", filtered, { showClass: false, filterId: "ctStudents" });
+    }
+
+    function renderTeacherStudents() {
+        var user = Auth.getUser();
+        var myClassIds = (user && user.classes) ? user.classes : [];
+        var filtered = [];
+        for (var i = 0; i < studentAccounts.length; i++) {
+            if (myClassIds.length > 0 && myClassIds.indexOf(studentAccounts[i].classId) === -1) continue;
+            filtered.push(studentAccounts[i]);
+        }
+        renderStudentTable("teacherStudentsList", filtered, { showClass: true, filterId: "teacherStudents" });
     }
 
     function renderCTCrossSubject() {
@@ -2491,23 +2677,7 @@ var UI = (function() {
     }
 
     function renderPrincipalStudents() {
-        var c = $("principalStudentsContent");
-        if (!c) return;
-        if (studentAccounts.length === 0) { c.innerHTML = "<p>No students yet. Click 'Add Student' or 'Import Excel' to add students.</p>"; return; }
-        var h = '<table><thead><tr><th>ID</th><th>Name</th><th>Father Name</th><th>Class</th><th>Roll No</th><th>Password</th><th>Actions</th></tr></thead><tbody>';
-        for (var i = 0; i < studentAccounts.length; i++) {
-            var s = studentAccounts[i];
-            var className = "N/A";
-            for (var j = 0; j < classes.length; j++) {
-                if (classes[j].id === s.classId) { className = classes[j].name; break; }
-            }
-            h += '<tr><td>' + s.id + '</td><td>' + s.name + '</td><td>' + (s.fatherName || "-") + '</td><td>' + className + '</td><td>' + (s.rollNo || "-") + '</td><td>' + s.password + '</td>' +
-                '<td><button onclick="editStudentAccount(\'' + s.id + '\')" class="action-btn">Edit</button> ' +
-                '<button onclick="showStudentPassword(\'' + s.id + '\')" class="action-btn">Show Pass</button> ' +
-                '<button onclick="resetStudentPassword(\'' + s.id + '\')" class="action-btn">Reset Pass</button> ' +
-                '<button onclick="deleteStudentAccount(\'' + s.id + '\')" class="action-btn danger">Delete</button></td></tr>';
-        }
-        c.innerHTML = h + '</tbody></table>';
+        renderStudentTable("principalStudentsContent", studentAccounts, { showClass: true, showReset: true, filterId: "principalStudents" });
     }
 
     function showStudentPassword(sid) {
@@ -2666,6 +2836,7 @@ var UI = (function() {
         var role = Auth.getRole();
         if (role === "principal") renderPrincipalStudents();
         if (role === "classteacher") renderCTStudents();
+        if (role === "teacher") renderTeacherStudents();
     }
 
     function renderPrincipalAnalytics() {
@@ -3743,6 +3914,7 @@ var UI = (function() {
         startPractice: startPractice,
         startAssignmentQuiz: startAssignmentQuiz,
         showTeacherTab: showTeacherTab,
+        renderTeacherStudents: renderTeacherStudents,
         renderClasses: renderClasses,
         editClass: editClass,
         deleteClass: deleteClass,
@@ -3817,7 +3989,9 @@ var UI = (function() {
         showClassCards: showClassCards,
         loadClassAnalytics: loadClassAnalytics,
         loadStudentAnalytics: loadStudentAnalytics,
-        insightNavigate: insightNavigate
+        insightNavigate: insightNavigate,
+        renderRecommendationsPanel: renderRecommendationsPanel,
+        recNavigate: recNavigate
     };
     for (var k in api) { if (typeof api[k] === "undefined") delete api[k]; }
     return api;

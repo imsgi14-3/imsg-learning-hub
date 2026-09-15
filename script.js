@@ -113,6 +113,7 @@ function closeModal() { UI.closeModal(); }
 function loadClassAnalytics(cid) { UI.loadClassAnalytics(cid); }
 function loadStudentAnalytics(cid, studentId) { UI.loadStudentAnalytics(cid, studentId); }
 function insightNavigate(target) { UI.insightNavigate(target); }
+function recNavigate(target) { UI.recNavigate(target); }
 function showClassCards() { UI.showClassCards(); }
 function markAttendance() { UI.markAttendance(); }
 function saveAttendance(e) { UI.saveAttendance(e); }
@@ -123,6 +124,7 @@ function renderQuestions() { UI.renderQuestions(); }
 function renderAssignments() { UI.renderAssignments(); }
 function renderCTOverview() { UI.renderCTOverview(); }
 function renderCTStudents() { UI.renderCTStudents(); }
+function renderTeacherStudents() { UI.renderTeacherStudents(); }
 function renderCTCrossSubject() { UI.renderCTCrossSubject(); }
 function renderCTAttendance() { UI.renderCTAttendance(); }
 function renderPrincipalSchool() { UI.renderPrincipalSchool(); }

@@ -151,8 +151,8 @@ The dependency must be:
 | Phase 3.4 | Topic & Question Analytics                   | âœ… Complete |
 | Phase 3.5 | Student Performance Analytics                | âœ… Complete |
 | Phase 3.6 | Teacher Action / Insight Panel               | âœ… Complete |
-| Phase 4   | Teacher Insights & Recommendations           | ðŸ"µ Current  |
-| Phase 5   | Advanced Learning & Question Analytics       | â³          |
+| Phase 4   | Teacher Insights & Recommendations           | ✅ Complete |
+| Phase 5   | Advanced Learning & Question Analytics       | ⏳          |
 | Phase 6   | Performance, Security & Production Hardening | â³          |
 | Phase 7   | Final QA, Deployment & Release               | â³          |
 
@@ -683,27 +683,79 @@ Do not introduce AI-generated recommendations yet.
 
 # PHASE 4 â€” TEACHER INSIGHTS & RECOMMENDATIONS
 
+## Status
+
+âœ… COMPLETE
+
 ## Goal
 
-Expand teacher decision support.
+Expand teacher decision support with deterministic, evidence-based recommendations.
 
-Potential features:
+## Completed requirements
 
-* Reteaching recommendations
-* Intervention groups
-* Revision recommendations
-* Weak-topic prioritization
-* Student support recommendations
-* Question review recommendations
-* Intervention tracking
-
-## Principle
-
-The system should answer:
+The system now answers:
 
 > What should the teacher do next?
 
-Recommendations should explain the evidence behind them.
+## Recommendation categories
+
+* Topic intervention (weak topics below mastery threshold)
+* Student support (at-risk students needing attention)
+* Question review (questions with low accuracy)
+* Difficulty review (difficulty levels with low performance)
+* Bloom-level review (higher-order thinking concerns)
+* Declining performance (negative trend)
+* Improving performance (positive trend)
+* Class strength (strong topics)
+
+## Architecture
+
+```text
+recommendations.js
+    â†‘
+analytics results (from analytics.js)
+    â†“
+TeacherAnalytics.getRecommendations (data.js bridge)
+    â†“
+ui.js renderRecommendationsPanel
+    â†“
+Teacher UI
+```
+
+## Key properties
+
+* Deterministic â€” no AI/ML
+* Evidence-based â€” every recommendation has traceable evidence
+* Explainable â€” answers "Why am I seeing this?"
+* Teacher-scoped â€” respects authorization boundaries
+* Priority-ordered â€” critical issues first
+* Deduplicated â€” related signals merged
+* Limited â€” 3â€“5 recommendations on main view
+* Advisory only â€” no automated actions
+
+## Module
+
+`recommendations.js` â€” standalone deterministic recommendation engine.
+
+Does NOT directly access:
+* Firestore
+* db.js
+* DOM
+* localStorage
+
+## Tests
+
+* Recommendation generation (all categories)
+* Evidence requirements
+* Priority ordering
+* Deduplication
+* Limits
+* Teacher isolation
+* Legacy data
+* Insufficient data
+* No AI fields
+* No data mutation
+* Regression (Phases 3.2â€“3.6)
 
 ---
 
@@ -910,11 +962,11 @@ Teacher Action / Insight Panel
         â†"
 Phase 4
 Teacher Insights & Recommendations
-        ðŸ"µ CURRENT
+        âœ…
         â†"
 Phase 5
 Advanced Analytics
-        â³
+        ðŸ"µ CURRENT
         â†"
 Phase 6
 Hardening
@@ -973,19 +1025,21 @@ Do not automatically start the next phase.
 The immediate task is:
 
 ```text
-PHASE 4
-Teacher Insights & Recommendations
+PHASE 5
+Advanced Learning & Question Analytics
 ```
 
-The teacher analytics MVP (Phases 3.1–3.6) is complete. The next phase expands teacher decision support with:
+Phase 4 (Teacher Insights & Recommendations) is complete. The recommendation engine provides deterministic, evidence-based teacher recommendations with:
 
-* Reteaching recommendations
-* Intervention groups
-* Revision recommendations
-* Weak-topic prioritization
+* Topic intervention recommendations
 * Student support recommendations
 * Question review recommendations
-* Intervention tracking
+* Difficulty review recommendations
+* Bloom-level review recommendations
+* Trend/improvement recommendations
+* Evidence-based explainability
+* Priority ordering and deduplication
+* 3–5 recommendation limit
 
 ---
 
