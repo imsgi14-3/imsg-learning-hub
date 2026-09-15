@@ -794,13 +794,25 @@ var UI = (function() {
     }
 
 
-    function insightNavigate(target) {
+    function insightNavigate(target, entityData) {
         if (target === "students") {
             if (selectedAnalyticsClassId) {
                 showTeacherTab("students");
                 var classFilter = $("teacherStudentsClassFilter");
                 if (classFilter) classFilter.value = selectedAnalyticsClassId;
                 filterStudentTable("teacherStudents");
+                if (entityData && entityData.affectedStudentIds && entityData.affectedStudentIds.length > 0) {
+                    var table = $("teacherStudentsTable");
+                    if (table) {
+                        var rows = table.querySelectorAll("tbody tr");
+                        for (var i = 0; i < rows.length; i++) {
+                            var rowId = rows[i].getAttribute("data-id");
+                            if (entityData.affectedStudentIds.indexOf(rowId) === -1) {
+                                rows[i].style.display = "none";
+                            }
+                        }
+                    }
+                }
             } else {
                 var studentSelect = $("studentAnalyticsSelect");
                 if (studentSelect) studentSelect.focus();
@@ -856,7 +868,12 @@ var UI = (function() {
             if (r.evidence && r.evidence.length > 0) {
                 h += '<div class="rec-evidence">';
                 for (var ei = 0; ei < Math.min(r.evidence.length, 3); ei++) {
-                    h += '<div class="rec-evidence-line">' + r.evidence[ei] + '</div>';
+                    var line = r.evidence[ei];
+                    line = line.replace(/([A-Z]+-\d+)/g, function(match) {
+                        var name = getStudentName(match);
+                        return name !== match ? name + " (" + match + ")" : match;
+                    });
+                    h += '<div class="rec-evidence-line">' + line + '</div>';
                 }
                 if (r.evidence.length > 3) {
                     h += '<div class="rec-evidence-line rec-more">+' + (r.evidence.length - 3) + ' more</div>';
@@ -866,8 +883,9 @@ var UI = (function() {
             if (r.action) {
                 h += '<div class="rec-action">';
                 if (r.actionLabel) {
+                    var entityData = r.data ? JSON.stringify(r.data).replace(/"/g, '&quot;') : '';
                     h += '<span class="rec-action-text">' + r.action + '</span>';
-                    h += '<button class="rec-link" onclick="recNavigate(\'' + r.actionTarget + '\')">' + r.actionLabel + ' &rarr;</button>';
+                    h += '<button class="rec-link" onclick="recNavigate(\'' + r.actionTarget + '\', ' + (entityData || 'null') + ')">' + r.actionLabel + ' &rarr;</button>';
                 } else {
                     h += '<span class="rec-action-text">' + r.action + '</span>';
                 }
@@ -882,8 +900,8 @@ var UI = (function() {
         container.appendChild(recDiv);
     }
 
-    function recNavigate(target) {
-        insightNavigate(target);
+    function recNavigate(target, entityData) {
+        insightNavigate(target, entityData);
     }
 
     function loadClassAnalytics(cid) {
@@ -1533,9 +1551,20 @@ var UI = (function() {
             h += '<div class="' + cardClass + '">';
             h += '<span class="insight-icon" style="color:' + color + ';">' + icon + '</span>';
             h += '<div class="insight-body">';
-            h += '<div class="insight-message">' + ins.message + '</div>';
+            var msg = ins.message;
+            if (ins.data && ins.data.affectedStudentIds) {
+                for (var si = 0; si < ins.data.affectedStudentIds.length; si++) {
+                    var sid = ins.data.affectedStudentIds[si];
+                    var sname = getStudentName(sid);
+                    if (sname !== sid) {
+                        msg = msg.replace(sid, sname);
+                    }
+                }
+            }
+            h += '<div class="insight-message">' + msg + '</div>';
             if (ins.actionLabel) {
-                h += '<div class="insight-action"><button class="insight-link" onclick="insightNavigate(\'' + ins.actionTarget + '\')">' + ins.actionLabel + ' &rarr;</button></div>';
+                var entityData = ins.data ? JSON.stringify(ins.data).replace(/"/g, '&quot;') : '';
+                h += '<div class="insight-action"><button class="insight-link" onclick="insightNavigate(\'' + ins.actionTarget + '\', ' + (entityData || 'null') + ')">' + ins.actionLabel + ' &rarr;</button></div>';
             }
             h += '</div></div>';
         }

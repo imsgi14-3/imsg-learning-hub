@@ -648,10 +648,12 @@ var Analytics = (function() {
 
         var highRisk = [];
         var mediumRisk = [];
+        var affectedStudentIds = [];
         for (var i = 0; i < atRiskStudents.length; i++) {
             var s = atRiskStudents[i];
             if (s.riskLevel === "high") highRisk.push(s);
             else if (s.riskLevel === "medium") mediumRisk.push(s);
+            affectedStudentIds.push(s.studentId);
         }
         var totalNeedSupport = highRisk.length + mediumRisk.length;
         if (totalNeedSupport > 0) {
@@ -669,17 +671,25 @@ var Analytics = (function() {
                     count: totalNeedSupport,
                     highRiskCount: highRisk.length,
                     mediumRiskCount: mediumRisk.length,
-                    students: atRiskStudents
+                    students: atRiskStudents,
+                    affectedStudentIds: affectedStudentIds
                 }
             });
         }
 
         var weakTopics = [];
         var strongTopics = [];
+        var weakTopicNames = [];
+        var strongTopicNames = [];
         for (var i = 0; i < topicMastery.length; i++) {
             var t = topicMastery[i];
-            if (t.masteryLevel === "Needs Support") weakTopics.push(t);
-            else if (t.masteryLevel === "Strong") strongTopics.push(t);
+            if (t.masteryLevel === "Needs Support") {
+                weakTopics.push(t);
+                weakTopicNames.push(t.topic);
+            } else if (t.masteryLevel === "Strong") {
+                strongTopics.push(t);
+                strongTopicNames.push(t.topic);
+            }
         }
         if (weakTopics.length > 0) {
             var weakest = weakTopics[0];
@@ -695,7 +705,8 @@ var Analytics = (function() {
                 actionTarget: "topics",
                 data: {
                     count: weakTopics.length,
-                    topics: weakTopics
+                    topics: weakTopics,
+                    affectedTopics: weakTopicNames
                 }
             });
         }
@@ -725,7 +736,8 @@ var Analytics = (function() {
                 actionTarget: "topics",
                 data: {
                     count: strongTopics.length,
-                    topics: strongTopics
+                    topics: strongTopics,
+                    affectedTopics: strongTopicNames
                 }
             });
         }

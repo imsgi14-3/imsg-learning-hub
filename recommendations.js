@@ -49,7 +49,8 @@ var Recommendations = (function() {
                     : "Review weak topics and provide targeted practice.",
                 actionLabel: "View Topics",
                 actionTarget: "topics",
-                confidence: weakTopics.length >= 3 ? "strong" : "limited"
+                confidence: weakTopics.length >= 3 ? "strong" : "limited",
+                data: { affectedTopics: names }
             });
         }
         if (strongTopics.length > 0) {
@@ -74,7 +75,8 @@ var Recommendations = (function() {
                 action: "Continue reinforcing these topics during revision.",
                 actionLabel: "View Topics",
                 actionTarget: "topics",
-                confidence: "strong"
+                confidence: "strong",
+                data: { affectedTopics: names }
             });
         }
         return recs;
@@ -93,10 +95,12 @@ var Recommendations = (function() {
         var total = highRisk.length + mediumRisk.length;
         if (total === 0) return recs;
         var evidenceLines = [];
+        var affectedStudentIds = [];
         for (var i = 0; i < atRiskStudents.length; i++) {
             var s = atRiskStudents[i];
             var reasons = s.reasons ? s.reasons.join("; ") : "Needs attention";
             evidenceLines.push(s.studentId + " (" + s.riskLevel + " risk): " + reasons);
+            affectedStudentIds.push(s.studentId);
         }
         var title = "Students Needing Support";
         var message = total + " student" + (total !== 1 ? "s need" : " needs") + " attention";
@@ -113,7 +117,8 @@ var Recommendations = (function() {
             action: "Review these students individually and provide targeted support.",
             actionLabel: "View Students",
             actionTarget: "students",
-            confidence: total >= 3 ? "strong" : "limited"
+            confidence: total >= 3 ? "strong" : "limited",
+            data: { affectedStudentIds: affectedStudentIds }
         });
         return recs;
     }
@@ -131,6 +136,7 @@ var Recommendations = (function() {
         }
         if (difficultQuestions.length === 0) return recs;
         var evidenceLines = [];
+        var affectedQuestionIds = [];
         for (var i = 0; i < difficultQuestions.length; i++) {
             var q = difficultQuestions[i];
             var parts = [q.questionId];
@@ -138,6 +144,7 @@ var Recommendations = (function() {
             if (q.difficulty) parts.push("Difficulty: " + q.difficulty);
             parts.push("Accuracy: " + q.accuracy + "% (" + q.attempts + " attempts)");
             evidenceLines.push(parts.join(" — "));
+            affectedQuestionIds.push(q.questionId);
         }
         var title = "Question Review Recommended";
         var message = difficultQuestions.length + " question" + (difficultQuestions.length !== 1 ? "s have" : " has") + " low accuracy and may need review.";
@@ -150,7 +157,8 @@ var Recommendations = (function() {
             action: "Review these questions for clarity, wording, or answer correctness.",
             actionLabel: "View Questions",
             actionTarget: "questions",
-            confidence: difficultQuestions.length >= 3 ? "strong" : "limited"
+            confidence: difficultQuestions.length >= 3 ? "strong" : "limited",
+            data: { affectedQuestionIds: affectedQuestionIds }
         });
         return recs;
     }
