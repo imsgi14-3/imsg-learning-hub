@@ -1438,6 +1438,7 @@ var UI = (function() {
 
         // Class-specific overview
         var overview = TeacherAnalytics.getTeacherOverview({ classId: cid, teacherClasses: [cid] });
+        h += '<div id="classAnalyticsSections">';
         h += '<div class="chart-section" style="margin-bottom:20px;">';
         h += '<h4 style="margin-bottom:16px;font-size:16px;">&#128200; Class Overview</h4>';
         h += '<div class="overview-cards">';
@@ -1472,7 +1473,7 @@ var UI = (function() {
         h += '</select></div>';
         h += '<div id="studentAnalyticsContent"></div>';
         if (data.totalAttempts === 0) {
-            c.innerHTML = h + '<div class="chart-section"><p style="color:var(--text-mid);text-align:center;padding:20px;">No quiz attempts for this class yet.</p></div>';
+            c.innerHTML = h + '</div><div class="chart-section"><p style="color:var(--text-mid);text-align:center;padding:20px;">No quiz attempts for this class yet.</p></div>';
             return;
         }
         var ca = getAttemptsForTeacher({ classId: cid });
@@ -1507,6 +1508,7 @@ var UI = (function() {
         h += renderClassTopicMastery(cid);
         h += renderClassDifficultQuestions(cid);
         h += renderTeacherDeepAnalytics(ca);
+        h += '</div>';
         c.innerHTML = h;
 
         // Class-specific Teacher Insights
@@ -1580,18 +1582,48 @@ var UI = (function() {
         if (!container) return;
         if (!studentId) {
             container.innerHTML = '';
+            var classSections = $("classAnalyticsSections");
+            if (classSections) classSections.style.display = "";
             return;
         }
+        var classSections = $("classAnalyticsSections");
+        if (classSections) classSections.style.display = "none";
+        var studentSelect = $("studentAnalyticsSelect");
+        if (studentSelect) studentSelect.style.display = "none";
+        var selectLabel = studentSelect ? studentSelect.previousElementSibling : null;
+        if (selectLabel && selectLabel.tagName === "P") selectLabel.style.display = "none";
+        var selectHeading = studentSelect ? studentSelect.parentElement.querySelector("h4") : null;
+        if (selectHeading) selectHeading.style.display = "none";
         container.innerHTML = '<div class="chart-section"><p style="text-align:center;color:var(--text-mid);padding:20px;">Loading student analytics...</p></div>';
         var studentName = getStudentName(studentId);
         var perf = TeacherAnalytics.getStudentPerformance(studentId, { classId: cid });
-        renderStudentPerformanceUI(container, perf, studentName, cid);
+        var backBtn = '<div style="margin-bottom:16px;"><button class="action-btn" onclick="closeStudentAnalytics(\'' + cid + '\')">&#8592; Back to Class Analytics</button></div>';
+        renderStudentPerformanceUI(container, perf, studentName, cid, backBtn);
     }
 
-    function renderStudentPerformanceUI(container, data, studentName, cid) {
+    window.closeStudentAnalytics = function(cid) {
+        var container = $("studentAnalyticsContent");
+        if (container) container.innerHTML = "";
+        var classSections = $("classAnalyticsSections");
+        if (classSections) classSections.style.display = "";
+        var studentSelect = $("studentAnalyticsSelect");
+        if (studentSelect) {
+            studentSelect.style.display = "";
+            studentSelect.value = "";
+        }
+        var selectParent = studentSelect ? studentSelect.parentElement : null;
+        if (selectParent) {
+            var h4 = selectParent.querySelector("h4");
+            if (h4) h4.style.display = "";
+            var p = selectParent.querySelector("p");
+            if (p) p.style.display = "";
+        }
+    };
+
+    function renderStudentPerformanceUI(container, data, studentName, cid, backBtn) {
         if (!container || !data) return;
         if (data.totalAttempts === 0) {
-            container.innerHTML = '<div class="chart-section"><h4>&#128100; ' + studentName + '</h4><p style="color:var(--text-mid);font-size:0.9rem;">No assessment data available for this student yet.</p></div>';
+            container.innerHTML = (backBtn || '') + '<div class="chart-section"><h4>&#128100; ' + studentName + '</h4><p style="color:var(--text-mid);font-size:0.9rem;">No assessment data available for this student yet.</p></div>';
             return;
         }
         var avg = data.averagePercentage;
@@ -1599,7 +1631,7 @@ var UI = (function() {
         var perfColor = "var(--accent)";
         if (avg >= 80) { perfLevel = "Strong"; perfColor = "var(--success)"; }
         else if (avg < 50) { perfLevel = "Needs Support"; perfColor = "var(--error)"; }
-        var h = '<div class="chart-section"><h4>&#128100; ' + studentName + '</h4>';
+        var h = (backBtn || '') + '<div class="chart-section"><h4>&#128100; ' + studentName + '</h4>';
         h += '<div class="overview-cards" style="margin-bottom:16px;">';
         h += '<div class="overview-card average" style="border-left-color:' + perfColor + ';"><div class="card-icon">&#128200;</div><div class="card-value" style="color:' + perfColor + ';">' + data.averagePercentage + '%</div><div class="card-label">Average Score</div></div>';
         h += '<div class="overview-card quizzes"><div class="card-icon">&#128221;</div><div class="card-value">' + data.totalAttempts + '</div><div class="card-label">Attempts</div></div>';
@@ -2100,8 +2132,19 @@ var UI = (function() {
                 if (select) {
                     select.value = studentId;
                     loadStudentAnalytics(classId, studentId);
+                } else {
+                    var container = $("studentAnalyticsContent");
+                    if (container) {
+                        var classSections = $("classAnalyticsSections");
+                        if (classSections) classSections.style.display = "none";
+                        container.innerHTML = '<div class="chart-section"><p style="text-align:center;color:var(--text-mid);padding:20px;">Loading student analytics...</p></div>';
+                        var studentName = getStudentName(studentId);
+                        var perf = TeacherAnalytics.getStudentPerformance(studentId, { classId: classId });
+                        var backBtn = '<div style="margin-bottom:16px;"><button class="action-btn" onclick="closeStudentAnalytics(\'' + classId + '\')">&#8592; Back to Class Analytics</button></div>';
+                        renderStudentPerformanceUI(container, perf, studentName, classId, backBtn);
+                    }
                 }
-            }, 300);
+            }, 400);
         }
     };
 
