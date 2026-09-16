@@ -818,17 +818,45 @@ var UI = (function() {
                 if (studentSelect) studentSelect.focus();
             }
         } else if (target === "topics") {
-            var topicSection = document.querySelector(".chart-section h4");
+            var topicSection = $("topicMasterySection");
             if (topicSection) topicSection.scrollIntoView({ behavior: "smooth" });
+            if (entityData && entityData.affectedTopics && entityData.affectedTopics.length > 0) {
+                var topicItems = document.querySelectorAll(".topic-mastery-item");
+                var topicBars = document.querySelectorAll(".topic-mastery-bar");
+                for (var i = 0; i < topicItems.length; i++) {
+                    var topicName = topicItems[i].getAttribute("data-topic");
+                    if (entityData.affectedTopics.indexOf(topicName) === -1) {
+                        topicItems[i].style.opacity = "0.3";
+                    } else {
+                        topicItems[i].style.opacity = "1";
+                        topicItems[i].style.border = "2px solid var(--primary, #6366f1)";
+                    }
+                }
+                for (var i = 0; i < topicBars.length; i++) {
+                    var topicName = topicBars[i].getAttribute("data-topic");
+                    if (entityData.affectedTopics.indexOf(topicName) === -1) {
+                        topicBars[i].style.opacity = "0.3";
+                    } else {
+                        topicBars[i].style.opacity = "1";
+                    }
+                }
+            }
         } else if (target === "performance") {
             var trendSection = document.querySelector(".chart-section h4");
             if (trendSection) trendSection.scrollIntoView({ behavior: "smooth" });
         } else if (target === "questions") {
-            var allH4s = document.querySelectorAll(".chart-section h4");
-            for (var qi = 0; qi < allH4s.length; qi++) {
-                if (allH4s[qi].textContent && allH4s[qi].textContent.indexOf("Difficult") !== -1) {
-                    allH4s[qi].scrollIntoView({ behavior: "smooth" });
-                    break;
+            var questionsSection = $("difficultQuestionsSection");
+            if (questionsSection) questionsSection.scrollIntoView({ behavior: "smooth" });
+            if (entityData && entityData.affectedQuestionIds && entityData.affectedQuestionIds.length > 0) {
+                var questionRows = document.querySelectorAll(".question-row");
+                for (var i = 0; i < questionRows.length; i++) {
+                    var questionId = questionRows[i].getAttribute("data-question-id");
+                    if (entityData.affectedQuestionIds.indexOf(questionId) === -1) {
+                        questionRows[i].style.opacity = "0.3";
+                    } else {
+                        questionRows[i].style.opacity = "1";
+                        questionRows[i].style.border = "2px solid var(--primary, #6366f1)";
+                    }
                 }
             }
         }
@@ -1844,7 +1872,7 @@ var UI = (function() {
         if (!topics || topics.length === 0) {
             return '<div class="chart-section"><h4>&#128218; Topic Mastery</h4><p style="color:var(--text-mid);font-size:0.9rem;">No topic performance data available yet.</p></div>';
         }
-        var h = '<div class="chart-section"><h4>&#128218; Topic Mastery</h4>';
+        var h = '<div class="chart-section" id="topicMasterySection"><h4>&#128218; Topic Mastery</h4>';
         var needsSupport = [];
         var developing = [];
         var strong = [];
@@ -1858,7 +1886,7 @@ var UI = (function() {
             h += '<div style="font-size:0.85rem;font-weight:600;color:#ef4444;margin-bottom:8px;">&#128683; Needs Most Attention</div>';
             for (var i = 0; i < needsSupport.length; i++) {
                 var t = needsSupport[i];
-                h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;padding:8px 12px;background:#fef2f2;border-radius:8px;">';
+                h += '<div class="topic-mastery-item" data-topic="' + t.topic + '" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;padding:8px 12px;background:#fef2f2;border-radius:8px;">';
                 h += '<div style="flex:1;min-width:0;">';
                 h += '<div style="font-weight:600;font-size:0.9rem;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + t.topic + '">' + t.topic + '</div>';
                 h += '<div style="font-size:0.75rem;color:var(--text-mid);">' + t.correctAnswers + '/' + t.totalQuestions + ' correct</div>';
@@ -1867,7 +1895,7 @@ var UI = (function() {
                 h += '<div style="font-weight:700;color:#ef4444;font-size:0.95rem;">' + t.accuracy + '%</div>';
                 h += '</div>';
                 h += '</div>';
-                h += '<div style="height:4px;background:var(--bg-tertiary,#e2e8f0);border-radius:2px;margin-bottom:12px;">';
+                h += '<div class="topic-mastery-bar" data-topic="' + t.topic + '" style="height:4px;background:var(--bg-tertiary,#e2e8f0);border-radius:2px;margin-bottom:12px;">';
                 h += '<div style="height:100%;width:' + t.accuracy + '%;background:#ef4444;border-radius:2px;"></div>';
                 h += '</div>';
             }
@@ -1878,7 +1906,7 @@ var UI = (function() {
             h += '<div style="font-size:0.85rem;font-weight:600;color:#f59e0b;margin-bottom:8px;">&#128218; Developing</div>';
             for (var i = 0; i < developing.length; i++) {
                 var t = developing[i];
-                h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;padding:8px 12px;background:#fffbeb;border-radius:8px;">';
+                h += '<div class="topic-mastery-item" data-topic="' + t.topic + '" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;padding:8px 12px;background:#fffbeb;border-radius:8px;">';
                 h += '<div style="flex:1;min-width:0;">';
                 h += '<div style="font-weight:600;font-size:0.9rem;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + t.topic + '">' + t.topic + '</div>';
                 h += '<div style="font-size:0.75rem;color:var(--text-mid);">' + t.correctAnswers + '/' + t.totalQuestions + ' correct</div>';
@@ -1887,7 +1915,7 @@ var UI = (function() {
                 h += '<div style="font-weight:700;color:#f59e0b;font-size:0.95rem;">' + t.accuracy + '%</div>';
                 h += '</div>';
                 h += '</div>';
-                h += '<div style="height:4px;background:var(--bg-tertiary,#e2e8f0);border-radius:2px;margin-bottom:12px;">';
+                h += '<div class="topic-mastery-bar" data-topic="' + t.topic + '" style="height:4px;background:var(--bg-tertiary,#e2e8f0);border-radius:2px;margin-bottom:12px;">';
                 h += '<div style="height:100%;width:' + t.accuracy + '%;background:#f59e0b;border-radius:2px;"></div>';
                 h += '</div>';
             }
@@ -1898,7 +1926,7 @@ var UI = (function() {
             h += '<div style="font-size:0.85rem;font-weight:600;color:#10b981;margin-bottom:8px;">&#127942; Strong</div>';
             for (var i = 0; i < strong.length; i++) {
                 var t = strong[i];
-                h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;padding:8px 12px;background:#ecfdf5;border-radius:8px;">';
+                h += '<div class="topic-mastery-item" data-topic="' + t.topic + '" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;padding:8px 12px;background:#ecfdf5;border-radius:8px;">';
                 h += '<div style="flex:1;min-width:0;">';
                 h += '<div style="font-weight:600;font-size:0.9rem;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + t.topic + '">' + t.topic + '</div>';
                 h += '<div style="font-size:0.75rem;color:var(--text-mid);">' + t.correctAnswers + '/' + t.totalQuestions + ' correct</div>';
@@ -1907,7 +1935,7 @@ var UI = (function() {
                 h += '<div style="font-weight:700;color:#10b981;font-size:0.95rem;">' + t.accuracy + '%</div>';
                 h += '</div>';
                 h += '</div>';
-                h += '<div style="height:4px;background:var(--bg-tertiary,#e2e8f0);border-radius:2px;margin-bottom:12px;">';
+                h += '<div class="topic-mastery-bar" data-topic="' + t.topic + '" style="height:4px;background:var(--bg-tertiary,#e2e8f0);border-radius:2px;margin-bottom:12px;">';
                 h += '<div style="height:100%;width:' + t.accuracy + '%;background:#10b981;border-radius:2px;"></div>';
                 h += '</div>';
             }
@@ -1931,7 +1959,7 @@ var UI = (function() {
         if (difficult.length === 0) {
             return '<div class="chart-section"><h4>&#10067; Difficult Questions</h4><p style="color:var(--text-mid);font-size:0.9rem;">No questions identified as difficult (all above 60% accuracy or insufficient attempts).</p></div>';
         }
-        var h = '<div class="chart-section"><h4>&#10067; Difficult Questions</h4>';
+        var h = '<div class="chart-section" id="difficultQuestionsSection"><h4>&#10067; Difficult Questions</h4>';
         h += '<p style="font-size:0.8rem;color:var(--text-mid);margin-bottom:12px;">Questions with less than 60% accuracy and at least 2 responses</p>';
         h += '<table class="history-table"><thead><tr><th>Question</th><th>Topic</th><th>Accuracy</th><th>Responses</th><th>Avg Time</th></tr></thead><tbody>';
         for (var i = 0; i < difficult.length; i++) {
@@ -1940,7 +1968,7 @@ var UI = (function() {
             var accColor = q.accuracy < 40 ? '#ef4444' : q.accuracy < 50 ? '#f97316' : '#f59e0b';
             var avgTime = q.averageTimeUsed > 0 ? Math.round(q.averageTimeUsed) + 's' : 'N/A';
             var topicLabel = q.topic || 'General';
-            h += '<tr>';
+            h += '<tr class="question-row" data-question-id="' + q.questionId + '">';
             h += '<td style="font-weight:600;font-size:0.85rem;" title="' + q.questionId + '">' + shortId + '</td>';
             h += '<td style="font-size:0.85rem;">' + topicLabel + '</td>';
             h += '<td style="color:' + accColor + ';font-weight:700;">' + q.accuracy + '%</td>';
@@ -3233,15 +3261,25 @@ var UI = (function() {
     }
 
     function getStudentName(studentId) {
-        for (var j = 0; j < studentAccounts.length; j++) { if (studentAccounts[j].id === studentId) return studentAccounts[j].name; }
+        if (!studentId) return "Student";
+        for (var j = 0; j < studentAccounts.length; j++) {
+            if (studentAccounts[j].id === studentId) {
+                return studentAccounts[j].name || "Student";
+            }
+        }
         for (var j = 0; j < classes.length; j++) {
             if (classes[j].students) {
                 for (var k = 0; k < classes[j].students.length; k++) {
-                    if (classes[j].students[k].id === studentId) return classes[j].students[k].name;
+                    if (classes[j].students[k].id === studentId) {
+                        return classes[j].students[k].name || "Student";
+                    }
                 }
             }
         }
-        return studentId;
+        if (studentId.indexOf("STU-") === 0) {
+            return "Student " + studentId.substring(4);
+        }
+        return "Student";
     }
 
     function renderStudentRankingsFromAttempts(attempts) {
