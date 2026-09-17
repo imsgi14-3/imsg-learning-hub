@@ -805,17 +805,24 @@ var UI = (function() {
                     var table = $("teacherStudentsTable");
                     if (table) {
                         var rows = table.querySelectorAll("tbody tr");
+                        var affectedIdsLower = [];
+                        for (var a = 0; a < entityData.affectedStudentIds.length; a++) {
+                            affectedIdsLower.push(entityData.affectedStudentIds[a].toLowerCase());
+                        }
                         for (var i = 0; i < rows.length; i++) {
-                            var rowId = rows[i].getAttribute("data-id");
-                            if (entityData.affectedStudentIds.indexOf(rowId) === -1) {
+                            var rowId = (rows[i].getAttribute("data-id") || "").toLowerCase();
+                            if (affectedIdsLower.indexOf(rowId) !== -1) {
+                                rows[i].style.display = "";
+                                rows[i].style.background = "var(--bg-active, #eff6ff)";
+                                rows[i].style.fontWeight = "600";
+                            } else {
                                 rows[i].style.display = "none";
                             }
                         }
                     }
                 }
             } else {
-                var studentSelect = $("studentAnalyticsSelect");
-                if (studentSelect) studentSelect.focus();
+                showTeacherTab("students");
             }
         } else if (target === "topics") {
             var topicSection = $("topicMasterySection");
@@ -1466,7 +1473,6 @@ var UI = (function() {
 
         // Class-specific overview
         var overview = TeacherAnalytics.getTeacherOverview({ classId: cid, teacherClasses: [cid] });
-        h += '<div id="classAnalyticsSections">';
         h += '<div class="chart-section" style="margin-bottom:20px;">';
         h += '<h4 style="margin-bottom:16px;font-size:16px;">&#128200; Class Overview</h4>';
         h += '<div class="overview-cards">';
@@ -1490,16 +1496,6 @@ var UI = (function() {
         h += '</div></div>';
         h += '</div>';
 
-        // Student Performance section
-        h += '<div class="chart-section"><h4>&#128100; Student Performance</h4>';
-        h += '<p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:12px;">Select a student to view detailed performance analytics</p>';
-        h += '<select id="studentAnalyticsSelect" onchange="loadStudentAnalytics(\'' + cid + '\', this.value)" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:200px;background:var(--bg-card);">';
-        h += '<option value="">-- Select Student --</option>';
-        for (var i = 0; i < classStudents.length; i++) {
-            h += '<option value="' + classStudents[i].id + '">' + classStudents[i].name + '</option>';
-        }
-        h += '</select></div>';
-        h += '<div id="studentAnalyticsContent"></div>';
         if (data.totalAttempts === 0) {
             c.innerHTML = h + '</div><div class="chart-section"><p style="color:var(--text-mid);text-align:center;padding:20px;">No quiz attempts for this class yet.</p></div>';
             return;
@@ -1536,7 +1532,6 @@ var UI = (function() {
         h += renderClassTopicMastery(cid);
         h += renderClassDifficultQuestions(cid);
         h += renderTeacherDeepAnalytics(ca);
-        h += '</div>';
         c.innerHTML = h;
 
         // Class-specific Teacher Insights
@@ -1604,49 +1599,6 @@ var UI = (function() {
         insightDiv.innerHTML = h;
         container.appendChild(insightDiv);
     }
-
-    function loadStudentAnalytics(cid, studentId) {
-        var container = $("studentAnalyticsContent");
-        if (!container) return;
-        if (!studentId) {
-            container.innerHTML = '';
-            var classSections = $("classAnalyticsSections");
-            if (classSections) classSections.style.display = "";
-            return;
-        }
-        var classSections = $("classAnalyticsSections");
-        if (classSections) classSections.style.display = "none";
-        var studentSelect = $("studentAnalyticsSelect");
-        if (studentSelect) studentSelect.style.display = "none";
-        var selectLabel = studentSelect ? studentSelect.previousElementSibling : null;
-        if (selectLabel && selectLabel.tagName === "P") selectLabel.style.display = "none";
-        var selectHeading = studentSelect ? studentSelect.parentElement.querySelector("h4") : null;
-        if (selectHeading) selectHeading.style.display = "none";
-        container.innerHTML = '<div class="chart-section"><p style="text-align:center;color:var(--text-mid);padding:20px;">Loading student analytics...</p></div>';
-        var studentName = getStudentName(studentId);
-        var perf = TeacherAnalytics.getStudentPerformance(studentId, { classId: cid });
-        var backBtn = '<div style="margin-bottom:16px;"><button class="action-btn" onclick="closeStudentAnalytics(\'' + cid + '\')">&#8592; Back to Class Analytics</button></div>';
-        renderStudentPerformanceUI(container, perf, studentName, cid, backBtn);
-    }
-
-    window.closeStudentAnalytics = function(cid) {
-        var container = $("studentAnalyticsContent");
-        if (container) container.innerHTML = "";
-        var classSections = $("classAnalyticsSections");
-        if (classSections) classSections.style.display = "";
-        var studentSelect = $("studentAnalyticsSelect");
-        if (studentSelect) {
-            studentSelect.style.display = "";
-            studentSelect.value = "";
-        }
-        var selectParent = studentSelect ? studentSelect.parentElement : null;
-        if (selectParent) {
-            var h4 = selectParent.querySelector("h4");
-            if (h4) h4.style.display = "";
-            var p = selectParent.querySelector("p");
-            if (p) p.style.display = "";
-        }
-    };
 
     function renderStudentPerformanceUI(container, data, studentName, cid, backBtn) {
         if (!container || !data) return;
@@ -2087,6 +2039,7 @@ var UI = (function() {
     function renderStudentTable(containerId, students, options) {
         var c = $(containerId);
         if (!c) return;
+        if (typeof closeStudentProgress === "function") closeStudentProgress();
         options = options || {};
         var showClass = options.showClass !== false;
         var showReset = options.showReset || false;
@@ -2152,28 +2105,24 @@ var UI = (function() {
     }
 
     window.openStudentPerformanceFromStudents = function(studentId, classId) {
-        showTeacherTab("analytics");
-        if (classId) {
-            loadClassAnalytics(classId);
-            setTimeout(function() {
-                var select = $("studentAnalyticsSelect");
-                if (select) {
-                    select.value = studentId;
-                    loadStudentAnalytics(classId, studentId);
-                } else {
-                    var container = $("studentAnalyticsContent");
-                    if (container) {
-                        var classSections = $("classAnalyticsSections");
-                        if (classSections) classSections.style.display = "none";
-                        container.innerHTML = '<div class="chart-section"><p style="text-align:center;color:var(--text-mid);padding:20px;">Loading student analytics...</p></div>';
-                        var studentName = getStudentName(studentId);
-                        var perf = TeacherAnalytics.getStudentPerformance(studentId, { classId: classId });
-                        var backBtn = '<div style="margin-bottom:16px;"><button class="action-btn" onclick="closeStudentAnalytics(\'' + classId + '\')">&#8592; Back to Class Analytics</button></div>';
-                        renderStudentPerformanceUI(container, perf, studentName, classId, backBtn);
-                    }
-                }
-            }, 400);
-        }
+        var user = Auth.getUser();
+        var isCT = user && (user.role === "classteacher" || user.role === "principal");
+        var progressContainer = isCT ? $("ctStudentProgressCard") : $("studentProgressCard");
+        if (!progressContainer) return;
+        progressContainer.style.display = "block";
+        progressContainer.innerHTML = '<div class="chart-section"><p style="text-align:center;color:var(--text-mid);padding:20px;">Loading student analytics...</p></div>';
+        var studentName = getStudentName(studentId);
+        var perf = TeacherAnalytics.getStudentPerformance(studentId, { classId: classId });
+        var backBtn = '<div style="margin-bottom:16px;"><button class="action-btn" onclick="closeStudentProgress()">&#8592; Back to Students</button></div>';
+        renderStudentPerformanceUI(progressContainer, perf, studentName, classId, backBtn);
+        progressContainer.scrollIntoView({ behavior: "smooth" });
+    };
+
+    window.closeStudentProgress = function() {
+        var progressCard = $("studentProgressCard");
+        var ctProgressCard = $("ctStudentProgressCard");
+        if (progressCard) { progressCard.style.display = "none"; progressCard.innerHTML = ""; }
+        if (ctProgressCard) { ctProgressCard.style.display = "none"; ctProgressCard.innerHTML = ""; }
     };
 
     window.filterStudentTable = function(filterId) {
@@ -4102,7 +4051,6 @@ var UI = (function() {
         renderDonut: renderDonut,
         showClassCards: showClassCards,
         loadClassAnalytics: loadClassAnalytics,
-        loadStudentAnalytics: loadStudentAnalytics,
         insightNavigate: insightNavigate,
         renderRecommendationsPanel: renderRecommendationsPanel,
         recNavigate: recNavigate
