@@ -138,7 +138,8 @@ var Analytics = (function() {
                 timestamp: a.timestamp || a.completedAt || "",
                 percentage: pct,
                 score: safeNum(a.score),
-                total: questions.length
+                total: questions.length,
+                mode: a.mode || "practice"
             });
         }
         var topicStrengths = [];

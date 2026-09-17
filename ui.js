@@ -1705,15 +1705,20 @@ var UI = (function() {
             if (!a.timestamp || !b.timestamp) return 0;
             return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
         });
+        var modeLabels = { practice: "Practice", assignment: "Assignment", random: "Random Quiz", quick: "Quick Practice", chapter: "Chapter Test", fullbook: "Full Book Test", weak: "Weak Areas" };
+        var modeColors = { practice: "#6366f1", assignment: "#f59e0b", random: "#10b981", quick: "#3b82f6", chapter: "#8b5cf6", fullbook: "#ec4899", weak: "#ef4444" };
         var showCount = Math.min(sorted.length, 10);
         var h = '<div class="chart-section"><h4>&#128197; Recent Attempts</h4>';
-        h += '<table class="history-table"><thead><tr><th>Date</th><th>Score</th><th>Percentage</th></tr></thead><tbody>';
+        h += '<table class="history-table"><thead><tr><th>Date</th><th>Type</th><th>Score</th><th>Percentage</th></tr></thead><tbody>';
         for (var i = 0; i < showCount; i++) {
             var a = sorted[i];
             var dateStr = a.timestamp ? a.timestamp.substring(0, 10) : 'Unknown';
             var pctColor = a.percentage >= 70 ? 'var(--success)' : a.percentage >= 50 ? 'var(--accent)' : 'var(--error)';
+            var modeLabel = modeLabels[a.mode] || a.mode || "Practice";
+            var modeColor = modeColors[a.mode] || "#6366f1";
             h += '<tr>';
             h += '<td>' + dateStr + '</td>';
+            h += '<td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;background:' + modeColor + '22;color:' + modeColor + ';">' + modeLabel + '</span></td>';
             h += '<td>' + a.score + '/' + a.total + '</td>';
             h += '<td style="color:' + pctColor + ';font-weight:700;">' + a.percentage + '%</td>';
             h += '</tr>';
@@ -2070,6 +2075,24 @@ var UI = (function() {
         h += '<option value="recent">Recent</option>';
         h += '<option value="inactive">Inactive</option>';
         h += '</select>';
+        h += '<select id="' + filterId + 'AttemptsFilter" onchange="filterStudentTable(\'' + filterId + '\')">';
+        h += '<option value="">All Attempts</option>';
+        h += '<option value="0">No Attempts</option>';
+        h += '<option value="1-5">1 - 5</option>';
+        h += '<option value="6-10">6 - 10</option>';
+        h += '<option value="11-20">11 - 20</option>';
+        h += '<option value="20+">20+</option>';
+        h += '</select>';
+        h += '<select id="' + filterId + 'ModeFilter" onchange="filterStudentTable(\'' + filterId + '\')">';
+        h += '<option value="">All Types</option>';
+        h += '<option value="practice">Practice</option>';
+        h += '<option value="chapter">Chapter Test</option>';
+        h += '<option value="assignment">Assignment</option>';
+        h += '<option value="random">Random Quiz</option>';
+        h += '<option value="quick">Quick Practice</option>';
+        h += '<option value="fullbook">Full Book Test</option>';
+        h += '<option value="weak">Weak Areas</option>';
+        h += '</select>';
         h += '</div>';
 
         h += '<table id="' + filterId + 'Table"><thead><tr>';
@@ -2083,10 +2106,18 @@ var UI = (function() {
             var s = students[i];
             found = true;
             var sa = [];
-            for (var k = 0; k < allAttempts.length; k++) { if (allAttempts[k].studentId === s.id) sa.push(allAttempts[k]); }
+            var modesUsed = {};
+            for (var k = 0; k < allAttempts.length; k++) {
+                if (allAttempts[k].studentId === s.id) {
+                    sa.push(allAttempts[k]);
+                    var m = allAttempts[k].mode || "practice";
+                    modesUsed[m] = true;
+                }
+            }
             var avg = sa.length > 0 ? sa.reduce(function(sum, a) { return sum + a.percentage; }, 0) / sa.length : 0;
             var st = getStudentStatus(s.id);
-            h += '<tr data-class="' + (s.classId || '') + '" data-status="' + st.status + '" data-name="' + (s.name || '').toLowerCase() + '" data-id="' + (s.id || '').toLowerCase() + '">';
+            var modeKeys = Object.keys(modesUsed).join(",");
+            h += '<tr data-class="' + (s.classId || '') + '" data-status="' + st.status + '" data-name="' + (s.name || '').toLowerCase() + '" data-id="' + (s.id || '').toLowerCase() + '" data-attempts="' + sa.length + '" data-modes="' + modeKeys + '">';
             h += '<td>' + s.name + '</td>';
             if (showClass) h += '<td>' + getStudentClassName(s.classId) + '</td>';
             h += '<td>' + sa.length + '</td>';
@@ -2129,11 +2160,15 @@ var UI = (function() {
         var searchEl = $(filterId + "Search");
         var classEl = $(filterId + "ClassFilter");
         var statusEl = $(filterId + "StatusFilter");
+        var attemptsEl = $(filterId + "AttemptsFilter");
+        var modeEl = $(filterId + "ModeFilter");
         var table = $(filterId + "Table");
         if (!table) return;
         var search = searchEl ? searchEl.value.toLowerCase() : "";
         var classF = classEl ? classEl.value : "";
         var statusF = statusEl ? statusEl.value : "";
+        var attemptsF = attemptsEl ? attemptsEl.value : "";
+        var modeF = modeEl ? modeEl.value : "";
         var rows = table.querySelectorAll("tbody tr");
         for (var i = 0; i < rows.length; i++) {
             var r = rows[i];
@@ -2141,10 +2176,20 @@ var UI = (function() {
             var sid = r.getAttribute("data-id") || "";
             var cls = r.getAttribute("data-class") || "";
             var stat = r.getAttribute("data-status") || "";
+            var attemptCount = parseInt(r.getAttribute("data-attempts") || "0", 10);
+            var modes = r.getAttribute("data-modes") || "";
             var show = true;
             if (search && name.indexOf(search) === -1 && sid.indexOf(search) === -1) show = false;
             if (classF && cls !== classF) show = false;
             if (statusF && stat !== statusF) show = false;
+            if (attemptsF) {
+                if (attemptsF === "0" && attemptCount !== 0) show = false;
+                else if (attemptsF === "1-5" && (attemptCount < 1 || attemptCount > 5)) show = false;
+                else if (attemptsF === "6-10" && (attemptCount < 6 || attemptCount > 10)) show = false;
+                else if (attemptsF === "11-20" && (attemptCount < 11 || attemptCount > 20)) show = false;
+                else if (attemptsF === "20+" && attemptCount < 21) show = false;
+            }
+            if (modeF && modes.indexOf(modeF) === -1) show = false;
             r.style.display = show ? "" : "none";
         }
     };
