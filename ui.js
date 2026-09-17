@@ -2098,7 +2098,9 @@ var UI = (function() {
         h += '<table id="' + filterId + 'Table"><thead><tr>';
         h += '<th>Name</th>';
         if (showClass) h += '<th>Class</th>';
-        h += '<th>Attempts</th><th>Average</th><th>Actions</th>';
+        h += '<th>Attempts</th><th>Average</th>';
+        if (showPassword) h += '<th>Password</th>';
+        h += '<th>Actions</th>';
         h += '</tr></thead><tbody>';
 
         var found = false;
@@ -2122,6 +2124,12 @@ var UI = (function() {
             if (showClass) h += '<td>' + getStudentClassName(s.classId) + '</td>';
             h += '<td>' + sa.length + '</td>';
             h += '<td>' + avg.toFixed(1) + '%</td>';
+            if (showPassword) {
+                h += '<td>';
+                h += '<button onclick="showStudentPassword(\'' + s.id + '\')" class="action-btn secondary" style="font-size:0.8rem;">View</button> ';
+                h += '<button onclick="resetStudentPassword(\'' + s.id + '\')" class="action-btn danger" style="font-size:0.8rem;">Reset</button>';
+                h += '</td>';
+            }
             h += '<td>';
             h += '<button onclick="openStudentPerformanceFromStudents(\'' + s.id + '\', \'' + (s.classId || '') + '\')" class="action-btn">Performance &rarr;</button> ';
             if (showEditDelete) {
