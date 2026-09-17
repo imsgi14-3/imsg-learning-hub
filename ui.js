@@ -2145,8 +2145,14 @@ var UI = (function() {
 
     window.openStudentPerformanceFromStudents = function(studentId, classId) {
         var user = Auth.getUser();
-        var isCT = user && (user.role === "classteacher" || user.role === "principal");
-        var progressContainer = isCT ? $("ctStudentProgressCard") : $("studentProgressCard");
+        var progressContainer;
+        if (user && user.role === "classteacher") {
+            progressContainer = $("ctStudentProgressCard");
+        } else if (user && user.role === "principal") {
+            progressContainer = $("principalStudentProgressCard");
+        } else {
+            progressContainer = $("studentProgressCard");
+        }
         if (!progressContainer) return;
         progressContainer.style.display = "block";
         progressContainer.innerHTML = '<div class="chart-section"><p style="text-align:center;color:var(--text-mid);padding:20px;">Loading student analytics...</p></div>';
@@ -2160,8 +2166,10 @@ var UI = (function() {
     window.closeStudentProgress = function() {
         var progressCard = $("studentProgressCard");
         var ctProgressCard = $("ctStudentProgressCard");
+        var principalProgressCard = $("principalStudentProgressCard");
         if (progressCard) { progressCard.style.display = "none"; progressCard.innerHTML = ""; }
         if (ctProgressCard) { ctProgressCard.style.display = "none"; ctProgressCard.innerHTML = ""; }
+        if (principalProgressCard) { principalProgressCard.style.display = "none"; principalProgressCard.innerHTML = ""; }
     };
 
     window.filterStudentTable = function(filterId) {
