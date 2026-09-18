@@ -1233,6 +1233,183 @@ var Analytics = (function() {
         };
     }
 
+    function getAdvancedClassAnalytics(attempts, totalStudents) {
+        attempts = safeArray(attempts);
+        totalStudents = safeNum(totalStudents, 0);
+        if (attempts.length === 0) {
+            return {
+                totalAttempts: 0, uniqueStudents: 0, confidence: "insufficient",
+                performanceSpread: null, studentGroups: null,
+                practiceAssessment: null, weakTopics: [], dataSufficiency: null
+            };
+        }
+
+        // --- Unique students ---
+        var studentMap = {};
+        for (var i = 0; i < attempts.length; i++) {
+            if (attempts[i] && attempts[i].studentId) studentMap[attempts[i].studentId] = true;
+        }
+        var uniqueStudents = Object.keys(studentMap).length;
+
+        // --- Confidence ---
+        var confidence = "insufficient";
+        if (attempts.length >= 20 && uniqueStudents >= 8) confidence = "high";
+        else if (attempts.length >= 10 && uniqueStudents >= 4) confidence = "medium";
+        else if (attempts.length >= 3 && uniqueStudents >= 2) confidence = "low";
+
+        // --- Per-student average performance ---
+        var studentData = {};
+        for (var i = 0; i < attempts.length; i++) {
+            var a = attempts[i];
+            if (!a || !a.studentId) continue;
+            var sid = a.studentId;
+            if (!studentData[sid]) studentData[sid] = { totalPercentage: 0, count: 0 };
+            studentData[sid].totalPercentage += safeNum(a.percentage);
+            studentData[sid].count++;
+        }
+        var studentAverages = [];
+        var sids = Object.keys(studentData);
+        for (var i = 0; i < sids.length; i++) {
+            var sd = studentData[sids[i]];
+            studentAverages.push(sd.count > 0 ? sd.totalPercentage / sd.count : 0);
+        }
+
+        // --- Performance spread ---
+        var performanceSpread = null;
+        if (studentAverages.length >= 2) {
+            var sum = 0;
+            for (var i = 0; i < studentAverages.length; i++) sum += studentAverages[i];
+            var mean = sum / studentAverages.length;
+            var sqSum = 0;
+            var min = studentAverages[0], max = studentAverages[0];
+            for (var i = 0; i < studentAverages.length; i++) {
+                sqSum += (studentAverages[i] - mean) * (studentAverages[i] - mean);
+                if (studentAverages[i] < min) min = studentAverages[i];
+                if (studentAverages[i] > max) max = studentAverages[i];
+            }
+            var stdDev = Math.sqrt(sqSum / studentAverages.length);
+            var cv = mean > 0 ? (stdDev / mean) * 100 : 0;
+            var range = max - min;
+            var spreadLevel = "consistent";
+            if (stdDev > 20) spreadLevel = "highly_variable";
+            else if (stdDev > 10) spreadLevel = "moderate";
+            performanceSpread = {
+                stdDev: Number(stdDev.toFixed(2)),
+                cv: Number(cv.toFixed(2)),
+                range: Number(range.toFixed(2)),
+                min: Number(min.toFixed(2)),
+                max: Number(max.toFixed(2)),
+                mean: Number(mean.toFixed(2)),
+                level: spreadLevel
+            };
+        }
+
+        // --- Student group breakdown (by unique students, not attempts) ---
+        var studentGroups = null;
+        if (studentAverages.length > 0) {
+            var strong = 0, developing = 0, needsSupport = 0;
+            for (var i = 0; i < studentAverages.length; i++) {
+                var avg = studentAverages[i];
+                if (avg >= 80) strong++;
+                else if (avg >= 50) developing++;
+                else needsSupport++;
+            }
+            var total = studentAverages.length;
+            studentGroups = {
+                strong: strong,
+                developing: developing,
+                needsSupport: needsSupport,
+                total: total,
+                strongPct: total > 0 ? Number(((strong / total) * 100).toFixed(1)) : 0,
+                developingPct: total > 0 ? Number(((developing / total) * 100).toFixed(1)) : 0,
+                needsSupportPct: total > 0 ? Number(((needsSupport / total) * 100).toFixed(1)) : 0
+            };
+        }
+
+        // --- Practice vs Assessment comparison ---
+        var practiceAssessment = null;
+        var practiceAttempts = filterByMode(attempts, "practice");
+        var assessmentAttempts = filterByMode(attempts, "assessment");
+        if (practiceAttempts.length > 0 && assessmentAttempts.length > 0) {
+            var pSum = 0, aSum = 0;
+            var pCorrect = 0, pTotal = 0, aCorrect = 0, aTotal = 0;
+            var pStudentMap = {}, aStudentMap = {};
+            for (var i = 0; i < practiceAttempts.length; i++) {
+                pSum += safeNum(practiceAttempts[i].percentage);
+                if (practiceAttempts[i].studentId) pStudentMap[practiceAttempts[i].studentId] = true;
+                var qs = safeArray(practiceAttempts[i].questions);
+                for (var j = 0; j < qs.length; j++) {
+                    if (qs[j]) { pTotal++; if (qs[j].correct) pCorrect++; }
+                }
+            }
+            for (var i = 0; i < assessmentAttempts.length; i++) {
+                aSum += safeNum(assessmentAttempts[i].percentage);
+                if (assessmentAttempts[i].studentId) aStudentMap[assessmentAttempts[i].studentId] = true;
+                var qs = safeArray(assessmentAttempts[i].questions);
+                for (var j = 0; j < qs.length; j++) {
+                    if (qs[j]) { aTotal++; if (qs[j].correct) aCorrect++; }
+                }
+            }
+            var pAvg = pSum / practiceAttempts.length;
+            var aAvg = aSum / assessmentAttempts.length;
+            var pAcc = pTotal > 0 ? (pCorrect / pTotal) * 100 : 0;
+            var aAcc = aTotal > 0 ? (aCorrect / aTotal) * 100 : 0;
+            var diff = pAvg - aAvg;
+            var pattern = "balanced";
+            if (diff > 10) pattern = "better_in_practice";
+            else if (diff < -10) pattern = "better_in_assessment";
+            practiceAssessment = {
+                practiceAttempts: practiceAttempts.length,
+                assessmentAttempts: assessmentAttempts.length,
+                practiceStudents: Object.keys(pStudentMap).length,
+                assessmentStudents: Object.keys(aStudentMap).length,
+                practiceAvg: Number(pAvg.toFixed(2)),
+                assessmentAvg: Number(aAvg.toFixed(2)),
+                practiceAccuracy: Number(pAcc.toFixed(2)),
+                assessmentAccuracy: Number(aAcc.toFixed(2)),
+                difference: Number(diff.toFixed(2)),
+                pattern: pattern
+            };
+        }
+
+        // --- Weak topics (class accuracy < 60% with sufficient data) ---
+        var topicMastery = getTopicMastery(attempts);
+        var weakTopics = [];
+        for (var i = 0; i < topicMastery.length; i++) {
+            var t = topicMastery[i];
+            if (t.accuracy < 60 && t.totalQuestions >= 3) {
+                weakTopics.push({
+                    topic: t.topic,
+                    accuracy: t.accuracy,
+                    totalQuestions: t.totalQuestions,
+                    correctAnswers: t.correctAnswers,
+                    masteryLevel: t.masteryLevel
+                });
+            }
+        }
+        weakTopics.sort(function(a, b) { return a.accuracy - b.accuracy; });
+
+        // --- Data sufficiency ---
+        var dataSufficiency = {
+            totalAttempts: attempts.length,
+            uniqueStudents: uniqueStudents,
+            totalStudents: totalStudents,
+            participationRate: totalStudents > 0 ? Number(((uniqueStudents / totalStudents) * 100).toFixed(1)) : 0,
+            hasEnoughData: attempts.length >= 3 && uniqueStudents >= 2
+        };
+
+        return {
+            totalAttempts: attempts.length,
+            uniqueStudents: uniqueStudents,
+            confidence: confidence,
+            performanceSpread: performanceSpread,
+            studentGroups: studentGroups,
+            practiceAssessment: practiceAssessment,
+            weakTopics: weakTopics,
+            dataSufficiency: dataSufficiency
+        };
+    }
+
     return {
         getClassOverview: getClassOverview,
         getStudentPerformance: getStudentPerformance,
@@ -1251,6 +1428,7 @@ var Analytics = (function() {
         filterByMode: filterByMode,
         getAdvancedQuestionAnalytics: getAdvancedQuestionAnalytics,
         getAdvancedStudentAnalytics: getAdvancedStudentAnalytics,
+        getAdvancedClassAnalytics: getAdvancedClassAnalytics,
         MODE_LABELS: MODE_LABELS,
         PRACTICE_MODES: PRACTICE_MODES,
         ASSESSMENT_MODES: ASSESSMENT_MODES

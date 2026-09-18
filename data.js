@@ -953,6 +953,23 @@ var TeacherAnalytics = (function() {
         }
     }
 
+    function getAdvancedClassAnalytics(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            var teacherClasses = filters.teacherClasses || [];
+            var totalStudents = 0;
+            for (var i = 0; i < studentAccounts.length; i++) {
+                if (teacherClasses.indexOf(studentAccounts[i].classId) !== -1) {
+                    totalStudents++;
+                }
+            }
+            return Analytics.getAdvancedClassAnalytics(data.attempts, totalStudents);
+        } catch(e) {
+            console.error("TeacherAnalytics.getAdvancedClassAnalytics error:", e);
+            return { totalAttempts: 0, uniqueStudents: 0, confidence: "insufficient", performanceSpread: null, studentGroups: null, practiceAssessment: null, weakTopics: [], dataSufficiency: null };
+        }
+    }
+
     function getFullAnalytics(filters) {
         try {
             var data = getTeacherAnalyticsData(filters);
@@ -990,6 +1007,7 @@ var TeacherAnalytics = (function() {
         getRecommendations: getRecommendations,
         getAdvancedQuestionAnalytics: getAdvancedQuestionAnalytics,
         getAdvancedStudentAnalytics: getAdvancedStudentAnalytics,
+        getAdvancedClassAnalytics: getAdvancedClassAnalytics,
         getFullAnalytics: getFullAnalytics
     };
 })();

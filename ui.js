@@ -1525,6 +1525,7 @@ var UI = (function() {
         var dist = TeacherAnalytics.getClassPerformanceDistribution({ classId: cid });
         h += renderClassPerformanceDistribution(dist);
         h += renderClassAverageContext(data, dist);
+        try { h += renderAdvancedClassAnalytics(cid); } catch(e) {}
         for (var m in modeCounts) {
             h += renderModeBarGraph(ca, m, MODE_LABELS[m] || m, MODE_COLORS[m] || "#6366f1");
         }
@@ -1882,6 +1883,95 @@ var UI = (function() {
         if (contextText) h += '<p style="margin:0 0 8px;color:var(--text-dark);font-size:0.95rem;">' + contextText + '</p>';
         h += '<p style="margin:0;font-size:0.8rem;color:var(--text-mid);">Based on ' + data.totalAttempts + ' assessment attempts from ' + data.uniqueStudents + ' students</p>';
         h += '</div></div></div>';
+        return h;
+    }
+
+    function renderAdvancedClassAnalytics(cid) {
+        var advanced = TeacherAnalytics.getAdvancedClassAnalytics({ classId: cid });
+        if (!advanced || advanced.totalAttempts === 0) return '';
+        var h = '';
+
+        // Performance Spread
+        if (advanced.performanceSpread) {
+            var ps = advanced.performanceSpread;
+            var psColor = ps.level === 'consistent' ? 'var(--success)' : ps.level === 'moderate' ? 'var(--accent)' : 'var(--error)';
+            var psIcon = ps.level === 'consistent' ? '&#9989;' : ps.level === 'moderate' ? '&#9888;' : '&#10060;';
+            var psLabel = ps.level === 'consistent' ? 'Consistent' : ps.level === 'moderate' ? 'Moderate Spread' : 'Highly Variable';
+            h += '<div class="chart-section"><h4>&#128200; Performance Spread</h4>';
+            h += '<div style="padding:12px 16px;background:var(--bg-main);border-radius:8px;margin-bottom:12px;">';
+            h += '<div style="display:flex;align-items:center;gap:12px;">';
+            h += '<span style="font-size:20px;">' + psIcon + '</span>';
+            h += '<div><div style="font-weight:600;color:' + psColor + ';">' + psLabel + '</div>';
+            h += '<div style="font-size:12px;color:var(--text-mid);">Range: ' + ps.min + '% – ' + ps.max + '% | Std Dev: ' + ps.stdDev + '% | CV: ' + ps.cv + '%</div>';
+            h += '</div></div></div></div>';
+        }
+
+        // Student Group Breakdown
+        if (advanced.studentGroups) {
+            var sg = advanced.studentGroups;
+            h += '<div class="chart-section"><h4>&#128101; Student Groups</h4>';
+            h += '<div class="bar-graph">';
+            h += '<div class="bar-graph-row">';
+            h += '<div class="bar-graph-label">Strong (&#8805;80%)</div>';
+            h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + sg.strongPct + '%;background:#10b981;"><span class="bar-graph-value">' + sg.strong + ' (' + sg.strongPct + '%)</span></div></div>';
+            h += '</div>';
+            h += '<div class="bar-graph-row">';
+            h += '<div class="bar-graph-label">Developing (50-79%)</div>';
+            h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + sg.developingPct + '%;background:#f59e0b;"><span class="bar-graph-value">' + sg.developing + ' (' + sg.developingPct + '%)</span></div></div>';
+            h += '</div>';
+            h += '<div class="bar-graph-row">';
+            h += '<div class="bar-graph-label">Needs Support (&lt;50%)</div>';
+            h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + sg.needsSupportPct + '%;background:#ef4444;"><span class="bar-graph-value">' + sg.needsSupport + ' (' + sg.needsSupportPct + '%)</span></div></div>';
+            h += '</div></div>';
+            h += '<div style="font-size:12px;color:var(--text-mid);margin-top:8px;">Based on ' + sg.total + ' unique students</div>';
+            h += '</div>';
+        }
+
+        // Practice vs Assessment Comparison
+        if (advanced.practiceAssessment) {
+            var pa = advanced.practiceAssessment;
+            var paColor = pa.pattern === 'balanced' ? 'var(--success)' : pa.pattern === 'better_in_practice' ? 'var(--accent)' : 'var(--error)';
+            var paLabel = pa.pattern === 'balanced' ? 'Balanced' : pa.pattern === 'better_in_practice' ? 'Better in Practice' : 'Better in Assessment';
+            h += '<div class="chart-section"><h4>&#128202; Practice vs Assessment</h4>';
+            h += '<div class="overview-cards" style="margin-bottom:12px;">';
+            h += '<div class="overview-card average" style="border-left-color:var(--accent);"><div class="card-icon">&#128221;</div><div class="card-value" style="font-size:1rem;">' + pa.practiceAvg + '%</div><div class="card-label">Practice Avg (' + pa.practiceAttempts + ' attempts, ' + pa.practiceStudents + ' students)</div></div>';
+            h += '<div class="overview-card average" style="border-left-color:var(--error);"><div class="card-icon">&#128203;</div><div class="card-value" style="font-size:1rem;">' + pa.assessmentAvg + '%</div><div class="card-label">Assessment Avg (' + pa.assessmentAttempts + ' attempts, ' + pa.assessmentStudents + ' students)</div></div>';
+            h += '</div>';
+            h += '<div style="padding:8px 12px;background:var(--bg-main);border-radius:6px;font-size:0.85rem;"><span style="font-weight:600;color:' + paColor + ';">' + paLabel + '</span>';
+            h += ' <span style="color:var(--text-mid);">(Practice: ' + pa.practiceAccuracy + '% accuracy | Assessment: ' + pa.assessmentAccuracy + '% accuracy | Diff: ' + pa.difference + '%)</span></div>';
+            h += '</div>';
+        }
+
+        // Class Weak Topics
+        if (advanced.weakTopics && advanced.weakTopics.length > 0) {
+            h += '<div class="chart-section"><h4>&#9888; Class Weak Topics</h4>';
+            h += '<p style="font-size:0.8rem;color:var(--text-mid);margin-bottom:12px;">Topics with class accuracy below 60% (3+ questions attempted)</p>';
+            h += '<div class="bar-graph">';
+            for (var i = 0; i < advanced.weakTopics.length; i++) {
+                var wt = advanced.weakTopics[i];
+                h += '<div class="bar-graph-row">';
+                h += '<div class="bar-graph-label" title="' + wt.topic + '">' + wt.topic + '</div>';
+                h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + wt.accuracy + '%;background:#ef4444;"><span class="bar-graph-value">' + wt.accuracy + '% (' + wt.correctAnswers + '/' + wt.totalQuestions + ')</span></div></div>';
+                h += '</div>';
+            }
+            h += '</div></div>';
+        } else if (advanced.weakTopics && advanced.weakTopics.length === 0) {
+            h += '<div class="chart-section"><h4>&#9888; Class Weak Topics</h4>';
+            h += '<p style="color:var(--text-mid);font-size:0.9rem;">No topics below 60% class accuracy. Good performance across all topics.</p>';
+            h += '</div>';
+        }
+
+        // Data Sufficiency
+        if (advanced.dataSufficiency) {
+            var ds = advanced.dataSufficiency;
+            var dsColor = ds.hasEnoughData ? 'var(--success)' : 'var(--text-mid)';
+            h += '<div class="chart-section" style="padding:8px 16px;background:var(--bg-main);border-radius:8px;">';
+            h += '<div style="font-size:12px;color:' + dsColor + ';font-weight:600;">Data Confidence: ' + advanced.confidence.charAt(0).toUpperCase() + advanced.confidence.slice(1);
+            h += ' | ' + ds.totalAttempts + ' attempts from ' + ds.uniqueStudents + ' students';
+            if (ds.totalStudents > 0) h += ' | ' + ds.participationRate + '% participation';
+            h += '</div></div>';
+        }
+
         return h;
     }
 

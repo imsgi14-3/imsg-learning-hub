@@ -1846,4 +1846,261 @@ function runTeacherAnalyticsFlowTests() {
     TestRunner.assertEqual(s2Result.studentId, "s2", "Advanced student: s2 studentId correct");
     var s2Difficulties = s2Result.difficultyPerformance.filter(function(d){ return d.difficulty === "hard"; });
     TestRunner.assertEqual(s2Difficulties.length, 1, "Advanced student: s2 only hard difficulty");
+
+    // ============================================================
+    // Phase 5.3 — Advanced Class & Learning-Pattern Analytics Tests
+    // ============================================================
+    TestRunner.suite("Analytics - getAdvancedClassAnalytics");
+
+    // 1. Empty data
+    var emptyClass = Analytics.getAdvancedClassAnalytics([], 0);
+    TestRunner.assertEqual(emptyClass.totalAttempts, 0, "Advanced class: empty returns 0");
+    TestRunner.assertEqual(emptyClass.confidence, "insufficient", "Advanced class: empty confidence insufficient");
+    TestRunner.assertEqual(emptyClass.performanceSpread, null, "Advanced class: empty no spread");
+    TestRunner.assertEqual(emptyClass.studentGroups, null, "Advanced class: empty no groups");
+    TestRunner.assertEqual(emptyClass.practiceAssessment, null, "Advanced class: empty no practice/assessment");
+    TestRunner.assertEqual(emptyClass.weakTopics.length, 0, "Advanced class: empty no weak topics");
+
+    // 2. Null input
+    var nullClass = Analytics.getAdvancedClassAnalytics(null, null);
+    TestRunner.assertEqual(nullClass.totalAttempts, 0, "Advanced class: null input returns 0");
+
+    // 3. One student — confidence low, no spread
+    var oneStudentClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 75, questions: [{questionId:"q1",correct:true,difficulty:"easy",topic:"T",bloom:"knowledge"}] }
+    ], 1);
+    TestRunner.assertEqual(oneStudentClass.totalAttempts, 1, "Advanced class: 1 student 1 attempt");
+    TestRunner.assertEqual(oneStudentClass.uniqueStudents, 1, "Advanced class: 1 unique student");
+    TestRunner.assertEqual(oneStudentClass.confidence, "insufficient", "Advanced class: 1 student = insufficient confidence");
+    TestRunner.assertEqual(oneStudentClass.performanceSpread, null, "Advanced class: 1 student no spread");
+
+    // 4. Multiple students — spread, groups, confidence
+    var multiStudentClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 90, questions: [] },
+        { studentId: "s1", percentage: 85, questions: [] },
+        { studentId: "s2", percentage: 60, questions: [] },
+        { studentId: "s2", percentage: 55, questions: [] },
+        { studentId: "s3", percentage: 40, questions: [] },
+        { studentId: "s3", percentage: 35, questions: [] },
+        { studentId: "s4", percentage: 70, questions: [] },
+        { studentId: "s4", percentage: 75, questions: [] },
+        { studentId: "s5", percentage: 80, questions: [] },
+        { studentId: "s5", percentage: 82, questions: [] },
+        { studentId: "s6", percentage: 65, questions: [] },
+        { studentId: "s6", percentage: 68, questions: [] },
+        { studentId: "s7", percentage: 50, questions: [] },
+        { studentId: "s7", percentage: 52, questions: [] },
+        { studentId: "s8", percentage: 88, questions: [] },
+        { studentId: "s8", percentage: 85, questions: [] },
+        { studentId: "s9", percentage: 72, questions: [] },
+        { studentId: "s9", percentage: 70, questions: [] },
+        { studentId: "s10", percentage: 45, questions: [] },
+        { studentId: "s10", percentage: 48, questions: [] }
+    ], 10);
+    TestRunner.assertEqual(multiStudentClass.uniqueStudents, 10, "Advanced class: 10 unique students");
+    TestRunner.assertEqual(multiStudentClass.confidence, "high", "Advanced class: 20 attempts 10 students = high");
+    TestRunner.assertType(multiStudentClass.performanceSpread, "object", "Advanced class: spread exists");
+    TestRunner.assertType(multiStudentClass.studentGroups, "object", "Advanced class: groups exist");
+    TestRunner.assertEqual(multiStudentClass.studentGroups.total, 10, "Advanced class: groups total 10");
+    TestRunner.assertEqual(multiStudentClass.studentGroups.strong + multiStudentClass.studentGroups.developing + multiStudentClass.studentGroups.needsSupport, 10, "Advanced class: groups sum to 10");
+
+    // 5. Class isolation — different class attempts don't mix
+    var isolatedClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 90, questions: [] },
+        { studentId: "s1", percentage: 85, questions: [] },
+        { studentId: "s2", percentage: 60, questions: [] },
+        { studentId: "s2", percentage: 55, questions: [] }
+    ], 5);
+    TestRunner.assertEqual(isolatedClass.uniqueStudents, 2, "Advanced class: only 2 students in this class");
+
+    // 6. Multiple topics — weak topics detection
+    var topicClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 50, questions: [
+            { questionId: "q1", correct: false, difficulty: "easy", topic: "WeakTopic", bloom: "knowledge" },
+            { questionId: "q2", correct: false, difficulty: "easy", topic: "WeakTopic", bloom: "knowledge" },
+            { questionId: "q3", correct: true, difficulty: "easy", topic: "WeakTopic", bloom: "knowledge" },
+            { questionId: "q4", correct: true, difficulty: "easy", topic: "StrongTopic", bloom: "knowledge" },
+            { questionId: "q5", correct: true, difficulty: "easy", topic: "StrongTopic", bloom: "knowledge" }
+        ]},
+        { studentId: "s2", percentage: 60, questions: [
+            { questionId: "q6", correct: false, difficulty: "easy", topic: "WeakTopic", bloom: "knowledge" },
+            { questionId: "q7", correct: false, difficulty: "easy", topic: "WeakTopic", bloom: "knowledge" },
+            { questionId: "q8", correct: true, difficulty: "easy", topic: "StrongTopic", bloom: "knowledge" }
+        ]}
+    ], 2);
+    var weakTopics = topicClass.weakTopics.filter(function(t){ return t.topic === "WeakTopic"; });
+    TestRunner.assertGreaterThan(weakTopics.length, 0, "Advanced class: WeakTopic detected as weak");
+    if (weakTopics.length > 0) {
+        TestRunner.assertLessThan(weakTopics[0].accuracy, 60, "Advanced class: WeakTopic accuracy < 60%");
+    }
+
+    // 7. Multiple difficulty levels
+    var diffClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 70, questions: [
+            { questionId: "q1", correct: true, difficulty: "easy", topic: "T", bloom: "knowledge" },
+            { questionId: "q2", correct: false, difficulty: "hard", topic: "T", bloom: "knowledge" }
+        ]},
+        { studentId: "s2", percentage: 65, questions: [
+            { questionId: "q3", correct: true, difficulty: "easy", topic: "T", bloom: "knowledge" },
+            { questionId: "q4", correct: true, difficulty: "medium", topic: "T", bloom: "knowledge" }
+        ]}
+    ], 2);
+    TestRunner.assertType(diffClass.performanceSpread, "object", "Advanced class: spread with mixed difficulties");
+
+    // 8. Multiple Bloom levels
+    var bloomClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 70, questions: [
+            { questionId: "q1", correct: true, difficulty: "easy", topic: "T", bloom: "knowledge" },
+            { questionId: "q2", correct: false, difficulty: "easy", topic: "T", bloom: "analysis" }
+        ]}
+    ], 1);
+    TestRunner.assertType(bloomClass, "object", "Advanced class: handles mixed bloom levels");
+
+    // 9. Multiple quiz modes — practice vs assessment comparison
+    var modeClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 80, mode: "practice", questions: [{questionId:"q1",correct:true,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s1", percentage: 85, mode: "practice", questions: [{questionId:"q2",correct:true,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s2", percentage: 75, mode: "practice", questions: [{questionId:"q3",correct:true,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s1", percentage: 55, mode: "test", questions: [{questionId:"q4",correct:false,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s2", percentage: 50, mode: "test", questions: [{questionId:"q5",correct:false,difficulty:"easy",topic:"T",bloom:"knowledge"}] }
+    ], 2);
+    TestRunner.assertType(modeClass.practiceAssessment, "object", "Advanced class: practice/assessment comparison exists");
+    TestRunner.assertEqual(modeClass.practiceAssessment.practiceAttempts, 3, "Advanced class: 3 practice attempts");
+    TestRunner.assertEqual(modeClass.practiceAssessment.assessmentAttempts, 2, "Advanced class: 2 assessment attempts");
+    TestRunner.assertEqual(modeClass.practiceAssessment.pattern, "better_in_practice", "Advanced class: better in practice");
+
+    // 10. Legacy/missing mode
+    var legacyClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 70, questions: [] },
+        { studentId: "s1", percentage: 75, mode: "practice", questions: [] },
+        { studentId: "s2", percentage: 60, mode: "test", questions: [] }
+    ], 2);
+    TestRunner.assertType(legacyClass.practiceAssessment, "object", "Advanced class: legacy mode handled");
+
+    // 11. Consistent class — low spread
+    var consistentClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 72, questions: [] },
+        { studentId: "s2", percentage: 74, questions: [] },
+        { studentId: "s3", percentage: 71, questions: [] },
+        { studentId: "s4", percentage: 73, questions: [] },
+        { studentId: "s5", percentage: 72, questions: [] }
+    ], 5);
+    TestRunner.assertEqual(consistentClass.performanceSpread.level, "consistent", "Advanced class: consistent performance");
+
+    // 12. Variable class — high spread
+    var variableClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 95, questions: [] },
+        { studentId: "s2", percentage: 30, questions: [] },
+        { studentId: "s3", percentage: 90, questions: [] },
+        { studentId: "s4", percentage: 35, questions: [] },
+        { studentId: "s5", percentage: 85, questions: [] }
+    ], 5);
+    TestRunner.assertEqual(variableClass.performanceSpread.level, "highly_variable", "Advanced class: variable performance");
+
+    // 13. High-performing class
+    var highClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 90, questions: [] },
+        { studentId: "s2", percentage: 88, questions: [] },
+        { studentId: "s3", percentage: 92, questions: [] },
+        { studentId: "s4", percentage: 85, questions: [] },
+        { studentId: "s5", percentage: 87, questions: [] }
+    ], 5);
+    TestRunner.assertEqual(highClass.studentGroups.strong, 5, "Advanced class: all 5 students strong");
+    TestRunner.assertEqual(highClass.studentGroups.needsSupport, 0, "Advanced class: no students need support");
+
+    // 14. Low-performing class
+    var lowClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 35, questions: [] },
+        { studentId: "s2", percentage: 40, questions: [] },
+        { studentId: "s3", percentage: 30, questions: [] },
+        { studentId: "s4", percentage: 45, questions: [] },
+        { studentId: "s5", percentage: 38, questions: [] }
+    ], 5);
+    TestRunner.assertEqual(lowClass.studentGroups.needsSupport, 5, "Advanced class: all 5 students need support");
+    TestRunner.assertEqual(lowClass.studentGroups.strong, 0, "Advanced class: no strong students");
+
+    // 15. Mixed performance class
+    var mixedClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 90, questions: [] },
+        { studentId: "s2", percentage: 65, questions: [] },
+        { studentId: "s3", percentage: 40, questions: [] },
+        { studentId: "s4", percentage: 75, questions: [] },
+        { studentId: "s5", percentage: 55, questions: [] }
+    ], 5);
+    TestRunner.assertEqual(mixedClass.studentGroups.strong, 1, "Advanced class: 1 strong");
+    TestRunner.assertEqual(mixedClass.studentGroups.developing, 3, "Advanced class: 3 developing");
+    TestRunner.assertEqual(mixedClass.studentGroups.needsSupport, 1, "Advanced class: 1 needs support");
+
+    // 16. No cross-student contamination
+    var noContam = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 90, questions: [] },
+        { studentId: "s2", percentage: 50, questions: [] }
+    ], 3);
+    TestRunner.assertEqual(noContam.uniqueStudents, 2, "Advanced class: 2 students not 3");
+    TestRunner.assertEqual(noContam.studentGroups.total, 2, "Advanced class: groups total 2");
+
+    // 17. Data sufficiency
+    var suffClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 70, questions: [] },
+        { studentId: "s2", percentage: 65, questions: [] },
+        { studentId: "s3", percentage: 60, questions: [] }
+    ], 10);
+    TestRunner.assertType(suffClass.dataSufficiency, "object", "Advanced class: dataSufficiency exists");
+    TestRunner.assertEqual(suffClass.dataSufficiency.hasEnoughData, true, "Advanced class: 3 attempts 3 students = enough");
+    TestRunner.assertEqual(suffClass.dataSufficiency.participationRate, 30, "Advanced class: 3/10 = 30%");
+
+    // 18. Insufficient data
+    var insuffClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 70, questions: [] },
+        { studentId: "s1", percentage: 72, questions: [] }
+    ], 10);
+    TestRunner.assertEqual(insuffClass.dataSufficiency.hasEnoughData, false, "Advanced class: 1 unique student not enough");
+
+    // 19. Practice only — no comparison
+    var practiceOnly = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 80, mode: "practice", questions: [] },
+        { studentId: "s1", percentage: 85, mode: "practice", questions: [] }
+    ], 1);
+    TestRunner.assertEqual(practiceOnly.practiceAssessment, null, "Advanced class: practice only = no comparison");
+
+    // 20. Assessment only — no comparison
+    var assessOnly = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 60, mode: "test", questions: [] },
+        { studentId: "s1", percentage: 55, mode: "test", questions: [] }
+    ], 1);
+    TestRunner.assertEqual(assessOnly.practiceAssessment, null, "Advanced class: assessment only = no comparison");
+
+    // 21. Weak topics only appear with sufficient data (3+ questions)
+    var weakTopicSuff = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 30, questions: [
+            { questionId: "q1", correct: false, difficulty: "easy", topic: "SparseTopic", bloom: "knowledge" },
+            { questionId: "q2", correct: false, difficulty: "easy", topic: "SparseTopic", bloom: "knowledge" }
+        ]}
+    ], 1);
+    var sparseWeak = weakTopicSuff.weakTopics.filter(function(t){ return t.topic === "SparseTopic"; });
+    TestRunner.assertEqual(sparseWeak.length, 0, "Advanced class: SparseTopic with 2 questions not flagged as weak");
+
+    // 22. No weak topics when all topics strong
+    var noWeakClass = Analytics.getAdvancedClassAnalytics([
+        { studentId: "s1", percentage: 85, questions: [
+            { questionId: "q1", correct: true, difficulty: "easy", topic: "GoodTopic", bloom: "knowledge" },
+            { questionId: "q2", correct: true, difficulty: "easy", topic: "GoodTopic", bloom: "knowledge" },
+            { questionId: "q3", correct: true, difficulty: "easy", topic: "GoodTopic", bloom: "knowledge" }
+        ]}
+    ], 1);
+    TestRunner.assertEqual(noWeakClass.weakTopics.length, 0, "Advanced class: no weak topics when all strong");
+
+    // 23. Bridge test
+    var origClassAttempts = allAttempts.slice();
+    allAttempts = [
+        { studentId: "s1", classId: "c1", percentage: 80, mode: "practice", questions: [{questionId:"q1",correct:true,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s1", classId: "c1", percentage: 75, mode: "practice", questions: [{questionId:"q2",correct:true,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s2", classId: "c1", percentage: 60, mode: "test", questions: [{questionId:"q3",correct:false,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s2", classId: "c1", percentage: 55, mode: "test", questions: [{questionId:"q4",correct:false,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s3", classId: "c2", percentage: 90, questions: [] }
+    ];
+    var taClassResult = TeacherAnalytics.getAdvancedClassAnalytics({ classId: "c1", teacherClasses: ["c1"] });
+    TestRunner.assertType(taClassResult, "object", "Advanced class bridge: returns object");
+    TestRunner.assertType(taClassResult.performanceSpread, "object", "Advanced class bridge: spread exists");
+    allAttempts = origClassAttempts;
 }
