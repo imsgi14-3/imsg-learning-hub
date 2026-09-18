@@ -1392,4 +1392,202 @@ function runTeacherAnalyticsFlowTests() {
     TestRunner.assertType(taInsights, "object", "TeacherAnalytics insights: returns array");
 
     allAttempts = origInsightsAttempts;
+
+    // ============================================================
+    // Phase 5.1 — Advanced Question Analytics Tests
+    // ============================================================
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Empty Data");
+
+    var emptyAdv = Analytics.getAdvancedQuestionAnalytics([]);
+    TestRunner.assertEqual(emptyAdv.length, 0, "Advanced QA: empty attempts returns empty");
+
+    var nullAdv = Analytics.getAdvancedQuestionAnalytics(null);
+    TestRunner.assertEqual(nullAdv.length, 0, "Advanced QA: null attempts returns empty");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Basic Structure");
+
+    var advAttempts = [
+        { attemptId: "adv1", studentId: "stu-high1", percentage: 90, questions: [
+            { questionId: "Q1", correct: true, selectedAnswer: "A", correctAnswer: "A", timeUsed: 10, difficulty: "easy", topic: "T1", bloom: "knowledge" },
+            { questionId: "Q2", correct: true, selectedAnswer: "B", correctAnswer: "B", timeUsed: 15, difficulty: "medium", topic: "T2", bloom: "comprehension" },
+            { questionId: "Q3", correct: false, selectedAnswer: "C", correctAnswer: "A", timeUsed: 20, difficulty: "hard", topic: "T3", bloom: "analysis" }
+        ]},
+        { attemptId: "adv2", studentId: "stu-high2", percentage: 85, questions: [
+            { questionId: "Q1", correct: true, selectedAnswer: "A", correctAnswer: "A", timeUsed: 12, difficulty: "easy", topic: "T1", bloom: "knowledge" },
+            { questionId: "Q2", correct: false, selectedAnswer: "C", correctAnswer: "B", timeUsed: 25, difficulty: "medium", topic: "T2", bloom: "comprehension" },
+            { questionId: "Q3", correct: false, selectedAnswer: "B", correctAnswer: "A", timeUsed: 30, difficulty: "hard", topic: "T3", bloom: "analysis" }
+        ]},
+        { attemptId: "adv3", studentId: "stu-low1", percentage: 30, questions: [
+            { questionId: "Q1", correct: false, selectedAnswer: "B", correctAnswer: "A", timeUsed: 30, difficulty: "easy", topic: "T1", bloom: "knowledge" },
+            { questionId: "Q2", correct: false, selectedAnswer: "A", correctAnswer: "B", timeUsed: 35, difficulty: "medium", topic: "T2", bloom: "comprehension" },
+            { questionId: "Q3", correct: false, selectedAnswer: "D", correctAnswer: "A", timeUsed: 40, difficulty: "hard", topic: "T3", bloom: "analysis" }
+        ]},
+        { attemptId: "adv4", studentId: "stu-low2", percentage: 25, questions: [
+            { questionId: "Q1", correct: false, selectedAnswer: "C", correctAnswer: "A", timeUsed: 28, difficulty: "easy", topic: "T1", bloom: "knowledge" },
+            { questionId: "Q2", correct: false, selectedAnswer: "D", correctAnswer: "B", timeUsed: 32, difficulty: "medium", topic: "T2", bloom: "comprehension" },
+            { questionId: "Q3", correct: false, selectedAnswer: "B", correctAnswer: "A", timeUsed: 45, difficulty: "hard", topic: "T3", bloom: "analysis" }
+        ]}
+    ];
+
+    var advResults = Analytics.getAdvancedQuestionAnalytics(advAttempts);
+    TestRunner.assertType(advResults, "object", "Advanced QA: returns array");
+    TestRunner.assertEqual(advResults.length, 3, "Advanced QA: 3 questions analyzed");
+
+    // Check structure of first result
+    var q1 = advResults[0];
+    TestRunner.assertNotNull(q1.questionId, "Advanced QA: has questionId");
+    TestRunner.assertType(q1.attempts, "number", "Advanced QA: has attempts");
+    TestRunner.assertType(q1.accuracy, "number", "Advanced QA: has accuracy");
+    TestRunner.assertType(q1.discrimination, "number", "Advanced QA: has discrimination");
+    TestRunner.assertType(q1.hasDiscriminationData, "boolean", "Advanced QA: has hasDiscriminationData");
+    TestRunner.assertType(q1.observedDifficulty, "string", "Advanced QA: has observedDifficulty");
+    TestRunner.assertType(q1.difficultyAlignment, "string", "Advanced QA: has difficultyAlignment");
+    TestRunner.assertType(q1.topDistractors, "object", "Advanced QA: has topDistractors");
+    TestRunner.assertType(q1.sufficientSample, "boolean", "Advanced QA: has sufficientSample");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Discrimination");
+
+    // Q1: high students get it right (2/2), low students get it wrong (0/2) → high discrimination
+    var q1Result = null;
+    for (var i = 0; i < advResults.length; i++) {
+        if (advResults[i].questionId === "Q1") { q1Result = advResults[i]; break; }
+    }
+    TestRunner.assertNotNull(q1Result, "Advanced QA: Q1 found");
+    TestRunner.assertTrue(q1Result.discrimination > 0, "Advanced QA: Q1 has positive discrimination");
+    TestRunner.assertTrue(q1Result.hasDiscriminationData, "Advanced QA: Q1 has discrimination data");
+
+    // Q3: both high and low students get it wrong → low/no discrimination
+    var q3Result = null;
+    for (var i = 0; i < advResults.length; i++) {
+        if (advResults[i].questionId === "Q3") { q3Result = advResults[i]; break; }
+    }
+    TestRunner.assertNotNull(q3Result, "Advanced QA: Q3 found");
+    TestRunner.assertTrue(q3Result.discrimination <= 0, "Advanced QA: Q3 has low/negative discrimination");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Observed Difficulty");
+
+    // Q1: 50% accuracy (2/4) → observed medium
+    TestRunner.assertEqual(q1Result.observedDifficulty, "medium", "Advanced QA: Q1 observed difficulty is medium");
+    // Q1 metadata is "easy" but observed is "medium" → misaligned
+    TestRunner.assertEqual(q1Result.difficultyAlignment, "misaligned", "Advanced QA: Q1 difficulty is misaligned");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Distractors");
+
+    // Q1: wrong answers are B (1), C (1) → top distractors
+    TestRunner.assertTrue(q1Result.topDistractors.length > 0, "Advanced QA: Q1 has distractors");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Sufficient Sample");
+
+    // 4 attempts per question → sufficient (>= 5 threshold is NOT met)
+    TestRunner.assertFalse(q1Result.sufficientSample, "Advanced QA: Q1 insufficient sample (4 < 5)");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Insufficient Sample");
+
+    var insufficientAttempts = [
+        { attemptId: "is1", studentId: "s1", percentage: 80, questions: [
+            { questionId: "Q-ONLY", correct: true, selectedAnswer: "A", correctAnswer: "A", timeUsed: 10 }
+        ]}
+    ];
+    var insufResults = Analytics.getAdvancedQuestionAnalytics(insufficientAttempts);
+    TestRunner.assertEqual(insufResults.length, 1, "Advanced QA insufficient: 1 question");
+    TestRunner.assertFalse(insufResults[0].sufficientSample, "Advanced QA insufficient: not sufficient");
+    TestRunner.assertFalse(insufResults[0].hasDiscriminationData, "Advanced QA insufficient: no discrimination data");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Sorted by Discrimination");
+
+    // Results should be sorted by discrimination (highest first)
+    var sortedCorrectly = true;
+    for (var i = 1; i < advResults.length; i++) {
+        if (advResults[i].discrimination > advResults[i - 1].discrimination) {
+            sortedCorrectly = false;
+            break;
+        }
+    }
+    TestRunner.assertTrue(sortedCorrectly, "Advanced QA: sorted by discrimination descending");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Missing Fields");
+
+    var missingFieldAttempts = [
+        { attemptId: "mf1", studentId: "s1", percentage: 50, questions: [
+            { questionId: "Q-MISS" }
+        ]},
+        { attemptId: "mf2", studentId: "s2", percentage: 60, questions: [
+            { questionId: "Q-MISS", correct: true }
+        ]}
+    ];
+    var mfResults = Analytics.getAdvancedQuestionAnalytics(missingFieldAttempts);
+    TestRunner.assertEqual(mfResults.length, 1, "Advanced QA missing fields: 1 question");
+    TestRunner.assertEqual(mfResults[0].attempts, 2, "Advanced QA missing fields: 2 attempts counted");
+    TestRunner.assertEqual(mfResults[0].difficulty, null, "Advanced QA missing fields: difficulty is null");
+    TestRunner.assertEqual(mfResults[0].topic, null, "Advanced QA missing fields: topic is null");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Difficulty Alignment Aligned");
+
+    var alignedAttempts = [
+        { attemptId: "al1", studentId: "s1", percentage: 90, questions: [
+            { questionId: "Q-EASY", correct: true, selectedAnswer: "A", correctAnswer: "A", difficulty: "easy" }
+        ]},
+        { attemptId: "al2", studentId: "s2", percentage: 85, questions: [
+            { questionId: "Q-EASY", correct: true, selectedAnswer: "A", correctAnswer: "A", difficulty: "easy" }
+        ]},
+        { attemptId: "al3", studentId: "s3", percentage: 80, questions: [
+            { questionId: "Q-EASY", correct: true, selectedAnswer: "B", correctAnswer: "A", difficulty: "easy" }
+        ]}
+    ];
+    var alResults = Analytics.getAdvancedQuestionAnalytics(alignedAttempts);
+    TestRunner.assertEqual(alResults.length, 1, "Aligned: 1 question");
+    TestRunner.assertEqual(alResults[0].observedDifficulty, "easy", "Aligned: observed is easy");
+    TestRunner.assertEqual(alResults[0].difficultyAlignment, "aligned", "Aligned: metadata matches");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Difficult as Synonym for Hard");
+
+    var difficultAttempts = [
+        { attemptId: "dh1", studentId: "s1", percentage: 30, questions: [
+            { questionId: "Q-DIFF", correct: false, selectedAnswer: "B", correctAnswer: "A", difficulty: "difficult" }
+        ]},
+        { attemptId: "dh2", studentId: "s2", percentage: 25, questions: [
+            { questionId: "Q-DIFF", correct: false, selectedAnswer: "C", correctAnswer: "A", difficulty: "difficult" }
+        ]},
+        { attemptId: "dh3", studentId: "s3", percentage: 20, questions: [
+            { questionId: "Q-DIFF", correct: false, selectedAnswer: "D", correctAnswer: "A", difficulty: "difficult" }
+        ]}
+    ];
+    var dhResults = Analytics.getAdvancedQuestionAnalytics(difficultAttempts);
+    TestRunner.assertEqual(dhResults.length, 1, "Difficult synonym: 1 question");
+    TestRunner.assertEqual(dhResults[0].observedDifficulty, "hard", "Difficult synonym: observed is hard");
+    TestRunner.assertEqual(dhResults[0].difficultyAlignment, "aligned", "Difficult synonym: 'difficult' treated as 'hard'");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: Multiple Students Multiple Questions");
+
+    var multiAttempts = [];
+    for (var mi = 0; mi < 10; mi++) {
+        multiAttempts.push({
+            attemptId: "multi-" + mi,
+            studentId: "stu-" + (mi % 5),
+            percentage: 50 + (mi * 5),
+            questions: [
+                { questionId: "MQ1", correct: mi < 5 ? false : true, selectedAnswer: mi < 5 ? "B" : "A", correctAnswer: "A", timeUsed: 10 + mi, difficulty: "medium", topic: "Topic1" },
+                { questionId: "MQ2", correct: true, selectedAnswer: "A", correctAnswer: "A", timeUsed: 8 + mi, difficulty: "easy", topic: "Topic2" }
+            ]
+        });
+    }
+    var multiResults = Analytics.getAdvancedQuestionAnalytics(multiAttempts);
+    TestRunner.assertEqual(multiResults.length, 2, "Multi: 2 questions");
+    var mq1 = null;
+    for (var mi = 0; mi < multiResults.length; mi++) {
+        if (multiResults[mi].questionId === "MQ1") { mq1 = multiResults[mi]; break; }
+    }
+    TestRunner.assertNotNull(mq1, "Multi: MQ1 found");
+    TestRunner.assertEqual(mq1.attempts, 10, "Multi: MQ1 has 10 attempts");
+    TestRunner.assertTrue(mq1.hasDiscriminationData, "Multi: MQ1 has discrimination data");
+
+    TestRunner.suite("Analytics - getAdvancedQuestionAnalytics: TeacherAnalytics Bridge");
+
+    var origAdvAttempts = allAttempts.slice();
+    allAttempts = advAttempts;
+    var taAdvResults = TeacherAnalytics.getAdvancedQuestionAnalytics({});
+    TestRunner.assertType(taAdvResults, "object", "TeacherAnalytics advanced QA: returns array");
+    TestRunner.assertEqual(taAdvResults.length, 3, "TeacherAnalytics advanced QA: 3 questions");
+    allAttempts = origAdvAttempts;
 }

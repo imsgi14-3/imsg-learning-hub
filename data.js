@@ -933,6 +933,16 @@ var TeacherAnalytics = (function() {
         }
     }
 
+    function getAdvancedQuestionAnalytics(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            return Analytics.getAdvancedQuestionAnalytics(data.attempts);
+        } catch(e) {
+            console.error("TeacherAnalytics.getAdvancedQuestionAnalytics error:", e);
+            return [];
+        }
+    }
+
     function getFullAnalytics(filters) {
         try {
             var data = getTeacherAnalyticsData(filters);
@@ -968,6 +978,7 @@ var TeacherAnalytics = (function() {
         getTrendDirection: getTrendDirection,
         getTeacherInsights: getTeacherInsights,
         getRecommendations: getRecommendations,
+        getAdvancedQuestionAnalytics: getAdvancedQuestionAnalytics,
         getFullAnalytics: getFullAnalytics
     };
 })();

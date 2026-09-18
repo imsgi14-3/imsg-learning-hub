@@ -3087,6 +3087,7 @@ var UI = (function() {
         try { h += renderQuestionAccuracyFromAttempts(attempts); } catch(e) {}
         try { h += renderProgressFromAttempts(attempts); } catch(e) {}
         try { h += renderDifficultyFromAttempts(attempts); } catch(e) {}
+        try { h += renderAdvancedQuestionAnalytics(attempts); } catch(e) {}
         h += '</div>';
         h += '<div class="analytics-sections" id="analyticsPractice" style="display:none;">';
         try { h += renderActionableInsights(practiceAttempts); } catch(e) {}
@@ -3096,6 +3097,7 @@ var UI = (function() {
         try { h += renderQuestionAccuracyFromAttempts(practiceAttempts); } catch(e) {}
         try { h += renderProgressFromAttempts(practiceAttempts); } catch(e) {}
         try { h += renderDifficultyFromAttempts(practiceAttempts); } catch(e) {}
+        try { h += renderAdvancedQuestionAnalytics(practiceAttempts); } catch(e) {}
         h += '</div>';
         h += '<div class="analytics-sections" id="analyticsAssessment" style="display:none;">';
         try { h += renderActionableInsights(assessmentAttempts); } catch(e) {}
@@ -3105,6 +3107,7 @@ var UI = (function() {
         try { h += renderQuestionAccuracyFromAttempts(assessmentAttempts); } catch(e) {}
         try { h += renderProgressFromAttempts(assessmentAttempts); } catch(e) {}
         try { h += renderDifficultyFromAttempts(assessmentAttempts); } catch(e) {}
+        try { h += renderAdvancedQuestionAnalytics(assessmentAttempts); } catch(e) {}
         h += '</div>';
         return h;
     }
@@ -3425,6 +3428,63 @@ var UI = (function() {
             var diffColor = diffColors[diffKey] || '#9ca3af';
             var diffLabel = diffLabels[diffKey] || diffKey;
             h += '<tr><td><span style="color:' + diffColor + ';font-weight:700;">' + diffLabel + '</span></td><td>' + d.attempts + '</td><td>' + d.correct + '</td><td style="color:' + color + ';font-weight:700;">' + d.accuracy.toFixed(1) + '%</td></tr>';
+        }
+        h += '</tbody></table></div>';
+        return h;
+    }
+
+    function renderAdvancedQuestionAnalytics(attempts) {
+        if (!attempts || attempts.length === 0) return '';
+        var data = Analytics.getAdvancedQuestionAnalytics(attempts);
+        if (!data || data.length === 0) return '';
+        var h = '<div class="chart-section"><h4>&#128269; Advanced Question Analytics</h4>';
+        h += '<p style="font-size:0.8rem;color:var(--text-mid);margin-bottom:12px;">Discrimination, observed difficulty, and time-accuracy analysis. Questions with 5+ responses shown.</p>';
+        // Summary cards
+        var highDisc = 0, lowDisc = 0, misaligned = 0, sufficientCount = 0;
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].discrimination > 0.3) highDisc++;
+            else if (data[i].discrimination < 0) lowDisc++;
+            if (data[i].difficultyAlignment === "misaligned") misaligned++;
+            if (data[i].sufficientSample) sufficientCount++;
+        }
+        h += '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">';
+        h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 14px;border-radius:8px;font-size:12px;"><strong>' + highDisc + '</strong> High Discrimination</div>';
+        h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 14px;border-radius:8px;font-size:12px;"><strong>' + lowDisc + '</strong> Low Discrimination</div>';
+        h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 14px;border-radius:8px;font-size:12px;"><strong>' + misaligned + '</strong> Difficulty Mismatch</div>';
+        h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 14px;border-radius:8px;font-size:12px;"><strong>' + sufficientCount + '</strong> Sufficient Data</div>';
+        h += '</div>';
+        // Table: show questions with sufficient sample, sorted by discrimination
+        var showQs = [];
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].sufficientSample) showQs.push(data[i]);
+        }
+        if (showQs.length === 0) {
+            h += '<p style="color:var(--text-mid);">No questions with sufficient data (5+ responses) for advanced analysis.</p></div>';
+            return h;
+        }
+        h += '<table class="history-table"><thead><tr><th>Question</th><th>Accuracy</th><th>Discrimination</th><th>Observed Diff.</th><th>Meta Diff.</th><th>Avg Time</th></tr></thead><tbody>';
+        for (var i = 0; i < showQs.length; i++) {
+            var q = showQs[i];
+            var shortId = q.questionId.length > 18 ? q.questionId.substring(0, 15) + '...' : q.questionId;
+            var accColor = q.accuracy >= 70 ? 'var(--success)' : q.accuracy >= 50 ? 'var(--accent)' : 'var(--error)';
+            var discColor = q.discrimination > 0.3 ? 'var(--success)' : q.discrimination > 0 ? 'var(--accent)' : 'var(--error)';
+            var discLabel = q.discrimination > 0.3 ? 'Good' : q.discrimination > 0 ? 'Fair' : 'Low';
+            var alignColor = q.difficultyAlignment === 'aligned' ? 'var(--success)' : 'var(--error)';
+            var alignLabel = q.difficultyAlignment === 'aligned' ? 'Yes' : 'No';
+            var diffColors = { easy: '#22c55e', medium: '#f59e0b', hard: '#ef4444' };
+            var metaDiff = q.difficulty || 'N/A';
+            var obsDiff = q.observedDifficulty;
+            var metaColor = diffColors[metaDiff] || '#9ca3af';
+            var obsColor = diffColors[obsDiff] || '#9ca3af';
+            var avgTime = q.averageTimeUsed > 0 ? Math.round(q.averageTimeUsed) + 's' : 'N/A';
+            h += '<tr class="question-row" data-question-id="' + q.questionId + '">';
+            h += '<td style="font-weight:600;font-size:0.85rem;" title="' + q.questionId + '">' + shortId + '</td>';
+            h += '<td style="color:' + accColor + ';font-weight:700;">' + q.accuracy + '%</td>';
+            h += '<td style="color:' + discColor + ';font-weight:700;">' + q.discrimination.toFixed(2) + ' <span style="font-size:0.75rem;">(' + discLabel + ')</span></td>';
+            h += '<td style="color:' + obsColor + ';font-weight:600;">' + obsDiff.charAt(0).toUpperCase() + obsDiff.slice(1) + '</td>';
+            h += '<td style="color:' + metaColor + ';font-weight:600;">' + metaDiff.charAt(0).toUpperCase() + metaDiff.slice(1) + ' <span style="color:' + alignColor + ';font-size:0.75rem;">' + alignLabel + '</span></td>';
+            h += '<td>' + avgTime + '</td>';
+            h += '</tr>';
         }
         h += '</tbody></table></div>';
         return h;

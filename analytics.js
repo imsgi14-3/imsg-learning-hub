@@ -826,6 +826,182 @@ var Analytics = (function() {
         return results;
     }
 
+    /**
+     * Advanced question analytics: discrimination, observed difficulty, time-accuracy, distractor analysis.
+     * Requires attempts with per-question data (questionId, correct, selectedAnswer, timeUsed, difficulty, topic, bloom).
+     * Returns array of enhanced question objects sorted by discrimination (highest first).
+     */
+    function getAdvancedQuestionAnalytics(attempts) {
+        attempts = safeArray(attempts);
+        if (attempts.length === 0) return [];
+
+        // Pass 1: compute per-student overall accuracy
+        var studentData = {};
+        for (var i = 0; i < attempts.length; i++) {
+            var a = attempts[i];
+            if (!a || !a.studentId) continue;
+            var sid = a.studentId;
+            if (!studentData[sid]) studentData[sid] = { correct: 0, total: 0 };
+            var questions = safeArray(a.questions);
+            for (var j = 0; j < questions.length; j++) {
+                var q = questions[j];
+                if (!q || !q.questionId) continue;
+                studentData[sid].total++;
+                if (q.correct) studentData[sid].correct++;
+            }
+        }
+        // Compute student overall accuracy
+        var studentAccuracy = {};
+        var sids = Object.keys(studentData);
+        for (var i = 0; i < sids.length; i++) {
+            var sd = studentData[sids[i]];
+            studentAccuracy[sids[i]] = sd.total > 0 ? (sd.correct / sd.total) : 0;
+        }
+        // Sort students by accuracy, split into top/bottom halves
+        var sortedSids = sids.slice().sort(function(a, b) { return studentAccuracy[b] - studentAccuracy[a]; });
+        var halfIdx = Math.floor(sortedSids.length / 2);
+        var topStudentIds = {};
+        var bottomStudentIds = {};
+        for (var i = 0; i < halfIdx; i++) topStudentIds[sortedSids[i]] = true;
+        for (var i = halfIdx; i < sortedSids.length; i++) bottomStudentIds[sortedSids[i]] = true;
+
+        // Pass 2: per-question detailed aggregation
+        var questionData = {};
+        for (var i = 0; i < attempts.length; i++) {
+            var a = attempts[i];
+            if (!a) continue;
+            var sid = a.studentId || "";
+            var questions = safeArray(a.questions);
+            for (var j = 0; j < questions.length; j++) {
+                var q = questions[j];
+                if (!q || !q.questionId) continue;
+                var qid = q.questionId;
+                if (!questionData[qid]) {
+                    questionData[qid] = {
+                        questionId: qid,
+                        attempts: 0,
+                        correct: 0,
+                        totalTime: 0,
+                        difficulty: q.difficulty || null,
+                        topic: q.topic || null,
+                        bloom: q.bloom || null,
+                        topCorrect: 0, topTotal: 0,
+                        bottomCorrect: 0, bottomTotal: 0,
+                        optionCounts: {},
+                        totalTimeForAccuracy: 0,
+                        timeCount: 0
+                    };
+                }
+                var qd = questionData[qid];
+                qd.attempts++;
+                if (q.correct) qd.correct++;
+                qd.totalTime += safeNum(q.timeUsed);
+                // Track top/bottom student performance
+                if (topStudentIds[sid]) {
+                    qd.topTotal++;
+                    if (q.correct) qd.topCorrect++;
+                }
+                if (bottomStudentIds[sid]) {
+                    qd.bottomTotal++;
+                    if (q.correct) qd.bottomCorrect++;
+                }
+                // Distractor tracking: count each selected answer option
+                var selected = q.selectedAnswer !== undefined ? q.selectedAnswer : null;
+                if (selected !== null && selected !== undefined) {
+                    var selKey = String(selected);
+                    if (!qd.optionCounts[selKey]) qd.optionCounts[selKey] = 0;
+                    qd.optionCounts[selKey]++;
+                }
+                // Time-accuracy: accumulate time for correct vs incorrect
+                var t = safeNum(q.timeUsed);
+                if (t > 0) {
+                    qd.timeCount++;
+                }
+            }
+        }
+
+        // Pass 3: compute advanced metrics
+        var results = [];
+        var keys = Object.keys(questionData);
+        for (var i = 0; i < keys.length; i++) {
+            var qd = questionData[keys[i]];
+            var accuracy = qd.attempts > 0 ? Number(((qd.correct / qd.attempts) * 100).toFixed(2)) : 0;
+            var avgTime = qd.attempts > 0 ? Number((qd.totalTime / qd.attempts).toFixed(2)) : 0;
+
+            // Discrimination index: (topCorrect/topTotal - bottomCorrect/bottomTotal)
+            // Range: -1.0 to 1.0. Higher = better differentiation.
+            var discrimination = 0;
+            var hasDiscriminationData = qd.topTotal > 0 && qd.bottomTotal > 0;
+            if (hasDiscriminationData) {
+                var topRate = qd.topCorrect / qd.topTotal;
+                var bottomRate = qd.bottomCorrect / qd.bottomTotal;
+                discrimination = Number((topRate - bottomRate).toFixed(4));
+            }
+
+            // Observed difficulty vs metadata difficulty
+            var observedDifficulty = "medium";
+            if (accuracy >= 80) observedDifficulty = "easy";
+            else if (accuracy >= 50) observedDifficulty = "medium";
+            else observedDifficulty = "hard";
+            var difficultyAlignment = "aligned";
+            if (qd.difficulty && observedDifficulty !== qd.difficulty) {
+                // Handle "difficult" as synonym for "hard"
+                var metaNorm = qd.difficulty === "difficult" ? "hard" : qd.difficulty;
+                if (observedDifficulty !== metaNorm) {
+                    difficultyAlignment = "misaligned";
+                }
+            }
+
+            // Distractor analysis: find most-selected wrong answer
+            var totalResponses = 0;
+            var correctResponses = 0;
+            var distractorOptions = [];
+            var optKeys = Object.keys(qd.optionCounts);
+            for (var oi = 0; oi < optKeys.length; oi++) {
+                totalResponses += qd.optionCounts[optKeys[oi]];
+            }
+            correctResponses = qd.correct;
+            for (var oi = 0; oi < optKeys.length; oi++) {
+                var opt = optKeys[oi];
+                var count = qd.optionCounts[opt];
+                var pctOfTotal = totalResponses > 0 ? Number(((count / totalResponses) * 100).toFixed(1)) : 0;
+                // An option is a distractor if it's selected frequently but isn't the correct pattern
+                distractorOptions.push({
+                    option: opt,
+                    count: count,
+                    percentage: pctOfTotal
+                });
+            }
+            distractorOptions.sort(function(a, b) { return b.count - a.count; });
+            var topDistractors = distractorOptions.slice(0, 3);
+
+            // Data sufficiency flag
+            var sufficientSample = qd.attempts >= 5;
+
+            results.push({
+                questionId: qd.questionId,
+                attempts: qd.attempts,
+                correct: qd.correct,
+                incorrect: qd.attempts - qd.correct,
+                accuracy: accuracy,
+                averageTimeUsed: avgTime,
+                difficulty: qd.difficulty,
+                topic: qd.topic,
+                bloom: qd.bloom,
+                discrimination: discrimination,
+                hasDiscriminationData: hasDiscriminationData,
+                observedDifficulty: observedDifficulty,
+                difficultyAlignment: difficultyAlignment,
+                topDistractors: topDistractors,
+                sufficientSample: sufficientSample
+            });
+        }
+
+        // Sort by discrimination (highest first) — questions that differentiate best come first
+        results.sort(function(a, b) { return b.discrimination - a.discrimination; });
+        return results;
+    }
+
     return {
         getClassOverview: getClassOverview,
         getStudentPerformance: getStudentPerformance,
@@ -842,6 +1018,7 @@ var Analytics = (function() {
         getTeacherInsights: getTeacherInsights,
         getModeBreakdown: getModeBreakdown,
         filterByMode: filterByMode,
+        getAdvancedQuestionAnalytics: getAdvancedQuestionAnalytics,
         MODE_LABELS: MODE_LABELS,
         PRACTICE_MODES: PRACTICE_MODES,
         ASSESSMENT_MODES: ASSESSMENT_MODES
