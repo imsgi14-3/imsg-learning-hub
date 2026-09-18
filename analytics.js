@@ -1002,6 +1002,237 @@ var Analytics = (function() {
         return results;
     }
 
+    function getAdvancedStudentAnalytics(studentId, attempts) {
+        attempts = safeArray(attempts);
+        if (!studentId) {
+            return { studentId: null, totalAttempts: 0, confidence: "insufficient", consistency: null, difficultyPerformance: [], bloomPerformance: [], timeAccuracy: null, modeComparison: null, riskTrajectory: null };
+        }
+        var studentAttempts = [];
+        for (var i = 0; i < attempts.length; i++) {
+            if (attempts[i] && attempts[i].studentId === studentId) {
+                studentAttempts.push(attempts[i]);
+            }
+        }
+        if (studentAttempts.length === 0) {
+            return { studentId: studentId, totalAttempts: 0, confidence: "insufficient", consistency: null, difficultyPerformance: [], bloomPerformance: [], timeAccuracy: null, modeComparison: null, riskTrajectory: null };
+        }
+        var totalAttempts = studentAttempts.length;
+        var confidence = "insufficient";
+        if (totalAttempts >= 10) confidence = "high";
+        else if (totalAttempts >= 5) confidence = "medium";
+        else if (totalAttempts >= 2) confidence = "low";
+
+        // --- Consistency ---
+        var consistency = null;
+        if (totalAttempts >= 2) {
+            var percentages = [];
+            var sum = 0;
+            for (var i = 0; i < totalAttempts; i++) {
+                var pct = safeNum(studentAttempts[i].percentage);
+                percentages.push(pct);
+                sum += pct;
+            }
+            var mean = sum / totalAttempts;
+            var sqSum = 0;
+            for (var i = 0; i < percentages.length; i++) {
+                sqSum += (percentages[i] - mean) * (percentages[i] - mean);
+            }
+            var stdDev = Math.sqrt(sqSum / totalAttempts);
+            var cv = mean > 0 ? (stdDev / mean) * 100 : 0;
+            var level = "variable";
+            if (stdDev <= 10) level = "consistent";
+            else if (stdDev <= 20) level = "moderate";
+            consistency = { stdDev: Number(stdDev.toFixed(2)), cv: Number(cv.toFixed(2)), level: level };
+        }
+
+        // --- Difficulty breakdown (per student) ---
+        var difficultyPerformance = [];
+        var diffData = {};
+        for (var i = 0; i < totalAttempts; i++) {
+            var questions = safeArray(studentAttempts[i].questions);
+            for (var j = 0; j < questions.length; j++) {
+                var q = questions[j];
+                if (!q) continue;
+                var diff = safeStr(q.difficulty, "medium");
+                if (!diffData[diff]) diffData[diff] = { correct: 0, total: 0 };
+                diffData[diff].total++;
+                if (q.correct) diffData[diff].correct++;
+            }
+        }
+        var diffKeys = Object.keys(diffData);
+        for (var i = 0; i < diffKeys.length; i++) {
+            var d = diffKeys[i];
+            var dd = diffData[d];
+            difficultyPerformance.push({
+                difficulty: d,
+                correct: dd.correct,
+                total: dd.total,
+                accuracy: dd.total > 0 ? Number(((dd.correct / dd.total) * 100).toFixed(2)) : 0
+            });
+        }
+        difficultyPerformance.sort(function(a, b) { return b.accuracy - a.accuracy; });
+
+        // --- Bloom breakdown (per student) ---
+        var bloomPerformance = [];
+        var bloomData = {};
+        for (var i = 0; i < totalAttempts; i++) {
+            var questions = safeArray(studentAttempts[i].questions);
+            for (var j = 0; j < questions.length; j++) {
+                var q = questions[j];
+                if (!q) continue;
+                var bloom = safeStr(q.bloom, "unspecified");
+                if (!bloomData[bloom]) bloomData[bloom] = { correct: 0, total: 0 };
+                bloomData[bloom].total++;
+                if (q.correct) bloomData[bloom].correct++;
+            }
+        }
+        var bloomKeys = Object.keys(bloomData);
+        for (var i = 0; i < bloomKeys.length; i++) {
+            var b = bloomKeys[i];
+            var bd = bloomData[b];
+            bloomPerformance.push({
+                bloom: b,
+                correct: bd.correct,
+                total: bd.total,
+                accuracy: bd.total > 0 ? Number(((bd.correct / bd.total) * 100).toFixed(2)) : 0
+            });
+        }
+        bloomPerformance.sort(function(a, b) { return b.accuracy - a.accuracy; });
+
+        // --- Time-accuracy pattern ---
+        var timeAccuracy = null;
+        var totalTimeUsed = 0;
+        var timeCount = 0;
+        var totalAccCount = 0;
+        for (var i = 0; i < totalAttempts; i++) {
+            var questions = safeArray(studentAttempts[i].questions);
+            for (var j = 0; j < questions.length; j++) {
+                var q = questions[j];
+                if (!q) continue;
+                var tu = safeNum(q.timeUsed);
+                if (tu > 0) { totalTimeUsed += tu; timeCount++; }
+                totalAccCount++;
+            }
+        }
+        var timeDataComplete = totalAccCount > 0 && (timeCount / totalAccCount) >= 0.5;
+        if (timeDataComplete && timeCount >= 2) {
+            var avgTimePerQ = totalTimeUsed / timeCount;
+            var fastAccCount = 0, slowAccCount = 0, fastInaccCount = 0, slowInaccCount = 0;
+            for (var i = 0; i < totalAttempts; i++) {
+                var questions = safeArray(studentAttempts[i].questions);
+                for (var j = 0; j < questions.length; j++) {
+                    var q = questions[j];
+                    if (!q) continue;
+                    var tu = safeNum(q.timeUsed);
+                    if (tu <= 0) continue;
+                    if (tu < avgTimePerQ) {
+                        if (q.correct) fastAccCount++; else fastInaccCount++;
+                    } else {
+                        if (q.correct) slowAccCount++; else slowInaccCount++;
+                    }
+                }
+            }
+            var totalAnswered = fastAccCount + slowAccCount + fastInaccCount + slowInaccCount;
+            timeAccuracy = {
+                avgTimePerQuestion: Number(avgTimePerQ.toFixed(2)),
+                fastAccurate: totalAnswered > 0 ? Number(((fastAccCount / totalAnswered) * 100).toFixed(1)) : 0,
+                slowAccurate: totalAnswered > 0 ? Number(((slowAccCount / totalAnswered) * 100).toFixed(1)) : 0,
+                fastInaccurate: totalAnswered > 0 ? Number(((fastInaccCount / totalAnswered) * 100).toFixed(1)) : 0,
+                slowInaccurate: totalAnswered > 0 ? Number(((slowInaccCount / totalAnswered) * 100).toFixed(1)) : 0,
+                fastAccCount: fastAccCount,
+                slowAccCount: slowAccCount,
+                fastInaccCount: fastInaccCount,
+                slowInaccCount: slowInaccCount,
+                sufficientData: true
+            };
+        } else {
+            timeAccuracy = { sufficientData: false, avgTimePerQuestion: 0, fastAccurate: 0, slowAccurate: 0, fastInaccurate: 0, slowInaccurate: 0 };
+        }
+
+        // --- Mode comparison (practice vs assessment) ---
+        var modeComparison = null;
+        var practiceAttempts = filterByMode(studentAttempts, "practice");
+        var assessmentAttempts = filterByMode(studentAttempts, "assessment");
+        if (practiceAttempts.length > 0 && assessmentAttempts.length > 0) {
+            var pSum = 0, aSum = 0;
+            var pCorrect = 0, pTotal = 0, aCorrect = 0, aTotal = 0;
+            for (var i = 0; i < practiceAttempts.length; i++) {
+                pSum += safeNum(practiceAttempts[i].percentage);
+                var qs = safeArray(practiceAttempts[i].questions);
+                for (var j = 0; j < qs.length; j++) {
+                    if (qs[j]) { pTotal++; if (qs[j].correct) pCorrect++; }
+                }
+            }
+            for (var i = 0; i < assessmentAttempts.length; i++) {
+                aSum += safeNum(assessmentAttempts[i].percentage);
+                var qs = safeArray(assessmentAttempts[i].questions);
+                for (var j = 0; j < qs.length; j++) {
+                    if (qs[j]) { aTotal++; if (qs[j].correct) aCorrect++; }
+                }
+            }
+            var pAvg = pSum / practiceAttempts.length;
+            var aAvg = aSum / assessmentAttempts.length;
+            var pAcc = pTotal > 0 ? (pCorrect / pTotal) * 100 : 0;
+            var aAcc = aTotal > 0 ? (aCorrect / aTotal) * 100 : 0;
+            var diff = pAvg - aAvg;
+            var pattern = "balanced";
+            if (diff > 10) pattern = "better_in_practice";
+            else if (diff < -10) pattern = "better_in_assessment";
+            modeComparison = {
+                practiceAttempts: practiceAttempts.length,
+                assessmentAttempts: assessmentAttempts.length,
+                practiceAvg: Number(pAvg.toFixed(2)),
+                assessmentAvg: Number(aAvg.toFixed(2)),
+                practiceAccuracy: Number(pAcc.toFixed(2)),
+                assessmentAccuracy: Number(aAcc.toFixed(2)),
+                pattern: pattern
+            };
+        }
+
+        // --- Risk trajectory (recent vs overall) ---
+        var riskTrajectory = null;
+        if (totalAttempts >= 3) {
+            var sorted = studentAttempts.slice().sort(function(a, b) {
+                var tsA = a.timestamp || a.completedAt || "";
+                var tsB = b.timestamp || b.completedAt || "";
+                if (!tsA || !tsB) return 0;
+                return new Date(tsA).getTime() - new Date(tsB).getTime();
+            });
+            var overallSum = 0;
+            for (var i = 0; i < sorted.length; i++) overallSum += safeNum(sorted[i].percentage);
+            var overallAvg = overallSum / sorted.length;
+            var recentCount = Math.min(3, Math.floor(sorted.length / 2));
+            if (recentCount < 2) recentCount = 2;
+            var recentSum = 0;
+            for (var i = sorted.length - recentCount; i < sorted.length; i++) recentSum += safeNum(sorted[i].percentage);
+            var recentAvg = recentSum / recentCount;
+            var trajectoryDiff = recentAvg - overallAvg;
+            var trajectory = "stable";
+            if (trajectoryDiff > 5) trajectory = "improving";
+            else if (trajectoryDiff < -5) trajectory = "worsening";
+            riskTrajectory = {
+                overallAvg: Number(overallAvg.toFixed(2)),
+                recentAvg: Number(recentAvg.toFixed(2)),
+                difference: Number(trajectoryDiff.toFixed(2)),
+                trajectory: trajectory,
+                recentCount: recentCount,
+                totalAttempts: totalAttempts
+            };
+        }
+
+        return {
+            studentId: studentId,
+            totalAttempts: totalAttempts,
+            confidence: confidence,
+            consistency: consistency,
+            difficultyPerformance: difficultyPerformance,
+            bloomPerformance: bloomPerformance,
+            timeAccuracy: timeAccuracy,
+            modeComparison: modeComparison,
+            riskTrajectory: riskTrajectory
+        };
+    }
+
     return {
         getClassOverview: getClassOverview,
         getStudentPerformance: getStudentPerformance,
@@ -1019,6 +1250,7 @@ var Analytics = (function() {
         getModeBreakdown: getModeBreakdown,
         filterByMode: filterByMode,
         getAdvancedQuestionAnalytics: getAdvancedQuestionAnalytics,
+        getAdvancedStudentAnalytics: getAdvancedStudentAnalytics,
         MODE_LABELS: MODE_LABELS,
         PRACTICE_MODES: PRACTICE_MODES,
         ASSESSMENT_MODES: ASSESSMENT_MODES

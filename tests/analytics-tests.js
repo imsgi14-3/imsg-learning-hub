@@ -1590,4 +1590,260 @@ function runTeacherAnalyticsFlowTests() {
     TestRunner.assertType(taAdvResults, "object", "TeacherAnalytics advanced QA: returns array");
     TestRunner.assertEqual(taAdvResults.length, 3, "TeacherAnalytics advanced QA: 3 questions");
     allAttempts = origAdvAttempts;
+
+    // ============================================================
+    // Phase 5.2 — Advanced Student Learning Analytics Tests
+    // ============================================================
+    TestRunner.suite("Analytics - getAdvancedStudentAnalytics");
+
+    // 1. Empty data
+    var emptyResult = Analytics.getAdvancedStudentAnalytics("s1", []);
+    TestRunner.assertEqual(emptyResult.totalAttempts, 0, "Advanced student: empty attempts returns 0");
+    TestRunner.assertEqual(emptyResult.confidence, "insufficient", "Advanced student: empty attempts confidence insufficient");
+    TestRunner.assertEqual(emptyResult.consistency, null, "Advanced student: empty attempts no consistency");
+    TestRunner.assertEqual(emptyResult.difficultyPerformance.length, 0, "Advanced student: empty attempts no difficulty");
+    TestRunner.assertEqual(emptyResult.bloomPerformance.length, 0, "Advanced student: empty attempts no bloom");
+    TestRunner.assertEqual(emptyResult.timeAccuracy, null, "Advanced student: empty attempts no timeAccuracy");
+    TestRunner.assertEqual(emptyResult.modeComparison, null, "Advanced student: empty attempts no modeComparison");
+    TestRunner.assertEqual(emptyResult.riskTrajectory, null, "Advanced student: empty attempts no riskTrajectory");
+
+    // 2. Null studentId
+    var nullIdResult = Analytics.getAdvancedStudentAnalytics(null, [{studentId:"s1",percentage:80,questions:[]}]);
+    TestRunner.assertEqual(nullIdResult.studentId, null, "Advanced student: null studentId");
+    TestRunner.assertEqual(nullIdResult.totalAttempts, 0, "Advanced student: null studentId 0 attempts");
+
+    // 3. No matching student
+    var noMatch = Analytics.getAdvancedStudentAnalytics("nonexistent", [{studentId:"s1",percentage:80,questions:[]}]);
+    TestRunner.assertEqual(noMatch.totalAttempts, 0, "Advanced student: no matching student");
+
+    // 4. One attempt — confidence low, no consistency, no riskTrajectory
+    var oneAttempt = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 75, timestamp: "2026-01-01T00:00:00Z", questions: [
+            { questionId: "q1", correct: true, topic: "Arrays", difficulty: "easy", bloom: "knowledge", timeUsed: 10 },
+            { questionId: "q2", correct: false, topic: "Arrays", difficulty: "medium", bloom: "application", timeUsed: 20 }
+        ]}
+    ]);
+    TestRunner.assertEqual(oneAttempt.totalAttempts, 1, "Advanced student: 1 attempt totalAttempts");
+    TestRunner.assertEqual(oneAttempt.confidence, "insufficient", "Advanced student: 1 attempt confidence insufficient");
+    TestRunner.assertEqual(oneAttempt.consistency, null, "Advanced student: 1 attempt no consistency");
+    TestRunner.assertEqual(oneAttempt.riskTrajectory, null, "Advanced student: 1 attempt no riskTrajectory");
+    TestRunner.assertEqual(oneAttempt.difficultyPerformance.length, 2, "Advanced student: 1 attempt 2 difficulties");
+    TestRunner.assertEqual(oneAttempt.bloomPerformance.length, 2, "Advanced student: 1 attempt 2 blooms");
+
+    // 5. Multiple attempts — consistency, confidence medium
+    var multiAttempts = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 80, timestamp: "2026-01-01T00:00:00Z", questions: [
+            { questionId: "q1", correct: true, topic: "Arrays", difficulty: "easy", bloom: "knowledge", timeUsed: 10 }
+        ]},
+        { studentId: "s1", percentage: 82, timestamp: "2026-01-02T00:00:00Z", questions: [
+            { questionId: "q1", correct: true, topic: "Arrays", difficulty: "easy", bloom: "knowledge", timeUsed: 8 }
+        ]},
+        { studentId: "s1", percentage: 78, timestamp: "2026-01-03T00:00:00Z", questions: [
+            { questionId: "q1", correct: true, topic: "Arrays", difficulty: "easy", bloom: "knowledge", timeUsed: 12 }
+        ]},
+        { studentId: "s1", percentage: 81, timestamp: "2026-01-04T00:00:00Z", questions: [
+            { questionId: "q1", correct: true, topic: "Arrays", difficulty: "easy", bloom: "knowledge", timeUsed: 9 }
+        ]},
+        { studentId: "s1", percentage: 79, timestamp: "2026-01-05T00:00:00Z", questions: [
+            { questionId: "q1", correct: true, topic: "Arrays", difficulty: "easy", bloom: "knowledge", timeUsed: 11 }
+        ]}
+    ]);
+    TestRunner.assertEqual(multiAttempts.totalAttempts, 5, "Advanced student: 5 attempts totalAttempts");
+    TestRunner.assertEqual(multiAttempts.confidence, "medium", "Advanced student: 5 attempts confidence medium");
+    TestRunner.assertType(multiAttempts.consistency, "object", "Advanced student: consistency is object");
+    TestRunner.assertEqual(multiAttempts.consistency.level, "consistent", "Advanced student: consistent performance");
+    TestRunner.assertType(multiAttempts.riskTrajectory, "object", "Advanced student: riskTrajectory exists for 5 attempts");
+
+    // 6. Variable performance
+    var variablePerf = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 95, timestamp: "2026-01-01T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 30, timestamp: "2026-01-02T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 90, timestamp: "2026-01-03T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 35, timestamp: "2026-01-04T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 85, timestamp: "2026-01-05T00:00:00Z", questions: [] }
+    ]);
+    TestRunner.assertEqual(variablePerf.consistency.level, "variable", "Advanced student: variable performance");
+
+    // 7. Difficulty breakdown with multiple levels
+    var diffBreakdown = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 70, questions: [
+            { questionId: "q1", correct: true, difficulty: "easy", topic: "T", bloom: "knowledge" },
+            { questionId: "q2", correct: false, difficulty: "hard", topic: "T", bloom: "knowledge" },
+            { questionId: "q3", correct: true, difficulty: "medium", topic: "T", bloom: "knowledge" }
+        ]}
+    ]);
+    TestRunner.assertEqual(diffBreakdown.difficultyPerformance.length, 3, "Advanced student: 3 difficulty levels");
+    var easyQ = diffBreakdown.difficultyPerformance.filter(function(d){ return d.difficulty === "easy"; })[0];
+    var hardQ = diffBreakdown.difficultyPerformance.filter(function(d){ return d.difficulty === "hard"; })[0];
+    TestRunner.assertEqual(easyQ.accuracy, 100, "Advanced student: easy 100% accuracy");
+    TestRunner.assertEqual(hardQ.accuracy, 0, "Advanced student: hard 0% accuracy");
+
+    // 8. Bloom breakdown with multiple levels
+    var bloomBreakdown = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 60, questions: [
+            { questionId: "q1", correct: true, difficulty: "easy", topic: "T", bloom: "knowledge" },
+            { questionId: "q2", correct: false, difficulty: "easy", topic: "T", bloom: "application" },
+            { questionId: "q3", correct: true, difficulty: "easy", topic: "T", bloom: "analysis" }
+        ]}
+    ]);
+    TestRunner.assertEqual(bloomBreakdown.bloomPerformance.length, 3, "Advanced student: 3 bloom levels");
+    var knowledgeBloom = bloomBreakdown.bloomPerformance.filter(function(b){ return b.bloom === "knowledge"; })[0];
+    var applicationBloom = bloomBreakdown.bloomPerformance.filter(function(b){ return b.bloom === "application"; })[0];
+    TestRunner.assertEqual(knowledgeBloom.accuracy, 100, "Advanced student: knowledge 100% accuracy");
+    TestRunner.assertEqual(applicationBloom.accuracy, 0, "Advanced student: application 0% accuracy");
+
+    // 9. Multiple quiz modes — modeComparison
+    var modeResult = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 80, mode: "practice", questions: [
+            { questionId: "q1", correct: true, difficulty: "easy", topic: "T", bloom: "knowledge", timeUsed: 10 }
+        ]},
+        { studentId: "s1", percentage: 85, mode: "practice", questions: [
+            { questionId: "q1", correct: true, difficulty: "easy", topic: "T", bloom: "knowledge", timeUsed: 8 }
+        ]},
+        { studentId: "s1", percentage: 60, mode: "test", questions: [
+            { questionId: "q1", correct: false, difficulty: "easy", topic: "T", bloom: "knowledge", timeUsed: 15 }
+        ]},
+        { studentId: "s1", percentage: 55, mode: "test", questions: [
+            { questionId: "q1", correct: false, difficulty: "easy", topic: "T", bloom: "knowledge", timeUsed: 20 }
+        ]}
+    ]);
+    TestRunner.assertType(modeResult.modeComparison, "object", "Advanced student: modeComparison exists");
+    TestRunner.assertEqual(modeResult.modeComparison.practiceAttempts, 2, "Advanced student: 2 practice attempts");
+    TestRunner.assertEqual(modeResult.modeComparison.assessmentAttempts, 2, "Advanced student: 2 assessment attempts");
+    TestRunner.assertEqual(modeResult.modeComparison.pattern, "better_in_practice", "Advanced student: better in practice");
+
+    // 10. Missing mode / legacy attempt
+    var legacyResult = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 70, questions: [] },
+        { studentId: "s1", percentage: 75, mode: "practice", questions: [] }
+    ]);
+    TestRunner.assertType(legacyResult.modeComparison, "object", "Advanced student: legacy mode treated as practice");
+
+    // 11. Time-accuracy with sufficient data
+    var timeResult = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 75, questions: [
+            { questionId: "q1", correct: true, timeUsed: 5, difficulty: "easy", topic: "T", bloom: "knowledge" },
+            { questionId: "q2", correct: false, timeUsed: 20, difficulty: "easy", topic: "T", bloom: "knowledge" },
+            { questionId: "q3", correct: true, timeUsed: 3, difficulty: "easy", topic: "T", bloom: "knowledge" },
+            { questionId: "q4", correct: true, timeUsed: 25, difficulty: "easy", topic: "T", bloom: "knowledge" }
+        ]}
+    ]);
+    TestRunner.assertType(timeResult.timeAccuracy, "object", "Advanced student: timeAccuracy exists");
+    TestRunner.assertEqual(timeResult.timeAccuracy.sufficientData, true, "Advanced student: time data sufficient");
+    TestRunner.assertGreaterThan(timeResult.timeAccuracy.fastAccurate, 0, "Advanced student: has fastAccurate");
+    TestRunner.assertGreaterThan(timeResult.timeAccuracy.slowAccurate, 0, "Advanced student: has slowAccurate");
+
+    // 12. Missing timeUsed
+    var noTimeResult = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 70, questions: [
+            { questionId: "q1", correct: true, difficulty: "easy", topic: "T", bloom: "knowledge" },
+            { questionId: "q2", correct: true, difficulty: "easy", topic: "T", bloom: "knowledge" }
+        ]}
+    ]);
+    TestRunner.assertEqual(noTimeResult.timeAccuracy.sufficientData, false, "Advanced student: no timeUsed = insufficient");
+
+    // 13. Malformed question data
+    var malformedResult = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 70, questions: [null, { questionId: "q1", correct: true }] }
+    ]);
+    TestRunner.assertType(malformedResult, "object", "Advanced student: malformed questions handled");
+
+    // 14. Multiple students — no cross-contamination
+    var multiStudent = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 80, questions: [
+            { questionId: "q1", correct: true, difficulty: "easy", topic: "Arrays", bloom: "knowledge", timeUsed: 10 }
+        ]},
+        { studentId: "s2", percentage: 40, questions: [
+            { questionId: "q2", correct: false, difficulty: "hard", topic: "Strings", bloom: "analysis", timeUsed: 30 }
+        ]},
+        { studentId: "s1", percentage: 85, questions: [
+            { questionId: "q3", correct: true, difficulty: "easy", topic: "Arrays", bloom: "knowledge", timeUsed: 8 }
+        ]}
+    ]);
+    TestRunner.assertEqual(multiStudent.totalAttempts, 2, "Advanced student: s1 has 2 attempts, not 3");
+    TestRunner.assertEqual(multiStudent.difficultyPerformance.length, 1, "Advanced student: s1 only easy difficulty");
+    var onlyEasy = multiStudent.difficultyPerformance.filter(function(d){ return d.difficulty === "easy"; })[0];
+    TestRunner.assertEqual(onlyEasy.correct, 2, "Advanced student: s1 2 correct easy");
+
+    // 15. Risk trajectory — improving
+    var improvingRisk = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 50, timestamp: "2026-01-01T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 55, timestamp: "2026-01-02T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 60, timestamp: "2026-01-03T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 80, timestamp: "2026-01-04T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 85, timestamp: "2026-01-05T00:00:00Z", questions: [] }
+    ]);
+    TestRunner.assertEqual(improvingRisk.riskTrajectory.trajectory, "improving", "Advanced student: improving trajectory");
+
+    // 16. Risk trajectory — worsening
+    var worseningRisk = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 90, timestamp: "2026-01-01T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 85, timestamp: "2026-01-02T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 80, timestamp: "2026-01-03T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 60, timestamp: "2026-01-04T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 55, timestamp: "2026-01-05T00:00:00Z", questions: [] }
+    ]);
+    TestRunner.assertEqual(worseningRisk.riskTrajectory.trajectory, "worsening", "Advanced student: worsening trajectory");
+
+    // 17. Risk trajectory — stable
+    var stableRisk = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 72, timestamp: "2026-01-01T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 73, timestamp: "2026-01-02T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 71, timestamp: "2026-01-03T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 74, timestamp: "2026-01-04T00:00:00Z", questions: [] },
+        { studentId: "s1", percentage: 72, timestamp: "2026-01-05T00:00:00Z", questions: [] }
+    ]);
+    TestRunner.assertEqual(stableRisk.riskTrajectory.trajectory, "stable", "Advanced student: stable trajectory");
+
+    // 18. Mode comparison — better in assessment
+    var betterAssess = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 60, mode: "practice", questions: [{questionId:"q1",correct:false,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s1", percentage: 65, mode: "practice", questions: [{questionId:"q1",correct:false,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s1", percentage: 90, mode: "test", questions: [{questionId:"q1",correct:true,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s1", percentage: 85, mode: "assignment", questions: [{questionId:"q1",correct:true,difficulty:"easy",topic:"T",bloom:"knowledge"}] }
+    ]);
+    TestRunner.assertEqual(betterAssess.modeComparison.pattern, "better_in_assessment", "Advanced student: better in assessment");
+
+    // 19. Class-scoped analytics — only student's class
+    var origAdvStuAttempts = allAttempts.slice();
+    allAttempts = [
+        { studentId: "s1", classId: "c1", percentage: 80, questions: [{questionId:"q1",correct:true,difficulty:"easy",topic:"T",bloom:"knowledge"}] },
+        { studentId: "s1", classId: "c2", percentage: 40, questions: [{questionId:"q2",correct:false,difficulty:"hard",topic:"T2",bloom:"analysis"}] }
+    ];
+    var classScoped = TeacherAnalytics.getAdvancedStudentAnalytics("s1", {});
+    TestRunner.assertEqual(classScoped.totalAttempts, 2, "Advanced student bridge: returns both (allAttempts not filtered by classId in bridge)");
+    allAttempts = origAdvStuAttempts;
+
+    // 20. Confidence high with 10+ attempts
+    var highConfAttempts = [];
+    for (var pi = 0; pi < 12; pi++) {
+        highConfAttempts.push({ studentId: "s1", percentage: 75 + (pi % 3), timestamp: "2026-01-" + String(pi + 1).padStart(2, "0") + "T00:00:00Z", questions: [
+            { questionId: "q" + pi, correct: pi % 3 !== 0, difficulty: "medium", topic: "T", bloom: "knowledge", timeUsed: 10 }
+        ]});
+    }
+    var highConf = Analytics.getAdvancedStudentAnalytics("s1", highConfAttempts);
+    TestRunner.assertEqual(highConf.confidence, "high", "Advanced student: 12 attempts = high confidence");
+
+    // 21. Mixed difficulty + bloom in single student
+    var mixedResult = Analytics.getAdvancedStudentAnalytics("s1", [
+        { studentId: "s1", percentage: 70, questions: [
+            { questionId: "q1", correct: true, difficulty: "easy", topic: "T", bloom: "knowledge", timeUsed: 5 },
+            { questionId: "q2", correct: true, difficulty: "medium", topic: "T", bloom: "application", timeUsed: 10 },
+            { questionId: "q3", correct: false, difficulty: "hard", topic: "T", bloom: "analysis", timeUsed: 20 }
+        ]}
+    ]);
+    TestRunner.assertEqual(mixedResult.difficultyPerformance.length, 3, "Advanced student: 3 difficulty levels from mixed");
+    TestRunner.assertEqual(mixedResult.bloomPerformance.length, 3, "Advanced student: 3 bloom levels from mixed");
+    TestRunner.assertEqual(mixedResult.timeAccuracy.sufficientData, true, "Advanced student: time data from mixed questions");
+
+    // 22. No cross-student contamination (reinforce)
+    var s2Result = Analytics.getAdvancedStudentAnalytics("s2", [
+        { studentId: "s1", percentage: 90, questions: [{questionId:"q1",correct:true,difficulty:"easy",topic:"A",bloom:"knowledge",timeUsed:5}] },
+        { studentId: "s2", percentage: 50, questions: [{questionId:"q2",correct:false,difficulty:"hard",topic:"B",bloom:"analysis",timeUsed:25}] },
+        { studentId: "s1", percentage: 85, questions: [{questionId:"q3",correct:true,difficulty:"easy",topic:"A",bloom:"knowledge",timeUsed:4}] }
+    ]);
+    TestRunner.assertEqual(s2Result.totalAttempts, 1, "Advanced student: s2 only 1 attempt");
+    TestRunner.assertEqual(s2Result.studentId, "s2", "Advanced student: s2 studentId correct");
+    var s2Difficulties = s2Result.difficultyPerformance.filter(function(d){ return d.difficulty === "hard"; });
+    TestRunner.assertEqual(s2Difficulties.length, 1, "Advanced student: s2 only hard difficulty");
 }

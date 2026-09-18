@@ -1601,7 +1601,7 @@ var UI = (function() {
         container.appendChild(insightDiv);
     }
 
-    function renderStudentPerformanceUI(container, data, studentName, cid, backBtn) {
+    function renderStudentPerformanceUI(container, data, advanced, studentName, cid, backBtn) {
         if (!container || !data) return;
         if (data.totalAttempts === 0) {
             container.innerHTML = (backBtn || '') + '<div class="chart-section"><h4>&#128100; ' + studentName + '</h4><p style="color:var(--text-mid);font-size:0.9rem;">No assessment data available for this student yet.</p></div>';
@@ -1645,6 +1645,9 @@ var UI = (function() {
             h += '</div></div>';
         }
         h += renderStudentRecentAttempts(data);
+        if (advanced) {
+            h += renderAdvancedStudentAnalytics(advanced);
+        }
         h += '</div>';
         container.innerHTML = h;
     }
@@ -1723,6 +1726,115 @@ var UI = (function() {
             h += '</tr>';
         }
         h += '</tbody></table></div>';
+        return h;
+    }
+
+    function renderAdvancedStudentAnalytics(advanced) {
+        if (!advanced) return '';
+        var h = '';
+
+        // Learning Consistency
+        if (advanced.consistency) {
+            var c = advanced.consistency;
+            var cColor = c.level === 'consistent' ? 'var(--success)' : c.level === 'moderate' ? 'var(--accent)' : 'var(--error)';
+            var cIcon = c.level === 'consistent' ? '&#9989;' : c.level === 'moderate' ? '&#9888;' : '&#10060;';
+            h += '<div class="chart-section"><h4>&#128200; Learning Consistency</h4>';
+            h += '<div style="padding:12px 16px;background:var(--bg-main);border-radius:8px;margin-bottom:12px;">';
+            h += '<div style="display:flex;align-items:center;gap:12px;">';
+            h += '<span style="font-size:20px;">' + cIcon + '</span>';
+            h += '<div><div style="font-weight:600;color:' + cColor + ';text-transform:capitalize;">' + c.level + '</div>';
+            h += '<div style="font-size:12px;color:var(--text-mid);">Std Dev: ' + c.stdDev + '% | CV: ' + c.cv + '%</div>';
+            h += '</div></div></div></div>';
+        }
+
+        // Difficulty Performance
+        if (advanced.difficultyPerformance && advanced.difficultyPerformance.length > 0) {
+            h += '<div class="chart-section"><h4>&#127919; Difficulty Performance</h4>';
+            h += '<div class="bar-graph">';
+            for (var i = 0; i < advanced.difficultyPerformance.length; i++) {
+                var dp = advanced.difficultyPerformance[i];
+                var dpColor = dp.accuracy >= 70 ? '#10b981' : dp.accuracy >= 50 ? '#f59e0b' : '#ef4444';
+                h += '<div class="bar-graph-row">';
+                h += '<div class="bar-graph-label" style="text-transform:capitalize;">' + dp.difficulty + '</div>';
+                h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + dp.accuracy + '%;background:' + dpColor + ';"><span class="bar-graph-value">' + dp.accuracy + '% (' + dp.correct + '/' + dp.total + ')</span></div></div>';
+                h += '</div>';
+            }
+            h += '</div></div>';
+        }
+
+        // Bloom Performance
+        if (advanced.bloomPerformance && advanced.bloomPerformance.length > 0) {
+            h += '<div class="chart-section"><h4>&#129504; Bloom Performance</h4>';
+            h += '<div class="bar-graph">';
+            for (var i = 0; i < advanced.bloomPerformance.length; i++) {
+                var bp = advanced.bloomPerformance[i];
+                var bpColor = bp.accuracy >= 70 ? '#10b981' : bp.accuracy >= 50 ? '#f59e0b' : '#ef4444';
+                h += '<div class="bar-graph-row">';
+                h += '<div class="bar-graph-label" style="text-transform:capitalize;">' + bp.bloom + '</div>';
+                h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + bp.accuracy + '%;background:' + bpColor + ';"><span class="bar-graph-value">' + bp.accuracy + '% (' + bp.correct + '/' + bp.total + ')</span></div></div>';
+                h += '</div>';
+            }
+            h += '</div></div>';
+        }
+
+        // Time-Accuracy Behavior
+        if (advanced.timeAccuracy && advanced.timeAccuracy.sufficientData) {
+            var ta = advanced.timeAccuracy;
+            h += '<div class="chart-section"><h4>&#9201; Time-Accuracy Behavior</h4>';
+            h += '<div class="overview-cards" style="margin-bottom:12px;">';
+            h += '<div class="overview-card average" style="border-left-color:#10b981;"><div class="card-icon">&#9889;</div><div class="card-value" style="font-size:1rem;color:#10b981;">' + ta.fastAccurate + '%</div><div class="card-label">Fast + Accurate</div></div>';
+            h += '<div class="overview-card average" style="border-left-color:#3b82f6;"><div class="card-icon">&#128214;</div><div class="card-value" style="font-size:1rem;color:#3b82f6;">' + ta.slowAccurate + '%</div><div class="card-label">Slow + Accurate</div></div>';
+            h += '<div class="overview-card average" style="border-left-color:#f59e0b;"><div class="card-icon">&#9888;</div><div class="card-value" style="font-size:1rem;color:#f59e0b;">' + ta.fastInaccurate + '%</div><div class="card-label">Fast + Inaccurate</div></div>';
+            h += '<div class="overview-card average" style="border-left-color:#ef4444;"><div class="card-icon">&#128683;</div><div class="card-value" style="font-size:1rem;color:#ef4444;">' + ta.slowInaccurate + '%</div><div class="card-label">Slow + Inaccurate</div></div>';
+            h += '</div>';
+            h += '<div style="font-size:12px;color:var(--text-mid);">Avg time per question: ' + ta.avgTimePerQuestion + 's</div>';
+            h += '</div>';
+        } else if (advanced.timeAccuracy && !advanced.timeAccuracy.sufficientData) {
+            h += '<div class="chart-section"><h4>&#9201; Time-Accuracy Behavior</h4>';
+            h += '<p style="color:var(--text-mid);font-size:0.9rem;">Insufficient time data to display behavior analysis.</p>';
+            h += '</div>';
+        }
+
+        // Practice vs Assessment Comparison
+        if (advanced.modeComparison) {
+            var mc = advanced.modeComparison;
+            var mcColor = mc.pattern === 'balanced' ? 'var(--success)' : mc.pattern === 'better_in_practice' ? 'var(--accent)' : 'var(--error)';
+            var mcLabel = mc.pattern === 'balanced' ? 'Balanced' : mc.pattern === 'better_in_practice' ? 'Better in Practice' : 'Better in Assessment';
+            h += '<div class="chart-section"><h4>&#128202; Practice vs Assessment</h4>';
+            h += '<div class="overview-cards" style="margin-bottom:12px;">';
+            h += '<div class="overview-card average" style="border-left-color:var(--accent);"><div class="card-icon">&#128221;</div><div class="card-value" style="font-size:1rem;">' + mc.practiceAvg + '%</div><div class="card-label">Practice Avg (' + mc.practiceAttempts + ' attempts)</div></div>';
+            h += '<div class="overview-card average" style="border-left-color:var(--error);"><div class="card-icon">&#128203;</div><div class="card-value" style="font-size:1rem;">' + mc.assessmentAvg + '%</div><div class="card-label">Assessment Avg (' + mc.assessmentAttempts + ' attempts)</div></div>';
+            h += '</div>';
+            h += '<div style="padding:8px 12px;background:var(--bg-main);border-radius:6px;font-size:0.85rem;"><span style="font-weight:600;color:' + mcColor + ';">' + mcLabel + '</span>';
+            h += ' <span style="color:var(--text-mid);">(Practice: ' + mc.practiceAccuracy + '% accuracy | Assessment: ' + mc.assessmentAccuracy + '% accuracy)</span></div>';
+            h += '</div>';
+        }
+
+        // Risk Trajectory
+        if (advanced.riskTrajectory) {
+            var rt = advanced.riskTrajectory;
+            var rtColor = rt.trajectory === 'improving' ? 'var(--success)' : rt.trajectory === 'worsening' ? 'var(--error)' : 'var(--text-mid)';
+            var rtIcon = rt.trajectory === 'improving' ? '&#128200;' : rt.trajectory === 'worsening' ? '&#128201;' : '&#128203;';
+            var rtLabel = rt.trajectory === 'improving' ? 'Improving' : rt.trajectory === 'worsening' ? 'Worsening' : 'Stable';
+            h += '<div class="chart-section"><h4>&#127919; Risk Trajectory</h4>';
+            h += '<div style="padding:12px 16px;background:var(--bg-main);border-radius:8px;">';
+            h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">';
+            h += '<span style="font-size:24px;">' + rtIcon + '</span>';
+            h += '<div><div style="font-weight:600;color:' + rtColor + ';">' + rtLabel + '</div>';
+            h += '<div style="font-size:12px;color:var(--text-mid);">Recent avg: ' + rt.recentAvg + '% | Overall avg: ' + rt.overallAvg + '% | Diff: ' + rt.difference + '%</div>';
+            h += '</div></div>';
+            h += '<div style="font-size:12px;color:var(--text-mid);">Based on ' + rt.recentCount + ' recent vs ' + rt.totalAttempts + ' total attempts</div>';
+            h += '</div></div>';
+        }
+
+        // Confidence indicator
+        if (advanced.confidence) {
+            var confColor = advanced.confidence === 'high' ? 'var(--success)' : advanced.confidence === 'medium' ? 'var(--accent)' : 'var(--text-mid)';
+            h += '<div class="chart-section" style="padding:8px 16px;background:var(--bg-main);border-radius:8px;">';
+            h += '<div style="font-size:12px;color:' + confColor + ';font-weight:600;">Data Confidence: ' + advanced.confidence.charAt(0).toUpperCase() + advanced.confidence.slice(1) + ' (' + advanced.totalAttempts + ' attempts)</div>';
+            h += '</div>';
+        }
+
         return h;
     }
 
@@ -2156,8 +2268,9 @@ var UI = (function() {
         progressContainer.innerHTML = '<div class="chart-section"><p style="text-align:center;color:var(--text-mid);padding:20px;">Loading student analytics...</p></div>';
         var studentName = getStudentName(studentId);
         var perf = TeacherAnalytics.getStudentPerformance(studentId, { classId: classId });
+        var advanced = TeacherAnalytics.getAdvancedStudentAnalytics(studentId, { classId: classId });
         var backBtn = '<div style="margin-bottom:16px;"><button class="action-btn" onclick="closeStudentProgress()">&#8592; Back to Students</button></div>';
-        renderStudentPerformanceUI(progressContainer, perf, studentName, classId, backBtn);
+        renderStudentPerformanceUI(progressContainer, perf, advanced, studentName, classId, backBtn);
         progressContainer.scrollIntoView({ behavior: "smooth" });
     };
 
