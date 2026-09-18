@@ -1,6 +1,9 @@
 var UI = (function() {
     function $(id) { return document.getElementById(id); }
 
+    var MODE_LABELS = Analytics.MODE_LABELS;
+    var MODE_COLORS = { practice: "#3b82f6", assignment: "#f59e0b", random: "#8b5cf6", quick: "#06b6d4", chapter: "#ef4444", fullbook: "#dc2626", weak: "#f97316", test: "#ef4444" };
+
     function dashboardsHide() {
         var ids = ["studentDashboard", "teacherDashboard", "classTeacherDashboard", "parentDashboard", "principalDashboard"];
         for (var i = 0; i < ids.length; i++) {
@@ -1514,18 +1517,16 @@ var UI = (function() {
         h += '<div class="overview-card students"><div class="card-icon">&#128100;</div><div class="card-value">' + data.uniqueStudents + '</div><div class="card-label">Students</div></div>';
         h += '</div>';
         h += '<div class="chart-section"><h4>&#128202; Attempt Types</h4><div style="display:flex;gap:12px;flex-wrap:wrap;">';
-        var modeLabels = { practice: "Practice", assignment: "Assignment", random: "Random Quiz", quick: "Quick Practice", chapter: "Chapter Test", fullbook: "Full Book Test", weak: "Weak Areas" };
         for (var m in modeCounts) {
-            var label = modeLabels[m] || m;
+            var label = MODE_LABELS[m] || m;
             h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 16px;border-radius:8px;font-size:13px;"><strong>' + modeCounts[m] + '</strong> ' + label + '</div>';
         }
         h += '</div></div>';
         var dist = TeacherAnalytics.getClassPerformanceDistribution({ classId: cid });
         h += renderClassPerformanceDistribution(dist);
         h += renderClassAverageContext(data, dist);
-        var modeColors = { practice: "#6366f1", assignment: "#f59e0b", random: "#10b981", quick: "#3b82f6", chapter: "#8b5cf6", fullbook: "#ec4899", weak: "#ef4444" };
         for (var m in modeCounts) {
-            h += renderModeBarGraph(ca, m, modeLabels[m] || m, modeColors[m] || "#6366f1");
+            h += renderModeBarGraph(ca, m, MODE_LABELS[m] || m, MODE_COLORS[m] || "#6366f1");
         }
         h += renderClassAssessmentTrend(ca);
         h += renderClassAssessmentComparison(cid);
@@ -1705,8 +1706,6 @@ var UI = (function() {
             if (!a.timestamp || !b.timestamp) return 0;
             return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
         });
-        var modeLabels = { practice: "Practice", assignment: "Assignment", random: "Random Quiz", quick: "Quick Practice", chapter: "Chapter Test", fullbook: "Full Book Test", weak: "Weak Areas" };
-        var modeColors = { practice: "#6366f1", assignment: "#f59e0b", random: "#10b981", quick: "#3b82f6", chapter: "#8b5cf6", fullbook: "#ec4899", weak: "#ef4444" };
         var showCount = Math.min(sorted.length, 10);
         var h = '<div class="chart-section"><h4>&#128197; Recent Attempts</h4>';
         h += '<table class="history-table"><thead><tr><th>Date</th><th>Type</th><th>Score</th><th>Percentage</th></tr></thead><tbody>';
@@ -1714,8 +1713,8 @@ var UI = (function() {
             var a = sorted[i];
             var dateStr = a.timestamp ? a.timestamp.substring(0, 10) : 'Unknown';
             var pctColor = a.percentage >= 70 ? 'var(--success)' : a.percentage >= 50 ? 'var(--accent)' : 'var(--error)';
-            var modeLabel = modeLabels[a.mode] || a.mode || "Practice";
-            var modeColor = modeColors[a.mode] || "#6366f1";
+            var modeLabel = MODE_LABELS[a.mode] || a.mode || "Practice";
+            var modeColor = MODE_COLORS[a.mode] || "#6366f1";
             h += '<tr>';
             h += '<td>' + dateStr + '</td>';
             h += '<td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;background:' + modeColor + '22;color:' + modeColor + ';">' + modeLabel + '</span></td>';
@@ -1990,10 +1989,9 @@ var UI = (function() {
                 '<div class="overview-card average"><div class="card-icon">&#128200;</div><div class="card-value">' + avg.toFixed(0) + '%</div><div class="card-label">Average</div></div>' +
                 '<div class="overview-card questions"><div class="card-icon">&#127942;</div><div class="card-value">' + best + '%</div><div class="card-label">Best Score</div></div>' +
                 '</div>';
-            var modeLabels = { practice: "Practice", assignment: "Assignment", random: "Random Quiz", quick: "Quick Practice", chapter: "Chapter Test", fullbook: "Full Book Test", weak: "Weak Areas" };
             h += '<div class="chart-section"><h4>&#128202; Attempt Types</h4><div style="display:flex;gap:12px;flex-wrap:wrap;">';
             for (var m in modeCounts) {
-                h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 16px;border-radius:8px;font-size:13px;"><strong>' + modeCounts[m] + '</strong> ' + (modeLabels[m] || m) + '</div>';
+                h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 16px;border-radius:8px;font-size:13px;"><strong>' + modeCounts[m] + '</strong> ' + (MODE_LABELS[m] || m) + '</div>';
             }
             h += '</div></div>';
             if (sa.length > 0) {
@@ -2285,7 +2283,6 @@ var UI = (function() {
             }
             h += '</tbody></table></div>';
             h += '<div class="chart-section"><h4>&#128202; Mode Breakdown Across Subjects</h4>';
-            var modeLabels = { practice: "Practice", assignment: "Assignment", random: "Random Quiz", quick: "Quick Practice", chapter: "Chapter Test", fullbook: "Full Book Test", weak: "Weak Areas" };
             var globalModes = {};
             for (var i = 0; i < sa.length; i++) {
                 var m = sa[i].mode || "practice";
@@ -2294,7 +2291,7 @@ var UI = (function() {
             }
             h += '<div style="display:flex;gap:12px;flex-wrap:wrap;">';
             for (var m in globalModes) {
-                h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 16px;border-radius:8px;font-size:13px;"><strong>' + globalModes[m] + '</strong> ' + (modeLabels[m] || m) + '</div>';
+                h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 16px;border-radius:8px;font-size:13px;"><strong>' + globalModes[m] + '</strong> ' + (MODE_LABELS[m] || m) + '</div>';
             }
             h += '</div></div>';
             var perStudent = {};
@@ -3229,7 +3226,6 @@ var UI = (function() {
             }
             h += '</tbody></table></div>';
         }
-        var modeLabels = { practice: "Practice", assignment: "Assignment", random: "Random", quick: "Quick", chapter: "Chapter Test", fullbook: "Full Book", weak: "Weak Areas" };
         var hasModes = false;
         for (var mk in modeStats) { hasModes = true; break; }
         if (hasModes) {
@@ -3238,7 +3234,7 @@ var UI = (function() {
             for (var m in modeStats) {
                 var ms = modeStats[m];
                 var mAvg = (ms.sum / ms.count).toFixed(0);
-                h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 14px;border-radius:8px;font-size:12px;"><strong>' + ms.count + '</strong> ' + (modeLabels[m] || m) + ' <span style="color:var(--text-muted);">(' + mAvg + '% avg)</span></div>';
+                h += '<div style="background:var(--bg-tertiary,#e2e8f0);padding:8px 14px;border-radius:8px;font-size:12px;"><strong>' + ms.count + '</strong> ' + (MODE_LABELS[m] || m) + ' <span style="color:var(--text-muted);">(' + mAvg + '% avg)</span></div>';
             }
             h += '</div></div>';
         }
@@ -3256,7 +3252,7 @@ var UI = (function() {
                 var mins = Math.floor((a.timeSpent || 0) / 60);
                 var secs = Math.floor((a.timeSpent || 0) % 60);
                 var color = a.percentage >= 80 ? 'var(--success)' : a.percentage >= 50 ? 'var(--accent)' : 'var(--error)';
-                h += '<tr><td>' + dateStr + '</td><td>' + (a.subject || "?") + '</td><td>' + (modeLabels[a.mode] || a.mode || "?") + '</td><td>' + a.score + '/' + a.total + '</td><td style="color:' + color + ';font-weight:700;">' + a.percentage + '%</td><td>' + mins + 'm ' + secs + 's</td></tr>';
+                h += '<tr><td>' + dateStr + '</td><td>' + (a.subject || "?") + '</td><td>' + (MODE_LABELS[a.mode] || a.mode || "?") + '</td><td>' + a.score + '/' + a.total + '</td><td style="color:' + color + ';font-weight:700;">' + a.percentage + '%</td><td>' + mins + 'm ' + secs + 's</td></tr>';
             }
             h += '</tbody></table></div>';
         }
@@ -3329,77 +3325,45 @@ var UI = (function() {
 
     function renderTopicAnalysisFromAttempts(attempts) {
         if (attempts.length === 0) return '';
-        var topicStats = {};
-        for (var i = 0; i < attempts.length; i++) {
-            var a = attempts[i];
-            if (!a.topicPerformance) continue;
-            for (var topic in a.topicPerformance) {
-                var tp = a.topicPerformance[topic];
-                if (!topicStats[topic]) topicStats[topic] = { correct: 0, total: 0 };
-                topicStats[topic].correct += tp.correct;
-                topicStats[topic].total += tp.total;
-            }
-        }
-        var topics = [];
-        for (var t in topicStats) {
-            var s = topicStats[t];
-            topics.push({ name: t, correct: s.correct, total: s.total, pct: s.total > 0 ? (s.correct / s.total * 100) : 0 });
-        }
-        topics.sort(function(a, b) { return a.pct - b.pct; });
+        var topics = Analytics.getTopicMastery(attempts);
+        if (!topics || topics.length === 0) return '<div class="chart-section"><h4>&#128270; Topic Analysis (Weakest First)</h4><p style="color:var(--text-muted);">No topic data yet.</p></div>';
+        topics.sort(function(a, b) { return a.accuracy - b.accuracy; });
         var h = '<div class="chart-section"><h4>&#128270; Topic Analysis (Weakest First)</h4>';
-        if (topics.length === 0) { h += '<p style="color:var(--text-muted);">No topic data yet.</p>'; }
-        else {
-            h += '<div class="bar-graph">';
-            for (var i = 0; i < topics.length; i++) {
-                var t = topics[i];
-                var color = t.pct >= 70 ? 'var(--success)' : t.pct >= 50 ? 'var(--accent)' : 'var(--error)';
-                var label = t.name.length > 35 ? t.name.substring(0, 35) + '...' : t.name;
-                h += '<div class="bar-graph-row">';
-                h += '<div class="bar-graph-label" title="' + t.name + '">' + label + '</div>';
-                h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + t.pct + '%;background:' + color + ';"><span class="bar-graph-value">' + t.pct.toFixed(0) + '% (' + t.correct + '/' + t.total + ')</span></div></div>';
-                h += '</div>';
-            }
+        h += '<div class="bar-graph">';
+        for (var i = 0; i < topics.length; i++) {
+            var t = topics[i];
+            var color = t.accuracy >= 70 ? 'var(--success)' : t.accuracy >= 50 ? 'var(--accent)' : 'var(--error)';
+            var label = t.topic.length > 35 ? t.topic.substring(0, 35) + '...' : t.topic;
+            h += '<div class="bar-graph-row">';
+            h += '<div class="bar-graph-label" title="' + t.topic + '">' + label + '</div>';
+            h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + t.accuracy + '%;background:' + color + ';"><span class="bar-graph-value">' + t.accuracy.toFixed(0) + '% (' + t.correctAnswers + '/' + t.totalQuestions + ')</span></div></div>';
             h += '</div>';
         }
-        h += '</div>';
+        h += '</div></div>';
         return h;
     }
 
     function renderQuestionAccuracyFromAttempts(attempts) {
         if (attempts.length === 0) return '';
-        var qStats = {};
-        for (var i = 0; i < attempts.length; i++) {
-            var a = attempts[i];
-            if (!a.questions) continue;
-            for (var j = 0; j < a.questions.length; j++) {
-                var q = a.questions[j];
-                if (!qStats[q.questionId]) qStats[q.questionId] = { correct: 0, total: 0 };
-                qStats[q.questionId].total++;
-                if (q.correct) qStats[q.questionId].correct++;
-            }
+        var qStats = Analytics.getQuestionStatistics(attempts);
+        if (!qStats || qStats.length === 0) return '<div class="chart-section"><h4>&#10060; Most Missed Questions</h4><p style="color:var(--text-muted);">Not enough data yet.</p></div>';
+        var showQs = [];
+        for (var i = 0; i < qStats.length; i++) {
+            if (qStats[i].attempts < 2) continue;
+            var text = qStats[i].questionId;
+            for (var k = 0; k < questions.length; k++) { if (questions[k].id === qStats[i].questionId) { text = (questions[k].text || questions[k].question || qStats[i].questionId).substring(0, 60); break; } }
+            showQs.push({ id: qStats[i].questionId, text: text, correct: qStats[i].correct, total: qStats[i].attempts, pct: qStats[i].accuracy });
         }
-        var qs = [];
-        for (var qid in qStats) {
-            var s = qStats[qid];
-            if (s.total < 2) continue;
-            var text = qid;
-            for (var k = 0; k < questions.length; k++) { if (questions[k].id === qid) { text = (questions[k].text || questions[k].question || qid).substring(0, 60); break; } }
-            qs.push({ id: qid, text: text, correct: s.correct, total: s.total, pct: (s.correct / s.total * 100) });
-        }
-        qs.sort(function(a, b) { return a.pct - b.pct; });
+        showQs.sort(function(a, b) { return a.pct - b.pct; });
+        showQs = showQs.slice(0, 10);
         var h = '<div class="chart-section"><h4>&#10060; Most Missed Questions</h4>';
-        if (qs.length === 0) { h += '<p style="color:var(--text-muted);">Not enough data yet.</p>'; }
-        else {
-            var showQs = qs.slice(0, 10);
-            h += '<table class="history-table"><thead><tr><th>Question</th><th>Correct</th><th>Total</th><th>Accuracy</th></tr></thead><tbody>';
-            for (var i = 0; i < showQs.length; i++) {
-                var q = showQs[i];
-                var color = q.pct >= 70 ? 'var(--success)' : q.pct >= 50 ? 'var(--accent)' : 'var(--error)';
-                h += '<tr><td title="' + q.id + '">' + q.text + '...</td><td>' + q.correct + '</td><td>' + q.total + '</td><td style="color:' + color + ';font-weight:700;">' + q.pct.toFixed(0) + '%</td></tr>';
-            }
-            h += '</tbody></table>';
+        h += '<table class="history-table"><thead><tr><th>Question</th><th>Correct</th><th>Total</th><th>Accuracy</th></tr></thead><tbody>';
+        for (var i = 0; i < showQs.length; i++) {
+            var q = showQs[i];
+            var color = q.pct >= 70 ? 'var(--success)' : q.pct >= 50 ? 'var(--accent)' : 'var(--error)';
+            h += '<tr><td title="' + q.id + '">' + q.text + '...</td><td>' + q.correct + '</td><td>' + q.total + '</td><td style="color:' + color + ';font-weight:700;">' + q.pct.toFixed(0) + '%</td></tr>';
         }
-        h += '</div>';
+        h += '</tbody></table></div>';
         return h;
     }
 
@@ -3447,30 +3411,20 @@ var UI = (function() {
 
     function renderDifficultyFromAttempts(attempts) {
         if (attempts.length === 0) return '';
-        var diffStats = { easy: { correct: 0, total: 0 }, medium: { correct: 0, total: 0 }, difficult: { correct: 0, total: 0 } };
-        for (var i = 0; i < attempts.length; i++) {
-            var a = attempts[i];
-            if (!a.questions) continue;
-            for (var j = 0; j < a.questions.length; j++) {
-                var q = a.questions[j];
-                var diff = "medium";
-                for (var k = 0; k < questions.length; k++) { if (questions[k].id === q.questionId) { diff = questions[k].difficulty || "medium"; break; } }
-                if (!diffStats[diff]) diffStats[diff] = { correct: 0, total: 0 };
-                diffStats[diff].total++;
-                if (q.correct) diffStats[diff].correct++;
-            }
-        }
+        var diffStats = Analytics.getDifficultyPerformance(attempts);
+        if (!diffStats || diffStats.length === 0) return '';
         var h = '<div class="chart-section"><h4>&#127919; Difficulty Analysis</h4>';
         h += '<table class="history-table"><thead><tr><th>Difficulty</th><th>Total Qs</th><th>Correct</th><th>Accuracy</th></tr></thead><tbody>';
-        var diffColors = { easy: '#22c55e', medium: '#f59e0b', difficult: '#ef4444' };
-        var diffLabels = { easy: 'Easy', medium: 'Medium', difficult: 'Hard' };
-        var diffs = ["easy", "medium", "difficult"];
-        for (var i = 0; i < diffs.length; i++) {
-            var d = diffStats[diffs[i]];
-            if (d.total === 0) continue;
-            var acc = (d.correct / d.total * 100).toFixed(1);
-            var color = acc >= 70 ? 'var(--success)' : acc >= 50 ? 'var(--accent)' : 'var(--error)';
-            h += '<tr><td><span style="color:' + diffColors[diffs[i]] + ';font-weight:700;">' + diffLabels[diffs[i]] + '</span></td><td>' + d.total + '</td><td>' + d.correct + '</td><td style="color:' + color + ';font-weight:700;">' + acc + '%</td></tr>';
+        var diffColors = { easy: '#22c55e', medium: '#f59e0b', difficult: '#ef4444', hard: '#ef4444', unspecified: '#9ca3af' };
+        var diffLabels = { easy: 'Easy', medium: 'Medium', difficult: 'Hard', hard: 'Hard', unspecified: 'Unspecified' };
+        for (var i = 0; i < diffStats.length; i++) {
+            var d = diffStats[i];
+            if (d.attempts === 0) continue;
+            var color = d.accuracy >= 70 ? 'var(--success)' : d.accuracy >= 50 ? 'var(--accent)' : 'var(--error)';
+            var diffKey = d.difficulty || "unspecified";
+            var diffColor = diffColors[diffKey] || '#9ca3af';
+            var diffLabel = diffLabels[diffKey] || diffKey;
+            h += '<tr><td><span style="color:' + diffColor + ';font-weight:700;">' + diffLabel + '</span></td><td>' + d.attempts + '</td><td>' + d.correct + '</td><td style="color:' + color + ';font-weight:700;">' + d.accuracy.toFixed(1) + '%</td></tr>';
         }
         h += '</tbody></table></div>';
         return h;
@@ -3478,55 +3432,22 @@ var UI = (function() {
 
     function renderAtRiskStudents(attempts) {
         if (attempts.length === 0) return '';
+        var atRiskData = Analytics.getAtRiskStudents(attempts);
+        if (!atRiskData || atRiskData.length === 0) return '<div class="chart-section"><h4>&#9888;&#65039; At-Risk Students</h4><p style="color:var(--success);font-weight:600;">&#9989; No at-risk students detected. Great job!</p></div>';
         var now = Date.now();
-        var weekMs = 7 * 24 * 60 * 60 * 1000;
-        var studentData = {};
-        for (var i = 0; i < attempts.length; i++) {
-            var a = attempts[i];
-            var sid = a.studentId;
-            if (!studentData[sid]) studentData[sid] = { scores: [], dates: [], name: getStudentName(sid) };
-            studentData[sid].scores.push(a.percentage);
-            var ts = a.timestamp ? new Date(a.timestamp).getTime() : 0;
-            if (ts > 0) studentData[sid].dates.push(ts);
-        }
-        var atRisk = [];
-        for (var sid in studentData) {
-            var d = studentData[sid];
-            if (d.scores.length === 0) continue;
-            var totalAvg = d.scores.reduce(function(s, v) { return s + v; }, 0) / d.scores.length;
-            var lastDate = 0;
-            for (var j = 0; j < d.dates.length; j++) { if (d.dates[j] > lastDate) lastDate = d.dates[j]; }
-            var inactive = lastDate > 0 && (now - lastDate > weekMs);
-            var recentScores = d.scores.slice(-3);
-            var olderScores = d.scores.slice(0, -3);
-            var recentAvg = recentScores.reduce(function(s, v) { return s + v; }, 0) / recentScores.length;
-            var declining = false;
-            if (olderScores.length > 0) {
-                var olderAvg = olderScores.reduce(function(s, v) { return s + v; }, 0) / olderScores.length;
-                declining = recentAvg < olderAvg - 10;
-            }
-            var lowPerf = totalAvg < 50 && d.scores.length >= 2;
-            if (inactive || declining || lowPerf) {
-                var reasons = [];
-                if (inactive) reasons.push('Inactive 7+ days');
-                if (declining) reasons.push('Scores declining');
-                if (lowPerf) reasons.push('Avg below 50%');
-                atRisk.push({ id: sid, name: d.name, avg: totalAvg.toFixed(0), lastDate: lastDate, attempts: d.scores.length, reasons: reasons });
-            }
-        }
-        atRisk.sort(function(a, b) { return a.avg - b.avg; });
-        if (atRisk.length === 0) return '<div class="chart-section"><h4>&#9888;&#65039; At-Risk Students</h4><p style="color:var(--success);font-weight:600;">&#9989; No at-risk students detected. Great job!</p></div>';
-        var h = '<div class="chart-section"><h4>&#9888;&#65039; At-Risk Students (' + atRisk.length + ')</h4>';
+        var h = '<div class="chart-section"><h4>&#9888;&#65039; At-Risk Students (' + atRiskData.length + ')</h4>';
         h += '<div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:12px;margin-bottom:12px;font-size:13px;color:#ef4444;">These students need immediate attention. Consider reaching out or assigning extra practice.</div>';
-        h += '<table class="history-table"><thead><tr><th>Student</th><th>Avg</th><th>Attempts</th><th>Last Active</th><th>Alerts</th></tr></thead><tbody>';
-        for (var i = 0; i < atRisk.length; i++) {
-            var s = atRisk[i];
-            var lastActiveStr = s.lastDate > 0 ? Math.floor((now - s.lastDate) / (24 * 60 * 60 * 1000)) + 'd ago' : 'Never';
+        h += '<table class="history-table"><thead><tr><th>Student</th><th>Risk</th><th>Reasons</th></tr></thead><tbody>';
+        for (var i = 0; i < atRiskData.length; i++) {
+            var s = atRiskData[i];
+            var name = getStudentName(s.studentId);
+            var riskColor = s.riskLevel === 'high' ? '#ef4444' : s.riskLevel === 'medium' ? '#f59e0b' : '#22c55e';
             var alertBadges = '';
-            for (var j = 0; j < s.reasons.length; j++) {
-                alertBadges += '<span style="display:inline-block;background:rgba(239,68,68,0.15);color:#ef4444;font-size:11px;padding:2px 6px;border-radius:4px;margin:1px;">' + s.reasons[j] + '</span> ';
+            var reasons = s.reasons || [];
+            for (var j = 0; j < reasons.length; j++) {
+                alertBadges += '<span style="display:inline-block;background:rgba(239,68,68,0.15);color:#ef4444;font-size:11px;padding:2px 6px;border-radius:4px;margin:1px;">' + reasons[j] + '</span> ';
             }
-            h += '<tr><td style="font-weight:600;">' + s.name + '</td><td style="color:#ef4444;font-weight:700;">' + s.avg + '%</td><td>' + s.attempts + '</td><td>' + lastActiveStr + '</td><td>' + alertBadges + '</td></tr>';
+            h += '<tr><td style="font-weight:600;">' + name + '</td><td><span style="display:inline-block;background:' + riskColor + '20;color:' + riskColor + ';padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">' + s.riskLevel + '</span></td><td>' + alertBadges + '</td></tr>';
         }
         h += '</tbody></table></div>';
         return h;
@@ -3534,78 +3455,23 @@ var UI = (function() {
 
     function renderActionableInsights(attempts) {
         if (attempts.length === 0) return '';
-        var now = Date.now();
-        var dayMs = 24 * 60 * 60 * 1000;
-        var weekMs = 7 * dayMs;
-        var insights = [];
-        var studentLastDate = {};
-        var studentScores = {};
-        var topicFails = {};
-        var totalAvg = 0;
-        for (var i = 0; i < attempts.length; i++) {
-            var a = attempts[i];
-            var sid = a.studentId;
-            var ts = a.timestamp ? new Date(a.timestamp).getTime() : 0;
-            totalAvg += a.percentage;
-            if (!studentLastDate[sid] || ts > studentLastDate[sid]) studentLastDate[sid] = ts;
-            if (!studentScores[sid]) studentScores[sid] = [];
-            studentScores[sid].push(a.percentage);
-            if (a.topicPerformance) {
-                for (var topic in a.topicPerformance) {
-                    var tp = a.topicPerformance[topic];
-                    if (!topicFails[topic]) topicFails[topic] = { correct: 0, total: 0 };
-                    topicFails[topic].correct += tp.correct;
-                    topicFails[topic].total += tp.total;
-                }
-            }
-        }
-        totalAvg = totalAvg / attempts.length;
-        var inactiveCount = 0;
-        for (var sid in studentLastDate) {
-            if (studentLastDate[sid] > 0 && (now - studentLastDate[sid] > weekMs)) inactiveCount++;
-        }
-        if (inactiveCount > 0) insights.push({ icon: '&#128680;', color: '#ef4444', text: inactiveCount + ' student' + (inactiveCount > 1 ? 's have' : ' has') + ' not practiced in over a week.' });
-        var decliningCount = 0;
-        for (var sid in studentScores) {
-            var sc = studentScores[sid];
-            if (sc.length < 3) continue;
-            var recent = sc.slice(-3).reduce(function(s, v) { return s + v; }, 0) / 3;
-            var older = sc.slice(0, -3);
-            if (older.length > 0) {
-                var oldAvg = older.reduce(function(s, v) { return s + v; }, 0) / older.length;
-                if (recent < oldAvg - 10) decliningCount++;
-            }
-        }
-        if (decliningCount > 0) insights.push({ icon: '&#128316;', color: '#f59e0b', text: decliningCount + ' student' + (decliningCount > 1 ? 's show' : ' shows') + ' declining performance. Consider checking in.' });
-        var lowAvgStudents = 0;
-        for (var sid in studentScores) {
-            var avg = studentScores[sid].reduce(function(s, v) { return s + v; }, 0) / studentScores[sid].length;
-            if (avg < 50 && studentScores[sid].length >= 2) lowAvgStudents++;
-        }
-        if (lowAvgStudents > 0) insights.push({ icon: '&#127919;', color: '#ef4444', text: lowAvgStudents + ' student' + (lowAvgStudents > 1 ? 's are' : ' is') + ' scoring below 50%. Extra practice recommended.' });
-        var weakTopics = [];
-        for (var topic in topicFails) {
-            var tf = topicFails[topic];
-            if (tf.total >= 5) {
-                var acc = (tf.correct / tf.total) * 100;
-                if (acc < 50) weakTopics.push({ name: topic, acc: acc.toFixed(0) });
-            }
-        }
-        weakTopics.sort(function(a, b) { return a.acc - b.acc; });
-        if (weakTopics.length > 0) {
-            var topicNames = weakTopics.slice(0, 3).map(function(t) { return t.name + ' (' + t.acc + '%)'; }).join(', ');
-            insights.push({ icon: '&#128218;', color: '#f59e0b', text: 'Weakest topics: ' + topicNames + '. Consider reteaching these.' });
-        }
-        if (totalAvg >= 70) insights.push({ icon: '&#127881;', color: '#22c55e', text: 'Class average is ' + totalAvg.toFixed(0) + '%. Great performance overall!' });
-        else if (totalAvg >= 50) insights.push({ icon: '&#128161;', color: '#3b82f6', text: 'Class average is ' + totalAvg.toFixed(0) + '%. Room for improvement — focus on weak topics.' });
-        else insights.push({ icon: '&#9888;&#65039;', color: '#ef4444', text: 'Class average is ' + totalAvg.toFixed(0) + '%. Significant intervention needed.' });
-        if (insights.length === 0) return '';
+        var atRisk = Analytics.getAtRiskStudents(attempts);
+        var topics = Analytics.getTopicMastery(attempts);
+        var trend = Analytics.getTrendDirection(attempts);
+        var overview = Analytics.getClassOverview(attempts);
+        var insights = Analytics.getTeacherInsights(atRisk, topics, trend, overview);
+        if (!insights || insights.length === 0) return '';
+        var iconMap = { needs_support: '&#9888;&#65039;', weak_topic: '&#128218;', declining: '&#128316;', strong_topic: '&#127942;', improving: '&#128316;' };
+        var colorMap = { needs_support: '#ef4444', weak_topic: '#f59e0b', declining: '#ef4444', strong_topic: '#22c55e', improving: '#22c55e' };
         var h = '<div class="chart-section"><h4>&#128161; Insights &amp; Recommendations</h4>';
         h += '<div style="display:flex;flex-direction:column;gap:8px;">';
         for (var i = 0; i < insights.length; i++) {
+            var ins = insights[i];
+            var icon = iconMap[ins.category] || '&#128161;';
+            var color = colorMap[ins.category] || '#3b82f6';
             h += '<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(59,130,246,0.06);border-radius:8px;padding:10px 14px;">';
-            h += '<span style="font-size:18px;flex-shrink:0;">' + insights[i].icon + '</span>';
-            h += '<span style="color:' + insights[i].color + ';font-weight:500;font-size:14px;">' + insights[i].text + '</span>';
+            h += '<span style="font-size:18px;flex-shrink:0;">' + icon + '</span>';
+            h += '<span style="color:' + color + ';font-weight:500;font-size:14px;">' + ins.message + '</span>';
             h += '</div>';
         }
         h += '</div></div>';
@@ -3681,18 +3547,18 @@ var UI = (function() {
         for (var sid in studentScores) {
             var d = studentScores[sid];
             if (d.scores.length < 2) continue;
+            var direction = Analytics.getTrendDirection(d.scores.map(function(s, i) { return { percentage: s, timestamp: "2024-01-" + (i + 1).toString().padStart(2, '0') }; }));
             var mid = Math.floor(d.scores.length / 2);
             var firstHalf = d.scores.slice(0, mid);
             var secondHalf = d.scores.slice(mid);
             var firstAvg = firstHalf.reduce(function(s, v) { return s + v; }, 0) / firstHalf.length;
             var secondAvg = secondHalf.reduce(function(s, v) { return s + v; }, 0) / secondHalf.length;
             var diff = secondAvg - firstAvg;
-            var trend = 'stable';
             var trendIcon = '&#8594;';
             var trendColor = '#3b82f6';
-            if (diff > 5) { trend = 'improving'; trendIcon = '&#128316;'; trendColor = '#22c55e'; }
-            else if (diff < -5) { trend = 'declining'; trendIcon = '&#128317;'; trendColor = '#ef4444'; }
-            trends.push({ name: d.name, firstAvg: firstAvg.toFixed(0), secondAvg: secondAvg.toFixed(0), diff: diff.toFixed(0), trend: trend, trendIcon: trendIcon, trendColor: trendColor, count: d.scores.length });
+            if (direction === 'improving') { trendIcon = '&#128316;'; trendColor = '#22c55e'; }
+            else if (direction === 'declining') { trendIcon = '&#128317;'; trendColor = '#ef4444'; }
+            trends.push({ name: d.name, firstAvg: firstAvg.toFixed(0), secondAvg: secondAvg.toFixed(0), diff: diff.toFixed(0), trend: direction, trendIcon: trendIcon, trendColor: trendColor, count: d.scores.length });
         }
         if (trends.length === 0) return '';
         var improving = trends.filter(function(t) { return t.trend === 'improving'; }).length;

@@ -760,6 +760,72 @@ var Analytics = (function() {
         return insights;
     }
 
+    var MODE_LABELS = {
+        practice: "Practice",
+        assignment: "Assignment",
+        random: "Random Quiz",
+        quick: "Quick Practice",
+        chapter: "Chapter Test",
+        fullbook: "Full Book Test",
+        weak: "Weak Areas",
+        test: "Test"
+    };
+
+    var PRACTICE_MODES = ["practice", "weak", "random", "quick"];
+    var ASSESSMENT_MODES = ["test", "assignment", "chapter", "fullbook"];
+
+    function filterByMode(attempts, mode) {
+        attempts = safeArray(attempts);
+        if (!mode || mode === "all") return attempts;
+        var filtered = [];
+        for (var i = 0; i < attempts.length; i++) {
+            var m = (attempts[i] && attempts[i].mode) || "practice";
+            if (mode === "practice") {
+                if (PRACTICE_MODES.indexOf(m) !== -1) filtered.push(attempts[i]);
+            } else if (mode === "assessment") {
+                if (ASSESSMENT_MODES.indexOf(m) !== -1) filtered.push(attempts[i]);
+            } else if (m === mode) {
+                filtered.push(attempts[i]);
+            }
+        }
+        return filtered;
+    }
+
+    function getModeBreakdown(attempts) {
+        attempts = safeArray(attempts);
+        var modeData = {};
+        for (var i = 0; i < attempts.length; i++) {
+            var a = attempts[i];
+            if (!a) continue;
+            var m = a.mode || "practice";
+            if (!modeData[m]) modeData[m] = { count: 0, totalPercentage: 0, totalQuestions: 0, correctAnswers: 0 };
+            modeData[m].count++;
+            modeData[m].totalPercentage += safeNum(a.percentage);
+            var questions = safeArray(a.questions);
+            modeData[m].totalQuestions += questions.length;
+            for (var j = 0; j < questions.length; j++) {
+                if (questions[j] && questions[j].correct) modeData[m].correctAnswers++;
+            }
+        }
+        var results = [];
+        var keys = Object.keys(modeData);
+        for (var i = 0; i < keys.length; i++) {
+            var m = keys[i];
+            var md = modeData[m];
+            results.push({
+                mode: m,
+                label: MODE_LABELS[m] || m,
+                count: md.count,
+                averagePercentage: md.count > 0 ? Number((md.totalPercentage / md.count).toFixed(1)) : 0,
+                totalQuestions: md.totalQuestions,
+                correctAnswers: md.correctAnswers,
+                accuracy: md.totalQuestions > 0 ? Number(((md.correctAnswers / md.totalQuestions) * 100).toFixed(1)) : 0
+            });
+        }
+        results.sort(function(a, b) { return b.count - a.count; });
+        return results;
+    }
+
     return {
         getClassOverview: getClassOverview,
         getStudentPerformance: getStudentPerformance,
@@ -773,6 +839,11 @@ var Analytics = (function() {
         getClassPerformanceDistribution: getClassPerformanceDistribution,
         getTrendDirection: getTrendDirection,
         getAssessmentComparison: getAssessmentComparison,
-        getTeacherInsights: getTeacherInsights
+        getTeacherInsights: getTeacherInsights,
+        getModeBreakdown: getModeBreakdown,
+        filterByMode: filterByMode,
+        MODE_LABELS: MODE_LABELS,
+        PRACTICE_MODES: PRACTICE_MODES,
+        ASSESSMENT_MODES: ASSESSMENT_MODES
     };
 })();
