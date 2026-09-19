@@ -1736,9 +1736,7 @@ var UI = (function() {
             h += '</div></div>';
         }
         h += renderStudentRecentAttempts(data);
-        if (advanced) {
-            h += renderAdvancedStudentAnalytics(advanced);
-        }
+        if (advanced) { h += renderAdvancedStudentAnalytics(advanced); }
         h += '</div>';
         container.innerHTML = h;
     }
@@ -1783,7 +1781,7 @@ var UI = (function() {
             var td = sorted[i];
             var pct = td.percentage;
             var color = pct >= 80 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
-            var label = td.timestamp ? td.timestamp.substring(0, 10) : ('Attempt ' + (i + 1));
+            var label = td.timestamp ? String(td.timestamp).substring(0, 10) : ('Attempt ' + (i + 1));
             h += '<div class="bar-graph-row">';
             h += '<div class="bar-graph-label" title="' + label + '">' + label + '</div>';
             h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + pct + '%;background:' + color + ';"><span class="bar-graph-value">' + pct + '%</span></div></div>';
@@ -1805,7 +1803,7 @@ var UI = (function() {
         h += '<table class="history-table"><thead><tr><th>Date</th><th>Type</th><th>Score</th><th>Percentage</th></tr></thead><tbody>';
         for (var i = 0; i < showCount; i++) {
             var a = sorted[i];
-            var dateStr = a.timestamp ? a.timestamp.substring(0, 10) : 'Unknown';
+            var dateStr = a.timestamp ? String(a.timestamp).substring(0, 10) : 'Unknown';
             var pctColor = a.percentage >= 70 ? 'var(--success)' : a.percentage >= 50 ? 'var(--accent)' : 'var(--error)';
             var modeLabel = MODE_LABELS[a.mode] || a.mode || "Practice";
             var modeColor = MODE_COLORS[a.mode] || "#6366f1";
@@ -2086,7 +2084,7 @@ var UI = (function() {
             var td = trendData[i];
             var pct = td.percentage;
             var color = pct >= 80 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
-            var label = td.timestamp ? td.timestamp.substring(0, 10) : ('Attempt ' + (i + 1));
+            var label = td.timestamp ? String(td.timestamp).substring(0, 10) : ('Attempt ' + (i + 1));
             h += '<div class="bar-graph-row">';
             h += '<div class="bar-graph-label" title="' + label + '">' + label + '</div>';
             h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + pct + '%;background:' + color + ';"><span class="bar-graph-value">' + pct + '%</span></div></div>';
@@ -2454,7 +2452,7 @@ var UI = (function() {
             renderStudentPerformanceUI(progressContainer, perf, advanced, studentName, classId, backBtn);
             progressContainer.scrollIntoView({ behavior: "smooth" });
         } catch(e) {
-            console.error("openStudentPerformanceFromStudents error:", e);
+            console.error("[PERF] CRASH:", e.name, e.message, e.stack);
             var backBtn2 = '<div style="margin-bottom:16px;"><button class="action-btn" onclick="closeStudentProgress()">&#8592; Back to Students</button></div>';
             progressContainer.innerHTML = backBtn2 + '<div class="chart-section"><p style="color:var(--error);padding:20px;">Unable to load student analytics. Please try again.</p></div>';
         }

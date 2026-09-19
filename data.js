@@ -668,9 +668,9 @@ function normalizeAttemptsForAnalytics(attempts) {
             percentage: typeof a.percentage === "number" ? a.percentage : 0,
             timeSpent: typeof a.timeSpent === "number" ? a.timeSpent : 0,
             mode: a.mode || "practice",
-            timestamp: a.timestamp || a.completedAt || "",
-            startedAt: a.startedAt || "",
-            completedAt: a.completedAt || a.timestamp || "",
+            timestamp: a.timestamp ? String(a.timestamp) : (a.completedAt ? String(a.completedAt) : ""),
+            startedAt: a.startedAt ? String(a.startedAt) : "",
+            completedAt: a.completedAt ? String(a.completedAt) : (a.timestamp ? String(a.timestamp) : ""),
             assignmentId: a.assignmentId || "",
             questions: [],
             topicPerformance: a.topicPerformance || {}
