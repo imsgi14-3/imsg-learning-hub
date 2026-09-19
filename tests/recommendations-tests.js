@@ -343,4 +343,334 @@ function runRecommendationTests() {
 
     var emptyBridgeRecs = TeacherAnalytics.getRecommendations({});
     TestRunner.assertEqual(emptyBridgeRecs.length, 0, "TeacherAnalytics empty: no recommendations");
+
+    // ============================================================
+    // Phase 5.4 — Actionable Teacher Insights Tests
+    // ============================================================
+    TestRunner.suite("Actionable Insights - Module Existence");
+
+    TestRunner.assertType(Recommendations.generateActionableInsights, "function", "generateActionableInsights is function");
+
+    TestRunner.suite("Actionable Insights - Empty Data");
+
+    var emptyInsights = Recommendations.generateActionableInsights({});
+    TestRunner.assertEqual(emptyInsights.length, 0, "Empty data: no insights");
+
+    var nullInsights = Recommendations.generateActionableInsights(null);
+    TestRunner.assertEqual(nullInsights.length, 0, "Null input: no insights");
+
+    TestRunner.suite("Actionable Insights - Topic-Student Cross-Level");
+
+    var topicStudentResults = Recommendations.generateActionableInsights({
+        topicMastery: [
+            { topic: "Networks", accuracy: 30, totalQuestions: 20, correctAnswers: 6, incorrectAnswers: 14, masteryLevel: "Needs Support" },
+            { topic: "Algorithms", accuracy: 85, totalQuestions: 15, correctAnswers: 13, incorrectAnswers: 2, masteryLevel: "Strong" }
+        ],
+        atRiskStudents: [],
+        questionStatistics: [
+            { questionId: "Q1", attempts: 5, correct: 1, accuracy: 20, topic: "Networks" },
+            { questionId: "Q2", attempts: 5, correct: 4, accuracy: 80, topic: "Algorithms" }
+        ],
+        difficultyPerformance: [],
+        bloomPerformance: [],
+        trendDirection: "stable",
+        classOverview: { totalAttempts: 20, uniqueStudents: 5 },
+        totalStudents: 5,
+        attempts: [
+            { studentId: "s1", percentage: 40, questions: [
+                { questionId: "Q1", correct: false, topic: "Networks" },
+                { questionId: "Q2", correct: true, topic: "Algorithms" }
+            ]},
+            { studentId: "s2", percentage: 45, questions: [
+                { questionId: "Q1", correct: false, topic: "Networks" },
+                { questionId: "Q2", correct: true, topic: "Algorithms" }
+            ]},
+            { studentId: "s3", percentage: 80, questions: [
+                { questionId: "Q1", correct: true, topic: "Networks" },
+                { questionId: "Q2", correct: true, topic: "Algorithms" }
+            ]}
+        ]
+    });
+    TestRunner.assertGreaterThan(topicStudentResults.length, 0, "Topic-student: has insights");
+    var topicInsight = null;
+    for (var i = 0; i < topicStudentResults.length; i++) {
+        if (topicStudentResults[i].type === "topic_student_support") { topicInsight = topicStudentResults[i]; break; }
+    }
+    TestRunner.assertNotNull(topicInsight, "Topic-student insight found");
+    TestRunner.assertTrue(topicInsight.title.indexOf("Networks") !== -1, "Topic-student: mentions Networks");
+    TestRunner.assertType(topicInsight.data, "object", "Topic-student: has data");
+    TestRunner.assertType(topicInsight.data.affectedStudentIds, "object", "Topic-student: has affectedStudentIds");
+    TestRunner.assertType(topicInsight.data.affectedTopics, "object", "Topic-student: has affectedTopics");
+    TestRunner.assertType(topicInsight.data.affectedQuestionIds, "object", "Topic-student: has affectedQuestionIds");
+    TestRunner.assertType(topicInsight.data.priorityCalculation, "object", "Topic-student: has priorityCalculation");
+    TestRunner.assertType(topicInsight.data.priorityCalculation.impactScore, "number", "Topic-student: impactScore is number");
+    TestRunner.assertType(topicInsight.data.priorityCalculation.confidence, "string", "Topic-student: confidence is string");
+    TestRunner.assertType(topicInsight.explanation, "string", "Topic-student: has explanation");
+
+    TestRunner.suite("Actionable Insights - Impact-Based Priority");
+
+    var highImpactResults = Recommendations.generateActionableInsights({
+        topicMastery: [
+            { topic: "Weak", accuracy: 20, totalQuestions: 30, correctAnswers: 6, incorrectAnswers: 24, masteryLevel: "Needs Support" }
+        ],
+        atRiskStudents: [],
+        questionStatistics: [],
+        difficultyPerformance: [],
+        bloomPerformance: [],
+        trendDirection: "stable",
+        classOverview: { totalAttempts: 30, uniqueStudents: 10 },
+        totalStudents: 10,
+        attempts: [
+            { studentId: "s1", percentage: 25, questions: [{ questionId: "Q1", correct: false, topic: "Weak" }] },
+            { studentId: "s2", percentage: 30, questions: [{ questionId: "Q2", correct: false, topic: "Weak" }] },
+            { studentId: "s3", percentage: 20, questions: [{ questionId: "Q3", correct: false, topic: "Weak" }] },
+            { studentId: "s4", percentage: 80, questions: [{ questionId: "Q4", correct: true, topic: "Weak" }] },
+            { studentId: "s5", percentage: 85, questions: [{ questionId: "Q5", correct: true, topic: "Weak" }] }
+        ]
+    });
+    TestRunner.assertGreaterThan(highImpactResults.length, 0, "High impact: has insights");
+    var firstInsight = highImpactResults[0];
+    TestRunner.assertType(firstInsight.data.priorityCalculation, "object", "High impact: has priorityCalculation");
+    TestRunner.assertGreaterThan(firstInsight.data.priorityCalculation.impactScore, 0, "High impact: impactScore > 0");
+
+    TestRunner.suite("Actionable Insights - Student Risk Alert");
+
+    var riskAlertResults = Recommendations.generateActionableInsights({
+        topicMastery: [],
+        atRiskStudents: [
+            { studentId: "s1", riskLevel: "high", reasons: ["Low average (30%)"] },
+            { studentId: "s2", riskLevel: "high", reasons: ["Low average (25%)"] }
+        ],
+        questionStatistics: [],
+        difficultyPerformance: [],
+        bloomPerformance: [],
+        trendDirection: "stable",
+        classOverview: { totalAttempts: 10, uniqueStudents: 5 },
+        totalStudents: 5,
+        attempts: []
+    });
+    var riskInsight = null;
+    for (var i = 0; i < riskAlertResults.length; i++) {
+        if (riskAlertResults[i].type === "student_risk_alert") { riskInsight = riskAlertResults[i]; break; }
+    }
+    TestRunner.assertNotNull(riskInsight, "Risk alert found");
+    TestRunner.assertEqual(riskInsight.data.affectedStudentIds.length, 2, "Risk alert: 2 affected students");
+    TestRunner.assertEqual(riskInsight.data.riskLevel, "high", "Risk alert: high risk level");
+    TestRunner.assertType(riskInsight.data.priorityCalculation, "object", "Risk alert: has priorityCalculation");
+
+    TestRunner.suite("Actionable Insights - Question Review with Cross-Level");
+
+    var questionReviewResults = Recommendations.generateActionableInsights({
+        topicMastery: [],
+        atRiskStudents: [],
+        questionStatistics: [
+            { questionId: "Q-HARD", attempts: 8, correct: 1, accuracy: 12.5, topic: "Networks", difficulty: "hard" },
+            { questionId: "Q-HARD2", attempts: 6, correct: 2, accuracy: 33.3, topic: "Networks", difficulty: "hard" }
+        ],
+        difficultyPerformance: [],
+        bloomPerformance: [],
+        trendDirection: "stable",
+        classOverview: { totalAttempts: 15, uniqueStudents: 5 },
+        totalStudents: 5,
+        attempts: []
+    });
+    var qReviewInsight = null;
+    for (var i = 0; i < questionReviewResults.length; i++) {
+        if (questionReviewResults[i].type === "question_review_needed") { qReviewInsight = questionReviewResults[i]; break; }
+    }
+    TestRunner.assertNotNull(qReviewInsight, "Question review insight found");
+    TestRunner.assertEqual(qReviewInsight.data.affectedQuestionIds.length, 2, "Question review: 2 affected questions");
+    TestRunner.assertType(qReviewInsight.data.affectedTopics, "object", "Question review: has affectedTopics");
+
+    TestRunner.suite("Actionable Insights - Declining Trend");
+
+    var decliningResults = Recommendations.generateActionableInsights({
+        topicMastery: [],
+        atRiskStudents: [],
+        questionStatistics: [],
+        difficultyPerformance: [],
+        bloomPerformance: [],
+        trendDirection: "declining",
+        classOverview: { totalAttempts: 10, uniqueStudents: 5, averagePercentage: 55 },
+        totalStudents: 5,
+        attempts: []
+    });
+    var decliningInsight = null;
+    for (var i = 0; i < decliningResults.length; i++) {
+        if (decliningResults[i].type === "declining_trend_alert") { decliningInsight = decliningResults[i]; break; }
+    }
+    TestRunner.assertNotNull(decliningInsight, "Declining insight found");
+    TestRunner.assertTrue(decliningInsight.explanation.indexOf("declining") !== -1, "Declining: mentions declining");
+    TestRunner.assertType(decliningInsight.data.priorityCalculation, "object", "Declining: has priorityCalculation");
+
+    TestRunner.suite("Actionable Insights - Difficulty Concern");
+
+    var difficultyResults = Recommendations.generateActionableInsights({
+        topicMastery: [],
+        atRiskStudents: [],
+        questionStatistics: [],
+        difficultyPerformance: [
+            { difficulty: "easy", attempts: 20, correct: 18, accuracy: 90 },
+            { difficulty: "hard", attempts: 15, correct: 4, accuracy: 26.67 }
+        ],
+        bloomPerformance: [],
+        trendDirection: "stable",
+        classOverview: { totalAttempts: 20, uniqueStudents: 5 },
+        totalStudents: 5,
+        attempts: []
+    });
+    var diffInsight = null;
+    for (var i = 0; i < difficultyResults.length; i++) {
+        if (difficultyResults[i].type === "difficulty_concern") { diffInsight = difficultyResults[i]; break; }
+    }
+    TestRunner.assertNotNull(diffInsight, "Difficulty insight found");
+    TestRunner.assertTrue(diffInsight.title.indexOf("hard") !== -1, "Difficulty: mentions hard");
+
+    TestRunner.suite("Actionable Insights - Bloom Concern");
+
+    var bloomResults = Recommendations.generateActionableInsights({
+        topicMastery: [],
+        atRiskStudents: [],
+        questionStatistics: [],
+        difficultyPerformance: [],
+        bloomPerformance: [
+            { bloom: "knowledge", attempts: 20, correct: 18, accuracy: 90 },
+            { bloom: "analysis", attempts: 10, correct: 3, accuracy: 30 }
+        ],
+        trendDirection: "stable",
+        classOverview: { totalAttempts: 20, uniqueStudents: 5 },
+        totalStudents: 5,
+        attempts: []
+    });
+    var bloomInsight = null;
+    for (var i = 0; i < bloomResults.length; i++) {
+        if (bloomResults[i].type === "bloom_concern") { bloomInsight = bloomResults[i]; break; }
+    }
+    TestRunner.assertNotNull(bloomInsight, "Bloom insight found");
+    TestRunner.assertTrue(bloomInsight.title.indexOf("thinking") !== -1, "Bloom: mentions thinking");
+
+    TestRunner.suite("Actionable Insights - Priority Ordering");
+
+    var orderedInsights = Recommendations.generateActionableInsights({
+        topicMastery: [
+            { topic: "Weak", accuracy: 20, totalQuestions: 30, correctAnswers: 6, incorrectAnswers: 24, masteryLevel: "Needs Support" }
+        ],
+        atRiskStudents: [
+            { studentId: "s1", riskLevel: "high", reasons: ["Low average"] }
+        ],
+        questionStatistics: [
+            { questionId: "Q1", attempts: 5, correct: 1, accuracy: 20, topic: "Weak" }
+        ],
+        difficultyPerformance: [
+            { difficulty: "hard", attempts: 10, correct: 2, accuracy: 20 }
+        ],
+        bloomPerformance: [
+            { bloom: "analysis", attempts: 8, correct: 2, accuracy: 25 }
+        ],
+        trendDirection: "declining",
+        classOverview: { totalAttempts: 30, uniqueStudents: 8, averagePercentage: 40 },
+        totalStudents: 8,
+        attempts: []
+    });
+    TestRunner.assertGreaterThan(orderedInsights.length, 1, "Ordering: multiple insights");
+    var prevScore = Infinity;
+    var isOrdered = true;
+    for (var i = 0; i < orderedInsights.length; i++) {
+        var score = orderedInsights[i].data && orderedInsights[i].data.priorityCalculation ? orderedInsights[i].data.priorityCalculation.impactScore : 0;
+        if (score > prevScore) { isOrdered = false; break; }
+        prevScore = score;
+    }
+    TestRunner.assertTrue(isOrdered, "Ordering: insights sorted by impact score descending");
+
+    TestRunner.suite("Actionable Insights - Confidence Levels");
+
+    var confResults = Recommendations.generateActionableInsights({
+        topicMastery: [
+            { topic: "T", accuracy: 30, totalQuestions: 5, correctAnswers: 2, incorrectAnswers: 3, masteryLevel: "Needs Support" }
+        ],
+        atRiskStudents: [],
+        questionStatistics: [],
+        difficultyPerformance: [],
+        bloomPerformance: [],
+        trendDirection: "stable",
+        classOverview: { totalAttempts: 5, uniqueStudents: 2 },
+        totalStudents: 2,
+        attempts: []
+    });
+    TestRunner.assertGreaterThan(confResults.length, 0, "Confidence: has insights");
+    var confInsight = confResults[0];
+    TestRunner.assertType(confInsight.dataSufficiency, "string", "Confidence: dataSufficiency is string");
+    TestRunner.assertTrue(confInsight.dataSufficiency === "low" || confInsight.dataSufficiency === "medium" || confInsight.dataSufficiency === "high" || confInsight.dataSufficiency === "insufficient", "Confidence: valid confidence level");
+
+    TestRunner.suite("Actionable Insights - No Cross-Contamination");
+
+    var noContamResults = Recommendations.generateActionableInsights({
+        topicMastery: [
+            { topic: "ClassATopic", accuracy: 30, totalQuestions: 10, correctAnswers: 3, incorrectAnswers: 7, masteryLevel: "Needs Support" }
+        ],
+        atRiskStudents: [],
+        questionStatistics: [],
+        difficultyPerformance: [],
+        bloomPerformance: [],
+        trendDirection: "stable",
+        classOverview: { totalAttempts: 10, uniqueStudents: 3 },
+        totalStudents: 3,
+        attempts: [
+            { studentId: "s1", percentage: 40, questions: [{ questionId: "Q1", correct: false, topic: "ClassATopic" }] }
+        ]
+    });
+    TestRunner.assertGreaterThan(noContamResults.length, 0, "No contamination: has insights");
+    var ncInsight = noContamResults[0];
+    TestRunner.assertEqual(ncInsight.data.affectedTopics.length, 1, "No contamination: 1 topic");
+    TestRunner.assertEqual(ncInsight.data.affectedTopics[0], "ClassATopic", "No contamination: correct topic");
+
+    TestRunner.suite("Actionable Insights - Legacy Attempts");
+
+    var legacyResults = Recommendations.generateActionableInsights({
+        topicMastery: [
+            { topic: "T", accuracy: 40, totalQuestions: 5, correctAnswers: 2, incorrectAnswers: 3, masteryLevel: "Needs Support" }
+        ],
+        atRiskStudents: [],
+        questionStatistics: [],
+        difficultyPerformance: [],
+        bloomPerformance: [],
+        trendDirection: "stable",
+        classOverview: { totalAttempts: 5, uniqueStudents: 2 },
+        totalStudents: 2,
+        attempts: [
+            { studentId: "s1", questions: [{ correct: false, topic: "T" }] }
+        ]
+    });
+    TestRunner.assertType(legacyResults, "object", "Legacy: handles attempts without questionId");
+
+    TestRunner.suite("Actionable Insights - Bridge");
+
+    var origAttemptsForBridge = allAttempts.slice();
+    var origStudentsForBridge = studentAccounts.slice();
+    studentAccounts = [
+        { id: "ins-s1", classId: "INS-CLASS", name: "Insight Student 1" },
+        { id: "ins-s2", classId: "INS-CLASS", name: "Insight Student 2" }
+    ];
+    allAttempts = [
+        { studentId: "ins-s1", classId: "INS-CLASS", percentage: 30, questions: [
+            { questionId: "q1", topic: "Weak", correct: false, difficulty: "hard" },
+            { questionId: "q2", topic: "Weak", correct: false, difficulty: "hard" }
+        ]},
+        { studentId: "ins-s2", classId: "INS-CLASS", percentage: 80, questions: [
+            { questionId: "q3", topic: "Strong", correct: true, difficulty: "easy" }
+        ]}
+    ];
+    var bridgeInsights = TeacherAnalytics.getActionableInsights({ classId: "INS-CLASS", teacherClasses: ["INS-CLASS"] });
+    TestRunner.assertType(bridgeInsights, "object", "Bridge: returns array");
+    for (var bi = 0; bi < bridgeInsights.length; bi++) {
+        TestRunner.assertType(bridgeInsights[bi].data.priorityCalculation, "object", "Bridge: insight " + bi + " has priorityCalculation");
+        TestRunner.assertType(bridgeInsights[bi].dataSufficiency, "string", "Bridge: insight " + bi + " has dataSufficiency");
+    }
+    studentAccounts = origStudentsForBridge;
+    allAttempts = origAttemptsForBridge;
+
+    TestRunner.suite("Actionable Insights - Bridge Empty");
+
+    var emptyBridgeInsights = TeacherAnalytics.getActionableInsights({});
+    TestRunner.assertEqual(emptyBridgeInsights.length, 0, "Bridge empty: no insights");
 }

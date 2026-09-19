@@ -933,6 +933,41 @@ var TeacherAnalytics = (function() {
         }
     }
 
+    function getActionableInsights(filters) {
+        try {
+            var data = getTeacherAnalyticsData(filters);
+            var attempts = data.attempts;
+            var teacherClasses = filters.teacherClasses || [];
+            var totalStudents = 0;
+            for (var i = 0; i < studentAccounts.length; i++) {
+                if (teacherClasses.indexOf(studentAccounts[i].classId) !== -1) {
+                    totalStudents++;
+                }
+            }
+            var analyticsResults = {
+                topicMastery: Analytics.getTopicMastery(attempts),
+                atRiskStudents: Analytics.getAtRiskStudents(attempts),
+                questionStatistics: Analytics.getQuestionStatistics(attempts),
+                difficultyPerformance: Analytics.getDifficultyPerformance(attempts),
+                bloomPerformance: Analytics.getBloomPerformance(attempts),
+                trendDirection: Analytics.getTrendDirection(attempts),
+                classOverview: Analytics.getClassOverview(attempts),
+                totalAttempts: data.totalAttempts,
+                totalStudents: totalStudents,
+                attempts: attempts,
+                advancedQuestionAnalytics: Analytics.getAdvancedQuestionAnalytics(attempts),
+                advancedClassAnalytics: Analytics.getAdvancedClassAnalytics(attempts, totalStudents)
+            };
+            if (!Recommendations.hasSufficientData(analyticsResults)) {
+                return [];
+            }
+            return Recommendations.generateActionableInsights(analyticsResults);
+        } catch(e) {
+            console.error("TeacherAnalytics.getActionableInsights error:", e);
+            return [];
+        }
+    }
+
     function getAdvancedQuestionAnalytics(filters) {
         try {
             var data = getTeacherAnalyticsData(filters);
@@ -1005,6 +1040,7 @@ var TeacherAnalytics = (function() {
         getTrendDirection: getTrendDirection,
         getTeacherInsights: getTeacherInsights,
         getRecommendations: getRecommendations,
+        getActionableInsights: getActionableInsights,
         getAdvancedQuestionAnalytics: getAdvancedQuestionAnalytics,
         getAdvancedStudentAnalytics: getAdvancedStudentAnalytics,
         getAdvancedClassAnalytics: getAdvancedClassAnalytics,
