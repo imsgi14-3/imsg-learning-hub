@@ -942,6 +942,87 @@ var UI = (function() {
         insightNavigate(target, entityData);
     }
 
+    function renderActionableInsightsPanel(container, insights, title) {
+        if (!container) return;
+        title = title || "Actionable Insights";
+        if (!insights || insights.length === 0) {
+            var noDiv = document.createElement("div");
+            noDiv.className = "recommendations-panel";
+            noDiv.innerHTML = '<div class="chart-section" style="margin-top:20px;"><h4>&#128161; ' + title + '</h4><div class="rec-card rec-ok"><span class="rec-icon">&#10003;</span><div class="rec-body"><div class="rec-title">No actionable insights</div><div class="rec-message">Insufficient data or no patterns detected.</div></div></div></div>';
+            container.appendChild(noDiv);
+            return;
+        }
+        var h = '<div class="chart-section" style="margin-top:20px;"><h4>&#128161; ' + title + '</h4>';
+        h += '<p style="font-size:0.8rem;color:var(--text-mid);margin-bottom:12px;">Insights ranked by impact score (students affected x accuracy gap x data confidence).</p>';
+        h += '<div class="rec-list">';
+        var typeConfig = {
+            topic_student_support: { icon: "&#9888;", color: "var(--error)", cardClass: "rec-critical" },
+            student_risk_alert: { icon: "&#9888;", color: "var(--error)", cardClass: "rec-critical" },
+            question_review_needed: { icon: "&#128269;", color: "var(--warning, #f59e0b)", cardClass: "rec-warn" },
+            declining_trend_alert: { icon: "&#128201;", color: "var(--error)", cardClass: "rec-critical" },
+            difficulty_concern: { icon: "&#9888;", color: "var(--warning, #f59e0b)", cardClass: "rec-warn" },
+            bloom_concern: { icon: "&#128218;", color: "var(--primary, #6366f1)", cardClass: "rec-info" },
+            practice_assessment_gap: { icon: "&#128202;", color: "var(--accent)", cardClass: "rec-warn" }
+        };
+        for (var i = 0; i < insights.length; i++) {
+            var ins = insights[i];
+            var cfg = typeConfig[ins.type] || { icon: "&#8505;", color: "var(--text-mid)", cardClass: "rec-info" };
+            var pc = (ins.data && ins.data.priorityCalculation) ? ins.data.priorityCalculation : null;
+            var priorityColor = ins.priority === "critical" ? "var(--error)" : ins.priority === "high" ? "var(--warning, #f59e0b)" : ins.priority === "medium" ? "var(--accent)" : "var(--text-mid)";
+            h += '<div class="rec-card ' + cfg.cardClass + '">';
+            h += '<span class="rec-icon" style="color:' + cfg.color + ';">' + cfg.icon + '</span>';
+            h += '<div class="rec-body">';
+            h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">';
+            h += '<div class="rec-title">' + (ins.title || ins.type) + '</div>';
+            h += '<span style="font-size:0.7rem;font-weight:600;padding:2px 8px;border-radius:4px;background:' + priorityColor + '22;color:' + priorityColor + ';text-transform:uppercase;">' + ins.priority + '</span>';
+            h += '</div>';
+            if (ins.explanation) {
+                h += '<div class="rec-message" style="font-size:0.85rem;">' + ins.explanation + '</div>';
+            }
+            if (pc) {
+                h += '<div style="font-size:0.75rem;color:var(--text-mid);margin:4px 0;padding:6px 10px;background:var(--bg-main);border-radius:6px;">';
+                h += '<strong>Impact:</strong> ' + pc.affectedStudents + '/' + pc.totalStudents + ' students | Gap: ' + pc.accuracyGap + '% | Confidence: ' + pc.confidence + ' | Score: ' + pc.impactScore;
+                h += '</div>';
+            }
+            if (ins.evidence && ins.evidence.length > 0) {
+                h += '<div class="rec-evidence">';
+                for (var ei = 0; ei < Math.min(ins.evidence.length, 3); ei++) {
+                    var line = ins.evidence[ei];
+                    line = line.replace(/([A-Z]+-\d+)/g, function(match) {
+                        var name = getStudentName(match);
+                        return name !== match ? name + " (" + match + ")" : match;
+                    });
+                    h += '<div class="rec-evidence-line">' + line + '</div>';
+                }
+                if (ins.evidence.length > 3) {
+                    h += '<div class="rec-evidence-line rec-more">+' + (ins.evidence.length - 3) + ' more</div>';
+                }
+                h += '</div>';
+            }
+            if (ins.dataSufficiency) {
+                var dsColor = ins.dataSufficiency === "high" ? "var(--success)" : ins.dataSufficiency === "medium" ? "var(--accent)" : ins.dataSufficiency === "low" ? "var(--warning, #f59e0b)" : "var(--text-mid)";
+                h += '<div style="font-size:0.7rem;color:' + dsColor + ';margin-bottom:4px;">Data: ' + ins.dataSufficiency.charAt(0).toUpperCase() + ins.dataSufficiency.slice(1) + '</div>';
+            }
+            if (ins.action) {
+                h += '<div class="rec-action">';
+                if (ins.actionLabel) {
+                    var entityData = ins.data ? JSON.stringify(ins.data).replace(/"/g, '&quot;') : '';
+                    h += '<span class="rec-action-text">' + ins.action + '</span>';
+                    h += '<button class="rec-link" onclick="recNavigate(\'' + ins.actionTarget + '\', ' + (entityData || 'null') + ')">' + ins.actionLabel + ' &rarr;</button>';
+                } else {
+                    h += '<span class="rec-action-text">' + ins.action + '</span>';
+                }
+                h += '</div>';
+            }
+            h += '</div></div>';
+        }
+        h += '</div></div>';
+        var recDiv = document.createElement("div");
+        recDiv.className = "recommendations-panel";
+        recDiv.innerHTML = h;
+        container.appendChild(recDiv);
+    }
+
     function loadClassAnalytics(cid) {
         selectedAnalyticsClassId = cid;
         var cards = $("teacherClassCards");
@@ -1541,6 +1622,9 @@ var UI = (function() {
 
         var recs = TeacherAnalytics.getRecommendations({ classId: cid });
         renderRecommendationsPanel(c, recs, "Recommendations for This Class");
+
+        var actionableInsights = TeacherAnalytics.getActionableInsights({ classId: cid, teacherClasses: [cid] });
+        renderActionableInsightsPanel(c, actionableInsights, "Actionable Insights");
     }
 
     function renderClassTeacherInsights(container, cid) {
@@ -1603,7 +1687,11 @@ var UI = (function() {
     }
 
     function renderStudentPerformanceUI(container, data, advanced, studentName, cid, backBtn) {
-        if (!container || !data) return;
+        if (!container) return;
+        if (!data) {
+            container.innerHTML = (backBtn || '') + '<div class="chart-section"><h4>&#128100; ' + (studentName || 'Student') + '</h4><p style="color:var(--text-mid);font-size:0.9rem;">No data available for this student.</p></div>';
+            return;
+        }
         if (data.totalAttempts === 0) {
             container.innerHTML = (backBtn || '') + '<div class="chart-section"><h4>&#128100; ' + studentName + '</h4><p style="color:var(--text-mid);font-size:0.9rem;">No assessment data available for this student yet.</p></div>';
             return;
@@ -1621,11 +1709,13 @@ var UI = (function() {
         h += '<div class="overview-card average"><div class="card-icon">&#127919;</div><div class="card-value">' + data.bestPercentage + '%</div><div class="card-label">Best Score</div></div>';
         h += '</div>';
         h += renderStudentTrend(data);
-        if (data.topicStrengths.length > 0) {
+        var strengths = data.topicStrengths || [];
+        var weaknesses = data.topicWeaknesses || [];
+        if (strengths.length > 0) {
             h += '<div class="chart-section"><h4>&#127942; Strengths</h4>';
             h += '<div class="bar-graph">';
-            for (var i = 0; i < data.topicStrengths.length; i++) {
-                var t = data.topicStrengths[i];
+            for (var i = 0; i < strengths.length; i++) {
+                var t = strengths[i];
                 h += '<div class="bar-graph-row">';
                 h += '<div class="bar-graph-label" title="' + t.topic + '">' + t.topic + '</div>';
                 h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + t.accuracy + '%;background:#10b981;"><span class="bar-graph-value">' + t.accuracy + '%</span></div></div>';
@@ -1633,11 +1723,11 @@ var UI = (function() {
             }
             h += '</div></div>';
         }
-        if (data.topicWeaknesses.length > 0) {
+        if (weaknesses.length > 0) {
             h += '<div class="chart-section"><h4>&#128683; Needs Support</h4>';
             h += '<div class="bar-graph">';
-            for (var i = 0; i < data.topicWeaknesses.length; i++) {
-                var t = data.topicWeaknesses[i];
+            for (var i = 0; i < weaknesses.length; i++) {
+                var t = weaknesses[i];
                 h += '<div class="bar-graph-row">';
                 h += '<div class="bar-graph-label" title="' + t.topic + '">' + t.topic + '</div>';
                 h += '<div class="bar-graph-track"><div class="bar-graph-fill" style="width:' + t.accuracy + '%;background:#ef4444;"><span class="bar-graph-value">' + t.accuracy + '%</span></div></div>';
@@ -1654,8 +1744,8 @@ var UI = (function() {
     }
 
     function renderStudentTrend(data) {
-        var recent = data.recentPerformance;
-        if (!recent || recent.length < 2) {
+        var recent = data ? data.recentPerformance : null;
+        if (!recent || !Array.isArray(recent) || recent.length < 2) {
             return '<div class="chart-section"><h4>&#128200; Trend</h4><p style="color:var(--text-mid);font-size:0.9rem;">Not enough data to determine a trend. At least 2 attempts are needed.</p></div>';
         }
         var sorted = recent.slice().sort(function(a, b) {
@@ -1704,8 +1794,8 @@ var UI = (function() {
     }
 
     function renderStudentRecentAttempts(data) {
-        var recent = data.recentPerformance;
-        if (!recent || recent.length === 0) return '';
+        var recent = data ? data.recentPerformance : null;
+        if (!recent || !Array.isArray(recent) || recent.length === 0) return '';
         var sorted = recent.slice().sort(function(a, b) {
             if (!a.timestamp || !b.timestamp) return 0;
             return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
@@ -1731,7 +1821,7 @@ var UI = (function() {
     }
 
     function renderAdvancedStudentAnalytics(advanced) {
-        if (!advanced) return '';
+        if (!advanced || typeof advanced !== 'object') return '';
         var h = '';
 
         // Learning Consistency
@@ -2356,12 +2446,18 @@ var UI = (function() {
         if (!progressContainer) return;
         progressContainer.style.display = "block";
         progressContainer.innerHTML = '<div class="chart-section"><p style="text-align:center;color:var(--text-mid);padding:20px;">Loading student analytics...</p></div>';
-        var studentName = getStudentName(studentId);
-        var perf = TeacherAnalytics.getStudentPerformance(studentId, { classId: classId });
-        var advanced = TeacherAnalytics.getAdvancedStudentAnalytics(studentId, { classId: classId });
-        var backBtn = '<div style="margin-bottom:16px;"><button class="action-btn" onclick="closeStudentProgress()">&#8592; Back to Students</button></div>';
-        renderStudentPerformanceUI(progressContainer, perf, advanced, studentName, classId, backBtn);
-        progressContainer.scrollIntoView({ behavior: "smooth" });
+        try {
+            var studentName = getStudentName(studentId);
+            var perf = TeacherAnalytics.getStudentPerformance(studentId, { classId: classId });
+            var advanced = TeacherAnalytics.getAdvancedStudentAnalytics(studentId, { classId: classId });
+            var backBtn = '<div style="margin-bottom:16px;"><button class="action-btn" onclick="closeStudentProgress()">&#8592; Back to Students</button></div>';
+            renderStudentPerformanceUI(progressContainer, perf, advanced, studentName, classId, backBtn);
+            progressContainer.scrollIntoView({ behavior: "smooth" });
+        } catch(e) {
+            console.error("openStudentPerformanceFromStudents error:", e);
+            var backBtn2 = '<div style="margin-bottom:16px;"><button class="action-btn" onclick="closeStudentProgress()">&#8592; Back to Students</button></div>';
+            progressContainer.innerHTML = backBtn2 + '<div class="chart-section"><p style="color:var(--error);padding:20px;">Unable to load student analytics. Please try again.</p></div>';
+        }
     };
 
     window.closeStudentProgress = function() {
