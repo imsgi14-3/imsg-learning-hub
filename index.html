@@ -168,6 +168,7 @@
                 <h3>&#128220; Assignments</h3>
                 <div class="assignments-toolbar">
                     <button class="action-btn" onclick="showCreateAssignmentModal()">&#43; Create Assignment</button>
+                    <button class="action-btn" onclick="showExamBuilder()">&#128203; Exam Builder</button>
                 </div>
                 <div id="assignmentsList"></div>
                 <div id="assignmentStatusPanel" style="display:none;margin-top:20px;"></div>
@@ -514,6 +515,78 @@
             </form>
         </div>
 
+        <!-- EXAM BUILDER MODAL -->
+        <div id="examBuilderModal" class="modal" style="max-height:92vh;overflow-y:auto;">
+            <h3>&#128203; Exam Builder</h3>
+            <p class="login-subtitle" style="font-size:12px;text-align:left;">Pick chapters and blueprint ratios (FBISE ToS defaults), generate a balanced paper, review it, then create it as an assignment.</p>
+            <div class="form-row full">
+                <label>Chapters &amp; Table of Specifications</label>
+                <div id="ebChapters"></div>
+            </div>
+            <div class="form-row full">
+                <div style="display:flex;gap:16px;flex-wrap:wrap;">
+                    <label style="display:flex;align-items:center;gap:6px;font-weight:normal;font-size:13px;">Total Questions
+                        <input type="number" id="ebTotal" value="20" min="1" max="100" style="width:64px;padding:4px;border:1px solid var(--border);border-radius:4px;">
+                    </label>
+                    <label style="display:flex;align-items:center;gap:6px;font-weight:normal;font-size:13px;">Time (min)
+                        <input type="number" id="ebTime" value="60" min="5" max="300" style="width:64px;padding:4px;border:1px solid var(--border);border-radius:4px;">
+                    </label>
+                </div>
+            </div>
+            <div class="form-row full">
+                <label>Cognitive Distribution % (K / U / A)</label>
+                <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
+                    <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Knowledge
+                        <input type="number" id="ebK" value="30" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                    </label>
+                    <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Understanding
+                        <input type="number" id="ebU" value="50" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                    </label>
+                    <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Application
+                        <input type="number" id="ebA" value="20" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                    </label>
+                </div>
+            </div>
+            <div class="form-row full">
+                <label>Difficulty Distribution %</label>
+                <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
+                    <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                        <span style="color:#22c55e;">&#9679;</span> Easy
+                        <input type="number" id="ebEasy" value="40" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                    </label>
+                    <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                        <span style="color:#f59e0b;">&#9679;</span> Medium
+                        <input type="number" id="ebMedium" value="40" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                    </label>
+                    <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                        <span style="color:#ef4444;">&#9679;</span> Hard
+                        <input type="number" id="ebHard" value="20" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                    </label>
+                </div>
+            </div>
+            <div class="form-row full">
+                <label>Question Format %</label>
+                <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
+                    <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Straight
+                        <input type="number" id="ebStraight" value="67" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                    </label>
+                    <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Scenario
+                        <input type="number" id="ebScenario" value="33" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                    </label>
+                </div>
+            </div>
+            <p id="ebStatus" style="font-size:12px;min-height:16px;margin:4px 0 8px;"></p>
+            <div class="form-row full" style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button type="button" class="action-btn" onclick="ebCheck()">Check Feasibility</button>
+                <button type="button" class="action-btn" onclick="ebGenerate()">&#9881; Generate Paper</button>
+                <button type="button" class="action-btn" id="ebCreateBtn" style="display:none;" onclick="ebUseAsAssignment()">&#128221; Create Assignment from Exam</button>
+            </div>
+            <div class="form-row full" id="ebReview" style="display:none;margin-top:8px;"></div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+
         <!-- EXCEL IMPORT MODAL -->
         <div id="excelModal" class="modal">
             <h3>&#128229; Import Questions from Excel</h3>
@@ -662,6 +735,7 @@
     <script src="data.js"></script>
     <script src="auth.js"></script>
     <script src="analytics.js"></script>
+    <script src="examEngine.js"></script>
     <script src="ui.js"></script>
     <script src="quiz.js"></script>
     <script src="recommendations.js"></script>
@@ -669,7 +743,7 @@
     <script src="script.js"></script>
     <script>
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("/sw.js").catch(function() {});
+            navigator.serviceWorker.register("sw.js").catch(function() {});
         }
     </script>
 </body>

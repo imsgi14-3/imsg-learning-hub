@@ -60,7 +60,7 @@ function runAssignmentTests() {
     TestRunner.assertEqual(lbl4, "Practice", "General-only topicPerformance falls back to mode label");
 
     var lbl4b = getAttemptTypeLabel({ mode: "practice", topicPerformance: { "7.1 HTML Structure": {}, "7.2 CSS Styling": {} } });
-    TestRunner.assertEqual(lbl4b, "Chapter 7: Website Development", "Multiple topics show chapter name");
+    TestRunner.assertEqual(lbl4b, "Chapter 7: Entrepreneurship", "Multiple topics show chapter name");
 
     try {
         assignments.push({ id: "TEST-LABEL-1", title: "Chapter 1 Quiz", classId: "CLASS-TEST" });

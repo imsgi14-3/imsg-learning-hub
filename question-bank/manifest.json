@@ -1,0 +1,79 @@
+{
+  "total_questions": 1506,
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Computer Systems",
+      "count": 274,
+      "file": "chapter1.json",
+      "domain": "A",
+      "domain_name": "Computer Systems",
+      "stimulus_groups": 17,
+      "stimulus_mcqs": 68
+    },
+    {
+      "chapter": 2,
+      "title": "Computational Thinking & Algorithms",
+      "count": 203,
+      "file": "chapter2.json",
+      "domain": "B",
+      "domain_name": "Computational Thinking and Algorithms",
+      "stimulus_groups": 19,
+      "stimulus_mcqs": 76
+    },
+    {
+      "chapter": 3,
+      "title": "Programing Fundamentals",
+      "count": 223,
+      "file": "chapter3.json",
+      "domain": "C",
+      "domain_name": "Programming Fundamentals",
+      "stimulus_groups": 16,
+      "stimulus_mcqs": 64
+    },
+    {
+      "chapter": 4,
+      "title": "Data and Analysis",
+      "count": 189,
+      "file": "chapter4.json",
+      "domain": "D",
+      "domain_name": "Data and Analysis",
+      "stimulus_groups": 20,
+      "stimulus_mcqs": 80
+    },
+    {
+      "chapter": 5,
+      "title": "Applications of Computer Science",
+      "count": 181,
+      "file": "chapter5.json",
+      "domain": "E",
+      "domain_name": "Applications of Computer Science",
+      "stimulus_groups": 23,
+      "stimulus_mcqs": 92
+    },
+    {
+      "chapter": 6,
+      "title": "Impacts of Computing",
+      "count": 261,
+      "file": "chapter6.json",
+      "domain": "F",
+      "domain_name": "Impacts of Computing",
+      "stimulus_groups": 19,
+      "stimulus_mcqs": 76
+    },
+    {
+      "chapter": 7,
+      "title": "Entrepreneurship",
+      "count": 175,
+      "file": "chapter7.json",
+      "domain": "H",
+      "domain_name": "Entrepreneurship in the Digital Age",
+      "stimulus_groups": 20,
+      "stimulus_mcqs": 80
+    }
+  ],
+  "version": "3.7.1",
+  "stimulus_group_rule": "Exactly 4 linked MCQs per stimulus group; select whole groups",
+  "stimulus_groups": 134,
+  "stimulus_mcqs": 536
+}

@@ -55,6 +55,9 @@ var QuizEngine = (function() {
 
     function startQuiz(questions, mode, subject, chapter, aId) {
         quizQuestions = prepareForAttempt(questions);
+        if (typeof ExamEngine !== "undefined" && ExamEngine.orderScenarioGroups) {
+            quizQuestions = ExamEngine.orderScenarioGroups(quizQuestions);
+        }
         quizMode = mode || "practice";
         quizSubject = subject || "";
         quizChapter = chapter || "";

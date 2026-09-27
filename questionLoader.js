@@ -1,15 +1,18 @@
 var QuestionLoader = (function() {
     var allQuestions = [];
     var loadedChapters = {};
+    // Pages served from a sub-folder (e.g. tests/test-runner.html) set
+    // QUESTION_BANK_BASE = "../" before this script so bank URLs resolve correctly.
+    var bankBase = (typeof QUESTION_BANK_BASE !== "undefined" && QUESTION_BANK_BASE) ? QUESTION_BANK_BASE : "";
 
     var chapterConfig = {
         1: { chapter: 1, chapterTitle: "Computer Systems", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 1", file: "question-bank/grade9/computer-science/chapter1.json" },
-        2: { chapter: 2, chapterTitle: "Networks and Communication", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 2", file: "question-bank/grade9/computer-science/chapter2.json" },
-        3: { chapter: 3, chapterTitle: "Data and Privacy", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 3", file: "question-bank/grade9/computer-science/chapter3.json" },
-        4: { chapter: 4, chapterTitle: "Programming Basics", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 4", file: "question-bank/grade9/computer-science/chapter4.json" },
-        5: { chapter: 5, chapterTitle: "Problem Solving", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 5", file: "question-bank/grade9/computer-science/chapter5.json" },
-        6: { chapter: 6, chapterTitle: "Arrays and Lists", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 6", file: "question-bank/grade9/computer-science/chapter6.json" },
-        7: { chapter: 7, chapterTitle: "Website Development", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 7", file: "question-bank/grade9/computer-science/chapter7.json" }
+        2: { chapter: 2, chapterTitle: "Computational Thinking & Algorithms", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 2", file: "question-bank/grade9/computer-science/chapter2.json" },
+        3: { chapter: 3, chapterTitle: "Programming Fundamentals", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 3", file: "question-bank/grade9/computer-science/chapter3.json" },
+        4: { chapter: 4, chapterTitle: "Data and Analysis", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 4", file: "question-bank/grade9/computer-science/chapter4.json" },
+        5: { chapter: 5, chapterTitle: "Applications of Computer Science", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 5", file: "question-bank/grade9/computer-science/chapter5.json" },
+        6: { chapter: 6, chapterTitle: "Impacts of Computing", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 6", file: "question-bank/grade9/computer-science/chapter6.json" },
+        7: { chapter: 7, chapterTitle: "Entrepreneurship", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 7", file: "question-bank/grade9/computer-science/chapter7.json" }
     };
 
     function loadChapter(chapterNum, callback) {
@@ -19,7 +22,7 @@ var QuestionLoader = (function() {
         }
         var config = chapterConfig[chapterNum];
         if (!config) { if (callback) callback(null); return; }
-        var url = config.file || ("question-bank/grade9/computer-science/chapter" + chapterNum + ".json");
+        var url = bankBase + (config.file || ("question-bank/grade9/computer-science/chapter" + chapterNum + ".json"));
         url += "?v=" + Date.now();
         fetch(url)
             .then(function(resp) {
@@ -33,6 +36,7 @@ var QuestionLoader = (function() {
                     if (!qs[i].subject) qs[i].subject = meta.subject;
                     if (!qs[i].grade) qs[i].grade = meta.grade;
                     if (!qs[i].chapter) qs[i].chapter = meta.chapter;
+                    if (!qs[i].scenario) qs[i].scenario = qs[i].stimulus || qs[i].scenario_stimulus || "";
                     allQuestions.push(qs[i]);
                 }
                 loadedChapters[chapterNum] = { questions: qs, subject: meta.subject, grade: meta.grade, chapter: meta.chapter, chapterTitle: meta.chapterTitle || meta.chapterTitle };

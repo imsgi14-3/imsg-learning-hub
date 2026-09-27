@@ -152,6 +152,7 @@ function loadData() {
 function saveAll() {
     LocalDB.putAll("questions", questions);
     LocalDB.putAll("classes", classes);
+    localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
     LocalDB.putAll("assignments", assignments);
     LocalDB.putAll("teachers", teachers);
     LocalDB.putAll("attendance", attendance);

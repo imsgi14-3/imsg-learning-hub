@@ -32,6 +32,14 @@
         .stat.pass .stat-value { color: #10b981; }
         .stat.fail .stat-value { color: #ef4444; }
         .stat.total .stat-value { color: #818cf8; }
+        .fail-box { background: rgba(239, 68, 68, 0.12); border: 1px solid #ef4444; border-radius: 10px; padding: 14px 18px; margin: 15px 0; }
+        .fail-box h2 { color: #ef4444; font-size: 1.05rem; margin-bottom: 8px; }
+        .fail-box ul { list-style: none; }
+        .fail-box li { padding: 4px 0; font-size: 0.85rem; line-height: 1.4; }
+        .fail-box a { color: #fecaca; text-decoration: underline; cursor: pointer; }
+        .fail-box a b { color: #fff; }
+        .flash { outline: 2px solid #f59e0b; outline-offset: 2px; }
+        .bank-warn { background: rgba(239, 68, 68, 0.15); border: 1px dashed #ef4444; border-radius: 8px; padding: 10px 14px; margin-top: 10px; font-size: 0.88rem; color: #fecaca; text-align: left; }
     </style>
 </head>
 <body>
@@ -48,6 +56,7 @@
         <button class="btn btn-primary" onclick="runSingle('analytics')">Analytics</button>
         <button class="btn btn-primary" onclick="runSingle('recommendations')">Recommendations</button>
         <button class="btn btn-primary" onclick="runSingle('assignments')">Assignments</button>
+        <button class="btn btn-primary" onclick="runSingle('examengine')">Exam Engine</button>
         <button class="btn btn-primary" onclick="runSingle('persistence')">Persistence</button>
     </div>
 
@@ -64,6 +73,8 @@
     <script src="../data.js"></script>
     <script src="../auth.js"></script>
     <script src="../analytics.js"></script>
+    <script>var QUESTION_BANK_BASE = "../";</script>
+    <script src="../examEngine.js"></script>
     <script src="../ui.js"></script>
     <script src="../quiz.js"></script>
     <script src="../recommendations.js"></script>
@@ -77,6 +88,7 @@
     <script src="analytics-tests.js"></script>
     <script src="recommendations-tests.js"></script>
     <script src="assignment-tests.js"></script>
+    <script src="exam-engine-tests.js"></script>
     <script src="data-tests.js"></script>
     <script>
         var appReady = false;
@@ -104,7 +116,14 @@
                                 questions = cleaned;
                             }
                             appReady = true;
-                            document.getElementById("results").innerHTML = '<div class="test-summary"><h2>Ready</h2><p>' + questions.length + ' questions loaded. Click "Run All Tests" to start.</p></div>';
+                            var qCount = questions.length;
+                            var warn = "";
+                            if (qCount < 1500) {
+                                warn = '<div class="bank-warn">&#9888; Only ' + qCount + ' questions loaded, but the bank has 1506. ' +
+                                    'The question bank JSON did not load. Open this page through Live Server (not file://), then hard-refresh (Ctrl+Shift+R). ' +
+                                    'Console (F12) must show "Loaded ... questions from Chapter 1" through "Chapter 7".</div>';
+                            }
+                            document.getElementById("results").innerHTML = '<div class="test-summary"><h2>Ready</h2><p>' + qCount + ' questions loaded. Click "Run All Tests" to start.</p>' + warn + '</div>';
                         });
                     } else {
                         appReady = true;
@@ -129,6 +148,7 @@
                 try { runTeacherAnalyticsFlowTests(); } catch(e) { TestRunner.suite("Teacher Analytics Flow"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runRecommendationTests(); } catch(e) { TestRunner.suite("Recommendations"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runAssignmentTests(); } catch(e) { TestRunner.suite("Assignments"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                try { runExamEngineTests(); } catch(e) { TestRunner.suite("Exam Engine"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runPersistenceTests(); } catch(e) { TestRunner.suite("Persistence"); TestRunner.assert(false, "CRASHED: " + e.message); }
             });
             showResults(result);
@@ -142,6 +162,7 @@
                 teacheranalyticsflow: runTeacherAnalyticsFlowTests,
                 recommendations: runRecommendationTests,
                 assignments: runAssignmentTests,
+                examengine: runExamEngineTests,
                 persistence: runPersistenceTests
             };
             var result = TestRunner.run(function() {
@@ -163,17 +184,41 @@
                 '<div class="test-summary"><h2>' + (result.failed === 0 ? 'All Tests Passed!' : result.failed + ' Test(s) Failed') + '</h2>' +
                 '<p class="' + cls + '-text">' + result.passed + '/' + result.total + ' passed</p></div>';
 
+            var failList = [];
+            for (var i = 0; i < result.results.length; i++) {
+                var r = result.results[i];
+                if (r.type === "fail") failList.push({ suite: r.suite || "", test: r.test, idx: i });
+            }
+            if (failList.length > 0) {
+                html += '<div class="fail-box" id="failBox"><h2>&#10007; ' + failList.length + ' failed &mdash; click to jump</h2><ul>';
+                for (var f = 0; f < failList.length; f++) {
+                    html += '<li><a href="#line' + failList[f].idx + '" onclick="jumpToFail(event, \'line' + failList[f].idx + '\')"><b>' + failList[f].suite + '</b> &mdash; ' + failList[f].test + '</a></li>';
+                }
+                html += '</ul></div>';
+            }
+
             for (var i = 0; i < result.results.length; i++) {
                 var r = result.results[i];
                 if (r.type === "suite") {
                     html += '<div class="test-suite"><h3>' + r.name + '</h3></div>';
                 } else {
                     var icon = r.type === "pass" ? "&#10003;" : "&#10007;";
-                    html += '<div class="test-result ' + r.type + '">' + icon + ' ' + r.test + '</div>';
+                    html += '<div class="test-result ' + r.type + '" id="line' + i + '">' + icon + ' ' + r.test + '</div>';
                 }
             }
 
             document.getElementById("results").innerHTML = html;
+            var failBox = document.getElementById("failBox");
+            if (failBox) failBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function jumpToFail(e, id) {
+            e.preventDefault();
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            el.classList.add("flash");
+            setTimeout(function() { el.classList.remove("flash"); }, 2000);
         }
     </script>
 </body>

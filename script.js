@@ -20,6 +20,8 @@ window.onload = function() {
                             if (!found) cleaned.push(allQs[i]);
                         }
                         questions = cleaned;
+                    } else {
+                        console.warn("Question bank JSON did not load (" + questions.length + " questions from local cache). Serve the app over Live Server and refresh.");
                     }
                     Auth.restoreSession();
                     if (Auth.isLoggedIn()) { UI.showDashboard(); }
@@ -71,12 +73,18 @@ function saveQuestion(e) { UI.saveQuestion(e); }
 function editQuestion(id) { UI.editQuestion(id); }
 function deleteQuestion(id) { UI.deleteQuestion(id); }
 function filterQuestions() { UI.filterQuestions(); }
-function showCreateAssignmentModal() { UI.showCreateAssignmentModal(); }
+function showCreateAssignmentModal(k) { UI.showCreateAssignmentModal(k); }
 function updateAssignmentTopics() { UI.updateAssignmentTopics(); }
 function updateAssignmentSubjects() { UI.updateAssignmentSubjects(); }
 function updateAssignmentAvailableCount() { UI.updateAssignmentAvailableCount(); }
 function previewAssignmentQuestions() { UI.previewAssignmentQuestions(); }
 function saveAssignment(e) { UI.saveAssignment(e); }
+function showExamBuilder() { UI.showExamBuilder(); }
+function ebCheck() { UI.ebCheck(); }
+function ebGenerate() { UI.ebGenerate(); }
+function ebMove(i, d) { UI.ebMove(i, d); }
+function ebDelete(i) { UI.ebDelete(i); }
+function ebUseAsAssignment() { UI.ebUseAsAssignment(); }
 function editAssignment(i) { UI.editAssignment(i); }
 function deleteAssignment(i) { UI.deleteAssignment(i); }
 function showAssignmentStatus(i) { UI.showAssignmentStatus(i); }

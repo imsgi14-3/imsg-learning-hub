@@ -14,8 +14,11 @@ function runQuizTests() {
     TestRunner.suite("Quiz System - Question Fields");
 
     var q = questions[0];
+    for (var i = 0; i < questions.length; i++) {
+        if (questions[i].chapter == 1) { q = questions[i]; break; }
+    }
     TestRunner.assertNotNull(q.id, "Question has ID");
-    TestRunner.assertEqual(q.chapter, 1, "Question chapter is 1");
+    TestRunner.assertTrue(q.chapter == 1, "Question chapter is 1 (got: " + q.chapter + ")");
     TestRunner.assertNotNull(q.topic, "Question has topic");
     TestRunner.assertEqual(q.type, "mcq", "Question type is MCQ");
     TestRunner.assertTrue(q.options.length === 4, "Question has 4 options");
@@ -265,4 +268,40 @@ function runQuizTests() {
     TestRunner.assertTrue(oldTimeUsedZero || true, "Old question may have timeUsed=0 (backward compat)");
     TestRunner.assertTrue(oldAttempt.classId === undefined || true, "Old attempt may lack classId (backward compat)");
     TestRunner.assertTrue(oldAttempt.startedAt === undefined || true, "Old attempt may lack startedAt (backward compat)");
+
+    TestRunner.suite("Quiz System - Scenario Group Order");
+
+    function grpQ(id, gid, order) {
+        return { id: id, question: id, options: ["a", "b", "c", "d"], answer: "A", mode: "scenario", scenario_id: gid, scenario_order: order, scenario: "Passage " + gid };
+    }
+    function strQ(id) {
+        return { id: id, question: id, options: ["a", "b", "c", "d"], answer: "A", mode: "straight" };
+    }
+    var mixed = [strQ("p1"), grpQ("y2", "GY", 2), strQ("p2"), grpQ("x1", "GX", 1), grpQ("y1", "GY", 1), strQ("p3"), grpQ("x2", "GX", 2), grpQ("y3", "GY", 3)];
+    var mixedIdsBefore = mixed.map(function(q) { return q.id; }).join(",");
+    QuizEngine.startQuiz(mixed, "practice", "Computer Science", 1, "");
+    var orderedQs = QuizEngine.getQuizQuestions();
+    TestRunner.assertEqual(orderedQs.length, mixed.length, "Grouping preserves question count");
+    TestRunner.assertEqual(mixed.map(function(q) { return q.id; }).join(","), mixedIdsBefore, "Grouping does not mutate source list");
+
+    var firstScenarioIdx = -1;
+    var straightAfterScenario = 0;
+    for (var i = 0; i < orderedQs.length; i++) {
+        var isScen = ExamEngine.normFormat(orderedQs[i]) === "scenario";
+        if (isScen && firstScenarioIdx === -1) firstScenarioIdx = i;
+        if (!isScen && firstScenarioIdx !== -1) straightAfterScenario++;
+    }
+    TestRunner.assertTrue(firstScenarioIdx !== -1, "Scenario questions present in fixture");
+    TestRunner.assertEqual(straightAfterScenario, 0, "All straight questions come before scenario questions");
+    TestRunner.assertEqual(firstScenarioIdx, 3, "3 straight questions lead the quiz");
+
+    var posById = {};
+    for (var i = 0; i < orderedQs.length; i++) posById[orderedQs[i].id] = i;
+    TestRunner.assertEqual(posById.x2 - posById.x1, 1, "Group GX members are adjacent");
+    TestRunner.assertTrue(posById.y3 > posById.y2 && posById.y2 > posById.y1, "Group GY members stay in one run");
+    TestRunner.assertEqual(posById.y3 - posById.y1, 2, "Group GY members are adjacent");
+    TestRunner.assertTrue(posById.x1 > posById.p3, "Scenario group GX starts after straight questions");
+
+    var again = ExamEngine.orderScenarioGroups(orderedQs);
+    TestRunner.assertEqual(again.map(function(q) { return q.id; }).join(","), orderedQs.map(function(q) { return q.id; }).join(","), "Ordering is idempotent");
 }

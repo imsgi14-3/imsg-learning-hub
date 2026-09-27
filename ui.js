@@ -424,7 +424,7 @@ var UI = (function() {
         }
         if (filtered.length === 0) { alert("No questions available."); return; }
         var count = Math.min(15, filtered.length);
-        var selected = shuffleArray(filtered).slice(0, count);
+        var selected = ExamEngine.selectBalanced(filtered, count);
         startQuizUI(selected, 20, "practice", subject, chapterNum);
     }
 
@@ -458,29 +458,8 @@ var UI = (function() {
         startQuizUI(selected, time, mode, subject, chapterNum);
     }
 
-    function balancedSelect(pool, count) {
-        var straight = [];
-        var scenario = [];
-        for (var i = 0; i < pool.length; i++) {
-            if (pool[i].mode === "scenario") scenario.push(pool[i]);
-            else straight.push(pool[i]);
-        }
-        straight = shuffleArray(straight);
-        scenario = shuffleArray(scenario);
-        var straightCount = Math.round(count * 0.6667);
-        var scenarioCount = count - straightCount;
-        var result = [];
-        for (var i = 0; i < straightCount && i < straight.length; i++) result.push(straight[i]);
-        for (var i = 0; i < scenarioCount && i < scenario.length; i++) result.push(scenario[i]);
-        var remaining = count - result.length;
-        if (remaining > 0) {
-            var used = {};
-            for (var i = 0; i < result.length; i++) used[result[i].id] = true;
-            for (var i = 0; i < pool.length && remaining > 0; i++) {
-                if (!used[pool[i].id]) { result.push(pool[i]); remaining--; }
-            }
-        }
-        return shuffleArray(result);
+    function balancedSelect(pool, count, opts) {
+        return ExamEngine.selectBalanced(pool, count, opts);
     }
 
     function getWeakQuestions() {
@@ -597,7 +576,7 @@ var UI = (function() {
             if (f === "all" || questions[i].subject === f) filtered.push(questions[i]);
         }
         if (filtered.length < 5) { alert("Not enough questions. Need at least 5."); return; }
-        var selected = shuffleArray(filtered).slice(0, Math.min(10, filtered.length));
+        var selected = ExamEngine.selectBalanced(filtered, Math.min(10, filtered.length), { evenKey: "chapter" });
         startQuizUI(selected, 15, "quick", f, "all");
     }
 
@@ -609,20 +588,20 @@ var UI = (function() {
             if (questions[i].subject === subject) filtered.push(questions[i]);
         }
         if (filtered.length < 10) { alert("Not enough questions for this subject. Need at least 10."); return; }
-        var selected = balancedSelect(filtered, Math.min(30, filtered.length));
+        var selected = balancedSelect(filtered, Math.min(30, filtered.length), { evenKey: "chapter" });
         startQuizUI(selected, 40, "chapter", subject, "all");
     }
 
     function launchFullBookTest() {
         if (questions.length < 20) { alert("Not enough questions. Need at least 20."); return; }
-        var selected = balancedSelect(questions, Math.min(50, questions.length));
+        var selected = balancedSelect(questions, Math.min(50, questions.length), { evenKey: "chapter" });
         startQuizUI(selected, 60, "fullbook", "all", "all");
     }
 
     function launchWeakPractice() {
         var weak = getWeakQuestions();
         if (weak.length === 0) { alert("No weak areas found. Complete some quizzes first!"); return; }
-        var selected = shuffleArray(weak).slice(0, Math.min(10, weak.length));
+        var selected = ExamEngine.selectBalanced(weak, Math.min(10, weak.length));
         startQuizUI(selected, 15, "weak", "all", "all");
     }
 
@@ -632,32 +611,8 @@ var UI = (function() {
             if (questions[i].subject === subject && questions[i].chapter == chapterNum) filtered.push(questions[i]);
         }
         if (filtered.length === 0) { alert("No questions available for this chapter."); return; }
-        var byTopic = {};
-        for (var i = 0; i < filtered.length; i++) {
-            var t = filtered[i].topic || "General";
-            if (!byTopic[t]) byTopic[t] = [];
-            byTopic[t].push(filtered[i]);
-        }
-        var topicKeys = Object.keys(byTopic);
         var count = Math.min(20, filtered.length);
-        var selected = [];
-        var perTopic = Math.max(1, Math.floor(count / topicKeys.length));
-        for (var i = 0; i < topicKeys.length && selected.length < count; i++) {
-            var pool = shuffleArray(byTopic[topicKeys[i]]);
-            var take = Math.min(perTopic, pool.length, count - selected.length);
-            for (var j = 0; j < take; j++) selected.push(pool[j]);
-        }
-        if (selected.length < count) {
-            var remaining = [];
-            var used = {};
-            for (var i = 0; i < selected.length; i++) used[selected[i].id] = true;
-            for (var i = 0; i < filtered.length; i++) {
-                if (!used[filtered[i].id]) remaining.push(filtered[i]);
-            }
-            remaining = shuffleArray(remaining);
-            while (selected.length < count && remaining.length > 0) selected.push(remaining.shift());
-        }
-        selected = shuffleArray(selected);
+        var selected = ExamEngine.selectBalanced(filtered, count, { evenKey: "topic" });
         startQuizUI(selected, 30, "random", subject, chapterNum);
     }
 
@@ -682,8 +637,8 @@ var UI = (function() {
             qs = getQuestionsByTopic(subject, chapter, topic);
         }
         if (qs.length === 0) { alert("No questions available"); return; }
-        qs = shuffleArray(qs);
-        if (count && qs.length > count) qs = qs.slice(0, count);
+        if (count && qs.length > count) qs = ExamEngine.selectBalanced(qs, count);
+        else qs = shuffleArray(qs);
         startQuizUI(qs, 20, "practice", subject, chapter);
     }
 
@@ -718,7 +673,7 @@ var UI = (function() {
         if (missing > 0) console.warn("Assignment " + a.title + ": " + missing + " questions not found in question bank.");
         activeQuizQuestions = shuffleArray(activeQuizQuestions);
         if (activeQuizQuestions.length === 0) { alert("Assignment questions not found."); return; }
-        startQuizUI(activeQuizQuestions, 60, "assignment", a.subject, "all", aid);
+        startQuizUI(activeQuizQuestions, a.timeLimit || 60, "assignment", a.subject, "all", aid);
     }
 
     function showTeacherTab(tab) {
@@ -1314,7 +1269,12 @@ var UI = (function() {
         if (panel) panel.style.display = "none";
     }
 
-    function showCreateAssignmentModal() {
+    var ebGenerated = [];
+    var ebPresetQuestions = null;
+    var ebPresetTime = 60;
+
+    function showCreateAssignmentModal(keepPreset) {
+        if (!keepPreset) { ebPresetQuestions = null; ebPresetTime = 60; }
         $("assignmentForm").reset();
         $("amAssignmentId").value = "";
         $("amModalTitle").textContent = "Create Assignment";
@@ -1325,6 +1285,10 @@ var UI = (function() {
         $("amPreviewList").innerHTML = "";
         $("amAvailableCount").textContent = "0";
         $("amDiffMsg").textContent = "";
+        var fromExam = keepPreset && ebPresetQuestions && ebPresetQuestions.length > 0;
+        $("amChapter").required = !fromExam;
+        $("amQuestionCount").disabled = !!fromExam;
+        if (fromExam) $("amQuestionCount").value = ebPresetQuestions.length;
         var user = Auth.getUser();
         var cs = (user && user.classSubjects) ? user.classSubjects : {};
         var myClassIds = (user && user.classes) ? user.classes : [];
@@ -1339,6 +1303,11 @@ var UI = (function() {
         }
         updateAssignmentSubjects();
         updateAssignmentTopics();
+        if (fromExam) {
+            $("amAvailableCount").textContent = ebPresetQuestions.length;
+            $("amDiffMsg").textContent = "Balanced ratios were set by the Exam Builder.";
+            $("amDiffMsg").style.color = "";
+        }
         $("assignmentModal").classList.add("active");
         $("modalOverlay").classList.add("active");
     }
@@ -1432,47 +1401,37 @@ var UI = (function() {
         var mode = "straight";
         var radios = document.querySelectorAll('input[name="amMode"]');
         for (var i = 0; i < radios.length; i++) { if (radios[i].checked) mode = radios[i].value; }
-        var easyQs = [], medQs = [], hardQs = [];
-        for (var i = 0; i < available.length; i++) {
-            var d = available[i].difficulty;
-            if (d === "easy") easyQs.push(available[i]);
-            else if (d === "medium" || d === "avg") medQs.push(available[i]);
-            else hardQs.push(available[i]);
-        }
-        easyQs = shuffleArray(easyQs);
-        medQs = shuffleArray(medQs);
-        hardQs = shuffleArray(hardQs);
-        var easyCount = Math.round(total * easyPct / 100);
-        var medCount = Math.round(total * medPct / 100);
-        var hardCount = total - easyCount - medCount;
-        var selected = [];
-        selected = selected.concat(easyQs.slice(0, easyCount));
-        selected = selected.concat(medQs.slice(0, medCount));
-        selected = selected.concat(hardQs.slice(0, hardCount));
+        var fmtTargets = null;
         if (mode === "straight") {
-            selected = selected.filter(function(q) { return q.mode === "straight"; });
+            available = available.filter(function(q) { return ExamEngine.normFormat(q) === "straight"; });
         } else if (mode === "scenario") {
-            selected = selected.filter(function(q) { return q.mode === "scenario"; });
+            available = available.filter(function(q) { return ExamEngine.normFormat(q) === "scenario"; });
+        } else {
+            fmtTargets = { straight: 70, scenario: 30 };
         }
-        if (selected.length < total) {
-            var remaining = [];
-            var selectedIds = {};
-            for (var i = 0; i < selected.length; i++) selectedIds[selected[i].id] = true;
-            for (var i = 0; i < available.length; i++) {
-                if (selectedIds[available[i].id]) continue;
-                if (mode === "straight" && available[i].mode !== "straight") continue;
-                if (mode === "scenario" && available[i].mode !== "scenario") continue;
-                remaining.push(available[i]);
-            }
-            remaining = shuffleArray(remaining);
-            selected = selected.concat(remaining.slice(0, total - selected.length));
-        }
-        selected = shuffleArray(selected);
-        return selected.slice(0, total);
+        var diffTargets = pctTotal > 0 ? { easy: easyPct, medium: medPct, hard: hardPct } : ExamEngine.DEFAULT_TARGETS.difficulty;
+        var opts = {
+            targets: {
+                difficulty: diffTargets,
+                cognitive: ExamEngine.DEFAULT_TARGETS.cognitive,
+                format: fmtTargets
+            },
+            evenKey: "topic"
+        };
+        return ExamEngine.selectBalanced(available, total, opts);
     }
 
     function previewAssignmentQuestions() {
-        var selected = autoSelectAssignmentQuestions();
+        var selected = [];
+        if (ebPresetQuestions && ebPresetQuestions.length > 0) {
+            for (var p = 0; p < ebPresetQuestions.length; p++) {
+                for (var pj = 0; pj < questions.length; pj++) {
+                    if (questions[pj].id === ebPresetQuestions[p]) { selected.push(questions[pj]); break; }
+                }
+            }
+        } else {
+            selected = autoSelectAssignmentQuestions();
+        }
         var c = $("amPreviewList");
         if (selected.length === 0) { c.innerHTML = "<p>No questions match the criteria.</p>"; return; }
         var h = '<div style="font-size:12px;">';
@@ -1500,7 +1459,9 @@ var UI = (function() {
         $("amClass").value = a.classId;
         $("amDueDate").value = a.dueDate;
         $("amQuestionCount").value = a.questions ? a.questions.length : 20;
-        $("amModalTitle").textContent = "Edit Assignment";
+        $("amQuestionCount").disabled = !!a.fromExam;
+        $("amChapter").required = !a.fromExam;
+        $("amModalTitle").textContent = a.fromExam ? "Edit Exam Assignment" : "Edit Assignment";
         if (a.chapter) $("amChapter").value = a.chapter;
         if (a.topic) $("amTopic").value = a.topic;
         if (a.difficulty) {
@@ -1542,17 +1503,195 @@ var UI = (function() {
     function saveAssignment(e) {
         e.preventDefault();
         var id = $("amAssignmentId").value;
-        var selected = autoSelectAssignmentQuestions();
+        var existing = null;
+        if (id) { for (var i = 0; i < assignments.length; i++) { if (assignments[i].id === id) { existing = assignments[i]; break; } } }
+        function resolveByIds(ids) {
+            var out = [];
+            for (var i = 0; i < ids.length; i++) {
+                for (var j = 0; j < questions.length; j++) {
+                    if (questions[j].id === ids[i]) { out.push(questions[j]); break; }
+                }
+            }
+            return out;
+        }
+        var selected = [];
+        var fromExam = false;
+        if (ebPresetQuestions && ebPresetQuestions.length > 0) {
+            selected = resolveByIds(ebPresetQuestions);
+            fromExam = true;
+        } else if (existing && existing.fromExam && existing.questions && existing.questions.length > 0) {
+            selected = resolveByIds(existing.questions);
+            fromExam = true;
+        }
+        if (selected.length === 0) { selected = autoSelectAssignmentQuestions(); fromExam = false; }
         if (selected.length === 0) { alert("No questions match the selected criteria."); return; }
         var sel = [];
         for (var i = 0; i < selected.length; i++) sel.push(selected[i].id);
         var mode = "straight";
         var radios = document.querySelectorAll('input[name="amMode"]');
         for (var i = 0; i < radios.length; i++) { if (radios[i].checked) mode = radios[i].value; }
-        var d = { id: id || "ASSIGN-" + Date.now(), title: $("amTitleInput").value, subject: $("amSubject").value, classId: $("amClass").value, dueDate: $("amDueDate").value, questions: sel, chapter: $("amChapter").value || null, topic: $("amTopic").value || null, count: sel.length, difficulty: { easy: parseInt($("amDiffEasy").value) || 0, medium: parseInt($("amDiffMedium").value) || 0, hard: parseInt($("amDiffHard").value) || 0 }, mode: mode, createdBy: Auth.getUser() ? Auth.getUser().id : "unknown", createdAt: new Date().toISOString() };
+        var timeLimit = 60;
+        if (fromExam && ebPresetQuestions && ebPresetQuestions.length > 0) timeLimit = ebPresetTime;
+        else if (existing && existing.timeLimit) timeLimit = existing.timeLimit;
+        var d = { id: id || "ASSIGN-" + Date.now(), title: $("amTitleInput").value, subject: $("amSubject").value, classId: $("amClass").value, dueDate: $("amDueDate").value, questions: sel, chapter: $("amChapter").value || null, topic: $("amTopic").value || null, count: sel.length, difficulty: { easy: parseInt($("amDiffEasy").value) || 0, medium: parseInt($("amDiffMedium").value) || 0, hard: parseInt($("amDiffHard").value) || 0 }, mode: mode, timeLimit: timeLimit, createdBy: Auth.getUser() ? Auth.getUser().id : "unknown", createdAt: new Date().toISOString() };
+        if (fromExam) d.fromExam = true;
         if (id) { for (var i = 0; i < assignments.length; i++) { if (assignments[i].id === id) { assignments[i] = d; break; } } }
         else assignments.push(d);
+        ebPresetQuestions = null;
+        ebPresetTime = 60;
         saveAll(); pushAssignmentToFirestore(d); closeModal(); renderAssignments();
+    }
+
+    function ebSetStatus(msg, ok) {
+        var el = $("ebStatus");
+        if (!el) return;
+        el.textContent = msg;
+        el.style.color = ok ? "var(--success)" : "var(--error)";
+    }
+
+    function showExamBuilder() {
+        var box = $("ebChapters");
+        if (box) {
+            var chapters = (subjectsData["Computer Science"] && subjectsData["Computer Science"].chapters) || [];
+            var h = "";
+            for (var i = 0; i < chapters.length; i++) {
+                var num = chapters[i].num;
+                var count = 0;
+                for (var j = 0; j < questions.length; j++) {
+                    if (String(questions[j].chapter) === String(num)) count++;
+                }
+                h += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-weight:normal;font-size:13px;">';
+                h += '<input type="checkbox" id="ebCh_' + num + '"' + (count > 0 ? "" : " disabled") + '>';
+                h += '<span style="flex:1;">Ch ' + num + ' &mdash; ' + chapters[i].title + '</span>';
+                h += '<span style="color:var(--text-muted);font-size:11px;">' + count + ' Qs</span>';
+                h += '<span style="color:var(--text-muted);font-size:11px;">ToS %</span>';
+                h += '<input type="number" id="ebTos_' + num + '" value="' + ExamEngine.chapterToSPct(num) + '" min="0" max="100" style="width:56px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">';
+                h += '</label>';
+            }
+            box.innerHTML = h;
+        }
+        ebGenerated = [];
+        renderEbReview();
+        ebSetStatus("Select chapters and ratios, then Check Feasibility.", true);
+        $("examBuilderModal").classList.add("active");
+        $("modalOverlay").classList.add("active");
+    }
+
+    function ebReadBlueprint() {
+        var chapters = (subjectsData["Computer Science"] && subjectsData["Computer Science"].chapters) || [];
+        var chSel = [];
+        var pcts = [];
+        for (var i = 0; i < chapters.length; i++) {
+            var cb = $("ebCh_" + chapters[i].num);
+            if (cb && cb.checked) {
+                chSel.push(chapters[i].num);
+                pcts.push(parseInt($("ebTos_" + chapters[i].num).value, 10) || 0);
+            }
+        }
+        var norm = ExamEngine.normalizeToSAlloc(pcts);
+        var bpCh = [];
+        for (var j = 0; j < chSel.length; j++) bpCh.push({ chapter: chSel[j], pct: norm[j] });
+        return {
+            total: parseInt($("ebTotal").value, 10) || 0,
+            timeLimit: parseInt($("ebTime").value, 10) || 60,
+            chapters: bpCh,
+            cognitive: { k: parseInt($("ebK").value, 10) || 0, u: parseInt($("ebU").value, 10) || 0, a: parseInt($("ebA").value, 10) || 0 },
+            difficulty: { easy: parseInt($("ebEasy").value, 10) || 0, medium: parseInt($("ebMedium").value, 10) || 0, hard: parseInt($("ebHard").value, 10) || 0 },
+            format: { straight: parseInt($("ebStraight").value, 10) || 0, scenario: parseInt($("ebScenario").value, 10) || 0 }
+        };
+    }
+
+    function ebPool() {
+        var bp = ebReadBlueprint();
+        var inCh = {};
+        for (var i = 0; i < bp.chapters.length; i++) inCh[String(bp.chapters[i].chapter)] = true;
+        var pool = [];
+        for (var j = 0; j < questions.length; j++) {
+            if (inCh[String(questions[j].chapter)]) pool.push(questions[j]);
+        }
+        return pool;
+    }
+
+    function ebCheck() {
+        var bp = ebReadBlueprint();
+        var errs = ExamEngine.validateBlueprint(bp);
+        if (errs.length) { ebSetStatus(errs.join(" "), false); return false; }
+        var pool = ebPool();
+        var shortages = ExamEngine.checkFeasibility(bp, pool);
+        if (shortages.length) { ebSetStatus("Not feasible (pool " + pool.length + "): " + shortages.join(" | "), false); return false; }
+        ebSetStatus("Feasible — pool of " + pool.length + " questions can fill every ratio for " + bp.total + " questions.", true);
+        return true;
+    }
+
+    function ebGenerate() {
+        var bp = ebReadBlueprint();
+        var errs = ExamEngine.validateBlueprint(bp);
+        if (errs.length) { ebSetStatus(errs.join(" "), false); return; }
+        var pool = ebPool();
+        var shortages = ExamEngine.checkFeasibility(bp, pool);
+        if (shortages.length) { ebSetStatus("Not feasible (pool " + pool.length + "): " + shortages.join(" | "), false); return; }
+        var plan = ExamEngine.generateExamPlan(bp, pool, 250);
+        if (!plan || plan.length === 0) { ebSetStatus("Could not generate a balanced paper. Adjust ratios or reduce total.", false); return; }
+        ebGenerated = plan;
+        ebPresetTime = bp.timeLimit;
+        ebSetStatus("Generated " + plan.length + " of " + pool.length + " pool questions. Review below, then create it as an assignment.", true);
+        renderEbReview();
+    }
+
+    function renderEbReview() {
+        var box = $("ebReview");
+        var createBtn = $("ebCreateBtn");
+        if (!box) return;
+        if (ebGenerated.length === 0) {
+            box.style.display = "none";
+            box.innerHTML = "";
+            if (createBtn) createBtn.style.display = "none";
+            return;
+        }
+        var h = '<label style="font-weight:normal;font-size:13px;">Generated Paper (' + ebGenerated.length + ' questions)</label>';
+        h += '<div style="max-height:320px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;">';
+        for (var i = 0; i < ebGenerated.length; i++) {
+            var q = ebGenerated[i];
+            var txt = (q.text || q.question || "").substring(0, 90);
+            var diffColor = q.difficulty === "easy" ? "#22c55e" : (q.difficulty === "medium" ? "#f59e0b" : "#ef4444");
+            h += '<div style="display:flex;gap:8px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--border);font-size:12px;">';
+            h += '<span style="width:24px;color:var(--text-muted);">' + (i + 1) + '.</span>';
+            h += '<span style="color:' + diffColor + ';font-weight:700;width:14px;" title="' + q.difficulty + '">' + String(q.difficulty || "?").charAt(0).toUpperCase() + '</span>';
+            h += '<span style="font-weight:600;width:78px;">' + q.id + '</span>';
+            h += '<span style="flex:1;color:var(--text-muted);">' + txt + '...</span>';
+            h += '<button type="button" onclick="ebMove(' + i + ',-1)" title="Move up" style="border:1px solid var(--border);background:#fff;border-radius:4px;cursor:pointer;padding:1px 7px;">&uarr;</button>';
+            h += '<button type="button" onclick="ebMove(' + i + ',1)" title="Move down" style="border:1px solid var(--border);background:#fff;border-radius:4px;cursor:pointer;padding:1px 7px;">&darr;</button>';
+            h += '<button type="button" onclick="ebDelete(' + i + ')" title="Remove" style="border:1px solid var(--border);background:#fff;border-radius:4px;cursor:pointer;padding:1px 7px;color:var(--error);">&times;</button>';
+            h += '</div>';
+        }
+        h += '</div>';
+        box.innerHTML = h;
+        box.style.display = "block";
+        if (createBtn) createBtn.style.display = "inline-block";
+    }
+
+    function ebMove(i, dir) {
+        var j = i + dir;
+        if (j < 0 || j >= ebGenerated.length) return;
+        var t = ebGenerated[i];
+        ebGenerated[i] = ebGenerated[j];
+        ebGenerated[j] = t;
+        renderEbReview();
+    }
+
+    function ebDelete(i) {
+        ebGenerated.splice(i, 1);
+        if (ebGenerated.length === 0) ebSetStatus("Paper is empty — generate again.", false);
+        renderEbReview();
+    }
+
+    function ebUseAsAssignment() {
+        if (ebGenerated.length === 0) { ebSetStatus("Generate a paper first.", false); return; }
+        var ids = [];
+        for (var i = 0; i < ebGenerated.length; i++) ids.push(ebGenerated[i].id);
+        ebPresetQuestions = ids;
+        closeModal();
+        showCreateAssignmentModal(true);
     }
 
 
@@ -4134,7 +4273,7 @@ var UI = (function() {
     }
 
     function closeModal() {
-        var ids = ["questionModal", "classModal", "assignmentModal", "excelModal", "teacherModal", "attendanceModal", "studentModal", "studentExcelModal", "exportCredentialsModal"];
+        var ids = ["questionModal", "classModal", "assignmentModal", "examBuilderModal", "excelModal", "teacherModal", "attendanceModal", "studentModal", "studentExcelModal", "exportCredentialsModal"];
         for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) el.classList.remove("active"); }
         var overlay = $("modalOverlay");
         if (overlay) overlay.classList.remove("active");
@@ -4294,6 +4433,12 @@ var UI = (function() {
         editAssignment: editAssignment,
         deleteAssignment: deleteAssignment,
         saveAssignment: saveAssignment,
+        showExamBuilder: showExamBuilder,
+        ebCheck: ebCheck,
+        ebGenerate: ebGenerate,
+        ebMove: ebMove,
+        ebDelete: ebDelete,
+        ebUseAsAssignment: ebUseAsAssignment,
         showAssignmentStatus: showAssignmentStatus,
         hideAssignmentStatus: hideAssignmentStatus,
         loadClassAnalytics: loadClassAnalytics,

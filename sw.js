@@ -1,15 +1,8 @@
-var CACHE_NAME = "imsg-hub-v1";
+var CACHE_NAME = "imsg-hub-v2";
 var STATIC_ASSETS = [
     "/",
     "/index.html",
-    "/styles.css",
-    "/script.js",
-    "/data.js",
-    "/db.js",
-    "/questions/cs9.json",
-    "/questions/phy9.json",
-    "/questions/bio9.json",
-    "/questions/maths9.json"
+    "/style.css"
 ];
 
 self.addEventListener("install", function(e) {
@@ -36,31 +29,27 @@ self.addEventListener("activate", function(e) {
 });
 
 self.addEventListener("fetch", function(e) {
+    if (e.request.method !== "GET") return;
     var url = new URL(e.request.url);
 
     if (url.pathname.indexOf("/__/firebase/") !== -1 || url.hostname.indexOf("googleapis.com") !== -1) {
-        e.respondWith(
-            fetch(e.request).catch(function() {
-                return caches.match(e.request);
-            })
-        );
         return;
     }
 
+    // Network-first: always try fresh content, cache only as offline fallback.
     e.respondWith(
-        caches.match(e.request).then(function(cached) {
-            var fetchPromise = fetch(e.request).then(function(networkResponse) {
-                if (networkResponse && networkResponse.status === 200) {
-                    var clone = networkResponse.clone();
-                    caches.open(CACHE_NAME).then(function(cache) {
-                        cache.put(e.request, clone);
-                    });
-                }
-                return networkResponse;
-            }).catch(function() {
-                return cached;
+        fetch(e.request).then(function(networkResponse) {
+            if (networkResponse && networkResponse.status === 200) {
+                var clone = networkResponse.clone();
+                caches.open(CACHE_NAME).then(function(cache) {
+                    cache.put(e.request, clone);
+                });
+            }
+            return networkResponse;
+        }).catch(function() {
+            return caches.match(e.request).then(function(cached) {
+                return cached || new Response("", { status: 504 });
             });
-            return cached || fetchPromise;
         })
     );
 });
