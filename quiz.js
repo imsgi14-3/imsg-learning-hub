@@ -27,8 +27,34 @@ var QuizEngine = (function() {
     function getTimer() { return timer; }
     function getAssignmentId() { return assignmentId; }
 
+    function prepareForAttempt(list) {
+        var prepared = [];
+        if (!list || !list.length) return prepared;
+        for (var i = 0; i < list.length; i++) {
+            var q = list[i];
+            if (!q || !q.options || q.options.length < 2 || q.options.length > 4) { prepared.push(q); continue; }
+            var copy = {};
+            for (var k in q) { if (Object.prototype.hasOwnProperty.call(q, k)) copy[k] = q[k]; }
+            var order = [];
+            for (var j = 0; j < q.options.length; j++) order.push(j);
+            for (var j = order.length - 1; j > 0; j--) {
+                var r = Math.floor(Math.random() * (j + 1));
+                var tmp = order[j]; order[j] = order[r]; order[r] = tmp;
+            }
+            var newOptions = [];
+            for (var j = 0; j < order.length; j++) newOptions.push(q.options[order[j]]);
+            copy.options = newOptions;
+            var letterIdx = "ABCD".indexOf(String(q.answer === undefined || q.answer === null ? "" : q.answer).trim().toUpperCase());
+            if (letterIdx >= 0 && letterIdx < q.options.length) {
+                copy.answer = "ABCD".charAt(order.indexOf(letterIdx));
+            }
+            prepared.push(copy);
+        }
+        return prepared;
+    }
+
     function startQuiz(questions, mode, subject, chapter, aId) {
-        quizQuestions = questions;
+        quizQuestions = prepareForAttempt(questions);
         quizMode = mode || "practice";
         quizSubject = subject || "";
         quizChapter = chapter || "";
@@ -140,7 +166,9 @@ var QuizEngine = (function() {
             if (answered) {
                 btns[i].onclick = null;
                 var optText = opts[i];
-                if (optText === q.answer) btns[i].classList.add("correct");
+                var ansIdx = "ABCD".indexOf(String(q.answer).toUpperCase());
+                var correctText = (ansIdx >= 0 && opts[ansIdx]) ? opts[ansIdx] : q.answer;
+                if (optText === correctText) btns[i].classList.add("correct");
                 else if (userAnswers[currentQuestion] === optText) btns[i].classList.add("incorrect");
             } else {
                 btns[i].onclick = (function(txt) { return function() { checkAnswer(txt); }; })(opts[i]);
@@ -398,6 +426,7 @@ var QuizEngine = (function() {
         getTimer: getTimer,
         getAssignmentId: getAssignmentId,
         startQuiz: startQuiz,
+        prepareForAttempt: prepareForAttempt,
         setTimerMinutes: setTimerMinutes,
         startTimer: startTimer,
         stopTimer: stopTimer,

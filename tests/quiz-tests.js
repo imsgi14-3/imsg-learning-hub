@@ -32,6 +32,44 @@ function runQuizTests() {
     }
     TestRunner.assertFalse(sameOrder, "Shuffled array is different order (statistical)");
 
+    TestRunner.suite("Quiz System - Option Randomization");
+
+    var bankQ = questions[0];
+    var origOpts = bankQ.options.slice();
+    var origAnswer = bankQ.answer;
+    var prep = QuizEngine.prepareForAttempt([bankQ]);
+    TestRunner.assertEqual(prep.length, 1, "Prepared list preserves question count");
+    TestRunner.assertEqual(bankQ.options.join("|"), origOpts.join("|"), "Source question options not mutated");
+    TestRunner.assertEqual(bankQ.answer, origAnswer, "Source question answer not mutated");
+
+    var p0 = prep[0];
+    TestRunner.assertEqual(p0.options.slice().sort().join("|"), origOpts.slice().sort().join("|"), "Option texts preserved after shuffle");
+    var origIdx = "ABCD".indexOf(origAnswer);
+    var newIdx = "ABCD".indexOf(p0.answer);
+    TestRunner.assertEqual(p0.options[newIdx], origOpts[origIdx], "Correct answer text invariant after shuffle");
+
+    var anyDifferent = false;
+    for (var s = 0; s < 30 && !anyDifferent; s++) {
+        var p2 = QuizEngine.prepareForAttempt([bankQ])[0];
+        if (p2.options.join("|") !== origOpts.join("|")) anyDifferent = true;
+    }
+    TestRunner.assertTrue(anyDifferent, "Option order differs across attempts (statistical)");
+
+    var srcQs = questions.slice(0, 3);
+    var srcOpts0 = srcQs[0].options.join("|");
+    QuizEngine.startQuiz(srcQs, "practice", "Computer Science", 1, "");
+    var preparedQs = QuizEngine.getQuizQuestions();
+    TestRunner.assertEqual(preparedQs.length, 3, "startQuiz prepares same question count");
+    TestRunner.assertEqual(srcQs[0].options.join("|"), srcOpts0, "startQuiz does not mutate source questions");
+
+    var textAnswerQ = { id: "t1", question: "x", options: ["yes", "no", "maybe", "never"], answer: "yes" };
+    var prepText = QuizEngine.prepareForAttempt([textAnswerQ])[0];
+    TestRunner.assertEqual(prepText.answer, "yes", "Text-based answers unchanged by shuffle");
+
+    var oneOptQ = { id: "t2", question: "x", options: ["only"], answer: "A" };
+    var prepOne = QuizEngine.prepareForAttempt([oneOptQ])[0];
+    TestRunner.assertEqual(prepOne.options[0], "only", "Single-option question left as-is");
+
     TestRunner.suite("Quiz System - Topic Filtering");
 
     var topics = {};

@@ -602,6 +602,107 @@ function getAttemptsByStudent(studentId) {
     return result;
 }
 
+function isAssignmentClosed(assignment, now) {
+    if (!assignment || !assignment.dueDate) return false;
+    var dueDate = String(assignment.dueDate);
+    var parts = dueDate.split("-");
+    var due;
+    if (parts.length === 3) {
+        due = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10), 23, 59, 59, 999);
+    } else {
+        due = new Date(dueDate);
+    }
+    if (isNaN(due.getTime())) return false;
+    return due.getTime() < (typeof now === "number" ? now : Date.now());
+}
+
+function getAssignmentAttempt(assignmentId, studentId) {
+    if (!assignmentId || !studentId) return null;
+    for (var i = 0; i < allAttempts.length; i++) {
+        var a = allAttempts[i];
+        if (a && a.assignmentId === assignmentId && a.studentId === studentId) return a;
+    }
+    return null;
+}
+
+function getAssignmentState(assignment, studentId) {
+    if (!assignment) return "available";
+    if (studentId && getAssignmentAttempt(assignment.id, studentId)) return "submitted";
+    if (isAssignmentClosed(assignment)) return "closed";
+    return "available";
+}
+
+function formatChapterLabel(chapterNum) {
+    var cfg = null;
+    if (typeof QuestionLoader !== "undefined" && QuestionLoader && typeof QuestionLoader.getChapterConfig === "function") {
+        cfg = QuestionLoader.getChapterConfig()[chapterNum];
+    }
+    if (cfg && cfg.chapterTitle) return "Chapter " + chapterNum + ": " + cfg.chapterTitle;
+    return "Chapter " + chapterNum;
+}
+
+function getAttemptChapterLabel(attempt, topicKeys) {
+    if (attempt.questions && typeof questions !== "undefined" && questions && questions.length) {
+        for (var i = 0; i < attempt.questions.length; i++) {
+            var qid = attempt.questions[i] && attempt.questions[i].questionId;
+            if (!qid) continue;
+            for (var j = 0; j < questions.length; j++) {
+                if (questions[j] && questions[j].id === qid && questions[j].chapter) {
+                    return formatChapterLabel(questions[j].chapter);
+                }
+            }
+        }
+    }
+    for (var t = 0; t < topicKeys.length; t++) {
+        var m = /^\s*(\d+)\./.exec(String(topicKeys[t]));
+        if (m) return formatChapterLabel(parseInt(m[1], 10));
+    }
+    if (attempt.chapter && attempt.chapter !== "all") {
+        var chNum = parseInt(attempt.chapter, 10);
+        if (!isNaN(chNum)) return formatChapterLabel(chNum);
+    }
+    return null;
+}
+
+function getAttemptTypeLabel(attempt) {
+    if (!attempt) return "";
+    var mode = attempt.mode || "practice";
+    mode = String(mode);
+    var label;
+    if (typeof Analytics !== "undefined" && Analytics.MODE_LABELS && Analytics.MODE_LABELS[mode]) {
+        label = Analytics.MODE_LABELS[mode];
+    } else {
+        label = mode.charAt(0).toUpperCase() + mode.slice(1);
+    }
+    if (mode === "assignment") {
+        if (attempt.assignmentId) {
+            for (var i = 0; i < assignments.length; i++) {
+                if (assignments[i].id === attempt.assignmentId) return assignments[i].title || label;
+            }
+        }
+        return label;
+    }
+    var topics = {};
+    if (attempt.topicPerformance && typeof attempt.topicPerformance === "object") {
+        for (var t in attempt.topicPerformance) {
+            if (t && t !== "General") topics[t] = true;
+        }
+    }
+    if (Object.keys(topics).length === 0 && attempt.questions && attempt.questions.length) {
+        for (var q = 0; q < attempt.questions.length; q++) {
+            var qt = attempt.questions[q] && attempt.questions[q].topic;
+            if (qt && qt !== "General") topics[qt] = true;
+        }
+    }
+    var topicKeys = Object.keys(topics);
+    if (topicKeys.length === 1) return topicKeys[0];
+    if (topicKeys.length > 1) {
+        var chapterLabel = getAttemptChapterLabel(attempt, topicKeys);
+        if (chapterLabel) return chapterLabel;
+    }
+    return label;
+}
+
 function getAttemptsByClass(classId) {
     var result = [];
     for (var i = 0; i < allAttempts.length; i++) {

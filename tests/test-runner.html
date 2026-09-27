@@ -47,6 +47,7 @@
         <button class="btn btn-primary" onclick="runSingle('questions')">Questions</button>
         <button class="btn btn-primary" onclick="runSingle('analytics')">Analytics</button>
         <button class="btn btn-primary" onclick="runSingle('recommendations')">Recommendations</button>
+        <button class="btn btn-primary" onclick="runSingle('assignments')">Assignments</button>
         <button class="btn btn-primary" onclick="runSingle('persistence')">Persistence</button>
     </div>
 
@@ -75,6 +76,7 @@
     <script src="question-tests.js"></script>
     <script src="analytics-tests.js"></script>
     <script src="recommendations-tests.js"></script>
+    <script src="assignment-tests.js"></script>
     <script src="data-tests.js"></script>
     <script>
         var appReady = false;
@@ -126,6 +128,7 @@
                 try { runAnalyticsTests(); } catch(e) { TestRunner.suite("Analytics"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runTeacherAnalyticsFlowTests(); } catch(e) { TestRunner.suite("Teacher Analytics Flow"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runRecommendationTests(); } catch(e) { TestRunner.suite("Recommendations"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                try { runAssignmentTests(); } catch(e) { TestRunner.suite("Assignments"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runPersistenceTests(); } catch(e) { TestRunner.suite("Persistence"); TestRunner.assert(false, "CRASHED: " + e.message); }
             });
             showResults(result);
@@ -138,6 +141,7 @@
                 quiz: runQuizTests, questions: runQuestionTests, analytics: runAnalyticsTests,
                 teacheranalyticsflow: runTeacherAnalyticsFlowTests,
                 recommendations: runRecommendationTests,
+                assignments: runAssignmentTests,
                 persistence: runPersistenceTests
             };
             var result = TestRunner.run(function() {

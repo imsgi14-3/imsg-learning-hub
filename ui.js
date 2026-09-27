@@ -46,7 +46,7 @@ var UI = (function() {
         for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) el.style.display = "none"; }
         activateTab("#studentDashboard", map[tab]);
         if (tab === "practice") { $("studentPracticeTab").style.display = "block"; renderSubjects(); showSubjectList(); }
-        else if (tab === "assignments") { $("studentAssignmentsTab").style.display = "block"; refreshAssignmentsFromFirestore(function() { renderStudentAssignments(); }); }
+        else if (tab === "assignments") { $("studentAssignmentsTab").style.display = "block"; refreshAssignmentsFromFirestore(function() { refreshAttemptsFromFirestore(function() { renderStudentAssignments(); }); }); }
         else if (tab === "results") { $("studentResultsTab").style.display = "block"; renderStudentResults(); }
         else if (tab === "progress") { $("studentProgressTab").style.display = "block"; renderStudentProgress(); }
     }
@@ -63,9 +63,10 @@ var UI = (function() {
     function renderStudentAssignments() {
         var c = $("studentAssignmentsList");
         if (!c) return;
+        var user = Auth.getUser();
         var sc = null;
         for (var i = 0; i < classes.length; i++) {
-            if (Auth.getUser().classId === classes[i].id) { sc = classes[i]; break; }
+            if (user && user.classId === classes[i].id) { sc = classes[i]; break; }
         }
         if (!sc) { c.innerHTML = "<p>No class assigned.</p>"; return; }
         var my = [];
@@ -73,10 +74,23 @@ var UI = (function() {
             if (assignments[i].classId === sc.id) my.push(assignments[i]);
         }
         if (my.length === 0) { c.innerHTML = "<p>No assignments yet.</p>"; return; }
+        var studentId = user ? user.id : null;
         var h = '<table><thead><tr><th>Title</th><th>Subject</th><th>Due Date</th><th>Questions</th><th>Action</th></tr></thead><tbody>';
         for (var i = 0; i < my.length; i++) {
-            var overdue = new Date(my[i].dueDate) < new Date();
-            h += '<tr><td>' + my[i].title + '</td><td>' + my[i].subject + '</td><td>' + my[i].dueDate + (overdue ? ' <span class="badge badge-hard">Overdue</span>' : '') + '</td><td>' + my[i].questions.length + '</td><td><button onclick="startAssignmentQuiz(\'' + my[i].id + '\')" class="action-btn">Start Quiz</button></td></tr>';
+            var a = my[i];
+            var state = getAssignmentState(a, studentId);
+            var overdue = isAssignmentClosed(a);
+            h += '<tr><td>' + a.title + '</td><td>' + a.subject + '</td><td>' + a.dueDate + (overdue ? ' <span class="badge badge-hard">Overdue</span>' : '') + '</td><td>' + a.questions.length + '</td>';
+            if (state === "submitted") {
+                var attempt = getAssignmentAttempt(a.id, studentId);
+                var score = attempt ? (' (' + attempt.score + '/' + attempt.total + ' &bull; ' + attempt.percentage + '%)') : '';
+                h += '<td><span class="badge badge-completed">&#10003; Submitted' + score + '</span></td>';
+            } else if (state === "closed") {
+                h += '<td><span class="badge badge-overdue">Due Date Passed</span></td>';
+            } else {
+                h += '<td><button onclick="startAssignmentQuiz(\'' + a.id + '\')" class="action-btn">Start Quiz</button></td>';
+            }
+            h += '</tr>';
         }
         c.innerHTML = h + '</tbody></table>';
     }
@@ -97,14 +111,8 @@ var UI = (function() {
                 var d = new Date(my[i].timestamp);
                 var ts = my[i].timeSpent ? Math.floor(my[i].timeSpent / 60) + ":" + (my[i].timeSpent % 60 < 10 ? "0" : "") + (my[i].timeSpent % 60) : "-";
                 var cls = my[i].percentage >= 70 ? "color:var(--success)" : my[i].percentage >= 50 ? "color:var(--accent)" : "color:var(--error)";
-                var modeLabel = "Practice";
-                if (my[i].mode === "assignment") modeLabel = "Assignment";
-                else if (my[i].mode === "random") modeLabel = "Random Quiz";
-                else if (my[i].mode === "quick") modeLabel = "Quick Practice";
-                else if (my[i].mode === "chapter") modeLabel = "Chapter Test";
-                else if (my[i].mode === "fullbook") modeLabel = "Full Book Test";
-                else if (my[i].mode === "weak") modeLabel = "Weak Areas";
-                var badge = modeLabel === "Assignment" ? ' <span class="badge badge-hard">Assignment</span>' : "";
+                var modeLabel = getAttemptTypeLabel(my[i]);
+                var badge = my[i].mode === "assignment" ? ' <span class="badge badge-hard">Assignment</span>' : "";
                 h += '<tr><td>' + d.toLocaleDateString() + '</td><td>' + my[i].subject + '</td><td>' + modeLabel + badge + '</td><td>' + my[i].score + '/' + my[i].total + '</td><td style="' + cls + ';font-weight:700;">' + my[i].percentage + '%</td><td>' + ts + '</td></tr>';
             }
             c.innerHTML = h + '</tbody></table>';
@@ -694,6 +702,10 @@ var UI = (function() {
         var a = null;
         for (var i = 0; i < assignments.length; i++) { if (assignments[i].id === aid) { a = assignments[i]; break; } }
         if (!a || a.questions.length === 0) { alert("This assignment has no questions."); return; }
+        var user = Auth.getUser();
+        var state = getAssignmentState(a, user ? user.id : null);
+        if (state === "submitted") { alert("You have already submitted this assignment. Only one attempt is allowed."); return; }
+        if (state === "closed") { alert("The due date for this assignment has passed. It can no longer be attempted."); return; }
         var activeQuizQuestions = [];
         var missing = 0;
         for (var i = 0; i < a.questions.length; i++) {
@@ -1805,7 +1817,7 @@ var UI = (function() {
             var a = sorted[i];
             var dateStr = a.timestamp ? String(a.timestamp).substring(0, 10) : 'Unknown';
             var pctColor = a.percentage >= 70 ? 'var(--success)' : a.percentage >= 50 ? 'var(--accent)' : 'var(--error)';
-            var modeLabel = MODE_LABELS[a.mode] || a.mode || "Practice";
+            var modeLabel = getAttemptTypeLabel(a);
             var modeColor = MODE_COLORS[a.mode] || "#6366f1";
             h += '<tr>';
             h += '<td>' + dateStr + '</td>';
@@ -3540,7 +3552,7 @@ var UI = (function() {
         }
         if (recentAttempts.length > 0) {
             h += '<div><h4 style="font-size:14px;margin-bottom:8px;">&#128197; Recent Attempts</h4>';
-            h += '<table class="history-table"><thead><tr><th>Date</th><th>Subject</th><th>Mode</th><th>Score</th><th>%</th><th>Time</th></tr></thead><tbody>';
+            h += '<table class="history-table"><thead><tr><th>Date</th><th>Subject</th><th>Type</th><th>Score</th><th>%</th><th>Time</th></tr></thead><tbody>';
             for (var i = 0; i < recentAttempts.length; i++) {
                 var a = recentAttempts[i];
                 var dateStr = "?";
@@ -3552,7 +3564,7 @@ var UI = (function() {
                 var mins = Math.floor((a.timeSpent || 0) / 60);
                 var secs = Math.floor((a.timeSpent || 0) % 60);
                 var color = a.percentage >= 80 ? 'var(--success)' : a.percentage >= 50 ? 'var(--accent)' : 'var(--error)';
-                h += '<tr><td>' + dateStr + '</td><td>' + (a.subject || "?") + '</td><td>' + (MODE_LABELS[a.mode] || a.mode || "?") + '</td><td>' + a.score + '/' + a.total + '</td><td style="color:' + color + ';font-weight:700;">' + a.percentage + '%</td><td>' + mins + 'm ' + secs + 's</td></tr>';
+                h += '<tr><td>' + dateStr + '</td><td>' + (a.subject || "?") + '</td><td>' + getAttemptTypeLabel(a) + '</td><td>' + a.score + '/' + a.total + '</td><td style="color:' + color + ';font-weight:700;">' + a.percentage + '%</td><td>' + mins + 'm ' + secs + 's</td></tr>';
             }
             h += '</tbody></table></div>';
         }
