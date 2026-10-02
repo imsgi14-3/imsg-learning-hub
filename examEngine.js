@@ -255,6 +255,17 @@ var ExamEngine = (function() {
         return null;
     }
 
+    // Shared entry point for assignment/exam selection: exact blueprint plan
+    // when feasible, closest-balance selection otherwise. Never throws.
+    function selectForBlueprint(bp, pool, retries) {
+        if (!bp || !pool || pool.length === 0 || !bp.total || bp.total <= 0) return [];
+        var plan = generateExamPlan(bp, pool, retries);
+        if (plan && plan.length > 0) return plan;
+        return selectBalanced(pool, bp.total, {
+            targets: { cognitive: bp.cognitive, difficulty: bp.difficulty, format: bp.format }
+        });
+    }
+
     // Paper/attempt order: straight questions first, then scenario questions
     // grouped contiguously by scenario_id, each group in question_order (1-4).
     function orderScenarioGroups(list) {
@@ -385,6 +396,7 @@ var ExamEngine = (function() {
         chapterToSPct: chapterToSPct,
         normalizeToSAlloc: normalizeToSAlloc,
         orderScenarioGroups: orderScenarioGroups,
+        selectForBlueprint: selectForBlueprint,
         selectBalanced: selectBalanced,
         validateBlueprint: validateBlueprint,
         targetCounts: targetCounts,

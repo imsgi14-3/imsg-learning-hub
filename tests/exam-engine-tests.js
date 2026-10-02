@@ -219,6 +219,67 @@ function runExamEngineTests() {
     };
     TestRunner.assertEqual(ExamEngine.validateBlueprint(ebBp).length, 0, "Builder default blueprint validates");
 
+    TestRunner.suite("Exam Engine - selectForBlueprint (assignment path)");
+
+    if (questions.length > 200) {
+        var asgPool = [];
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].chapter == 1) asgPool.push(questions[i]);
+        }
+        var asgBp = {
+            total: 15,
+            chapters: [{ chapter: 1, pct: 100 }],
+            cognitive: { k: 30, u: 50, a: 20 },
+            difficulty: { easy: 40, medium: 40, hard: 20 },
+            format: { straight: 67, scenario: 33 }
+        };
+        var asgSel = ExamEngine.selectForBlueprint(asgBp, asgPool, 150);
+        TestRunner.assertEqual(asgSel.length, 15, "Feasible blueprint returns exact count");
+        var asgSeen = {}, asgDupes = 0, asgWrongCh = 0;
+        for (var i = 0; i < asgSel.length; i++) {
+            if (asgSeen[asgSel[i].id]) asgDupes++;
+            asgSeen[asgSel[i].id] = true;
+            if (asgSel[i].chapter != 1) asgWrongCh++;
+        }
+        TestRunner.assertEqual(asgDupes, 0, "Selection has no duplicate questions");
+        TestRunner.assertEqual(asgWrongCh, 0, "Selection stays inside the assignment chapter");
+        var asgOrdered = ExamEngine.orderScenarioGroups(asgSel).map(function(q) { return q.id; }).join(",");
+        TestRunner.assertEqual(asgOrdered, asgSel.map(function(q) { return q.id; }).join(","), "Selection comes back straight-first and group-ordered");
+
+        var straightBp = {
+            total: 10,
+            chapters: [{ chapter: 1, pct: 100 }],
+            cognitive: { k: 30, u: 50, a: 20 },
+            difficulty: { easy: 40, medium: 40, hard: 20 },
+            format: { straight: 100, scenario: 0 }
+        };
+        var straightSel = ExamEngine.selectForBlueprint(straightBp, asgPool, 150);
+        var nonStraight = 0;
+        for (var i = 0; i < straightSel.length; i++) {
+            if (ExamEngine.normFormat(straightSel[i]) !== "straight") nonStraight++;
+        }
+        TestRunner.assertEqual(straightSel.length, 10, "Straight-only blueprint returns exact count");
+        TestRunner.assertEqual(nonStraight, 0, "Straight-only blueprint selects only straight questions");
+
+        var hugeAsg = {
+            total: 9999,
+            chapters: [{ chapter: 1, pct: 100 }],
+            cognitive: { k: 30, u: 50, a: 20 },
+            difficulty: { easy: 40, medium: 40, hard: 20 },
+            format: { straight: 67, scenario: 33 }
+        };
+        var hugeSel = ExamEngine.selectForBlueprint(hugeAsg, asgPool, 20);
+        TestRunner.assertEqual(hugeSel.length, asgPool.length, "Infeasible total falls back to the whole pool");
+        TestRunner.assertGreaterThan(hugeSel.length, 0, "Fallback selection is non-empty");
+
+        var zeroSel = ExamEngine.selectForBlueprint({ total: 0, chapters: [{ chapter: 1, pct: 100 }], cognitive: { k: 30, u: 50, a: 20 }, difficulty: { easy: 40, medium: 40, hard: 20 }, format: { straight: 67, scenario: 33 } }, asgPool);
+        TestRunner.assertEqual(zeroSel.length, 0, "Zero total returns empty selection");
+        var noPoolSel = ExamEngine.selectForBlueprint(asgBp, []);
+        TestRunner.assertEqual(noPoolSel.length, 0, "Empty pool returns empty selection");
+    } else {
+        TestRunner.assertTrue(false, "Question bank not loaded for selectForBlueprint tests");
+    }
+
     TestRunner.suite("Exam Engine - Scenario Group Ordering");
 
     function grpQ(id, gid, order) {

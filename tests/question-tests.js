@@ -75,6 +75,17 @@ function runQuestionTests() {
     TestRunner.assertEqual(cs1.num, 1, "First chapter is chapter 1");
     TestRunner.assertGreaterThan(cs1.topics.length, 5, "Chapter 1 has 6+ topics");
 
+    TestRunner.assertNotNull(subjectsData["Chemistry"], "Chemistry subject configured");
+    TestRunner.assertEqual(subjectsData["Chemistry"].chapters.length, 19, "Chemistry has 19 chapters");
+
+    var unknownSubject = 0, chemCount = 0;
+    for (var i = 0; i < questions.length; i++) {
+        if (!subjectsData[questions[i].subject]) unknownSubject++;
+        if (questions[i].subject === "Chemistry") chemCount++;
+    }
+    TestRunner.assertEqual(unknownSubject, 0, "Every loaded question maps to a configured subject");
+    TestRunner.assertGreaterThan(chemCount, 500, "Chemistry bank is loaded (500+ questions)");
+
     TestRunner.suite("Question Bank - QuestionLoader Module");
 
     TestRunner.assertType(QuestionLoader, "object", "QuestionLoader module exists");

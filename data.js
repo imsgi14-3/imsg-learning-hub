@@ -54,14 +54,27 @@ var subjectsData = {
     "Chemistry": {
         icon: "&#128300;",
         color: "#10b981",
-        description: "Elements, Reactions, Acids & Bases",
+        description: "Matter, Reactions, Acids & Organic Chemistry",
         chapters: [
-            { num: 1, title: "States of Matter", topics: ["Solids", "Liquids", "Gases", "Changes of State"] },
-            { num: 2, title: "Atomic Structure", topics: ["Atoms", "Elements", "Periodic Table"] },
-            { num: 3, title: "Chemical Bonding", topics: ["Ionic Bond", "Covalent Bond", "Metallic Bond"] },
-            { num: 4, title: "Acids & Bases", topics: ["Properties", "pH Scale", "Neutralization"] },
-            { num: 5, title: "Salts", topics: ["Preparation", "Types", "Uses"] },
-            { num: 6, title: "Chemical Reactions", topics: ["Types of Reactions", "Equations", "Balancing"] }
+            { num: 1, title: "Nature of Science in Chemistry" },
+            { num: 2, title: "Matter" },
+            { num: 3, title: "Atomic Structure" },
+            { num: 4, title: "Periodic Table and Periodicity of Properties" },
+            { num: 5, title: "Chemical Bonding" },
+            { num: 6, title: "Stoichiometry" },
+            { num: 7, title: "Electrochemistry" },
+            { num: 8, title: "Energetics" },
+            { num: 9, title: "Chemical Equilibrium" },
+            { num: 10, title: "Acids, Bases, and Salts" },
+            { num: 11, title: "Environmental Chemistry \u2014 Air" },
+            { num: 12, title: "Environmental Chemistry \u2014 Water" },
+            { num: 13, title: "Organic Chemistry" },
+            { num: 14, title: "Hydrocarbons" },
+            { num: 15, title: "Biochemistry" },
+            { num: 16, title: "Empirical Data Collection and Analysis" },
+            { num: 17, title: "Separation Techniques" },
+            { num: 18, title: "Qualitative Analysis" },
+            { num: 19, title: "Chromatography" }
         ]
     },
     "Biology": {
@@ -633,10 +646,17 @@ function getAssignmentState(assignment, studentId) {
     return "available";
 }
 
-function formatChapterLabel(chapterNum) {
+function formatChapterLabel(chapterNum, subject) {
     var cfg = null;
     if (typeof QuestionLoader !== "undefined" && QuestionLoader && typeof QuestionLoader.getChapterConfig === "function") {
-        cfg = QuestionLoader.getChapterConfig()[chapterNum];
+        var all = QuestionLoader.getChapterConfig();
+        cfg = all[chapterNum];
+        if (subject && (!cfg || !cfg.subject || cfg.subject !== subject)) {
+            cfg = null;
+            for (var k in all) {
+                if (all[k] && all[k].subject === subject && all[k].chapter === Number(chapterNum)) { cfg = all[k]; break; }
+            }
+        }
     }
     if (cfg && cfg.chapterTitle) return "Chapter " + chapterNum + ": " + cfg.chapterTitle;
     return "Chapter " + chapterNum;
@@ -649,18 +669,18 @@ function getAttemptChapterLabel(attempt, topicKeys) {
             if (!qid) continue;
             for (var j = 0; j < questions.length; j++) {
                 if (questions[j] && questions[j].id === qid && questions[j].chapter) {
-                    return formatChapterLabel(questions[j].chapter);
+                    return formatChapterLabel(questions[j].chapter, questions[j].subject);
                 }
             }
         }
     }
     for (var t = 0; t < topicKeys.length; t++) {
         var m = /^\s*(\d+)\./.exec(String(topicKeys[t]));
-        if (m) return formatChapterLabel(parseInt(m[1], 10));
+        if (m) return formatChapterLabel(parseInt(m[1], 10), attempt.subject);
     }
     if (attempt.chapter && attempt.chapter !== "all") {
         var chNum = parseInt(attempt.chapter, 10);
-        if (!isNaN(chNum)) return formatChapterLabel(chNum);
+        if (!isNaN(chNum)) return formatChapterLabel(chNum, attempt.subject);
     }
     return null;
 }

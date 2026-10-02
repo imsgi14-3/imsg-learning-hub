@@ -82,6 +82,22 @@ function runPersistenceTests() {
     TestRunner.assertTrue(config[1].file.indexOf("grade9") !== -1, "Path contains grade9");
     TestRunner.assertTrue(config[1].file.indexOf("computer-science") !== -1, "Path contains computer-science");
 
+    TestRunner.assertNotNull(config["chemistry-1"], "Chemistry chapter 1 config exists");
+    TestRunner.assertTrue(config["chemistry-1"].file.indexOf("question-bank/grade9/chemistry") !== -1, "Chemistry path is registered");
+    TestRunner.assertEqual(config["chemistry-1"].subject, "Chemistry", "Chemistry config subject is Chemistry");
+    var chemConfigCount = 0;
+    for (var k in config) { if (config[k] && config[k].subject === "Chemistry") chemConfigCount++; }
+    TestRunner.assertEqual(chemConfigCount, 19, "All 19 chemistry chapters are registered");
+
+    TestRunner.suite("Persistence - Chapter Labels");
+
+    TestRunner.assertEqual(formatChapterLabel(3), "Chapter 3: Programming Fundamentals", "CS label works without subject");
+    TestRunner.assertEqual(formatChapterLabel(3, "Computer Science"), "Chapter 3: Programming Fundamentals", "CS label resolves with subject");
+    TestRunner.assertEqual(formatChapterLabel(3, "Chemistry"), "Chapter 3: Atomic Structure", "Chemistry chapter 3 resolves its own title");
+    TestRunner.assertEqual(formatChapterLabel(15, "Chemistry"), "Chapter 15: Biochemistry", "Chemistry chapter 15 resolves its own title");
+    TestRunner.assertEqual(formatChapterLabel(19, "Chemistry"), "Chapter 19: Chromatography", "Chemistry chapter 19 resolves its own title");
+    TestRunner.assertEqual(formatChapterLabel(99, "Chemistry"), "Chapter 99", "Unknown chapter falls back to plain label");
+
     TestRunner.suite("Persistence - Principal Account");
 
     TestRunner.assertNotNull(principalAccount, "Principal account exists");

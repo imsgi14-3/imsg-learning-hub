@@ -12,7 +12,26 @@ var QuestionLoader = (function() {
         4: { chapter: 4, chapterTitle: "Data and Analysis", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 4", file: "question-bank/grade9/computer-science/chapter4.json" },
         5: { chapter: 5, chapterTitle: "Applications of Computer Science", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 5", file: "question-bank/grade9/computer-science/chapter5.json" },
         6: { chapter: 6, chapterTitle: "Impacts of Computing", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 6", file: "question-bank/grade9/computer-science/chapter6.json" },
-        7: { chapter: 7, chapterTitle: "Entrepreneurship", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 7", file: "question-bank/grade9/computer-science/chapter7.json" }
+        7: { chapter: 7, chapterTitle: "Entrepreneurship", subject: "Computer Science", grade: 9, source: "NBF Grade 9 Computer Science, Unit 7", file: "question-bank/grade9/computer-science/chapter7.json" },
+        "chemistry-1": { chapter: 1, chapterTitle: "Nature of Science in Chemistry", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-1.json" },
+        "chemistry-2": { chapter: 2, chapterTitle: "Matter", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-2.json" },
+        "chemistry-3": { chapter: 3, chapterTitle: "Atomic Structure", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-3.json" },
+        "chemistry-4": { chapter: 4, chapterTitle: "Periodic Table and Periodicity of Properties", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-4.json" },
+        "chemistry-5": { chapter: 5, chapterTitle: "Chemical Bonding", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-5.json" },
+        "chemistry-6": { chapter: 6, chapterTitle: "Stoichiometry", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-6.json" },
+        "chemistry-7": { chapter: 7, chapterTitle: "Electrochemistry", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-7.json" },
+        "chemistry-8": { chapter: 8, chapterTitle: "Energetics", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-8.json" },
+        "chemistry-9": { chapter: 9, chapterTitle: "Chemical Equilibrium", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-9.json" },
+        "chemistry-10": { chapter: 10, chapterTitle: "Acids, Bases, and Salts", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-10.json" },
+        "chemistry-11": { chapter: 11, chapterTitle: "Environmental Chemistry\u2014Air", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-11.json" },
+        "chemistry-12": { chapter: 12, chapterTitle: "Environmental Chemistry\u2014Water", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-12.json" },
+        "chemistry-13": { chapter: 13, chapterTitle: "Organic Chemistry", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-13.json" },
+        "chemistry-14": { chapter: 14, chapterTitle: "Hydrocarbons", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-14.json" },
+        "chemistry-15": { chapter: 15, chapterTitle: "Biochemistry", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-15.json" },
+        "chemistry-16": { chapter: 16, chapterTitle: "Empirical Data Collection and Analysis", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-16.json" },
+        "chemistry-17": { chapter: 17, chapterTitle: "Separation Techniques", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-17.json" },
+        "chemistry-18": { chapter: 18, chapterTitle: "Qualitative Analysis", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-18.json" },
+        "chemistry-19": { chapter: 19, chapterTitle: "Chromatography", subject: "Chemistry", grade: 9, source: "FBISE Chemistry Grade IX, Curriculum 2022-23", file: "question-bank/grade9/chemistry/chapter-19.json" }
     };
 
     function loadChapter(chapterNum, callback) {
@@ -40,7 +59,7 @@ var QuestionLoader = (function() {
                     allQuestions.push(qs[i]);
                 }
                 loadedChapters[chapterNum] = { questions: qs, subject: meta.subject, grade: meta.grade, chapter: meta.chapter, chapterTitle: meta.chapterTitle || meta.chapterTitle };
-                console.log("Loaded " + qs.length + " questions from Chapter " + chapterNum);
+                console.log("Loaded " + qs.length + " questions from Chapter " + meta.chapter + (meta.subject && meta.subject !== "Computer Science" ? " (" + meta.subject + ")" : ""));
                 if (callback) callback(loadedChapters[chapterNum]);
             })
             .catch(function(err) {
@@ -61,7 +80,7 @@ var QuestionLoader = (function() {
     }
 
     function loadAllChapters(callback) {
-        var chapters = Object.keys(chapterConfig).map(Number);
+        var chapters = Object.keys(chapterConfig);
         loadMultipleChapters(chapters, callback);
     }
 

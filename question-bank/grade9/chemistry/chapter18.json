@@ -1,0 +1,16 @@
+{
+  "subject": "Chemistry",
+  "grade": 9,
+  "board": "FBISE",
+  "chapter": 18,
+  "chapter_title": "Qualitative Analysis",
+  "content_area": "Qualitative Analysis",
+  "bank_purpose": "ExamEngine chapter inventory",
+  "annual_exam_eligible": false,
+  "assessment_status": "pba_or_formative",
+  "questions": [],
+  "exclusion_reason": "Practical Based Assessment content; not part of the annual theory MCQ pool.",
+  "note": "Kept as a chapter JSON so the chapter inventory remains complete. Practice/PBA item generation can be added separately without contaminating the annual theory MCQ pool.",
+  "question_count": 0,
+  "dedup_removed": 0
+}

@@ -305,7 +305,7 @@ var UI = (function() {
                         if (questions[j].topic) topicSet[questions[j].topic] = true;
                     }
                 }
-                var topicCount = Object.keys(topicSet).length || ch.topics.length;
+                var topicCount = Object.keys(topicSet).length || (ch.topics ? ch.topics.length : 0);
                 html += '<div class="quiz-mode-card" onclick="showChapterQuizOptions(' + ch.num + ', \'' + subject.replace(/'/g, "\\'") + '\')">';
                 html += '<div class="mode-title">Chapter ' + ch.num + ': ' + ch.title + '</div>';
                 html += '<div class="mode-desc">' + qCount + ' questions &bull; ' + topicCount + ' topics</div></div>';
@@ -1278,9 +1278,15 @@ var UI = (function() {
         $("assignmentForm").reset();
         $("amAssignmentId").value = "";
         $("amModalTitle").textContent = "Create Assignment";
-        $("amDiffEasy").value = 30;
-        $("amDiffMedium").value = 40;
-        $("amDiffHard").value = 30;
+        var dt = ExamEngine.DEFAULT_TARGETS;
+        $("amDiffEasy").value = dt.difficulty.easy;
+        $("amDiffMedium").value = dt.difficulty.medium;
+        $("amDiffHard").value = dt.difficulty.hard;
+        $("amK").value = dt.cognitive.k;
+        $("amU").value = dt.cognitive.u;
+        $("amA").value = dt.cognitive.a;
+        $("amStraight").value = dt.format.straight;
+        $("amScenario").value = dt.format.scenario;
         $("amQuestionCount").value = 20;
         $("amPreviewList").innerHTML = "";
         $("amAvailableCount").textContent = "0";
@@ -1304,6 +1310,11 @@ var UI = (function() {
         updateAssignmentSubjects();
         updateAssignmentTopics();
         if (fromExam) {
+            var ratioMap = [["ebK", "amK"], ["ebU", "amU"], ["ebA", "amA"], ["ebEasy", "amDiffEasy"], ["ebMedium", "amDiffMedium"], ["ebHard", "amDiffHard"], ["ebStraight", "amStraight"], ["ebScenario", "amScenario"]];
+            for (var r = 0; r < ratioMap.length; r++) {
+                var srcEl = $(ratioMap[r][0]);
+                if (srcEl) $(ratioMap[r][1]).value = srcEl.value;
+            }
             $("amAvailableCount").textContent = ebPresetQuestions.length;
             $("amDiffMsg").textContent = "Balanced ratios were set by the Exam Builder.";
             $("amDiffMsg").style.color = "";
@@ -1352,6 +1363,16 @@ var UI = (function() {
                         topicSel.innerHTML += '<option value="' + chapters[i].topics[j] + '">' + chapters[i].topics[j] + '</option>';
                     }
                     break;
+                } else if (chapters[i].num === chNum) {
+                    var seenTopics = {};
+                    for (var qj = 0; qj < questions.length; qj++) {
+                        var tq = questions[qj];
+                        if (tq.subject === sub && tq.chapter == chNum && tq.topic && !seenTopics[tq.topic]) {
+                            seenTopics[tq.topic] = true;
+                            topicSel.innerHTML += '<option value="' + tq.topic + '">' + tq.topic + '</option>';
+                        }
+                    }
+                    break;
                 }
             }
         }
@@ -1377,48 +1398,68 @@ var UI = (function() {
     function updateAssignmentAvailableCount() {
         var available = getAvailableAssignmentQuestions();
         $("amAvailableCount").textContent = available.length;
+        var el = $("amDiffMsg");
         var count = parseInt($("amQuestionCount").value) || 0;
-        if (count > available.length) {
-            $("amDiffMsg").textContent = "Warning: only " + available.length + " questions match. Will select all.";
-            $("amDiffMsg").style.color = "var(--error,#ef4444)";
-        } else {
-            $("amDiffMsg").textContent = "";
+        if (available.length === 0) {
+            el.textContent = "No questions match the selected criteria.";
+            el.style.color = "var(--error,#ef4444)";
+            return;
         }
+        if (count > available.length) {
+            el.textContent = "Warning: only " + available.length + " questions match. Will select all.";
+            el.style.color = "var(--error,#ef4444)";
+            return;
+        }
+        var bp = amReadBlueprint();
+        if (bp.chapters.length === 0 || bp.total <= 0) { el.textContent = ""; el.style.color = ""; return; }
+        var shortages = ExamEngine.checkFeasibility(bp, available);
+        if (shortages.length) {
+            el.textContent = "Not feasible: " + shortages.join(" | ");
+            el.style.color = "var(--error,#ef4444)";
+        } else {
+            el.textContent = "";
+            el.style.color = "";
+        }
+    }
+
+    // Same blueprint shape the Exam Builder reads: chapter ToS, cognitive,
+    // difficulty, format. Each ratio group is normalized to 100%.
+    function amReadBlueprint() {
+        var dt = ExamEngine.DEFAULT_TARGETS;
+        function normTriple(a, b, c, fallback) {
+            var va = parseInt($(a).value, 10) || 0;
+            var vb = parseInt($(b).value, 10) || 0;
+            var vc = parseInt($(c).value, 10) || 0;
+            if (va + vb + vc <= 0) { va = fallback[0]; vb = fallback[1]; vc = fallback[2]; }
+            return ExamEngine.normalizeToSAlloc([va, vb, vc]);
+        }
+        function normPair(a, b, fallback) {
+            var va = parseInt($(a).value, 10) || 0;
+            var vb = parseInt($(b).value, 10) || 0;
+            if (va + vb <= 0) { va = fallback[0]; vb = fallback[1]; }
+            return ExamEngine.normalizeToSAlloc([va, vb]);
+        }
+        var chNum = parseInt($("amChapter").value, 10);
+        var cog = normTriple("amK", "amU", "amA", [dt.cognitive.k, dt.cognitive.u, dt.cognitive.a]);
+        var diff = normTriple("amDiffEasy", "amDiffMedium", "amDiffHard", [dt.difficulty.easy, dt.difficulty.medium, dt.difficulty.hard]);
+        var fmt = normPair("amStraight", "amScenario", [dt.format.straight, dt.format.scenario]);
+        return {
+            total: parseInt($("amQuestionCount").value, 10) || 0,
+            chapters: isNaN(chNum) ? [] : [{ chapter: chNum, pct: 100 }],
+            cognitive: { k: cog[0], u: cog[1], a: cog[2] },
+            difficulty: { easy: diff[0], medium: diff[1], hard: diff[2] },
+            format: { straight: fmt[0], scenario: fmt[1] }
+        };
     }
 
     function autoSelectAssignmentQuestions() {
         var available = getAvailableAssignmentQuestions();
-        var total = parseInt($("amQuestionCount").value) || 20;
-        var easyPct = parseInt($("amDiffEasy").value) || 0;
-        var medPct = parseInt($("amDiffMedium").value) || 0;
-        var hardPct = parseInt($("amDiffHard").value) || 0;
-        var pctTotal = easyPct + medPct + hardPct;
-        if (pctTotal !== 100 && pctTotal > 0) {
-            easyPct = Math.round(easyPct / pctTotal * 100);
-            medPct = Math.round(medPct / pctTotal * 100);
-            hardPct = 100 - easyPct - medPct;
-        }
-        var mode = "straight";
-        var radios = document.querySelectorAll('input[name="amMode"]');
-        for (var i = 0; i < radios.length; i++) { if (radios[i].checked) mode = radios[i].value; }
-        var fmtTargets = null;
-        if (mode === "straight") {
-            available = available.filter(function(q) { return ExamEngine.normFormat(q) === "straight"; });
-        } else if (mode === "scenario") {
-            available = available.filter(function(q) { return ExamEngine.normFormat(q) === "scenario"; });
-        } else {
-            fmtTargets = { straight: 70, scenario: 30 };
-        }
-        var diffTargets = pctTotal > 0 ? { easy: easyPct, medium: medPct, hard: hardPct } : ExamEngine.DEFAULT_TARGETS.difficulty;
-        var opts = {
-            targets: {
-                difficulty: diffTargets,
-                cognitive: ExamEngine.DEFAULT_TARGETS.cognitive,
-                format: fmtTargets
-            },
-            evenKey: "topic"
-        };
-        return ExamEngine.selectBalanced(available, total, opts);
+        var bp = amReadBlueprint();
+        if (bp.chapters.length === 0 || bp.total <= 0 || available.length === 0) return [];
+        if (bp.format.straight >= 100) available = available.filter(function(q) { return ExamEngine.normFormat(q) === "straight"; });
+        else if (bp.format.scenario >= 100) available = available.filter(function(q) { return ExamEngine.normFormat(q) === "scenario"; });
+        if (available.length === 0) return [];
+        return ExamEngine.selectForBlueprint(bp, available, 150);
     }
 
     function previewAssignmentQuestions() {
@@ -1464,16 +1505,31 @@ var UI = (function() {
         $("amModalTitle").textContent = a.fromExam ? "Edit Exam Assignment" : "Edit Assignment";
         if (a.chapter) $("amChapter").value = a.chapter;
         if (a.topic) $("amTopic").value = a.topic;
-        if (a.difficulty) {
-            $("amDiffEasy").value = a.difficulty.easy || 30;
-            $("amDiffMedium").value = a.difficulty.medium || 40;
-            $("amDiffHard").value = a.difficulty.hard || 30;
+        var dt = ExamEngine.DEFAULT_TARGETS;
+        $("amDiffEasy").value = a.difficulty ? (a.difficulty.easy || 30) : dt.difficulty.easy;
+        $("amDiffMedium").value = a.difficulty ? (a.difficulty.medium || 40) : dt.difficulty.medium;
+        $("amDiffHard").value = a.difficulty ? (a.difficulty.hard || 30) : dt.difficulty.hard;
+        if (a.cognitive) {
+            $("amK").value = a.cognitive.k;
+            $("amU").value = a.cognitive.u;
+            $("amA").value = a.cognitive.a;
+        } else {
+            $("amK").value = dt.cognitive.k;
+            $("amU").value = dt.cognitive.u;
+            $("amA").value = dt.cognitive.a;
         }
-        if (a.mode) {
-            var radios = document.querySelectorAll('input[name="amMode"]');
-            for (var i = 0; i < radios.length; i++) {
-                radios[i].checked = radios[i].value === a.mode;
-            }
+        if (a.format) {
+            $("amStraight").value = a.format.straight;
+            $("amScenario").value = a.format.scenario;
+        } else if (a.mode === "straight") {
+            $("amStraight").value = 100; $("amScenario").value = 0;
+        } else if (a.mode === "scenario") {
+            $("amStraight").value = 0; $("amScenario").value = 100;
+        } else if (a.mode === "mixed") {
+            $("amStraight").value = 70; $("amScenario").value = 30;
+        } else {
+            $("amStraight").value = dt.format.straight;
+            $("amScenario").value = dt.format.scenario;
         }
         var user = Auth.getUser();
         var cs = (user && user.classSubjects) ? user.classSubjects : {};
@@ -1527,13 +1583,12 @@ var UI = (function() {
         if (selected.length === 0) { alert("No questions match the selected criteria."); return; }
         var sel = [];
         for (var i = 0; i < selected.length; i++) sel.push(selected[i].id);
-        var mode = "straight";
-        var radios = document.querySelectorAll('input[name="amMode"]');
-        for (var i = 0; i < radios.length; i++) { if (radios[i].checked) mode = radios[i].value; }
+        var bp = amReadBlueprint();
+        var mode = bp.format.straight >= 100 ? "straight" : (bp.format.scenario >= 100 ? "scenario" : "mixed");
         var timeLimit = 60;
         if (fromExam && ebPresetQuestions && ebPresetQuestions.length > 0) timeLimit = ebPresetTime;
         else if (existing && existing.timeLimit) timeLimit = existing.timeLimit;
-        var d = { id: id || "ASSIGN-" + Date.now(), title: $("amTitleInput").value, subject: $("amSubject").value, classId: $("amClass").value, dueDate: $("amDueDate").value, questions: sel, chapter: $("amChapter").value || null, topic: $("amTopic").value || null, count: sel.length, difficulty: { easy: parseInt($("amDiffEasy").value) || 0, medium: parseInt($("amDiffMedium").value) || 0, hard: parseInt($("amDiffHard").value) || 0 }, mode: mode, timeLimit: timeLimit, createdBy: Auth.getUser() ? Auth.getUser().id : "unknown", createdAt: new Date().toISOString() };
+        var d = { id: id || "ASSIGN-" + Date.now(), title: $("amTitleInput").value, subject: $("amSubject").value, classId: $("amClass").value, dueDate: $("amDueDate").value, questions: sel, chapter: $("amChapter").value || null, topic: $("amTopic").value || null, count: sel.length, difficulty: bp.difficulty, cognitive: bp.cognitive, format: bp.format, mode: mode, timeLimit: timeLimit, createdBy: Auth.getUser() ? Auth.getUser().id : "unknown", createdAt: new Date().toISOString() };
         if (fromExam) d.fromExam = true;
         if (id) { for (var i = 0; i < assignments.length; i++) { if (assignments[i].id === id) { assignments[i] = d; break; } } }
         else assignments.push(d);

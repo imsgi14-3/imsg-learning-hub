@@ -1,0 +1,1169 @@
+{
+  "version": "V3 seed-cleaned",
+  "total_questions": 1001,
+  "chapter_counts": {
+    "1": 51,
+    "2": 88,
+    "3": 84,
+    "4": 56,
+    "5": 82,
+    "6": 59,
+    "7": 60,
+    "8": 59,
+    "9": 55,
+    "10": 85,
+    "11": 54,
+    "12": 58,
+    "13": 90,
+    "14": 60,
+    "15": 60
+  },
+  "topic_counts": {
+    "1::Branch identification": 6,
+    "1::Branches of chemistry": 6,
+    "1::Chemistry in daily life": 7,
+    "1::Definition of chemistry": 7,
+    "1::Engineering connection": 6,
+    "1::Essential questions": 7,
+    "1::Interdisciplinary chemistry": 6,
+    "1::Science vs technology": 6,
+    "2::Allotropes": 7,
+    "2::Colloid vs solution": 8,
+    "2::Matter": 8,
+    "2::Mixtures": 24,
+    "2::Plasma": 6,
+    "2::Saturated solution": 6,
+    "2::Solubility": 14,
+    "2::Solutions": 8,
+    "2::States of matter": 7,
+    "3::Atomic number": 7,
+    "3::Atomic structure": 8,
+    "3::Electron shells": 7,
+    "3::Element identity": 7,
+    "3::Isotope calculation": 6,
+    "3::Isotopes": 15,
+    "3::Isotopic properties": 7,
+    "3::Mass number": 8,
+    "3::Neutrons": 7,
+    "3::Relative atomic mass": 6,
+    "3::Subatomic particles": 6,
+    "4::Group I": 6,
+    "4::Groups and periods": 6,
+    "4::Halogen displacement": 7,
+    "4::Halogens": 8,
+    "4::Noble gases": 8,
+    "4::Periodic arrangement": 7,
+    "4::Periodic trend": 7,
+    "4::Transition elements": 7,
+    "5::Bond types": 7,
+    "5::Bonding application": 6,
+    "5::Conductivity comparison": 8,
+    "5::Covalent bonding": 7,
+    "5::Electrical conduction": 6,
+    "5::Graphite use": 7,
+    "5::Ionic properties": 6,
+    "5::Lewis structures": 7,
+    "5::Melting points": 7,
+    "5::Metallic bonding": 14,
+    "5::Molecular substance": 7,
+    "6::Balancing equations": 8,
+    "6::Empirical formula": 7,
+    "6::Formula deduction": 7,
+    "6::Ionic equation": 7,
+    "6::Mole": 8,
+    "6::Molecular formula": 8,
+    "6::Moles from mass": 7,
+    "6::Particles from moles": 7,
+    "7::Corrosion": 8,
+    "7::Electroplating": 8,
+    "7::Monatomic ion": 7,
+    "7::Oxidation": 8,
+    "7::Oxidation number": 7,
+    "7::Oxidation-number sum": 7,
+    "7::Oxidizing agent": 7,
+    "7::Reduction": 8,
+    "8::Activation energy": 7,
+    "8::Bond breaking": 8,
+    "8::Bond making": 8,
+    "8::Bond-energy calculation": 6,
+    "8::Catalyst": 8,
+    "8::Chemical system": 7,
+    "8::Endothermic reaction": 8,
+    "8::Exothermic reaction": 7,
+    "9::Condition change": 6,
+    "9::Dynamic equilibrium": 8,
+    "9::Equilibrium condition": 8,
+    "9::Equilibrium interpretation": 6,
+    "9::Equilibrium not completion": 7,
+    "9::Hydrated copper sulfate": 7,
+    "9::Reversible reaction": 7,
+    "9::Temperature effect": 6,
+    "10::Acid dissociation": 7,
+    "10::Acid rain": 7,
+    "10::Acid-base reactions": 7,
+    "10::Acids and bases": 6,
+    "10::Alkali": 7,
+    "10::Ammonium salts": 6,
+    "10::Bases and alkalis": 8,
+    "10::Brønsted-Lowry acid": 8,
+    "10::Brønsted-Lowry base": 8,
+    "10::Reaction interpretation": 8,
+    "10::Strong acid": 6,
+    "10::Strong vs weak": 7,
+    "11::Acid rain": 6,
+    "11::Air composition": 7,
+    "11::Carbon dioxide source": 7,
+    "11::Carbon monoxide": 7,
+    "11::Catalytic converter": 6,
+    "11::Greenhouse gases": 7,
+    "11::Particulates": 7,
+    "11::Pollution reduction": 7,
+    "12::Disinfection": 8,
+    "12::Domestic water treatment": 6,
+    "12::Fertilizers": 8,
+    "12::NPK": 8,
+    "12::Natural water": 7,
+    "12::Water pollutants": 7,
+    "12::Water scarcity": 7,
+    "12::Water-borne disease": 7,
+    "13::Formula interpretation": 8,
+    "13::Functional group": 14,
+    "13::General formula": 8,
+    "13::Homologous series": 7,
+    "13::Isomer identification": 8,
+    "13::Isomers": 7,
+    "13::Organic structures": 7,
+    "13::Structural formula": 16,
+    "13::Structure classification": 7,
+    "13::Unsaturation": 8,
+    "14::Alkane properties": 8,
+    "14::Alkanes": 8,
+    "14::Cracking": 8,
+    "14::Hydrogenation": 8,
+    "14::Methane chlorination": 6,
+    "14::Saturated compounds": 8,
+    "14::Substitution": 7,
+    "14::Unsaturated compounds": 7,
+    "15::Biomolecule comparison": 8,
+    "15::Biomolecules": 7,
+    "15::Carbohydrates": 8,
+    "15::Diet scenario": 6,
+    "15::Lipids": 8,
+    "15::Nucleic acids": 8,
+    "15::Nutrition": 8,
+    "15::Proteins": 7
+  },
+  "removed_near_duplicates": 119,
+  "remaining_near_duplicate_pairs_gt_93": 144,
+  "note": "This is a deduplicated seed build from V2; it is not yet the final 1500+ authoring-complete bank. Topic depth is preserved and artificial near-duplicate variants are removed.",
+  "near_duplicate_pairs": [
+    {
+      "chapter": 3,
+      "topic": "Electron shells",
+      "id1": "CH03-MCQ-0010",
+      "id2": "CH03-MCQ-0014",
+      "similarity": 0.9464
+    },
+    {
+      "chapter": 3,
+      "topic": "Subatomic particles",
+      "id1": "CH03-MCQ-0018",
+      "id2": "CH03-MCQ-0022",
+      "similarity": 0.9535
+    },
+    {
+      "chapter": 3,
+      "topic": "Atomic number",
+      "id1": "CH03-MCQ-0026",
+      "id2": "CH03-MCQ-0030",
+      "similarity": 0.9348
+    },
+    {
+      "chapter": 3,
+      "topic": "Isotopes",
+      "id1": "CH03-MCQ-0042",
+      "id2": "CH03-MCQ-0046",
+      "similarity": 0.931
+    },
+    {
+      "chapter": 3,
+      "topic": "Isotope calculation",
+      "id1": "CH03-MCQ-0050",
+      "id2": "CH03-MCQ-0054",
+      "similarity": 0.9531
+    },
+    {
+      "chapter": 3,
+      "topic": "Relative atomic mass",
+      "id1": "CH03-MCQ-0058",
+      "id2": "CH03-MCQ-0059",
+      "similarity": 0.9348
+    },
+    {
+      "chapter": 3,
+      "topic": "Relative atomic mass",
+      "id1": "CH03-MCQ-0058",
+      "id2": "CH03-MCQ-0062",
+      "similarity": 0.958
+    },
+    {
+      "chapter": 3,
+      "topic": "Relative atomic mass",
+      "id1": "CH03-MCQ-0059",
+      "id2": "CH03-MCQ-0062",
+      "similarity": 0.9362
+    },
+    {
+      "chapter": 3,
+      "topic": "Neutrons",
+      "id1": "CH03-MCQ-0074",
+      "id2": "CH03-MCQ-0078",
+      "similarity": 0.9339
+    },
+    {
+      "chapter": 3,
+      "topic": "Element identity",
+      "id1": "CH03-MCQ-0082",
+      "id2": "CH03-MCQ-0086",
+      "similarity": 0.9362
+    },
+    {
+      "chapter": 3,
+      "topic": "Isotopic properties",
+      "id1": "CH03-MCQ-0090",
+      "id2": "CH03-MCQ-0094",
+      "similarity": 0.9364
+    },
+    {
+      "chapter": 11,
+      "topic": "Air composition",
+      "id1": "CH11-MCQ-0002",
+      "id2": "CH11-MCQ-0006",
+      "similarity": 0.9348
+    },
+    {
+      "chapter": 11,
+      "topic": "Carbon dioxide source",
+      "id1": "CH11-MCQ-0010",
+      "id2": "CH11-MCQ-0014",
+      "similarity": 0.9434
+    },
+    {
+      "chapter": 11,
+      "topic": "Carbon monoxide",
+      "id1": "CH11-MCQ-0018",
+      "id2": "CH11-MCQ-0022",
+      "similarity": 0.9302
+    },
+    {
+      "chapter": 11,
+      "topic": "Particulates",
+      "id1": "CH11-MCQ-0026",
+      "id2": "CH11-MCQ-0030",
+      "similarity": 0.9381
+    },
+    {
+      "chapter": 11,
+      "topic": "Greenhouse gases",
+      "id1": "CH11-MCQ-0034",
+      "id2": "CH11-MCQ-0038",
+      "similarity": 0.9469
+    },
+    {
+      "chapter": 11,
+      "topic": "Acid rain",
+      "id1": "CH11-MCQ-0042",
+      "id2": "CH11-MCQ-0046",
+      "similarity": 0.9504
+    },
+    {
+      "chapter": 11,
+      "topic": "Catalytic converter",
+      "id1": "CH11-MCQ-0050",
+      "id2": "CH11-MCQ-0051",
+      "similarity": 0.9543
+    },
+    {
+      "chapter": 11,
+      "topic": "Pollution reduction",
+      "id1": "CH11-MCQ-0058",
+      "id2": "CH11-MCQ-0062",
+      "similarity": 0.9492
+    },
+    {
+      "chapter": 5,
+      "topic": "Bond types",
+      "id1": "CH05-MCQ-0002",
+      "id2": "CH05-MCQ-0006",
+      "similarity": 0.9444
+    },
+    {
+      "chapter": 5,
+      "topic": "Covalent bonding",
+      "id1": "CH05-MCQ-0010",
+      "id2": "CH05-MCQ-0014",
+      "similarity": 0.9368
+    },
+    {
+      "chapter": 5,
+      "topic": "Metallic bonding",
+      "id1": "CH05-MCQ-0018",
+      "id2": "CH05-MCQ-0022",
+      "similarity": 0.9474
+    },
+    {
+      "chapter": 5,
+      "topic": "Melting points",
+      "id1": "CH05-MCQ-0026",
+      "id2": "CH05-MCQ-0030",
+      "similarity": 0.9318
+    },
+    {
+      "chapter": 5,
+      "topic": "Electrical conduction",
+      "id1": "CH05-MCQ-0034",
+      "id2": "CH05-MCQ-0035",
+      "similarity": 0.9412
+    },
+    {
+      "chapter": 5,
+      "topic": "Electrical conduction",
+      "id1": "CH05-MCQ-0034",
+      "id2": "CH05-MCQ-0038",
+      "similarity": 0.962
+    },
+    {
+      "chapter": 5,
+      "topic": "Electrical conduction",
+      "id1": "CH05-MCQ-0035",
+      "id2": "CH05-MCQ-0038",
+      "similarity": 0.9423
+    },
+    {
+      "chapter": 5,
+      "topic": "Graphite use",
+      "id1": "CH05-MCQ-0042",
+      "id2": "CH05-MCQ-0046",
+      "similarity": 0.9417
+    },
+    {
+      "chapter": 5,
+      "topic": "Lewis structures",
+      "id1": "CH05-MCQ-0050",
+      "id2": "CH05-MCQ-0054",
+      "similarity": 0.945
+    },
+    {
+      "chapter": 5,
+      "topic": "Bonding application",
+      "id1": "CH05-MCQ-0058",
+      "id2": "CH05-MCQ-0059",
+      "similarity": 0.9357
+    },
+    {
+      "chapter": 5,
+      "topic": "Bonding application",
+      "id1": "CH05-MCQ-0058",
+      "id2": "CH05-MCQ-0062",
+      "similarity": 0.9586
+    },
+    {
+      "chapter": 5,
+      "topic": "Bonding application",
+      "id1": "CH05-MCQ-0059",
+      "id2": "CH05-MCQ-0062",
+      "similarity": 0.9371
+    },
+    {
+      "chapter": 5,
+      "topic": "Ionic properties",
+      "id1": "CH05-MCQ-0066",
+      "id2": "CH05-MCQ-0069",
+      "similarity": 0.944
+    },
+    {
+      "chapter": 5,
+      "topic": "Ionic properties",
+      "id1": "CH05-MCQ-0066",
+      "id2": "CH05-MCQ-0070",
+      "similarity": 0.9498
+    },
+    {
+      "chapter": 5,
+      "topic": "Metallic bonding",
+      "id1": "CH05-MCQ-0074",
+      "id2": "CH05-MCQ-0077",
+      "similarity": 0.9503
+    },
+    {
+      "chapter": 5,
+      "topic": "Metallic bonding",
+      "id1": "CH05-MCQ-0074",
+      "id2": "CH05-MCQ-0078",
+      "similarity": 0.9555
+    },
+    {
+      "chapter": 5,
+      "topic": "Metallic bonding",
+      "id1": "CH05-MCQ-0074",
+      "id2": "CH05-MCQ-0079",
+      "similarity": 0.9353
+    },
+    {
+      "chapter": 5,
+      "topic": "Molecular substance",
+      "id1": "CH05-MCQ-0082",
+      "id2": "CH05-MCQ-0085",
+      "similarity": 0.9526
+    },
+    {
+      "chapter": 5,
+      "topic": "Molecular substance",
+      "id1": "CH05-MCQ-0082",
+      "id2": "CH05-MCQ-0086",
+      "similarity": 0.9575
+    },
+    {
+      "chapter": 5,
+      "topic": "Molecular substance",
+      "id1": "CH05-MCQ-0082",
+      "id2": "CH05-MCQ-0087",
+      "similarity": 0.9382
+    },
+    {
+      "chapter": 5,
+      "topic": "Conductivity comparison",
+      "id1": "CH05-MCQ-0090",
+      "id2": "CH05-MCQ-0093",
+      "similarity": 0.952
+    },
+    {
+      "chapter": 5,
+      "topic": "Conductivity comparison",
+      "id1": "CH05-MCQ-0090",
+      "id2": "CH05-MCQ-0095",
+      "similarity": 0.9374
+    },
+    {
+      "chapter": 9,
+      "topic": "Reversible reaction",
+      "id1": "CH09-MCQ-0002",
+      "id2": "CH09-MCQ-0006",
+      "similarity": 0.9326
+    },
+    {
+      "chapter": 9,
+      "topic": "Temperature effect",
+      "id1": "CH09-MCQ-0026",
+      "id2": "CH09-MCQ-0027",
+      "similarity": 0.9489
+    },
+    {
+      "chapter": 9,
+      "topic": "Temperature effect",
+      "id1": "CH09-MCQ-0026",
+      "id2": "CH09-MCQ-0030",
+      "similarity": 0.9669
+    },
+    {
+      "chapter": 9,
+      "topic": "Temperature effect",
+      "id1": "CH09-MCQ-0027",
+      "id2": "CH09-MCQ-0030",
+      "similarity": 0.9497
+    },
+    {
+      "chapter": 9,
+      "topic": "Hydrated copper sulfate",
+      "id1": "CH09-MCQ-0034",
+      "id2": "CH09-MCQ-0038",
+      "similarity": 0.9478
+    },
+    {
+      "chapter": 9,
+      "topic": "Equilibrium not completion",
+      "id1": "CH09-MCQ-0042",
+      "id2": "CH09-MCQ-0046",
+      "similarity": 0.9459
+    },
+    {
+      "chapter": 9,
+      "topic": "Condition change",
+      "id1": "CH09-MCQ-0050",
+      "id2": "CH09-MCQ-0054",
+      "similarity": 0.9504
+    },
+    {
+      "chapter": 9,
+      "topic": "Equilibrium interpretation",
+      "id1": "CH09-MCQ-0058",
+      "id2": "CH09-MCQ-0059",
+      "similarity": 0.9323
+    },
+    {
+      "chapter": 9,
+      "topic": "Equilibrium interpretation",
+      "id1": "CH09-MCQ-0058",
+      "id2": "CH09-MCQ-0062",
+      "similarity": 0.9565
+    },
+    {
+      "chapter": 9,
+      "topic": "Equilibrium interpretation",
+      "id1": "CH09-MCQ-0059",
+      "id2": "CH09-MCQ-0062",
+      "similarity": 0.9338
+    },
+    {
+      "chapter": 2,
+      "topic": "States of matter",
+      "id1": "CH02-MCQ-0010",
+      "id2": "CH02-MCQ-0014",
+      "similarity": 0.9423
+    },
+    {
+      "chapter": 2,
+      "topic": "Plasma",
+      "id1": "CH02-MCQ-0018",
+      "id2": "CH02-MCQ-0022",
+      "similarity": 0.9535
+    },
+    {
+      "chapter": 2,
+      "topic": "Allotropes",
+      "id1": "CH02-MCQ-0026",
+      "id2": "CH02-MCQ-0030",
+      "similarity": 0.9348
+    },
+    {
+      "chapter": 2,
+      "topic": "Solubility",
+      "id1": "CH02-MCQ-0050",
+      "id2": "CH02-MCQ-0051",
+      "similarity": 0.9434
+    },
+    {
+      "chapter": 2,
+      "topic": "Solubility",
+      "id1": "CH02-MCQ-0050",
+      "id2": "CH02-MCQ-0054",
+      "similarity": 0.9634
+    },
+    {
+      "chapter": 2,
+      "topic": "Solubility",
+      "id1": "CH02-MCQ-0051",
+      "id2": "CH02-MCQ-0054",
+      "similarity": 0.9444
+    },
+    {
+      "chapter": 2,
+      "topic": "Solubility",
+      "id1": "CH02-MCQ-0090",
+      "id2": "CH02-MCQ-0093",
+      "similarity": 0.9505
+    },
+    {
+      "chapter": 2,
+      "topic": "Solubility",
+      "id1": "CH02-MCQ-0090",
+      "id2": "CH02-MCQ-0094",
+      "similarity": 0.9556
+    },
+    {
+      "chapter": 2,
+      "topic": "Solubility",
+      "id1": "CH02-MCQ-0090",
+      "id2": "CH02-MCQ-0095",
+      "similarity": 0.9354
+    },
+    {
+      "chapter": 2,
+      "topic": "Saturated solution",
+      "id1": "CH02-MCQ-0058",
+      "id2": "CH02-MCQ-0059",
+      "similarity": 0.9338
+    },
+    {
+      "chapter": 2,
+      "topic": "Saturated solution",
+      "id1": "CH02-MCQ-0058",
+      "id2": "CH02-MCQ-0062",
+      "similarity": 0.9574
+    },
+    {
+      "chapter": 2,
+      "topic": "Saturated solution",
+      "id1": "CH02-MCQ-0059",
+      "id2": "CH02-MCQ-0062",
+      "similarity": 0.9353
+    },
+    {
+      "chapter": 2,
+      "topic": "Mixtures",
+      "id1": "CH02-MCQ-0066",
+      "id2": "CH02-MCQ-0069",
+      "similarity": 0.9408
+    },
+    {
+      "chapter": 2,
+      "topic": "Mixtures",
+      "id1": "CH02-MCQ-0066",
+      "id2": "CH02-MCQ-0070",
+      "similarity": 0.9469
+    },
+    {
+      "chapter": 2,
+      "topic": "Mixtures",
+      "id1": "CH02-MCQ-0074",
+      "id2": "CH02-MCQ-0076",
+      "similarity": 0.9378
+    },
+    {
+      "chapter": 2,
+      "topic": "Mixtures",
+      "id1": "CH02-MCQ-0074",
+      "id2": "CH02-MCQ-0077",
+      "similarity": 0.9494
+    },
+    {
+      "chapter": 2,
+      "topic": "Mixtures",
+      "id1": "CH02-MCQ-0074",
+      "id2": "CH02-MCQ-0078",
+      "similarity": 0.9546
+    },
+    {
+      "chapter": 2,
+      "topic": "Mixtures",
+      "id1": "CH02-MCQ-0074",
+      "id2": "CH02-MCQ-0079",
+      "similarity": 0.9341
+    },
+    {
+      "chapter": 2,
+      "topic": "Solutions",
+      "id1": "CH02-MCQ-0082",
+      "id2": "CH02-MCQ-0085",
+      "similarity": 0.9439
+    },
+    {
+      "chapter": 2,
+      "topic": "Solutions",
+      "id1": "CH02-MCQ-0082",
+      "id2": "CH02-MCQ-0086",
+      "similarity": 0.9496
+    },
+    {
+      "chapter": 12,
+      "topic": "Natural water",
+      "id1": "CH12-MCQ-0002",
+      "id2": "CH12-MCQ-0006",
+      "similarity": 0.9492
+    },
+    {
+      "chapter": 12,
+      "topic": "Water pollutants",
+      "id1": "CH12-MCQ-0010",
+      "id2": "CH12-MCQ-0014",
+      "similarity": 0.9406
+    },
+    {
+      "chapter": 12,
+      "topic": "Domestic water treatment",
+      "id1": "CH12-MCQ-0018",
+      "id2": "CH12-MCQ-0022",
+      "similarity": 0.952
+    },
+    {
+      "chapter": 12,
+      "topic": "Water-borne disease",
+      "id1": "CH12-MCQ-0034",
+      "id2": "CH12-MCQ-0038",
+      "similarity": 0.9348
+    },
+    {
+      "chapter": 12,
+      "topic": "Water scarcity",
+      "id1": "CH12-MCQ-0042",
+      "id2": "CH12-MCQ-0046",
+      "similarity": 0.9388
+    },
+    {
+      "chapter": 1,
+      "topic": "Definition of chemistry",
+      "id1": "CH01-MCQ-0002",
+      "id2": "CH01-MCQ-0006",
+      "similarity": 0.9368
+    },
+    {
+      "chapter": 1,
+      "topic": "Branches of chemistry",
+      "id1": "CH01-MCQ-0010",
+      "id2": "CH01-MCQ-0014",
+      "similarity": 0.9549
+    },
+    {
+      "chapter": 1,
+      "topic": "Branches of chemistry",
+      "id1": "CH01-MCQ-0011",
+      "id2": "CH01-MCQ-0014",
+      "similarity": 0.9313
+    },
+    {
+      "chapter": 1,
+      "topic": "Interdisciplinary chemistry",
+      "id1": "CH01-MCQ-0018",
+      "id2": "CH01-MCQ-0019",
+      "similarity": 0.9388
+    },
+    {
+      "chapter": 1,
+      "topic": "Interdisciplinary chemistry",
+      "id1": "CH01-MCQ-0018",
+      "id2": "CH01-MCQ-0022",
+      "similarity": 0.9605
+    },
+    {
+      "chapter": 1,
+      "topic": "Interdisciplinary chemistry",
+      "id1": "CH01-MCQ-0019",
+      "id2": "CH01-MCQ-0022",
+      "similarity": 0.94
+    },
+    {
+      "chapter": 1,
+      "topic": "Essential questions",
+      "id1": "CH01-MCQ-0026",
+      "id2": "CH01-MCQ-0030",
+      "similarity": 0.9492
+    },
+    {
+      "chapter": 1,
+      "topic": "Science vs technology",
+      "id1": "CH01-MCQ-0034",
+      "id2": "CH01-MCQ-0035",
+      "similarity": 0.9534
+    },
+    {
+      "chapter": 1,
+      "topic": "Science vs technology",
+      "id1": "CH01-MCQ-0035",
+      "id2": "CH01-MCQ-0040",
+      "similarity": 0.9333
+    },
+    {
+      "chapter": 1,
+      "topic": "Engineering connection",
+      "id1": "CH01-MCQ-0042",
+      "id2": "CH01-MCQ-0043",
+      "similarity": 0.948
+    },
+    {
+      "chapter": 1,
+      "topic": "Engineering connection",
+      "id1": "CH01-MCQ-0042",
+      "id2": "CH01-MCQ-0046",
+      "similarity": 0.9663
+    },
+    {
+      "chapter": 1,
+      "topic": "Engineering connection",
+      "id1": "CH01-MCQ-0043",
+      "id2": "CH01-MCQ-0046",
+      "similarity": 0.9489
+    },
+    {
+      "chapter": 1,
+      "topic": "Chemistry in daily life",
+      "id1": "CH01-MCQ-0050",
+      "id2": "CH01-MCQ-0054",
+      "similarity": 0.9429
+    },
+    {
+      "chapter": 1,
+      "topic": "Branch identification",
+      "id1": "CH01-MCQ-0058",
+      "id2": "CH01-MCQ-0059",
+      "similarity": 0.9384
+    },
+    {
+      "chapter": 1,
+      "topic": "Branch identification",
+      "id1": "CH01-MCQ-0058",
+      "id2": "CH01-MCQ-0062",
+      "similarity": 0.9603
+    },
+    {
+      "chapter": 1,
+      "topic": "Branch identification",
+      "id1": "CH01-MCQ-0059",
+      "id2": "CH01-MCQ-0062",
+      "similarity": 0.9396
+    },
+    {
+      "chapter": 14,
+      "topic": "Unsaturated compounds",
+      "id1": "CH14-MCQ-0010",
+      "id2": "CH14-MCQ-0014",
+      "similarity": 0.9341
+    },
+    {
+      "chapter": 14,
+      "topic": "Substitution",
+      "id1": "CH14-MCQ-0034",
+      "id2": "CH14-MCQ-0038",
+      "similarity": 0.9333
+    },
+    {
+      "chapter": 14,
+      "topic": "Methane chlorination",
+      "id1": "CH14-MCQ-0042",
+      "id2": "CH14-MCQ-0046",
+      "similarity": 0.9549
+    },
+    {
+      "chapter": 14,
+      "topic": "Methane chlorination",
+      "id1": "CH14-MCQ-0043",
+      "id2": "CH14-MCQ-0046",
+      "similarity": 0.9313
+    },
+    {
+      "chapter": 8,
+      "topic": "Chemical system",
+      "id1": "CH08-MCQ-0002",
+      "id2": "CH08-MCQ-0006",
+      "similarity": 0.9444
+    },
+    {
+      "chapter": 8,
+      "topic": "Exothermic reaction",
+      "id1": "CH08-MCQ-0010",
+      "id2": "CH08-MCQ-0014",
+      "similarity": 0.9412
+    },
+    {
+      "chapter": 8,
+      "topic": "Activation energy",
+      "id1": "CH08-MCQ-0026",
+      "id2": "CH08-MCQ-0030",
+      "similarity": 0.9412
+    },
+    {
+      "chapter": 8,
+      "topic": "Bond-energy calculation",
+      "id1": "CH08-MCQ-0058",
+      "id2": "CH08-MCQ-0059",
+      "similarity": 0.9437
+    },
+    {
+      "chapter": 8,
+      "topic": "Bond-energy calculation",
+      "id1": "CH08-MCQ-0058",
+      "id2": "CH08-MCQ-0062",
+      "similarity": 0.9636
+    },
+    {
+      "chapter": 8,
+      "topic": "Bond-energy calculation",
+      "id1": "CH08-MCQ-0059",
+      "id2": "CH08-MCQ-0062",
+      "similarity": 0.9448
+    },
+    {
+      "chapter": 6,
+      "topic": "Empirical formula",
+      "id1": "CH06-MCQ-0010",
+      "id2": "CH06-MCQ-0014",
+      "similarity": 0.9326
+    },
+    {
+      "chapter": 6,
+      "topic": "Moles from mass",
+      "id1": "CH06-MCQ-0026",
+      "id2": "CH06-MCQ-0030",
+      "similarity": 0.9455
+    },
+    {
+      "chapter": 6,
+      "topic": "Particles from moles",
+      "id1": "CH06-MCQ-0034",
+      "id2": "CH06-MCQ-0038",
+      "similarity": 0.9483
+    },
+    {
+      "chapter": 6,
+      "topic": "Ionic equation",
+      "id1": "CH06-MCQ-0050",
+      "id2": "CH06-MCQ-0054",
+      "similarity": 0.9318
+    },
+    {
+      "chapter": 6,
+      "topic": "Formula deduction",
+      "id1": "CH06-MCQ-0058",
+      "id2": "CH06-MCQ-0062",
+      "similarity": 0.9459
+    },
+    {
+      "chapter": 15,
+      "topic": "Biomolecules",
+      "id1": "CH15-MCQ-0010",
+      "id2": "CH15-MCQ-0014",
+      "similarity": 0.9496
+    },
+    {
+      "chapter": 15,
+      "topic": "Proteins",
+      "id1": "CH15-MCQ-0026",
+      "id2": "CH15-MCQ-0030",
+      "similarity": 0.9333
+    },
+    {
+      "chapter": 15,
+      "topic": "Diet scenario",
+      "id1": "CH15-MCQ-0050",
+      "id2": "CH15-MCQ-0051",
+      "similarity": 0.9318
+    },
+    {
+      "chapter": 15,
+      "topic": "Diet scenario",
+      "id1": "CH15-MCQ-0050",
+      "id2": "CH15-MCQ-0054",
+      "similarity": 0.9562
+    },
+    {
+      "chapter": 15,
+      "topic": "Diet scenario",
+      "id1": "CH15-MCQ-0051",
+      "id2": "CH15-MCQ-0054",
+      "similarity": 0.9333
+    },
+    {
+      "chapter": 7,
+      "topic": "Oxidation number",
+      "id1": "CH07-MCQ-0018",
+      "id2": "CH07-MCQ-0022",
+      "similarity": 0.9417
+    },
+    {
+      "chapter": 7,
+      "topic": "Monatomic ion",
+      "id1": "CH07-MCQ-0026",
+      "id2": "CH07-MCQ-0030",
+      "similarity": 0.9333
+    },
+    {
+      "chapter": 7,
+      "topic": "Oxidizing agent",
+      "id1": "CH07-MCQ-0034",
+      "id2": "CH07-MCQ-0038",
+      "similarity": 0.9375
+    },
+    {
+      "chapter": 7,
+      "topic": "Oxidation-number sum",
+      "id1": "CH07-MCQ-0058",
+      "id2": "CH07-MCQ-0062",
+      "similarity": 0.9492
+    },
+    {
+      "chapter": 4,
+      "topic": "Periodic arrangement",
+      "id1": "CH04-MCQ-0002",
+      "id2": "CH04-MCQ-0006",
+      "similarity": 0.9492
+    },
+    {
+      "chapter": 4,
+      "topic": "Groups and periods",
+      "id1": "CH04-MCQ-0010",
+      "id2": "CH04-MCQ-0011",
+      "similarity": 0.9308
+    },
+    {
+      "chapter": 4,
+      "topic": "Groups and periods",
+      "id1": "CH04-MCQ-0010",
+      "id2": "CH04-MCQ-0014",
+      "similarity": 0.9556
+    },
+    {
+      "chapter": 4,
+      "topic": "Groups and periods",
+      "id1": "CH04-MCQ-0011",
+      "id2": "CH04-MCQ-0014",
+      "similarity": 0.9323
+    },
+    {
+      "chapter": 4,
+      "topic": "Periodic trend",
+      "id1": "CH04-MCQ-0018",
+      "id2": "CH04-MCQ-0022",
+      "similarity": 0.9394
+    },
+    {
+      "chapter": 4,
+      "topic": "Group I",
+      "id1": "CH04-MCQ-0026",
+      "id2": "CH04-MCQ-0027",
+      "similarity": 0.9348
+    },
+    {
+      "chapter": 4,
+      "topic": "Group I",
+      "id1": "CH04-MCQ-0026",
+      "id2": "CH04-MCQ-0030",
+      "similarity": 0.958
+    },
+    {
+      "chapter": 4,
+      "topic": "Group I",
+      "id1": "CH04-MCQ-0027",
+      "id2": "CH04-MCQ-0030",
+      "similarity": 0.9362
+    },
+    {
+      "chapter": 4,
+      "topic": "Halogen displacement",
+      "id1": "CH04-MCQ-0042",
+      "id2": "CH04-MCQ-0046",
+      "similarity": 0.9455
+    },
+    {
+      "chapter": 4,
+      "topic": "Transition elements",
+      "id1": "CH04-MCQ-0058",
+      "id2": "CH04-MCQ-0062",
+      "similarity": 0.9412
+    },
+    {
+      "chapter": 13,
+      "topic": "Organic structures",
+      "id1": "CH13-MCQ-0002",
+      "id2": "CH13-MCQ-0006",
+      "similarity": 0.9464
+    },
+    {
+      "chapter": 13,
+      "topic": "Functional group",
+      "id1": "CH13-MCQ-0018",
+      "id2": "CH13-MCQ-0022",
+      "similarity": 0.9417
+    },
+    {
+      "chapter": 13,
+      "topic": "Functional group",
+      "id1": "CH13-MCQ-0082",
+      "id2": "CH13-MCQ-0086",
+      "similarity": 0.9347
+    },
+    {
+      "chapter": 13,
+      "topic": "Homologous series",
+      "id1": "CH13-MCQ-0026",
+      "id2": "CH13-MCQ-0030",
+      "similarity": 0.94
+    },
+    {
+      "chapter": 13,
+      "topic": "Isomers",
+      "id1": "CH13-MCQ-0042",
+      "id2": "CH13-MCQ-0046",
+      "similarity": 0.9496
+    },
+    {
+      "chapter": 13,
+      "topic": "Structure classification",
+      "id1": "CH13-MCQ-0090",
+      "id2": "CH13-MCQ-0094",
+      "similarity": 0.9308
+    },
+    {
+      "chapter": 10,
+      "topic": "Strong vs weak",
+      "id1": "CH10-MCQ-0018",
+      "id2": "CH10-MCQ-0022",
+      "similarity": 0.9388
+    },
+    {
+      "chapter": 10,
+      "topic": "Acid dissociation",
+      "id1": "CH10-MCQ-0026",
+      "id2": "CH10-MCQ-0030",
+      "similarity": 0.9459
+    },
+    {
+      "chapter": 10,
+      "topic": "Acid-base reactions",
+      "id1": "CH10-MCQ-0042",
+      "id2": "CH10-MCQ-0046",
+      "similarity": 0.9434
+    },
+    {
+      "chapter": 10,
+      "topic": "Ammonium salts",
+      "id1": "CH10-MCQ-0050",
+      "id2": "CH10-MCQ-0054",
+      "similarity": 0.9512
+    },
+    {
+      "chapter": 10,
+      "topic": "Acid rain",
+      "id1": "CH10-MCQ-0058",
+      "id2": "CH10-MCQ-0062",
+      "similarity": 0.9302
+    },
+    {
+      "chapter": 10,
+      "topic": "Acids and bases",
+      "id1": "CH10-MCQ-0066",
+      "id2": "CH10-MCQ-0069",
+      "similarity": 0.9368
+    },
+    {
+      "chapter": 10,
+      "topic": "Acids and bases",
+      "id1": "CH10-MCQ-0066",
+      "id2": "CH10-MCQ-0070",
+      "similarity": 0.9432
+    },
+    {
+      "chapter": 10,
+      "topic": "Strong acid",
+      "id1": "CH10-MCQ-0074",
+      "id2": "CH10-MCQ-0077",
+      "similarity": 0.934
+    },
+    {
+      "chapter": 10,
+      "topic": "Strong acid",
+      "id1": "CH10-MCQ-0074",
+      "id2": "CH10-MCQ-0078",
+      "similarity": 0.9408
+    },
+    {
+      "chapter": 10,
+      "topic": "Alkali",
+      "id1": "CH10-MCQ-0082",
+      "id2": "CH10-MCQ-0086",
+      "similarity": 0.9359
+    },
+    {
+      "chapter": 10,
+      "topic": "Reaction interpretation",
+      "id1": "CH10-MCQ-0090",
+      "id2": "CH10-MCQ-0093",
+      "similarity": 0.9384
+    },
+    {
+      "chapter": 10,
+      "topic": "Reaction interpretation",
+      "id1": "CH10-MCQ-0090",
+      "id2": "CH10-MCQ-0094",
+      "similarity": 0.9447
+    }
+  ]
+}
