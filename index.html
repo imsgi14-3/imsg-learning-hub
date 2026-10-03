@@ -431,6 +431,7 @@
         <!-- CREATE ASSIGNMENT MODAL -->
         <div id="assignmentModal" class="modal">
             <h3 id="amModalTitle">&#128220; Create Assignment</h3>
+            <div id="amExamSummary" style="display:none;background:rgba(16,185,129,0.08);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:12px;margin-bottom:10px;"></div>
             <form id="assignmentForm" onsubmit="saveAssignment(event)">
                 <input type="hidden" id="amAssignmentId">
                 <div class="form-row">
@@ -441,7 +442,7 @@
                     <label>Class</label>
                     <select id="amClass" onchange="updateAssignmentSubjects()" required></select>
                 </div>
-                <div class="form-row">
+                <div class="form-row" id="amRowSubject">
                     <label>Subject</label>
                     <select id="amSubject" onchange="updateAssignmentTopics()" required>
                         <option value="Computer Science">Computer Science</option>
@@ -451,13 +452,13 @@
                         <option value="Mathematics">Mathematics</option>
                     </select>
                 </div>
-                <div class="form-row">
+                <div class="form-row" id="amRowChapter">
                     <label>Chapter</label>
                     <select id="amChapter" onchange="updateAssignmentTopics()" required>
                         <option value="">Select chapter</option>
                     </select>
                 </div>
-                <div class="form-row">
+                <div class="form-row" id="amRowTopic">
                     <label>Topic <span style="font-weight:normal;color:var(--text-muted);">(optional — leave blank for all topics)</span></label>
                     <select id="amTopic" onchange="updateAssignmentAvailableCount()">
                         <option value="">All topics</option>
@@ -467,11 +468,11 @@
                     <label>Due Date</label>
                     <input type="date" id="amDueDate" required>
                 </div>
-                <div class="form-row">
+                <div class="form-row" id="amRowCount">
                     <label>Number of Questions</label>
                     <input type="number" id="amQuestionCount" min="1" max="100" value="20" oninput="updateAssignmentAvailableCount()" required>
                 </div>
-                <div class="form-row">
+                <div class="form-row" id="amRowDifficulty">
                     <label>Difficulty Distribution %</label>
                     <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;">
                         <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
@@ -489,7 +490,7 @@
                     </div>
                     <p id="amDiffMsg" style="font-size:11px;color:var(--text-muted);margin-top:4px;"></p>
                 </div>
-                <div class="form-row">
+                <div class="form-row" id="amRowCognitive">
                     <label>Cognitive Distribution % (K / U / A)</label>
                     <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
                         <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Knowledge
@@ -503,7 +504,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-row">
+                <div class="form-row" id="amRowFormat">
                     <label>Question Format %</label>
                     <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
                         <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Straight
@@ -521,7 +522,7 @@
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn-save">Save Assignment</button>
+                    <button type="submit" class="btn-save" id="amSubmitBtn">Save Assignment</button>
                 </div>
             </form>
         </div>
@@ -529,7 +530,7 @@
         <!-- EXAM BUILDER MODAL -->
         <div id="examBuilderModal" class="modal" style="max-height:92vh;overflow-y:auto;">
             <h3>&#128203; Exam Builder</h3>
-            <p class="login-subtitle" style="font-size:12px;text-align:left;">Pick chapters and blueprint ratios (FBISE ToS defaults), generate a balanced paper, review it, then create it as an assignment.</p>
+            <p class="login-subtitle" style="font-size:12px;text-align:left;">Pick chapters and blueprint ratios (FBISE ToS defaults), generate a balanced paper, review it, then assign it to students.</p>
             <div class="form-row full">
                 <label>Chapters &amp; Table of Specifications</label>
                 <div id="ebChapters"></div>
@@ -590,7 +591,7 @@
             <div class="form-row full" style="display:flex;gap:8px;flex-wrap:wrap;">
                 <button type="button" class="action-btn" onclick="ebCheck()">Check Feasibility</button>
                 <button type="button" class="action-btn" onclick="ebGenerate()">&#9881; Generate Paper</button>
-                <button type="button" class="action-btn" id="ebCreateBtn" style="display:none;" onclick="ebUseAsAssignment()">&#128221; Create Assignment from Exam</button>
+                <button type="button" class="action-btn" id="ebCreateBtn" style="display:none;" onclick="ebUseAsAssignment()">&#10145; Assign to Students</button>
             </div>
             <div class="form-row full" id="ebReview" style="display:none;margin-top:8px;"></div>
             <div class="modal-actions">

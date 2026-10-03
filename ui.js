@@ -1272,6 +1272,23 @@ var UI = (function() {
     var ebGenerated = [];
     var ebPresetQuestions = null;
     var ebPresetTime = 60;
+    var amBlueprintRows = ["amRowSubject", "amRowChapter", "amRowTopic", "amRowCount", "amRowDifficulty", "amRowCognitive", "amRowFormat"];
+
+    // Exam-generated papers skip the blueprint form: hide the ratio/chapter
+    // rows, show a locked-paper summary, and relabel the submit button.
+    function setAssignmentExamMode(on, count, mins) {
+        for (var i = 0; i < amBlueprintRows.length; i++) {
+            var el = $(amBlueprintRows[i]);
+            if (el && el.style) el.style.display = on ? "none" : "";
+        }
+        var sum = $("amExamSummary");
+        if (sum && sum.style) {
+            sum.style.display = on ? "block" : "none";
+            if (on) sum.innerHTML = "&#128203; <strong>" + count + " questions</strong> &bull; " + (mins || 60) + " minutes &bull; paper locked by the Exam Builder &mdash; pick class, title, and due date.";
+        }
+        var btn = $("amSubmitBtn");
+        if (btn) btn.textContent = on ? "Assign to Students" : "Save Assignment";
+    }
 
     function showCreateAssignmentModal(keepPreset) {
         if (!keepPreset) { ebPresetQuestions = null; ebPresetTime = 60; }
@@ -1292,6 +1309,8 @@ var UI = (function() {
         $("amAvailableCount").textContent = "0";
         $("amDiffMsg").textContent = "";
         var fromExam = keepPreset && ebPresetQuestions && ebPresetQuestions.length > 0;
+        $("amModalTitle").textContent = fromExam ? "Assign Exam to Students" : "Create Assignment";
+        setAssignmentExamMode(fromExam, fromExam ? ebPresetQuestions.length : 0, ebPresetTime);
         $("amChapter").required = !fromExam;
         $("amQuestionCount").disabled = !!fromExam;
         if (fromExam) $("amQuestionCount").value = ebPresetQuestions.length;
@@ -1503,6 +1522,7 @@ var UI = (function() {
         $("amQuestionCount").disabled = !!a.fromExam;
         $("amChapter").required = !a.fromExam;
         $("amModalTitle").textContent = a.fromExam ? "Edit Exam Assignment" : "Edit Assignment";
+        setAssignmentExamMode(!!a.fromExam, a.questions ? a.questions.length : 0, a.timeLimit || 60);
         if (a.chapter) $("amChapter").value = a.chapter;
         if (a.topic) $("amTopic").value = a.topic;
         var dt = ExamEngine.DEFAULT_TARGETS;
@@ -1689,7 +1709,7 @@ var UI = (function() {
         if (!plan || plan.length === 0) { ebSetStatus("Could not generate a balanced paper. Adjust ratios or reduce total.", false); return; }
         ebGenerated = plan;
         ebPresetTime = bp.timeLimit;
-        ebSetStatus("Generated " + plan.length + " of " + pool.length + " pool questions. Review below, then create it as an assignment.", true);
+        ebSetStatus("Generated " + plan.length + " of " + pool.length + " pool questions. Review below, then click Assign to Students.", true);
         renderEbReview();
     }
 
