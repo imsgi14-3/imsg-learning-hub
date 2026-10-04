@@ -62,6 +62,7 @@ function launchQuiz(s, c, t, n) { UI.launchQuiz(s, c, t, n); }
 function launchQuickPractice() { UI.launchQuickPractice(); }
 function launchChapterTest() { UI.launchChapterTest(); }
 function launchFullBookTest() { UI.launchFullBookTest(); }
+function launchSubjectFullBook(s) { UI.launchSubjectFullBook(s); }
 function launchWeakPractice() { UI.launchWeakPractice(); }
 function launchRandomQuiz(s) { UI.launchRandomQuiz(s); }
 function showModeDetail(m) { UI.showModeDetail(m); }
@@ -80,6 +81,7 @@ function updateAssignmentAvailableCount() { UI.updateAssignmentAvailableCount();
 function previewAssignmentQuestions() { UI.previewAssignmentQuestions(); }
 function saveAssignment(e) { UI.saveAssignment(e); }
 function showExamBuilder() { UI.showExamBuilder(); }
+function ebSubjectChanged() { UI.ebSubjectChanged(); }
 function ebCheck() { UI.ebCheck(); }
 function ebGenerate() { UI.ebGenerate(); }
 function ebMove(i, d) { UI.ebMove(i, d); }

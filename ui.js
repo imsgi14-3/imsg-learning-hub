@@ -295,6 +295,13 @@ var UI = (function() {
         var sData = subjectsData[subject];
         var html = "";
         if (sData && sData.chapters) {
+            var subjectQs = 0;
+            for (var qi = 0; qi < questions.length; qi++) {
+                if (questions[qi].subject === subject) subjectQs++;
+            }
+            html += '<div class="quiz-mode-card" onclick="launchSubjectFullBook(\'' + subject.replace(/'/g, "\\'") + '\')" style="border:1px solid var(--primary,#2563eb);">';
+            html += '<div class="mode-title">&#128214; Full Book Test</div>';
+            html += '<div class="mode-desc">All chapters &bull; up to 60 of ' + subjectQs + ' questions &bull; 80 min</div></div>';
             for (var i = 0; i < sData.chapters.length; i++) {
                 var ch = sData.chapters[i];
                 var qCount = 0;
@@ -538,8 +545,8 @@ var UI = (function() {
             html += '<h4>&#128214; Full Book Test</h4>';
             html += '<p class="mode-desc">Comprehensive exam. All chapters, balanced difficulty.</p>';
             html += '<div class="mode-info">';
-            html += '<div class="mode-info-item"><strong>50</strong> questions</div>';
-            html += '<div class="mode-info-item"><strong>60 min</strong> time limit</div>';
+            html += '<div class="mode-info-item"><strong>60</strong> questions</div>';
+            html += '<div class="mode-info-item"><strong>80 min</strong> time limit</div>';
             html += '<div class="mode-info-item">Full review + weak analysis</div>';
             html += '</div>';
             html += '<button class="mode-start-btn" onclick="launchFullBookTest()">Start Test</button>';
@@ -594,8 +601,18 @@ var UI = (function() {
 
     function launchFullBookTest() {
         if (questions.length < 20) { alert("Not enough questions. Need at least 20."); return; }
-        var selected = balancedSelect(questions, Math.min(50, questions.length), { evenKey: "chapter" });
-        startQuizUI(selected, 60, "fullbook", "all", "all");
+        var selected = balancedSelect(questions, Math.min(60, questions.length), { evenKey: "chapter" });
+        startQuizUI(selected, 80, "fullbook", "all", "all");
+    }
+
+    function launchSubjectFullBook(subject) {
+        var filtered = [];
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].subject === subject) filtered.push(questions[i]);
+        }
+        if (filtered.length < 20) { alert("Not enough questions for a Full Book Test in " + subject + ". Found " + filtered.length + ", need at least 20."); return; }
+        var selected = ExamEngine.selectBalanced(filtered, Math.min(60, filtered.length), { evenKey: "chapter" });
+        startQuizUI(selected, 80, "fullbook", subject, "all");
     }
 
     function launchWeakPractice() {
@@ -1272,6 +1289,7 @@ var UI = (function() {
     var ebGenerated = [];
     var ebPresetQuestions = null;
     var ebPresetTime = 60;
+    var ebPresetSubject = null;
     var amBlueprintRows = ["amRowSubject", "amRowChapter", "amRowTopic", "amRowCount", "amRowDifficulty", "amRowCognitive", "amRowFormat"];
 
     // Exam-generated papers skip the blueprint form: hide the ratio/chapter
@@ -1291,7 +1309,7 @@ var UI = (function() {
     }
 
     function showCreateAssignmentModal(keepPreset) {
-        if (!keepPreset) { ebPresetQuestions = null; ebPresetTime = 60; }
+        if (!keepPreset) { ebPresetQuestions = null; ebPresetTime = 60; ebPresetSubject = null; }
         $("assignmentForm").reset();
         $("amAssignmentId").value = "";
         $("amModalTitle").textContent = "Create Assignment";
@@ -1326,6 +1344,7 @@ var UI = (function() {
                 csEl.innerHTML += '<option value="' + classes[i].id + '">' + classes[i].name + '</option>';
             }
         }
+        if (fromExam && ebPresetSubject) $("amSubject").value = ebPresetSubject;
         updateAssignmentSubjects();
         updateAssignmentTopics();
         if (fromExam) {
@@ -1614,6 +1633,7 @@ var UI = (function() {
         else assignments.push(d);
         ebPresetQuestions = null;
         ebPresetTime = 60;
+        ebPresetSubject = null;
         saveAll(); pushAssignmentToFirestore(d); closeModal(); renderAssignments();
     }
 
@@ -1624,27 +1644,53 @@ var UI = (function() {
         el.style.color = ok ? "var(--success)" : "var(--error)";
     }
 
-    function showExamBuilder() {
-        var box = $("ebChapters");
-        if (box) {
-            var chapters = (subjectsData["Computer Science"] && subjectsData["Computer Science"].chapters) || [];
-            var h = "";
-            for (var i = 0; i < chapters.length; i++) {
-                var num = chapters[i].num;
-                var count = 0;
-                for (var j = 0; j < questions.length; j++) {
-                    if (String(questions[j].chapter) === String(num)) count++;
-                }
-                h += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-weight:normal;font-size:13px;">';
-                h += '<input type="checkbox" id="ebCh_' + num + '"' + (count > 0 ? "" : " disabled") + '>';
-                h += '<span style="flex:1;">Ch ' + num + ' &mdash; ' + chapters[i].title + '</span>';
-                h += '<span style="color:var(--text-muted);font-size:11px;">' + count + ' Qs</span>';
-                h += '<span style="color:var(--text-muted);font-size:11px;">ToS %</span>';
-                h += '<input type="number" id="ebTos_' + num + '" value="' + ExamEngine.chapterToSPct(num) + '" min="0" max="100" style="width:56px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">';
-                h += '</label>';
-            }
-            box.innerHTML = h;
+    // Same rule as the assignment modal: teacher's own subjects, else all.
+    function ebTeacherSubjects() {
+        var user = Auth.getUser();
+        var allowed = (user && user.subjects) ? user.subjects : [];
+        var out = [];
+        for (var s in subjectsData) {
+            if (allowed.length === 0 || allowed.indexOf(s) !== -1) out.push(s);
         }
+        return out;
+    }
+
+    function ebRenderChapters(subject) {
+        var box = $("ebChapters");
+        if (!box) return;
+        var chapters = (subjectsData[subject] && subjectsData[subject].chapters) || [];
+        var evenPct = chapters.length ? Math.round(100 / chapters.length) : 100;
+        var h = "";
+        for (var i = 0; i < chapters.length; i++) {
+            var num = chapters[i].num;
+            var count = 0;
+            for (var j = 0; j < questions.length; j++) {
+                if (questions[j].subject === subject && String(questions[j].chapter) === String(num)) count++;
+            }
+            var tos = ExamEngine.chapterToSPct(num) || evenPct;
+            h += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-weight:normal;font-size:13px;">';
+            h += '<input type="checkbox" id="ebCh_' + num + '"' + (count > 0 ? "" : " disabled") + '>';
+            h += '<span style="flex:1;">Ch ' + num + ' &mdash; ' + chapters[i].title + '</span>';
+            h += '<span style="color:var(--text-muted);font-size:11px;">' + count + ' Qs</span>';
+            h += '<span style="color:var(--text-muted);font-size:11px;">ToS %</span>';
+            h += '<input type="number" id="ebTos_' + num + '" value="' + tos + '" min="0" max="100" style="width:56px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">';
+            h += '</label>';
+        }
+        box.innerHTML = h;
+    }
+
+    function showExamBuilder() {
+        var subs = ebTeacherSubjects();
+        var sel = $("ebSubject");
+        if (sel) {
+            var prev = sel.value;
+            var h = "";
+            for (var i = 0; i < subs.length; i++) h += '<option value="' + subs[i] + '">' + subs[i] + '</option>';
+            sel.innerHTML = h;
+            if (prev && subs.indexOf(prev) !== -1) sel.value = prev;
+        }
+        var subject = sel && sel.value ? sel.value : "Computer Science";
+        ebRenderChapters(subject);
         ebGenerated = [];
         renderEbReview();
         ebSetStatus("Select chapters and ratios, then Check Feasibility.", true);
@@ -1652,8 +1698,19 @@ var UI = (function() {
         $("modalOverlay").classList.add("active");
     }
 
+    function ebSubjectChanged() {
+        var sel = $("ebSubject");
+        var subject = sel && sel.value ? sel.value : "Computer Science";
+        ebRenderChapters(subject);
+        ebGenerated = [];
+        renderEbReview();
+        ebSetStatus("Subject changed to " + subject + ". Select chapters, then Check Feasibility.", true);
+    }
+
     function ebReadBlueprint() {
-        var chapters = (subjectsData["Computer Science"] && subjectsData["Computer Science"].chapters) || [];
+        var sel = $("ebSubject");
+        var subject = sel && sel.value ? sel.value : "Computer Science";
+        var chapters = (subjectsData[subject] && subjectsData[subject].chapters) || [];
         var chSel = [];
         var pcts = [];
         for (var i = 0; i < chapters.length; i++) {
@@ -1667,6 +1724,7 @@ var UI = (function() {
         var bpCh = [];
         for (var j = 0; j < chSel.length; j++) bpCh.push({ chapter: chSel[j], pct: norm[j] });
         return {
+            subject: subject,
             total: parseInt($("ebTotal").value, 10) || 0,
             timeLimit: parseInt($("ebTime").value, 10) || 60,
             chapters: bpCh,
@@ -1682,7 +1740,7 @@ var UI = (function() {
         for (var i = 0; i < bp.chapters.length; i++) inCh[String(bp.chapters[i].chapter)] = true;
         var pool = [];
         for (var j = 0; j < questions.length; j++) {
-            if (inCh[String(questions[j].chapter)]) pool.push(questions[j]);
+            if (questions[j].subject === bp.subject && inCh[String(questions[j].chapter)]) pool.push(questions[j]);
         }
         return pool;
     }
@@ -1765,6 +1823,8 @@ var UI = (function() {
         var ids = [];
         for (var i = 0; i < ebGenerated.length; i++) ids.push(ebGenerated[i].id);
         ebPresetQuestions = ids;
+        var selEl = $("ebSubject");
+        ebPresetSubject = selEl && selEl.value ? selEl.value : "Computer Science";
         closeModal();
         showCreateAssignmentModal(true);
     }
@@ -4480,6 +4540,7 @@ var UI = (function() {
         launchQuickPractice: launchQuickPractice,
         launchChapterTest: launchChapterTest,
         launchFullBookTest: launchFullBookTest,
+        launchSubjectFullBook: launchSubjectFullBook,
         launchWeakPractice: launchWeakPractice,
         launchRandomQuiz: launchRandomQuiz,
         startQuizUI: startQuizUI,
@@ -4509,6 +4570,7 @@ var UI = (function() {
         deleteAssignment: deleteAssignment,
         saveAssignment: saveAssignment,
         showExamBuilder: showExamBuilder,
+        ebSubjectChanged: ebSubjectChanged,
         ebCheck: ebCheck,
         ebGenerate: ebGenerate,
         ebMove: ebMove,

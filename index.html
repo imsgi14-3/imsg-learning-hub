@@ -532,6 +532,10 @@
             <h3>&#128203; Exam Builder</h3>
             <p class="login-subtitle" style="font-size:12px;text-align:left;">Pick chapters and blueprint ratios (FBISE ToS defaults), generate a balanced paper, review it, then assign it to students.</p>
             <div class="form-row full">
+                <label>Subject</label>
+                <select id="ebSubject" onchange="ebSubjectChanged()" style="max-width:340px;"></select>
+            </div>
+            <div class="form-row full">
                 <label>Chapters &amp; Table of Specifications</label>
                 <div id="ebChapters"></div>
             </div>
