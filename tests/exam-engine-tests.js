@@ -318,4 +318,47 @@ function runExamEngineTests() {
     TestRunner.assertEqual(ExamEngine.orderScenarioGroups([]).length, 0, "Empty list stays empty");
     var single = ExamEngine.orderScenarioGroups([grpQ("only", "G9", 2)]);
     TestRunner.assertEqual(single.length, 1, "Single question list unchanged");
+
+    TestRunner.suite("Offline Exam - Paper Builder");
+
+    TestRunner.assertType(UI.oeBuildPaperHTML, "function", "oeBuildPaperHTML exposed on UI");
+
+    var straightQ = { id: "S1", question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "B", difficulty: "easy" };
+    var scenQ1 = { id: "G1", question: "Which option fits <b>best</b>?", options: ["x", "y", "z", "w"], answer: "A", mode: "scenario", scenario_id: "SG-1", stimulus: "Read the passage & answer.", difficulty: "medium" };
+    var scenQ2 = { id: "G2", question: "Second scenario?", options: ["p", "q", "r", "s"], answer: "C", mode: "scenario", scenario_id: "SG-1", stimulus: "Read the passage & answer.", difficulty: "medium" };
+    var mediaQ = { id: "M1", question: "Identify the diagram.", options: ["A1", "B1", "C1", "D1"], answer: "D", media: "media/star01.png" };
+
+    var meta = { title: "Grade IX Computer Science <A & B> Section A", className: "9", time: 80, marks: 30, includeKey: true, date: "1/1/2026" };
+    var html = UI.oeBuildPaperHTML(meta, [straightQ, scenQ1, scenQ2, mediaQ]);
+
+    TestRunner.assertType(html, "string", "builder returns a string");
+    TestRunner.assert(html.indexOf("IMSG I-14/3 ISLAMABAD") !== -1, "school name in header");
+    TestRunner.assert(html.indexOf("Grade IX Computer Science &lt;A &amp; B&gt; Section A") !== -1, "title HTML-escaped");
+    TestRunner.assert(html.indexOf("Class: 9") !== -1, "class label rendered");
+    TestRunner.assert(html.indexOf("Time: 80 Minutes") !== -1, "time rendered");
+    TestRunner.assert(html.indexOf("Total Marks: 30") !== -1, "marks rendered");
+    TestRunner.assert(html.indexOf("(7.5 marks each)") !== -1, "per-question marks computed (30/4)");
+    TestRunner.assert(html.indexOf("What is 2 + 2?") !== -1, "straight question rendered");
+    TestRunner.assert(html.indexOf("A. 3") !== -1 && html.indexOf("B. 4") !== -1, "options labelled A-D");
+    TestRunner.assert(html.indexOf("Questions 2&ndash;3 are based on the following:") !== -1, "stimulus block spans the scenario group");
+    TestRunner.assert(html.indexOf("Read the passage &amp; answer.") !== -1, "stimulus text escaped");
+    TestRunner.assert(html.indexOf("Read the passage &amp; answer.") === html.lastIndexOf("Read the passage &amp; answer."), "stimulus shown once per group");
+    TestRunner.assert(html.indexOf("Which option fits &lt;b&gt;best&lt;/b&gt;?") !== -1, "question text escaped");
+    TestRunner.assert(html.indexOf('src="media/star01.png"') !== -1, "media image rendered");
+    TestRunner.assert(html.indexOf("Answer Key &mdash; Section A") !== -1, "answer key included when requested");
+    TestRunner.assert(html.indexOf("1. B") !== -1 && html.indexOf("4. D") !== -1, "answer key letters match order");
+    TestRunner.assert(html.indexOf(">1.<") !== -1 && html.indexOf(">4.<") !== -1, "questions numbered 1..n");
+
+    var noKey = UI.oeBuildPaperHTML({ title: "T", className: "9", time: 60, marks: 10, includeKey: false }, [straightQ]);
+    TestRunner.assert(noKey.indexOf("Answer Key") === -1, "answer key omitted when unchecked");
+    TestRunner.assert(noKey.indexOf("(10 marks each)") !== -1, "single question shows 10 marks each");
+
+    var empty = UI.oeBuildPaperHTML(meta, []);
+    TestRunner.assertType(empty, "string", "empty question list still builds");
+    TestRunner.assert(empty.indexOf("Section A &mdash; 0 Multiple Choice Questions") !== -1, "empty paper reports 0 questions");
+    TestRunner.assert(empty.indexOf("Answer Key") !== -1, "empty paper can still carry a key block");
+
+    var missingFields = UI.oeBuildPaperHTML({ includeKey: true }, [{}]);
+    TestRunner.assert(missingFields.indexOf("paper-title\">Section A") !== -1, "missing meta falls back to defaults");
+    TestRunner.assert(missingFields.indexOf("1. ?") !== -1, "missing answer shows ? in key");
 }

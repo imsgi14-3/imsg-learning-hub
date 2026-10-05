@@ -126,6 +126,7 @@
                 <button class="tab-btn" onclick="showTeacherTab('questionbank')">&#128218; Question Bank</button>
                 <button class="tab-btn" onclick="showTeacherTab('assignments')">&#128220; Assignments</button>
                 <button class="tab-btn" onclick="showTeacherTab('analytics')">&#128200; Class Analytics</button>
+                <button class="tab-btn" onclick="showTeacherTab('offlineexam')">&#128424; Offline Exam</button>
             </div>
             <div id="teacherClassesTab" class="tab-content active">
                 <h3>&#127979; My Classes</h3>
@@ -178,6 +179,89 @@
                 <div id="teacherClassCards"></div>
                 <div id="classAnalyticsContent" style="display:none;"></div>
                 <button id="backToClassCards" class="action-btn" style="display:none;margin-bottom:16px;" onclick="showClassCards()">&#8592; Back to Classes</button>
+            </div>
+            <div id="teacherOfflineExamTab" class="tab-content" style="display:none;">
+                <h3>&#128424; Offline Exam &mdash; Section A (PDF)</h3>
+                <p style="font-size:13px;color:var(--text-mid);margin-bottom:16px;">Generate an FBISE-style Section A paper from the question bank, review it, then print or save it as PDF. Sections B &amp; C will be added later.</p>
+                <div class="form-row full">
+                    <label>Exam title</label>
+                    <input type="text" id="oeTitle" value="Grade IX Computer Science — Section A">
+                </div>
+                <div class="form-row full">
+                    <label>Class / Roll No. label</label>
+                    <input type="text" id="oeClass" value="9">
+                </div>
+                <div class="form-row full">
+                    <label>Subject</label>
+                    <select id="oeSubject" onchange="oeSubjectChanged()" style="max-width:340px;"></select>
+                </div>
+                <div class="form-row full">
+                    <label>Chapters &amp; Table of Specifications</label>
+                    <div id="oeChapters"></div>
+                </div>
+                <div class="form-row full">
+                    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:normal;font-size:13px;">Total MCQs
+                            <input type="number" id="oeTotal" value="60" min="1" max="120" style="width:64px;padding:4px;border:1px solid var(--border);border-radius:4px;">
+                        </label>
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:normal;font-size:13px;">Time (min)
+                            <input type="number" id="oeTime" value="80" min="5" max="300" style="width:64px;padding:4px;border:1px solid var(--border);border-radius:4px;">
+                        </label>
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:normal;font-size:13px;">Marks
+                            <input type="number" id="oeMarks" value="30" min="1" max="100" style="width:64px;padding:4px;border:1px solid var(--border);border-radius:4px;">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <label>Cognitive Distribution % (K / U / A)</label>
+                    <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Knowledge
+                            <input type="number" id="oeK" value="30" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Understanding
+                            <input type="number" id="oeU" value="50" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Application
+                            <input type="number" id="oeA" value="20" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <label>Difficulty Distribution %</label>
+                    <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                            <span style="color:#22c55e;">&#9679;</span> Easy
+                            <input type="number" id="oeEasy" value="40" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                            <span style="color:#f59e0b;">&#9679;</span> Medium
+                            <input type="number" id="oeMedium" value="40" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
+                            <span style="color:#ef4444;">&#9679;</span> Hard
+                            <input type="number" id="oeHard" value="20" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <label>Question Format %</label>
+                    <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Straight
+                            <input type="number" id="oeStraight" value="67" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                        </label>
+                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Scenario / Stimulus
+                            <input type="number" id="oeScenario" value="33" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
+                        </label>
+                    </div>
+                </div>
+                <p id="oeStatus" style="font-size:12px;min-height:16px;margin:4px 0 8px;"></p>
+                <div class="form-row full" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                    <button type="button" class="action-btn" onclick="oeCheck()">Check Feasibility</button>
+                    <button type="button" class="action-btn" onclick="oeGenerate()">&#9881; Generate Paper</button>
+                    <button type="button" class="action-btn" id="oePrintBtn" style="display:none;" onclick="oePrint()">&#128424; Print / Save as PDF</button>
+                    <label style="display:flex;align-items:center;gap:6px;font-weight:normal;font-size:13px;"><input type="checkbox" id="oeKey" checked> Include answer key page</label>
+                </div>
+                <div class="form-row full" id="oeReview" style="display:none;margin-top:8px;"></div>
             </div>
         </div>
 
@@ -742,6 +826,7 @@
 
     </main>
     <footer><p>&#127891; IMSG I-14/3 Islamabad &bull; Learning Hub</p></footer>
+    <div id="printArea" aria-hidden="true"></div>
     <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>

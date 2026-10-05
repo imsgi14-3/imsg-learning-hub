@@ -706,8 +706,8 @@ var UI = (function() {
             }
             $("teacherSubjectDisplay").textContent = tSubs.join(", ") || "N/A";
         }
-        var map = { classes: 0, students: 1, questionbank: 2, assignments: 3, analytics: 4 };
-        var ids = ["teacherClassesTab", "teacherStudentsTab", "teacherQuestionBankTab", "teacherAssignmentsTab", "teacherAnalyticsTab"];
+        var map = { classes: 0, students: 1, questionbank: 2, assignments: 3, analytics: 4, offlineexam: 5 };
+        var ids = ["teacherClassesTab", "teacherStudentsTab", "teacherQuestionBankTab", "teacherAssignmentsTab", "teacherAnalyticsTab", "teacherOfflineExamTab"];
         for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) el.style.display = "none"; }
         activateTab("#teacherDashboard", map[tab]);
         if (tab === "classes") { $("teacherClassesTab").style.display = "block"; renderClasses(); }
@@ -729,6 +729,7 @@ var UI = (function() {
         }
         else if (tab === "assignments") { $("teacherAssignmentsTab").style.display = "block"; renderAssignments(); }
         else if (tab === "analytics") { $("teacherAnalyticsTab").style.display = "block"; showClassCards(); }
+        else if (tab === "offlineexam") { $("teacherOfflineExamTab").style.display = "block"; oeInit(); }
     }
 
     var selectedAnalyticsClassId = null;
@@ -1637,8 +1638,8 @@ var UI = (function() {
         saveAll(); pushAssignmentToFirestore(d); closeModal(); renderAssignments();
     }
 
-    function ebSetStatus(msg, ok) {
-        var el = $("ebStatus");
+    function ebSetStatus(msg, ok, pfx) {
+        var el = $((pfx || "eb") + "Status");
         if (!el) return;
         el.textContent = msg;
         el.style.color = ok ? "var(--success)" : "var(--error)";
@@ -1655,8 +1656,9 @@ var UI = (function() {
         return out;
     }
 
-    function ebRenderChapters(subject) {
-        var box = $("ebChapters");
+    function ebRenderChapters(subject, pfx) {
+        pfx = pfx || "eb";
+        var box = $(pfx + "Chapters");
         if (!box) return;
         var chapters = (subjectsData[subject] && subjectsData[subject].chapters) || [];
         var evenPct = chapters.length ? Math.round(100 / chapters.length) : 100;
@@ -1669,11 +1671,11 @@ var UI = (function() {
             }
             var tos = ExamEngine.chapterToSPct(num) || evenPct;
             h += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-weight:normal;font-size:13px;">';
-            h += '<input type="checkbox" id="ebCh_' + num + '"' + (count > 0 ? "" : " disabled") + '>';
+            h += '<input type="checkbox" id="' + pfx + 'Ch_' + num + '"' + (count > 0 ? "" : " disabled") + '>';
             h += '<span style="flex:1;">Ch ' + num + ' &mdash; ' + chapters[i].title + '</span>';
             h += '<span style="color:var(--text-muted);font-size:11px;">' + count + ' Qs</span>';
             h += '<span style="color:var(--text-muted);font-size:11px;">ToS %</span>';
-            h += '<input type="number" id="ebTos_' + num + '" value="' + tos + '" min="0" max="100" style="width:56px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">';
+            h += '<input type="number" id="' + pfx + 'Tos_' + num + '" value="' + tos + '" min="0" max="100" style="width:56px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">';
             h += '</label>';
         }
         box.innerHTML = h;
@@ -1707,17 +1709,18 @@ var UI = (function() {
         ebSetStatus("Subject changed to " + subject + ". Select chapters, then Check Feasibility.", true);
     }
 
-    function ebReadBlueprint() {
-        var sel = $("ebSubject");
+    function ebReadBlueprint(pfx) {
+        pfx = pfx || "eb";
+        var sel = $(pfx + "Subject");
         var subject = sel && sel.value ? sel.value : "Computer Science";
         var chapters = (subjectsData[subject] && subjectsData[subject].chapters) || [];
         var chSel = [];
         var pcts = [];
         for (var i = 0; i < chapters.length; i++) {
-            var cb = $("ebCh_" + chapters[i].num);
+            var cb = $(pfx + "Ch_" + chapters[i].num);
             if (cb && cb.checked) {
                 chSel.push(chapters[i].num);
-                pcts.push(parseInt($("ebTos_" + chapters[i].num).value, 10) || 0);
+                pcts.push(parseInt($(pfx + "Tos_" + chapters[i].num).value, 10) || 0);
             }
         }
         var norm = ExamEngine.normalizeToSAlloc(pcts);
@@ -1725,17 +1728,17 @@ var UI = (function() {
         for (var j = 0; j < chSel.length; j++) bpCh.push({ chapter: chSel[j], pct: norm[j] });
         return {
             subject: subject,
-            total: parseInt($("ebTotal").value, 10) || 0,
-            timeLimit: parseInt($("ebTime").value, 10) || 60,
+            total: parseInt($(pfx + "Total").value, 10) || 0,
+            timeLimit: parseInt($(pfx + "Time").value, 10) || 60,
             chapters: bpCh,
-            cognitive: { k: parseInt($("ebK").value, 10) || 0, u: parseInt($("ebU").value, 10) || 0, a: parseInt($("ebA").value, 10) || 0 },
-            difficulty: { easy: parseInt($("ebEasy").value, 10) || 0, medium: parseInt($("ebMedium").value, 10) || 0, hard: parseInt($("ebHard").value, 10) || 0 },
-            format: { straight: parseInt($("ebStraight").value, 10) || 0, scenario: parseInt($("ebScenario").value, 10) || 0 }
+            cognitive: { k: parseInt($(pfx + "K").value, 10) || 0, u: parseInt($(pfx + "U").value, 10) || 0, a: parseInt($(pfx + "A").value, 10) || 0 },
+            difficulty: { easy: parseInt($(pfx + "Easy").value, 10) || 0, medium: parseInt($(pfx + "Medium").value, 10) || 0, hard: parseInt($(pfx + "Hard").value, 10) || 0 },
+            format: { straight: parseInt($(pfx + "Straight").value, 10) || 0, scenario: parseInt($(pfx + "Scenario").value, 10) || 0 }
         };
     }
 
-    function ebPool() {
-        var bp = ebReadBlueprint();
+    function ebPool(pfx) {
+        var bp = ebReadBlueprint(pfx);
         var inCh = {};
         for (var i = 0; i < bp.chapters.length; i++) inCh[String(bp.chapters[i].chapter)] = true;
         var pool = [];
@@ -1745,29 +1748,32 @@ var UI = (function() {
         return pool;
     }
 
-    function ebCheck() {
-        var bp = ebReadBlueprint();
+    // Shared validate + feasibility check for both the Exam Builder modal
+    // ("eb") and the Offline Exam tab ("oe").
+    function checkPaperCore(pfx) {
+        var bp = ebReadBlueprint(pfx);
         var errs = ExamEngine.validateBlueprint(bp);
-        if (errs.length) { ebSetStatus(errs.join(" "), false); return false; }
-        var pool = ebPool();
+        if (errs.length) return { ok: false, bp: bp, msg: errs.join(" ") };
+        var pool = ebPool(pfx);
         var shortages = ExamEngine.checkFeasibility(bp, pool);
-        if (shortages.length) { ebSetStatus("Not feasible (pool " + pool.length + "): " + shortages.join(" | "), false); return false; }
-        ebSetStatus("Feasible — pool of " + pool.length + " questions can fill every ratio for " + bp.total + " questions.", true);
-        return true;
+        if (shortages.length) return { ok: false, bp: bp, pool: pool, msg: "Not feasible (pool " + pool.length + "): " + shortages.join(" | ") };
+        return { ok: true, bp: bp, pool: pool, msg: "Feasible — pool of " + pool.length + " questions can fill every ratio for " + bp.total + " questions." };
+    }
+
+    function ebCheck() {
+        var r = checkPaperCore("eb");
+        ebSetStatus(r.msg, r.ok);
+        return r.ok;
     }
 
     function ebGenerate() {
-        var bp = ebReadBlueprint();
-        var errs = ExamEngine.validateBlueprint(bp);
-        if (errs.length) { ebSetStatus(errs.join(" "), false); return; }
-        var pool = ebPool();
-        var shortages = ExamEngine.checkFeasibility(bp, pool);
-        if (shortages.length) { ebSetStatus("Not feasible (pool " + pool.length + "): " + shortages.join(" | "), false); return; }
-        var plan = ExamEngine.generateExamPlan(bp, pool, 250);
+        var r = checkPaperCore("eb");
+        if (!r.ok) { ebSetStatus(r.msg, false); return; }
+        var plan = ExamEngine.generateExamPlan(r.bp, r.pool, 250);
         if (!plan || plan.length === 0) { ebSetStatus("Could not generate a balanced paper. Adjust ratios or reduce total.", false); return; }
         ebGenerated = plan;
-        ebPresetTime = bp.timeLimit;
-        ebSetStatus("Generated " + plan.length + " of " + pool.length + " pool questions. Review below, then click Assign to Students.", true);
+        ebPresetTime = r.bp.timeLimit;
+        ebSetStatus("Generated " + plan.length + " of " + r.pool.length + " pool questions. Review below, then click Assign to Students.", true);
         renderEbReview();
     }
 
@@ -1827,6 +1833,194 @@ var UI = (function() {
         ebPresetSubject = selEl && selEl.value ? selEl.value : "Computer Science";
         closeModal();
         showCreateAssignmentModal(true);
+    }
+
+    // ---------------------------------------------------------------
+    // Offline Exam tab: generates a printable Section A paper (HTML ->
+    // browser print / Save as PDF). Pure builder + thin DOM glue so the
+    // paper HTML stays testable without a browser.
+    // ---------------------------------------------------------------
+    var oeGenerated = [];
+
+    function oeStatus(msg, ok) { ebSetStatus(msg, ok, "oe"); }
+
+    function oeInit() {
+        var sel = $("oeSubject");
+        if (!sel) return;
+        if (sel.options.length > 0) return; // tab DOM persists; init once
+        var subs = ebTeacherSubjects();
+        var h = "";
+        for (var i = 0; i < subs.length; i++) h += '<option value="' + subs[i] + '">' + subs[i] + '</option>';
+        sel.innerHTML = h;
+        var subject = sel.value || "Computer Science";
+        ebRenderChapters(subject, "oe");
+        oeStatus("Select chapters and ratios, then Check Feasibility.", true);
+    }
+
+    function oeSubjectChanged() {
+        var sel = $("oeSubject");
+        var subject = sel && sel.value ? sel.value : "Computer Science";
+        ebRenderChapters(subject, "oe");
+        oeGenerated = [];
+        oeRenderReview();
+        oeStatus("Subject changed to " + subject + ". Select chapters, then Check Feasibility.", true);
+    }
+
+    function oeCheck() {
+        var r = checkPaperCore("oe");
+        oeStatus(r.msg, r.ok);
+        return r.ok;
+    }
+
+    function oeGenerate() {
+        var r = checkPaperCore("oe");
+        if (!r.ok) { oeStatus(r.msg, false); return; }
+        var plan = ExamEngine.generateExamPlan(r.bp, r.pool, 250);
+        if (!plan || plan.length === 0) { oeStatus("Could not generate a balanced paper. Adjust ratios or reduce total.", false); return; }
+        oeGenerated = plan;
+        oeStatus("Generated " + plan.length + " of " + r.pool.length + " pool questions. Review below, then Print / Save as PDF.", true);
+        oeRenderReview();
+    }
+
+    function oeRenderReview() {
+        var box = $("oeReview");
+        var printBtn = $("oePrintBtn");
+        if (!box) return;
+        if (oeGenerated.length === 0) {
+            box.style.display = "none";
+            box.innerHTML = "";
+            if (printBtn) printBtn.style.display = "none";
+            return;
+        }
+        var h = '<label style="font-weight:normal;font-size:13px;">Generated Paper (' + oeGenerated.length + ' questions)</label>';
+        h += '<div style="max-height:320px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;">';
+        for (var i = 0; i < oeGenerated.length; i++) {
+            var q = oeGenerated[i];
+            var txt = (q.question || q.text || "").substring(0, 90);
+            var diffColor = q.difficulty === "easy" ? "#22c55e" : (q.difficulty === "medium" ? "#f59e0b" : "#ef4444");
+            h += '<div style="display:flex;gap:8px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--border);font-size:12px;">';
+            h += '<span style="width:24px;color:var(--text-muted);">' + (i + 1) + '.</span>';
+            h += '<span style="color:' + diffColor + ';font-weight:700;width:14px;" title="' + q.difficulty + '">' + String(q.difficulty || "?").charAt(0).toUpperCase() + '</span>';
+            h += '<span style="font-weight:600;width:78px;">' + q.id + '</span>';
+            h += '<span style="flex:1;color:var(--text-muted);">' + txt + '...</span>';
+            h += '<button type="button" onclick="oeMove(' + i + ',-1)" title="Move up" style="border:1px solid var(--border);background:#fff;border-radius:4px;cursor:pointer;padding:1px 7px;">&uarr;</button>';
+            h += '<button type="button" onclick="oeMove(' + i + ',1)" title="Move down" style="border:1px solid var(--border);background:#fff;border-radius:4px;cursor:pointer;padding:1px 7px;">&darr;</button>';
+            h += '<button type="button" onclick="oeDelete(' + i + ')" title="Remove" style="border:1px solid var(--border);background:#fff;border-radius:4px;cursor:pointer;padding:1px 7px;color:var(--error);">&times;</button>';
+            h += '</div>';
+        }
+        h += '</div>';
+        box.innerHTML = h;
+        box.style.display = "block";
+        if (printBtn) printBtn.style.display = "inline-block";
+    }
+
+    function oeMove(i, dir) {
+        var j = i + dir;
+        if (j < 0 || j >= oeGenerated.length) return;
+        var t = oeGenerated[i];
+        oeGenerated[i] = oeGenerated[j];
+        oeGenerated[j] = t;
+        oeRenderReview();
+    }
+
+    function oeDelete(i) {
+        oeGenerated.splice(i, 1);
+        if (oeGenerated.length === 0) oeStatus("Paper is empty — generate again.", false);
+        oeRenderReview();
+    }
+
+    function oeEsc(s) {
+        return String(s === null || s === undefined ? "" : s)
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+
+    // Pure: meta = { title, className, time, marks, includeKey, date }
+    // qs   = ordered question objects (straight first, scenario groups
+    //        contiguous). Returns the full printable paper HTML string.
+    function oeBuildPaperHTML(meta, qs) {
+        meta = meta || {};
+        qs = qs || [];
+        var count = qs.length;
+        var perQ = count > 0 ? (Number(meta.marks) || 0) / count : 0;
+        var perQStr = String(Math.round(perQ * 100) / 100);
+
+        function pq(q, num) {
+            var h = '<div class="pq"><span class="pq-n">' + num + '.</span><div class="pq-body">';
+            h += '<div class="pq-t">' + oeEsc(q.question || q.text || "") + '</div>';
+            if (q.media) h += '<img class="pq-img" src="' + oeEsc(q.media) + '" alt="">';
+            h += '<div class="pq-opts">';
+            var opts = q.options || [];
+            for (var i = 0; i < opts.length; i++) h += '<span class="pq-o">' + String.fromCharCode(65 + i) + '. ' + oeEsc(opts[i]) + '</span>';
+            h += '</div></div></div>';
+            return h;
+        }
+
+        var h = '<div class="paper">';
+        h += '<div class="paper-head">';
+        h += '<div class="paper-school">IMSG I-14/3 ISLAMABAD</div>';
+        h += '<div class="paper-title">' + oeEsc(meta.title || "Section A") + '</div>';
+        h += '<div class="paper-meta">Class: ' + oeEsc(meta.className || "-") +
+             ' &nbsp;|&nbsp; Time: ' + oeEsc(meta.time || "") + ' Minutes' +
+             ' &nbsp;|&nbsp; Total Marks: ' + oeEsc(meta.marks === undefined ? "" : meta.marks) +
+             ' &nbsp;|&nbsp; Date: ' + oeEsc(meta.date || "") + '</div>';
+        h += '<div class="paper-fields">Name: ______________________&nbsp;&nbsp; Roll No: ______________</div>';
+        h += '</div>';
+        h += '<div class="paper-note">Section A &mdash; ' + count + ' Multiple Choice Questions (' +
+             perQStr + ' mark' + (perQStr === "1" ? "" : "s") + ' each). Select the correct answer for each question.</div>';
+
+        var i = 0, num = 0;
+        while (i < count) {
+            var q = qs[i];
+            if (ExamEngine.normFormat(q) === "scenario" && q.scenario_id) {
+                var sid = q.scenario_id;
+                var j = i;
+                while (j < count && qs[j].scenario_id === sid) j++;
+                var stim = q.stimulus || q.scenario_stimulus || "";
+                if (stim) {
+                    h += '<div class="pq-stim"><div class="pq-stim-label">Questions ' + (i + 1) + '&ndash;' + j +
+                         ' are based on the following:</div><div class="pq-stim-text">' + oeEsc(stim) + '</div></div>';
+                }
+                for (; i < j; i++) { num++; h += pq(qs[i], num); }
+            } else {
+                i++; num++;
+                h += pq(q, num);
+            }
+        }
+
+        if (meta.includeKey) {
+            h += '<div class="paper-key">';
+            h += '<div class="paper-key-title">Answer Key &mdash; Section A</div>';
+            h += '<div class="paper-key-grid">';
+            for (var k = 0; k < count; k++) {
+                h += '<span class="paper-key-item">' + (k + 1) + '. ' + oeEsc(qs[k].answer || "?") + '</span>';
+            }
+            h += '</div></div>';
+        }
+        h += '</div>';
+        return h;
+    }
+
+    function oePrint() {
+        if (oeGenerated.length === 0) { oeStatus("Generate a paper first.", false); return; }
+        var meta = {
+            title: ($("oeTitle") && $("oeTitle").value) || "Section A",
+            className: ($("oeClass") && $("oeClass").value) || "-",
+            time: ($("oeTime") && $("oeTime").value) || 0,
+            marks: ($("oeMarks") && $("oeMarks").value) || 0,
+            includeKey: $("oeKey") ? !!$("oeKey").checked : false,
+            date: new Date().toLocaleDateString()
+        };
+        var area = $("printArea");
+        if (!area) { oeStatus("Print container missing in page.", false); return; }
+        area.innerHTML = oeBuildPaperHTML(meta, oeGenerated);
+        var oldTitle = document.title;
+        try {
+            document.title = String(meta.title).replace(/[\\\/:*?"<>|]/g, "");
+            window.print();
+        } finally {
+            document.title = oldTitle;
+        }
     }
 
 
@@ -4576,6 +4770,14 @@ var UI = (function() {
         ebMove: ebMove,
         ebDelete: ebDelete,
         ebUseAsAssignment: ebUseAsAssignment,
+        oeInit: oeInit,
+        oeSubjectChanged: oeSubjectChanged,
+        oeCheck: oeCheck,
+        oeGenerate: oeGenerate,
+        oeMove: oeMove,
+        oeDelete: oeDelete,
+        oePrint: oePrint,
+        oeBuildPaperHTML: oeBuildPaperHTML,
         showAssignmentStatus: showAssignmentStatus,
         hideAssignmentStatus: hideAssignmentStatus,
         loadClassAnalytics: loadClassAnalytics,

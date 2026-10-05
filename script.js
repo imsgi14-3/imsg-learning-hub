@@ -87,6 +87,12 @@ function ebGenerate() { UI.ebGenerate(); }
 function ebMove(i, d) { UI.ebMove(i, d); }
 function ebDelete(i) { UI.ebDelete(i); }
 function ebUseAsAssignment() { UI.ebUseAsAssignment(); }
+function oeSubjectChanged() { UI.oeSubjectChanged(); }
+function oeCheck() { return UI.oeCheck(); }
+function oeGenerate() { UI.oeGenerate(); }
+function oeMove(i, d) { UI.oeMove(i, d); }
+function oeDelete(i) { UI.oeDelete(i); }
+function oePrint() { UI.oePrint(); }
 function editAssignment(i) { UI.editAssignment(i); }
 function deleteAssignment(i) { UI.deleteAssignment(i); }
 function showAssignmentStatus(i) { UI.showAssignmentStatus(i); }
