@@ -88,6 +88,7 @@ function ebMove(i, d) { UI.ebMove(i, d); }
 function ebDelete(i) { UI.ebDelete(i); }
 function ebUseAsAssignment() { UI.ebUseAsAssignment(); }
 function oeSubjectChanged() { UI.oeSubjectChanged(); }
+function oeSelectAll(on) { UI.oeSelectAll(on); }
 function oeCheck() { return UI.oeCheck(); }
 function oeGenerate() { UI.oeGenerate(); }
 function oeMove(i, d) { UI.oeMove(i, d); }

@@ -2510,7 +2510,204 @@ footer {
     text-decoration: underline;
 }
 
-/* ============ OFFLINE EXAM — PAPER / PRINT ============ */
+/* ============ OFFLINE EXAM TAB â€” LAYOUT ============ */
+.oe-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.oe-head h3 { margin-bottom: 4px; }
+.oe-sub { font-size: 13px; color: var(--text-mid); margin: 0; max-width: 640px; }
+
+.oe-status {
+    font-size: 12.5px;
+    line-height: 1.4;
+    min-height: 32px;
+    max-width: 46%;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 6px 12px;
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow-sm);
+}
+
+.oe-layout {
+    display: grid;
+    grid-template-columns: minmax(340px, 5fr) minmax(340px, 6fr);
+    gap: 16px;
+    align-items: start;
+}
+.oe-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.oe-panel { padding: 16px; margin-bottom: 0; }
+.oe-panel h4 { margin-bottom: 12px; }
+.oe-hint {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 6px;
+}
+
+.oe-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+.oe-panel-head h4 { margin-bottom: 0; }
+.oe-tools { display: flex; align-items: center; gap: 6px; }
+.oe-tools .icon-btn { padding: 4px 10px; font-size: 12px; margin: 0; }
+
+.oe-field { margin-bottom: 12px; }
+.oe-field:last-child { margin-bottom: 0; }
+.oe-field label {
+    display: block;
+    font-weight: 600;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--text-mid);
+    margin-bottom: 5px;
+}
+.oe-field input,
+.oe-field select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-dark);
+    background: #fafbfe;
+    transition: var(--transition);
+}
+.oe-field input:focus,
+.oe-field select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(79,70,229,0.1);
+    background: #fff;
+}
+.oe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px 12px;
+}
+
+.oe-ratio-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 9px 0;
+    border-bottom: 1px dashed var(--border);
+}
+.oe-ratio-row:last-child { border-bottom: none; padding-bottom: 0; }
+.oe-ratio-row:first-of-type { padding-top: 0; }
+.oe-ratio-name {
+    width: 92px;
+    flex-shrink: 0;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--text-mid);
+}
+.oe-ratio-items { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex: 1; min-width: 0; }
+.oe-ratio {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dark);
+    white-space: nowrap;
+}
+.oe-ratio input {
+    width: 54px;
+    padding: 5px 6px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    text-align: center;
+    color: var(--text-dark);
+    background: #fafbfe;
+    transition: var(--transition);
+}
+.oe-ratio input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+    background: #fff;
+}
+.oe-dot { font-size: 10px; }
+
+.oe-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(99,102,241,0.08);
+    color: var(--text-mid);
+    white-space: nowrap;
+}
+.oe-badge.ok { background: rgba(34,197,94,0.14); color: #16a34a; }
+.oe-badge.bad { background: rgba(239,68,68,0.14); color: #dc2626; }
+
+.oe-chapters {
+    max-height: 340px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 2px 10px;
+    background: #fafbfe;
+}
+
+.oe-review {
+    background: var(--bg-card, #fff);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.oe-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 12px 16px;
+}
+.oe-actions .action-btn { margin: 0; }
+.oe-key {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-mid);
+    margin-left: auto;
+}
+
+@media (max-width: 768px) {
+    .oe-layout { grid-template-columns: 1fr; }
+    .oe-status { max-width: 100%; }
+    .oe-key { margin-left: 0; }
+    .oe-ratio-name { width: 100%; }
+}
+
+
+/* ============ OFFLINE EXAM ï¿½ PAPER / PRINT ============ */
 #printArea { display: none; }
 
 .paper {

@@ -181,87 +181,100 @@
                 <button id="backToClassCards" class="action-btn" style="display:none;margin-bottom:16px;" onclick="showClassCards()">&#8592; Back to Classes</button>
             </div>
             <div id="teacherOfflineExamTab" class="tab-content" style="display:none;">
-                <h3>&#128424; Offline Exam &mdash; Section A (PDF)</h3>
-                <p style="font-size:13px;color:var(--text-mid);margin-bottom:16px;">Generate an FBISE-style Section A paper from the question bank, review it, then print or save it as PDF. Sections B &amp; C will be added later.</p>
-                <div class="form-row full">
-                    <label>Exam title</label>
-                    <input type="text" id="oeTitle" value="Grade IX Computer Science — Section A">
-                </div>
-                <div class="form-row full">
-                    <label>Class / Roll No. label</label>
-                    <input type="text" id="oeClass" value="9">
-                </div>
-                <div class="form-row full">
-                    <label>Subject</label>
-                    <select id="oeSubject" onchange="oeSubjectChanged()" style="max-width:340px;"></select>
-                </div>
-                <div class="form-row full">
-                    <label>Chapters &amp; Table of Specifications</label>
-                    <div id="oeChapters"></div>
-                </div>
-                <div class="form-row full">
-                    <div style="display:flex;gap:16px;flex-wrap:wrap;">
-                        <label style="display:flex;align-items:center;gap:6px;font-weight:normal;font-size:13px;">Total MCQs
-                            <input type="number" id="oeTotal" value="60" min="1" max="120" style="width:64px;padding:4px;border:1px solid var(--border);border-radius:4px;">
-                        </label>
-                        <label style="display:flex;align-items:center;gap:6px;font-weight:normal;font-size:13px;">Time (min)
-                            <input type="number" id="oeTime" value="80" min="5" max="300" style="width:64px;padding:4px;border:1px solid var(--border);border-radius:4px;">
-                        </label>
-                        <label style="display:flex;align-items:center;gap:6px;font-weight:normal;font-size:13px;">Marks
-                            <input type="number" id="oeMarks" value="30" min="1" max="100" style="width:64px;padding:4px;border:1px solid var(--border);border-radius:4px;">
-                        </label>
+                <div class="oe-head">
+                    <div>
+                        <h3>&#128424; Offline Exam &mdash; Section A (PDF)</h3>
+                        <p class="oe-sub">Build an FBISE-style Section A paper, review it, then Print / Save as PDF. Sections B &amp; C will be added later.</p>
                     </div>
+                    <p id="oeStatus" class="oe-status"></p>
                 </div>
-                <div class="form-row full">
-                    <label>Cognitive Distribution % (K / U / A)</label>
-                    <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Knowledge
-                            <input type="number" id="oeK" value="30" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
-                        </label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Understanding
-                            <input type="number" id="oeU" value="50" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
-                        </label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Application
-                            <input type="number" id="oeA" value="20" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
-                        </label>
+
+                <div class="oe-layout">
+                    <div class="oe-col">
+                        <section class="chart-section oe-panel">
+                            <h4>Paper Setup</h4>
+                            <div class="oe-field">
+                                <label for="oeTitle">Exam title</label>
+                                <input type="text" id="oeTitle" value="Grade IX Computer Science — Section A">
+                            </div>
+                            <div class="oe-grid">
+                                <div class="oe-field">
+                                    <label for="oeSubject">Subject</label>
+                                    <select id="oeSubject" onchange="oeSubjectChanged()"></select>
+                                </div>
+                                <div class="oe-field">
+                                    <label for="oeClass">Class / roll no. label</label>
+                                    <input type="text" id="oeClass" value="9">
+                                </div>
+                                <div class="oe-field">
+                                    <label for="oeTotal">Total MCQs</label>
+                                    <input type="number" id="oeTotal" value="60" min="1" max="120">
+                                </div>
+                                <div class="oe-field">
+                                    <label for="oeTime">Time (min)</label>
+                                    <input type="number" id="oeTime" value="80" min="5" max="300">
+                                </div>
+                                <div class="oe-field">
+                                    <label for="oeMarks">Marks</label>
+                                    <input type="number" id="oeMarks" value="30" min="1" max="100">
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="chart-section oe-panel">
+                            <h4>Blueprint <span class="oe-hint">each group must total 100%</span></h4>
+                            <div class="oe-ratio-row">
+                                <span class="oe-ratio-name">Cognitive</span>
+                                <div class="oe-ratio-items">
+                                    <label class="oe-ratio">Knowledge <input type="number" id="oeK" value="30" min="0" max="100"></label>
+                                    <label class="oe-ratio">Understanding <input type="number" id="oeU" value="50" min="0" max="100"></label>
+                                    <label class="oe-ratio">Application <input type="number" id="oeA" value="20" min="0" max="100"></label>
+                                    <span id="oeCogTotal" class="oe-badge"></span>
+                                </div>
+                            </div>
+                            <div class="oe-ratio-row">
+                                <span class="oe-ratio-name">Difficulty</span>
+                                <div class="oe-ratio-items">
+                                    <label class="oe-ratio"><span class="oe-dot" style="color:#22c55e;">&#9679;</span> Easy <input type="number" id="oeEasy" value="40" min="0" max="100"></label>
+                                    <label class="oe-ratio"><span class="oe-dot" style="color:#f59e0b;">&#9679;</span> Medium <input type="number" id="oeMedium" value="40" min="0" max="100"></label>
+                                    <label class="oe-ratio"><span class="oe-dot" style="color:#ef4444;">&#9679;</span> Hard <input type="number" id="oeHard" value="20" min="0" max="100"></label>
+                                    <span id="oeDiffTotal" class="oe-badge"></span>
+                                </div>
+                            </div>
+                            <div class="oe-ratio-row">
+                                <span class="oe-ratio-name">Format</span>
+                                <div class="oe-ratio-items">
+                                    <label class="oe-ratio">Straight <input type="number" id="oeStraight" value="67" min="0" max="100"></label>
+                                    <label class="oe-ratio">Scenario <input type="number" id="oeScenario" value="33" min="0" max="100"></label>
+                                    <span id="oeFmtTotal" class="oe-badge"></span>
+                                </div>
+                            </div>
+                        </section>
                     </div>
-                </div>
-                <div class="form-row full">
-                    <label>Difficulty Distribution %</label>
-                    <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
-                            <span style="color:#22c55e;">&#9679;</span> Easy
-                            <input type="number" id="oeEasy" value="40" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
-                        </label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
-                            <span style="color:#f59e0b;">&#9679;</span> Medium
-                            <input type="number" id="oeMedium" value="40" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
-                        </label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">
-                            <span style="color:#ef4444;">&#9679;</span> Hard
-                            <input type="number" id="oeHard" value="20" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
-                        </label>
+
+                    <div class="oe-col">
+                        <section class="chart-section oe-panel">
+                            <div class="oe-panel-head">
+                                <h4>Chapters &amp; Table of Specifications</h4>
+                                <div class="oe-tools">
+                                    <button type="button" class="icon-btn" onclick="oeSelectAll(true)">All</button>
+                                    <button type="button" class="icon-btn" onclick="oeSelectAll(false)">None</button>
+                                    <span id="oeTosTotal" class="oe-badge"></span>
+                                </div>
+                            </div>
+                            <div id="oeChapters" class="oe-chapters"></div>
+                        </section>
+
+                        <div id="oeReview" class="oe-review" style="display:none;"></div>
                     </div>
+
+                    <section class="chart-section oe-panel oe-actions">
+                        <button type="button" class="action-btn secondary" onclick="oeCheck()">Check Feasibility</button>
+                        <button type="button" class="action-btn" onclick="oeGenerate()">&#9881; Generate Paper</button>
+                        <button type="button" class="action-btn" id="oePrintBtn" style="display:none;" onclick="oePrint()">&#128424; Print / Save as PDF</button>
+                        <label class="oe-key"><input type="checkbox" id="oeKey" checked> Include answer key page</label>
+                    </section>
                 </div>
-                <div class="form-row full">
-                    <label>Question Format %</label>
-                    <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Straight
-                            <input type="number" id="oeStraight" value="67" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
-                        </label>
-                        <label style="display:flex;align-items:center;gap:4px;font-weight:normal;font-size:13px;">Scenario / Stimulus
-                            <input type="number" id="oeScenario" value="33" min="0" max="100" style="width:52px;padding:4px;border:1px solid var(--border);border-radius:4px;font-size:13px;">%
-                        </label>
-                    </div>
-                </div>
-                <p id="oeStatus" style="font-size:12px;min-height:16px;margin:4px 0 8px;"></p>
-                <div class="form-row full" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                    <button type="button" class="action-btn" onclick="oeCheck()">Check Feasibility</button>
-                    <button type="button" class="action-btn" onclick="oeGenerate()">&#9881; Generate Paper</button>
-                    <button type="button" class="action-btn" id="oePrintBtn" style="display:none;" onclick="oePrint()">&#128424; Print / Save as PDF</button>
-                    <label style="display:flex;align-items:center;gap:6px;font-weight:normal;font-size:13px;"><input type="checkbox" id="oeKey" checked> Include answer key page</label>
-                </div>
-                <div class="form-row full" id="oeReview" style="display:none;margin-top:8px;"></div>
             </div>
         </div>
 

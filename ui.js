@@ -1841,12 +1841,79 @@ var UI = (function() {
     // paper HTML stays testable without a browser.
     // ---------------------------------------------------------------
     var oeGenerated = [];
+    var oeBound = false;
 
     function oeStatus(msg, ok) { ebSetStatus(msg, ok, "oe"); }
+
+    // Live totals: badge turns green exactly when the group reaches 100%.
+    function oeBadge(id, total) {
+        var el = $(id);
+        if (!el) return;
+        el.textContent = total + "%";
+        el.className = "oe-badge " + (Math.abs(total - 100) < 0.05 ? "ok" : "bad");
+    }
+
+    function oeSum(ids) {
+        var t = 0;
+        for (var i = 0; i < ids.length; i++) {
+            var el = $(ids[i]);
+            if (el) t += Number(el.value) || 0;
+        }
+        return Math.round(t * 10) / 10;
+    }
+
+    function oeRatiosChanged() {
+        oeBadge("oeCogTotal", oeSum(["oeK", "oeU", "oeA"]));
+        oeBadge("oeDiffTotal", oeSum(["oeEasy", "oeMedium", "oeHard"]));
+        oeBadge("oeFmtTotal", oeSum(["oeStraight", "oeScenario"]));
+    }
+
+    // ToS total across CHECKED chapters only (what the blueprint validates).
+    function oeTosChanged() {
+        var out = $("oeTosTotal");
+        var box = $("oeChapters");
+        if (!out || !box || !box.querySelectorAll) return;
+        var cbs = box.querySelectorAll("input[type=checkbox]");
+        var sel = 0;
+        var total = 0;
+        for (var i = 0; i < cbs.length; i++) {
+            if (!cbs[i].checked) continue;
+            sel++;
+            var tosEl = $(cbs[i].id.replace("Ch_", "Tos_"));
+            if (tosEl) total += Number(tosEl.value) || 0;
+        }
+        total = Math.round(total * 10) / 10;
+        if (sel === 0) { out.textContent = "No chapters"; out.className = "oe-badge bad"; out.title = ""; return; }
+        if (total === 0) { out.textContent = "ToS 0% (" + sel + " ch)"; out.className = "oe-badge bad"; out.title = ""; return; }
+        out.textContent = "ToS " + total + "% (" + sel + " ch)";
+        out.className = "oe-badge " + (total === 100 ? "ok" : "");
+        out.title = total === 100 ? "" : "Will be scaled to 100% when the paper is generated";
+    }
+
+    function oeLiveUpdate() {
+        oeRatiosChanged();
+        oeTosChanged();
+    }
+
+    function oeSelectAll(on) {
+        var box = $("oeChapters");
+        if (!box || !box.querySelectorAll) return;
+        var cbs = box.querySelectorAll("input[type=checkbox]");
+        for (var i = 0; i < cbs.length; i++) if (!cbs[i].disabled) cbs[i].checked = !!on;
+        oeTosChanged();
+    }
 
     function oeInit() {
         var sel = $("oeSubject");
         if (!sel) return;
+        if (!oeBound) {
+            var tab = $("teacherOfflineExamTab");
+            if (tab) {
+                oeBound = true;
+                tab.addEventListener("input", oeLiveUpdate);
+                tab.addEventListener("change", oeLiveUpdate);
+            }
+        }
         if (sel.options.length > 0) return; // tab DOM persists; init once
         var subs = ebTeacherSubjects();
         var h = "";
@@ -1854,6 +1921,7 @@ var UI = (function() {
         sel.innerHTML = h;
         var subject = sel.value || "Computer Science";
         ebRenderChapters(subject, "oe");
+        oeLiveUpdate();
         oeStatus("Select chapters and ratios, then Check Feasibility.", true);
     }
 
@@ -1863,6 +1931,7 @@ var UI = (function() {
         ebRenderChapters(subject, "oe");
         oeGenerated = [];
         oeRenderReview();
+        oeTosChanged();
         oeStatus("Subject changed to " + subject + ". Select chapters, then Check Feasibility.", true);
     }
 
@@ -4772,6 +4841,7 @@ var UI = (function() {
         ebUseAsAssignment: ebUseAsAssignment,
         oeInit: oeInit,
         oeSubjectChanged: oeSubjectChanged,
+        oeSelectAll: oeSelectAll,
         oeCheck: oeCheck,
         oeGenerate: oeGenerate,
         oeMove: oeMove,
