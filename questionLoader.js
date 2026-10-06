@@ -50,7 +50,8 @@ var QuestionLoader = (function() {
             })
             .then(function(data) {
                 var meta = chapterConfig[chapterNum] || data;
-                var qs = data.questions || [];
+                // Bank files may be { questions: [...] } or a bare array.
+                var qs = Array.isArray(data) ? data : (data.questions || []);
                 for (var i = 0; i < qs.length; i++) {
                     if (!qs[i].subject) qs[i].subject = meta.subject;
                     if (!qs[i].grade) qs[i].grade = meta.grade;
