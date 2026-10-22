@@ -104,4 +104,61 @@ function runPersistenceTests() {
     TestRunner.assertEqual(principalAccount.id, "ADMIN-001", "Principal ID correct");
     TestRunner.assertGreaterThan(principalAccount.password.length, 5, "Principal password valid length");
     TestRunner.assertType(LocalDB.getCache().principalAccount, "object", "Principal saved to IndexedDB");
+
+    TestRunner.suite("Persistence - saveAttempt (offline exam)");
+
+    TestRunner.assertType(saveAttempt, "function", "saveAttempt function exists");
+    TestRunner.assertEqual(saveAttempt(null), false, "saveAttempt rejects null");
+    TestRunner.assertEqual(saveAttempt({}), false, "saveAttempt rejects attempt without attemptId");
+
+    var attSnapshot = allAttempts.slice();
+    var attId = "offline-test-roll-" + Date.now();
+    var offAttempt = {
+        attemptId: attId,
+        timestamp: new Date().toISOString(),
+        studentId: "TEST-ROLL-01",
+        subject: "Computer Science",
+        mode: "offlineExam",
+        score: 7, total: 10, percentage: 70,
+        questions: [], topicPerformance: {}
+    };
+    var n0 = allAttempts.length;
+    TestRunner.assertEqual(saveAttempt(offAttempt), true, "saveAttempt saves offline attempt");
+    TestRunner.assertEqual(allAttempts.length, n0 + 1, "Attempt appended to allAttempts");
+
+    var offAttempt2 = {
+        attemptId: attId,
+        timestamp: new Date().toISOString(),
+        studentId: "TEST-ROLL-01",
+        subject: "Computer Science",
+        mode: "offlineExam",
+        score: 8, total: 10, percentage: 80,
+        questions: [], topicPerformance: {}
+    };
+    saveAttempt(offAttempt2);
+    TestRunner.assertEqual(allAttempts.length, n0 + 1, "Duplicate attemptId replaces instead of appending");
+
+    var foundAtt = null;
+    for (var ai = 0; ai < allAttempts.length; ai++) {
+        if (allAttempts[ai].attemptId === attId) { foundAtt = allAttempts[ai]; break; }
+    }
+    TestRunner.assertNotNull(foundAtt, "Attempt found after re-save");
+    TestRunner.assertEqual(foundAtt.score, 8, "Re-saved attempt has updated score");
+
+    var cachedAttempts = LocalDB.getCache().allAttempts || [];
+    var inStore = false;
+    for (ai = 0; ai < cachedAttempts.length; ai++) {
+        if (cachedAttempts[ai].attemptId === attId) { inStore = true; break; }
+    }
+    TestRunner.assertTrue(inStore, "Attempt persisted to local cache");
+
+    TestRunner.assertEqual(Analytics.MODE_LABELS.offlineExam, "Offline Exam", "MODE_LABELS has offlineExam label");
+
+    allAttempts = attSnapshot;
+    saveAll();
+    var cleaned = true;
+    for (ai = 0; ai < allAttempts.length; ai++) {
+        if (allAttempts[ai].attemptId === attId) { cleaned = false; break; }
+    }
+    TestRunner.assertTrue(cleaned, "Test attempt cleaned up");
 }

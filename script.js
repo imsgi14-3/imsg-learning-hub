@@ -24,11 +24,11 @@ window.onload = function() {
                         console.warn("Question bank JSON did not load (" + questions.length + " questions from local cache). Serve the app over Live Server and refresh.");
                     }
                     Auth.restoreSession();
-                    if (Auth.isLoggedIn()) { UI.showDashboard(); }
+                    if (Auth.isLoggedIn()) { UI.applyRoute(true); }
                 });
             } else {
                 Auth.restoreSession();
-                if (Auth.isLoggedIn()) { UI.showDashboard(); }
+                if (Auth.isLoggedIn()) { UI.applyRoute(true); }
             }
         });
     });
@@ -37,11 +37,11 @@ window.onload = function() {
 function handleLogin(e) { Auth.handleLogin(e); }
 function handleLogout() { Auth.handleLogout(); }
 function updateLoginFields() { UI.updateLoginFields(); }
-function showStudentTab(tab) { UI.showStudentTab(tab); }
-function showTeacherTab(tab) { UI.showTeacherTab(tab); }
-function showCTTab(tab) { UI.showCTTab(tab); }
-function showParentTab(tab) { UI.showParentTab(tab); }
-function showPrincipalTab(tab) { UI.showPrincipalTab(tab); }
+function showStudentTab(tab) { UI.showStudentTab(tab); UI.pushTabHash(tab); }
+function showTeacherTab(tab) { UI.showTeacherTab(tab); UI.pushTabHash(tab); }
+function showCTTab(tab) { UI.showCTTab(tab); UI.pushTabHash(tab); }
+function showParentTab(tab) { UI.showParentTab(tab); UI.pushTabHash(tab); }
+function showPrincipalTab(tab) { UI.showPrincipalTab(tab); UI.pushTabHash(tab); }
 function startPractice() { UI.startPractice(); }
 function displayQuestion() { QuizEngine.displayQuestion(); }
 function checkAnswer(sel) { QuizEngine.checkAnswer(sel); }
@@ -94,6 +94,14 @@ function oeGenerate() { UI.oeGenerate(); }
 function oeMove(i, d) { UI.oeMove(i, d); }
 function oeDelete(i) { UI.oeDelete(i); }
 function oePrint() { UI.oePrint(); }
+function oePrintKey() { UI.oePrintKey(); }
+function oePrintOMR() { UI.oePrintOMR(); }
+function oeScanSelected() { UI.oeScanSelected(); }
+function oeScanRoll(key, value) { UI.oeScanRoll(key, value); }
+function oeScanVersion(key, value) { UI.oeScanVersion(key, value); }
+function oeScanAns(key, qi, letter) { UI.oeScanAns(key, qi, letter); }
+function oeScanSave(key) { UI.oeScanSave(key); }
+function oeSwitchVersion(i) { UI.oeSwitchVersion(i); }
 function editAssignment(i) { UI.editAssignment(i); }
 function deleteAssignment(i) { UI.deleteAssignment(i); }
 function showAssignmentStatus(i) { UI.showAssignmentStatus(i); }
@@ -151,3 +159,9 @@ function renderPrincipalAnalytics() { UI.renderPrincipalAnalytics(); }
 function filterDeepAnalytics(filter, btn) { UI.filterDeepAnalytics(filter, btn); }
 function showStudentDrillDown(id) { UI.showStudentDrillDown(id); }
 function closeStudentDrillDown() { UI.closeStudentDrillDown(); }
+
+// One-time UI behaviors (ESC/scroll-lock modals + back/forward router).
+// Top-level: ui.js is loaded before this file and the DOM exists (scripts
+// sit at the end of <body>).
+if (window.UI && UI.bindModalChrome) UI.bindModalChrome();
+if (window.UI && UI.bindRouter) UI.bindRouter();

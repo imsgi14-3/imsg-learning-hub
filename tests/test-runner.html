@@ -75,6 +75,7 @@
     <script src="../analytics.js"></script>
     <script>var QUESTION_BANK_BASE = "../";</script>
     <script src="../examEngine.js"></script>
+    <script src="../omrScanner.js"></script>
     <script src="../ui.js"></script>
     <script src="../quiz.js"></script>
     <script src="../recommendations.js"></script>
@@ -89,6 +90,7 @@
     <script src="recommendations-tests.js"></script>
     <script src="assignment-tests.js"></script>
     <script src="exam-engine-tests.js"></script>
+    <script src="omr-tests.js"></script>
     <script src="data-tests.js"></script>
     <script>
         var appReady = false;
@@ -149,6 +151,7 @@
                 try { runRecommendationTests(); } catch(e) { TestRunner.suite("Recommendations"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runAssignmentTests(); } catch(e) { TestRunner.suite("Assignments"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runExamEngineTests(); } catch(e) { TestRunner.suite("Exam Engine"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                try { runOMRTests(); } catch(e) { TestRunner.suite("OMR"); TestRunner.assert(false, "CRASHED: " + e.message); }
                 try { runPersistenceTests(); } catch(e) { TestRunner.suite("Persistence"); TestRunner.assert(false, "CRASHED: " + e.message); }
             });
             showResults(result);
@@ -163,6 +166,7 @@
                 recommendations: runRecommendationTests,
                 assignments: runAssignmentTests,
                 examengine: runExamEngineTests,
+                omr: runOMRTests,
                 persistence: runPersistenceTests
             };
             var result = TestRunner.run(function() {

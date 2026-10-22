@@ -231,14 +231,14 @@ var QuizEngine = (function() {
         displayQuestion();
     }
 
-    function showResult() {
+    function showResult(pushHistory) {
         clearInterval(timer);
         document.getElementById("quiz").style.display = "none";
         document.getElementById("result").style.display = "block";
         document.getElementById("review").style.display = "none";
         var nextBtn = document.getElementById("nextButton");
         if (nextBtn) nextBtn.style.display = "none";
-        history.pushState({ page: "result" }, "", "#result");
+        if (pushHistory !== false) history.pushState({ page: "result" }, "", "#result");
         var finalScoreEl = document.getElementById("finalScore");
         if (finalScoreEl) finalScoreEl.textContent = "Score: " + score + " / " + quizQuestions.length;
         var pct = quizQuestions.length > 0 ? Number(((score / quizQuestions.length) * 100).toFixed(2)) : 0;
@@ -355,10 +355,10 @@ var QuizEngine = (function() {
         return attempt;
     }
 
-    function showReview() {
+    function showReview(pushHistory) {
         document.getElementById("result").style.display = "none";
         document.getElementById("review").style.display = "block";
-        history.pushState({ page: "review" }, "", "#review");
+        if (pushHistory !== false) history.pushState({ page: "review" }, "", "#review");
         var rc = document.getElementById("reviewContent");
         rc.innerHTML = "";
         var lastAttempt = allAttempts.length > 0 ? allAttempts[allAttempts.length - 1] : null;

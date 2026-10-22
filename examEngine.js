@@ -299,6 +299,72 @@ var ExamEngine = (function() {
         return out;
     }
 
+    // Copy a question's own properties (shallow) for version generation.
+    function copyQuestion(q) {
+        var c = {};
+        for (var k in q) if (Object.prototype.hasOwnProperty.call(q, k)) c[k] = q[k];
+        return c;
+    }
+
+    // Randomize option order for one question and remap the answer letter
+    // so it still points at the same option text. Returns a copy.
+    function shuffleOptions(q) {
+        var c = copyQuestion(q);
+        var opts = q && q.options ? q.options : [];
+        if (opts.length < 2) return c;
+        var perm = [];
+        for (var i = 0; i < opts.length; i++) perm.push(i);
+        for (i = opts.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = perm[i]; perm[i] = perm[j]; perm[j] = t;
+        }
+        var newOpts = [];
+        for (i = 0; i < perm.length; i++) newOpts.push(opts[perm[i]]);
+        c.options = newOpts;
+        var ans = q && typeof q.answer === "string" ? q.answer.toUpperCase() : "";
+        if (ans.length === 1 && ans >= "A" && ans <= "Z") {
+            var origIdx = ans.charCodeAt(0) - 65;
+            if (origIdx < perm.length) {
+                for (i = 0; i < perm.length; i++) {
+                    if (perm[i] === origIdx) { c.answer = String.fromCharCode(65 + i); break; }
+                }
+            }
+        }
+        return c;
+    }
+
+    // Shuffle only the straight-question prefix. Scenario groups at the
+    // end keep both their group contiguity and internal question_order.
+    function shuffleStraightSegment(list) {
+        if (!list || list.length === 0) return [];
+        if (list.length < 3) return list.slice();
+        var firstScen = -1;
+        for (var i = 0; i < list.length; i++) {
+            if (normFormat(list[i]) === "scenario") { firstScen = i; break; }
+        }
+        if (firstScen === -1) return shuffle(list);
+        if (firstScen < 2) return list.slice();
+        return shuffle(list.slice(0, firstScen)).concat(list.slice(firstScen));
+    }
+
+    // N independent papers from one blueprint: different selection, shuffled
+    // straight order, shuffled options (answers remapped), scenarios intact
+    // and last. Returns [{ label: "A", questions: [...] }, ...] or null.
+    function generateVersions(bp, pool, n, retries) {
+        n = Number(n) || 1;
+        if (n < 1) n = 1;
+        var out = [];
+        for (var v = 0; v < n; v++) {
+            var plan = generateExamPlan(bp, pool, retries);
+            if (!plan || plan.length === 0) return null;
+            plan = shuffleStraightSegment(plan);
+            var qs = [];
+            for (var i = 0; i < plan.length; i++) qs.push(shuffleOptions(plan[i]));
+            out.push({ label: String.fromCharCode(65 + v), questions: qs });
+        }
+        return out;
+    }
+
     function makePlan(bp, t, pool) {
         var rem = { chapters: {}, cognitive: {}, difficulty: {}, format: {} };
         for (var i = 0; i < bp.chapters.length; i++) rem.chapters[bp.chapters[i].chapter] = t.chapters[i];
@@ -311,6 +377,93 @@ var ExamEngine = (function() {
         var selected = [];
         var remaining = pool.slice();
         var selGroups = {};
+
+        function applySel(q) {
+            selected.push(q);
+            if (q.scenario_id) selGroups[q.scenario_id] = (selGroups[q.scenario_id] || 0) + 1;
+            rem.chapters[q.chapter]--;
+            rem.cognitive[normCognitive(q)]--;
+            rem.difficulty[normDifficulty(q.difficulty)]--;
+            rem.format[normFormat(q)]--;
+            var idx = remaining.indexOf(q);
+            if (idx >= 0) remaining.splice(idx, 1);
+        }
+
+        function fitsAlone(q) {
+            var ch = rem.chapters[q.chapter];
+            if (ch === undefined || ch <= 0) return false;
+            var cg = rem.cognitive[normCognitive(q)];
+            if (cg === undefined || cg <= 0) return false;
+            var df = rem.difficulty[normDifficulty(q.difficulty)];
+            if (df === undefined || df <= 0) return false;
+            var fm = rem.format[normFormat(q)];
+            return !(fm === undefined || fm <= 0);
+        }
+
+        // Phase 1 — scenario questions are taken as WHOLE groups so a
+        // stimulus group is never split across the paper. Only when the
+        // quota is not a multiple of the group size (or whole groups are
+        // blocked by other buckets) does it fall back to individuals,
+        // with a cohesion bonus keeping same-group members together.
+        var scenRem = rem.format.scenario || 0;
+        while (scenRem > 0) {
+            var groups = {};
+            for (var gi = 0; gi < remaining.length; gi++) {
+                var gq = remaining[gi];
+                if (normFormat(gq) !== "scenario") continue;
+                var gk = gq.scenario_id ? gq.scenario_id : ("sc:" + String(gq.scenario || gq.stimulus || ""));
+                if (!groups[gk]) groups[gk] = [];
+                groups[gk].push(gq);
+            }
+            var bestKey = null, bestScore = -1;
+            for (var key in groups) {
+                var members = groups[key];
+                if (members.length === 0 || members.length > scenRem) continue;
+                var ok = true, gscore = 0;
+                for (var mi = 0; mi < members.length; mi++) {
+                    var mq = members[mi];
+                    var mch = rem.chapters[mq.chapter];
+                    var mcg = rem.cognitive[normCognitive(mq)];
+                    var mdf = rem.difficulty[normDifficulty(mq.difficulty)];
+                    if (mch === undefined || mch <= 0 || mcg === undefined || mcg <= 0 || mdf === undefined || mdf <= 0) { ok = false; break; }
+                    gscore += mch * 5 + mcg * 4 + mdf * 3 + Math.random() * 0.5;
+                }
+                if (!ok) continue;
+                if (gscore > bestScore) { bestScore = gscore; bestKey = key; }
+            }
+            if (bestKey) {
+                var pick = groups[bestKey];
+                for (var pi = 0; pi < pick.length; pi++) applySel(pick[pi]);
+                scenRem -= pick.length;
+                if (!marginsStillPossible(remaining, rem)) return null;
+                continue;
+            }
+            var iBest = null, iScore = -1;
+            for (var ii = 0; ii < remaining.length; ii++) {
+                var iq = remaining[ii];
+                if (normFormat(iq) !== "scenario") continue;
+                if (!fitsAlone(iq)) continue;
+                var gBonus = 0;
+                if (iq.scenario_id) {
+                    var gCount = selGroups[iq.scenario_id] || 0;
+                    var qo = parseInt(iq.question_order, 10);
+                    if (gCount > 0 && !isNaN(qo) && gCount === qo - 1) gBonus = 10;
+                    else if (gCount > 0) gBonus = 4;
+                    else if (qo === 1) gBonus = 6;
+                }
+                var isc = rem.chapters[iq.chapter] * 5 + rem.cognitive[normCognitive(iq)] * 4 +
+                          gBonus + rem.difficulty[normDifficulty(iq.difficulty)] * 3 + Math.random();
+                if (isc > iScore) { iScore = isc; iBest = iq; }
+            }
+            if (!iBest) return null;
+            applySel(iBest);
+            scenRem--;
+            if (!marginsStillPossible(remaining, rem)) return null;
+        }
+
+        // Phase 2 — straight questions with the original per-question
+        // greedy scoring (the scenario bucket is 0 by now, so scenario
+        // questions can no longer be picked here).
         while (selected.length < bp.total) {
             var candidates = [];
             for (var i = 0; i < remaining.length; i++) {
@@ -321,28 +474,12 @@ var ExamEngine = (function() {
                 var df = rem.difficulty[normDifficulty(q.difficulty)];
                 var fm = rem.format[normFormat(q)];
                 if (cg === undefined || cg <= 0 || df === undefined || df <= 0 || fm === undefined || fm <= 0) continue;
-                var gBonus = 0;
-                if (q.scenario_id) {
-                    var gCount = selGroups[q.scenario_id] || 0;
-                    var qo = parseInt(q.question_order, 10);
-                    if (gCount > 0 && !isNaN(qo) && gCount === qo - 1) gBonus = 10;
-                    else if (gCount > 0) gBonus = 4;
-                    else if (qo === 1) gBonus = 6;
-                }
-                var score = ch * 5 + cg * 4 + fm * 4 + df * 3 + gBonus + Math.random();
+                var score = ch * 5 + cg * 4 + fm * 4 + df * 3 + Math.random();
                 candidates.push([score, q]);
             }
             if (candidates.length === 0) return null;
             candidates.sort(function(a, b) { return b[0] - a[0]; });
-            var q = candidates[0][1];
-            selected.push(q);
-            if (q.scenario_id) selGroups[q.scenario_id] = (selGroups[q.scenario_id] || 0) + 1;
-            rem.chapters[q.chapter]--;
-            rem.cognitive[normCognitive(q)]--;
-            rem.difficulty[normDifficulty(q.difficulty)]--;
-            rem.format[normFormat(q)]--;
-            var idx = remaining.indexOf(q);
-            if (idx >= 0) remaining.splice(idx, 1);
+            applySel(candidates[0][1]);
             if (!marginsStillPossible(remaining, rem)) return null;
         }
         return selected;
@@ -384,6 +521,42 @@ var ExamEngine = (function() {
         return largestRemainder(100, pctList);
     }
 
+    function normAnswerLetter(q) {
+        var a = String(q && q.answer !== undefined && q.answer !== null ? q.answer : "").trim().toUpperCase();
+        if (a.length === 1 && "ABCD".indexOf(a) >= 0) return a;
+        var opts = (q && q.options) || [];
+        for (var i = 0; i < opts.length; i++) if (String(opts[i]) === String(q.answer)) return "ABCD".charAt(i);
+        return a ? a.charAt(0) : "";
+    }
+
+    function gradeDetected(questions, answers) {
+        questions = questions || [];
+        answers = answers || [];
+        var score = 0, out = [];
+        for (var i = 0; i < questions.length; i++) {
+            var q = questions[i] || {};
+            var key = normAnswerLetter(q);
+            var sel = answers[i] !== undefined && answers[i] !== null ? String(answers[i]).toUpperCase().slice(0, 1) : null;
+            var ok = !!(sel && key && sel === key);
+            if (ok) score++;
+            out.push({
+                questionId: q.id,
+                selectedAnswer: sel,
+                correctAnswer: key,
+                correct: ok,
+                topic: q.topic || "General",
+                difficulty: normDifficulty(q.difficulty) || "medium",
+                bloom: q.bloom || "knowledge"
+            });
+        }
+        return {
+            score: score,
+            total: questions.length,
+            percentage: questions.length ? Number(((score / questions.length) * 100).toFixed(2)) : 0,
+            questions: out
+        };
+    }
+
     return {
         normDifficulty: normDifficulty,
         normCognitive: normCognitive,
@@ -396,6 +569,11 @@ var ExamEngine = (function() {
         chapterToSPct: chapterToSPct,
         normalizeToSAlloc: normalizeToSAlloc,
         orderScenarioGroups: orderScenarioGroups,
+        shuffleOptions: shuffleOptions,
+        shuffleStraightSegment: shuffleStraightSegment,
+        generateVersions: generateVersions,
+        gradeDetected: gradeDetected,
+        normAnswerLetter: normAnswerLetter,
         selectForBlueprint: selectForBlueprint,
         selectBalanced: selectBalanced,
         validateBlueprint: validateBlueprint,

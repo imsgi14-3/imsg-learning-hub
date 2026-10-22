@@ -642,6 +642,7 @@ var UI = (function() {
         $("result").style.display = "none";
         $("review").style.display = "none";
         $("homeBtn").style.display = "inline-block";
+        if (typeof history !== "undefined" && location.hash !== "#quiz") history.pushState({ page: "quiz" }, "", "#quiz");
         QuizEngine.displayQuestion();
         QuizEngine.startTimer();
     }
@@ -1841,6 +1842,10 @@ var UI = (function() {
     // paper HTML stays testable without a browser.
     // ---------------------------------------------------------------
     var oeGenerated = [];
+    var oeVersionsArr = [];   // [{ label: "A", questions: [...] }]
+    var oeScans = [];         // scanned OMR sheets: { key, fileName, dataURL, res, roll, versionLabel, answers, saved }
+    var oeScanSeq = 0;
+    var oeVersionIdx = 0;
     var oeBound = false;
 
     function oeStatus(msg, ok) { ebSetStatus(msg, ok, "oe"); }
@@ -1930,6 +1935,9 @@ var UI = (function() {
         var subject = sel && sel.value ? sel.value : "Computer Science";
         ebRenderChapters(subject, "oe");
         oeGenerated = [];
+        oeVersionsArr = [];
+        oeVersionIdx = 0;
+        oeScanReset();
         oeRenderReview();
         oeTosChanged();
         oeStatus("Subject changed to " + subject + ". Select chapters, then Check Feasibility.", true);
@@ -1941,27 +1949,87 @@ var UI = (function() {
         return r.ok;
     }
 
+    // Persist the generated exam (all versions, full question snapshots)
+    // to IndexedDB + Firestore. Save failure never blocks printing — the
+    // in-memory paper stays usable either way.
+    function oeSaveExam(bp) {
+        try {
+            var meta = oeReadMeta();
+            var exam = {
+                id: "EXAM-" + Date.now() + "-" + Math.random().toString(36).substr(2, 4),
+                title: meta.title,
+                className: meta.className,
+                subject: ($("oeSubject") && $("oeSubject").value) || "",
+                time: meta.time,
+                marks: meta.marks,
+                total: bp ? bp.total : (oeGenerated.length || 0),
+                blueprint: bp || null,
+                versions: oeVersionsArr,
+                createdAt: Date.now()
+            };
+            if (typeof saveExam === "function") { saveExam(exam); return true; }
+        } catch (e) { if (typeof console !== "undefined") console.error("oeSaveExam:", e); }
+        return false;
+    }
+
     function oeGenerate() {
         var r = checkPaperCore("oe");
         if (!r.ok) { oeStatus(r.msg, false); return; }
-        var plan = ExamEngine.generateExamPlan(r.bp, r.pool, 250);
-        if (!plan || plan.length === 0) { oeStatus("Could not generate a balanced paper. Adjust ratios or reduce total.", false); return; }
-        oeGenerated = plan;
-        oeStatus("Generated " + plan.length + " of " + r.pool.length + " pool questions. Review below, then Print / Save as PDF.", true);
+        var vSel = $("oeVersions");
+        var vCount = vSel ? (parseInt(vSel.value, 10) || 1) : 1;
+        if (vCount < 1) vCount = 1;
+        if (vCount > 9) vCount = 9;
+        var versions = ExamEngine.generateVersions(r.bp, r.pool, vCount, 250);
+        if (!versions || versions.length === 0) { oeStatus("Could not generate a balanced paper. Adjust ratios or reduce total.", false); return; }
+        oeVersionsArr = versions;
+        oeVersionIdx = 0;
+        oeGenerated = versions[0].questions;
+        oeScanReset();
+        var saved = oeSaveExam(r.bp);
+        var labels = [];
+        for (var i = 0; i < versions.length; i++) labels.push(versions[i].label);
+        var msg = "Generated " + oeGenerated.length + " of " + r.pool.length + " pool questions";
+        msg += versions.length > 1 ? " × " + versions.length + " versions (" + labels.join(", ") + ")" : " (version A)";
+        msg += ". Review, then Print." + (saved ? " Saved locally." : "");
+        oeStatus(msg, true);
         oeRenderReview();
+    }
+
+    function oeSwitchVersion(i) {
+        if (i < 0 || i >= oeVersionsArr.length) return;
+        oeVersionIdx = i;
+        oeGenerated = oeVersionsArr[i].questions;
+        oeRenderReview();
+        oeStatus("Showing version " + oeVersionsArr[i].label + " (" + oeGenerated.length + " questions). Review, then Print.", true);
     }
 
     function oeRenderReview() {
         var box = $("oeReview");
         var printBtn = $("oePrintBtn");
+        var keyBtn = $("oeKeyBtn");
+        var omrBtn = $("oeOmrBtn");
+        var scanPanel = $("oeScanPanel");
         if (!box) return;
         if (oeGenerated.length === 0) {
             box.style.display = "none";
             box.innerHTML = "";
             if (printBtn) printBtn.style.display = "none";
+            if (keyBtn) keyBtn.style.display = "none";
+            if (omrBtn) omrBtn.style.display = "none";
+            if (scanPanel) scanPanel.style.display = "none";
             return;
         }
-        var h = '<label style="font-weight:normal;font-size:13px;">Generated Paper (' + oeGenerated.length + ' questions)</label>';
+        var h = "";
+        if (oeVersionsArr.length > 1) {
+            h += '<div class="oe-versions">';
+            for (var v = 0; v < oeVersionsArr.length; v++) {
+                var on = v === oeVersionIdx;
+                h += '<button type="button" class="oe-vbtn' + (on ? " on" : "") + '" onclick="oeSwitchVersion(' + v + ')">Version ' + oeVersionsArr[v].label + '</button>';
+            }
+            h += '</div>';
+        }
+        h += '<label style="font-weight:normal;font-size:13px;">Generated Paper (' + oeGenerated.length + ' questions' +
+             (oeVersionsArr.length > 1 ? ', version ' + oeVersionsArr[oeVersionIdx].label : '') + ')</label>';
         h += '<div style="max-height:320px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;">';
         for (var i = 0; i < oeGenerated.length; i++) {
             var q = oeGenerated[i];
@@ -1981,6 +2049,9 @@ var UI = (function() {
         box.innerHTML = h;
         box.style.display = "block";
         if (printBtn) printBtn.style.display = "inline-block";
+        if (keyBtn) keyBtn.style.display = "inline-block";
+        if (omrBtn) omrBtn.style.display = "inline-block";
+        if (scanPanel) scanPanel.style.display = "block";
     }
 
     function oeMove(i, dir) {
@@ -2004,9 +2075,12 @@ var UI = (function() {
             .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
 
-    // Pure: meta = { title, className, time, marks, includeKey, date }
+    // Pure: meta = { title, className, time, marks, date }
     // qs   = ordered question objects (straight first, scenario groups
     //        contiguous). Returns the full printable paper HTML string.
+    // Layout: FBISE-style table (S# | Question | A | B | C | D) with a
+    // scenario divider and SCENARIO#n label rows before each stimulus group.
+    // The answer key is NOT included — it lives in oeBuildKeyHTML.
     function oeBuildPaperHTML(meta, qs) {
         meta = meta || {};
         qs = qs || [];
@@ -2014,15 +2088,14 @@ var UI = (function() {
         var perQ = count > 0 ? (Number(meta.marks) || 0) / count : 0;
         var perQStr = String(Math.round(perQ * 100) / 100);
 
-        function pq(q, num) {
-            var h = '<div class="pq"><span class="pq-n">' + num + '.</span><div class="pq-body">';
-            h += '<div class="pq-t">' + oeEsc(q.question || q.text || "") + '</div>';
-            if (q.media) h += '<img class="pq-img" src="' + oeEsc(q.media) + '" alt="">';
-            h += '<div class="pq-opts">';
+        function row(q, num) {
             var opts = q.options || [];
-            for (var i = 0; i < opts.length; i++) h += '<span class="pq-o">' + String.fromCharCode(65 + i) + '. ' + oeEsc(opts[i]) + '</span>';
-            h += '</div></div></div>';
-            return h;
+            var h = '<tr><td class="pq-n">' + num + '.</td><td class="pq-q">' +
+                oeEsc(q.question || q.text || "");
+            if (q.media) h += '<img class="pq-img" src="' + oeEsc(q.media) + '" alt="">';
+            h += '</td>';
+            for (var i = 0; i < 4; i++) h += '<td class="pq-c">' + (opts[i] === undefined ? "" : oeEsc(opts[i])) + '</td>';
+            return h + '</tr>';
         }
 
         var h = '<div class="paper">';
@@ -2035,61 +2108,447 @@ var UI = (function() {
              ' &nbsp;|&nbsp; Date: ' + oeEsc(meta.date || "") + '</div>';
         h += '<div class="paper-fields">Name: ______________________&nbsp;&nbsp; Roll No: ______________</div>';
         h += '</div>';
+        if (meta.version) h += '<div class="paper-version">MCQs PAPER VERSION: ' + oeEsc(meta.version) + '</div>';
         h += '<div class="paper-note">Section A &mdash; ' + count + ' Multiple Choice Questions (' +
              perQStr + ' mark' + (perQStr === "1" ? "" : "s") + ' each). Select the correct answer for each question.</div>';
+        h += '<div class="paper-sign"><span>Candidate Sign. ______________</span>' +
+             '<span>Invigilator Sign. ______________</span></div>';
 
-        var i = 0, num = 0;
+        h += '<table class="paper-table"><thead><tr>' +
+             '<th class="pt-s">S #</th><th class="pt-q">Question</th>' +
+             '<th>(A)</th><th>(B)</th><th>(C)</th><th>(D)</th></tr></thead><tbody>';
+
+        var i = 0, num = 0, scenNo = 0, dividerDone = false;
         while (i < count) {
             var q = qs[i];
             if (ExamEngine.normFormat(q) === "scenario" && q.scenario_id) {
                 var sid = q.scenario_id;
                 var j = i;
                 while (j < count && qs[j].scenario_id === sid) j++;
-                var stim = q.stimulus || q.scenario_stimulus || "";
-                if (stim) {
-                    h += '<div class="pq-stim"><div class="pq-stim-label">Questions ' + (i + 1) + '&ndash;' + j +
-                         ' are based on the following:</div><div class="pq-stim-text">' + oeEsc(stim) + '</div></div>';
+                scenNo++;
+                if (!dividerDone) {
+                    h += '<tr class="ps-div"><td colspan="6">STIMULUS/SITUATION/SCENARIO BASED MCQs</td></tr>';
+                    dividerDone = true;
                 }
-                for (; i < j; i++) { num++; h += pq(qs[i], num); }
+                var stim = q.stimulus || q.scenario_stimulus || "";
+                h += '<tr class="ps-head"><td class="ps-label">SCENARIO#' + scenNo +
+                     ' (FOR QUESTIONS ' + (i + 1) + '&ndash;' + j + ')</td>' +
+                     '<td colspan="5" class="ps-stim">' + oeEsc(stim) + '</td></tr>';
+                for (; i < j; i++) { num++; h += row(qs[i], num); }
             } else {
                 i++; num++;
-                h += pq(q, num);
+                h += row(q, num);
             }
         }
+        h += '</tbody></table>';
+        h += '</div>';
+        return h;
+    }
 
-        if (meta.includeKey) {
-            h += '<div class="paper-key">';
-            h += '<div class="paper-key-title">Answer Key &mdash; Section A</div>';
-            h += '<div class="paper-key-grid">';
-            for (var k = 0; k < count; k++) {
-                h += '<span class="paper-key-item">' + (k + 1) + '. ' + oeEsc(qs[k].answer || "?") + '</span>';
+    // Pure: standalone answer-key page. Never embedded in the question
+    // paper — printed as its own document via oePrintKey().
+    function oeBuildKeyHTML(meta, qs) {
+        meta = meta || {};
+        qs = qs || [];
+        var h = '<div class="paper paper-key-page">';
+        h += '<div class="paper-head">';
+        h += '<div class="paper-school">IMSG I-14/3 ISLAMABAD</div>';
+        h += '<div class="paper-title">Answer Key &mdash; ' + oeEsc(meta.title || "Section A") +
+             (meta.version ? ' (Version ' + oeEsc(meta.version) + ')' : '') + '</div>';
+        h += '<div class="paper-meta">Class: ' + oeEsc(meta.className || "-") +
+             ' &nbsp;|&nbsp; Total Marks: ' + oeEsc(meta.marks === undefined ? "" : meta.marks) +
+             ' &nbsp;|&nbsp; Date: ' + oeEsc(meta.date || "") + '</div>';
+        h += '</div>';
+        h += '<div class="paper-note">Examiner copy &mdash; do not distribute with question papers.</div>';
+        h += '<div class="paper-key">';
+        h += '<div class="paper-key-grid">';
+        for (var k = 0; k < qs.length; k++) {
+            h += '<span class="paper-key-item">' + (k + 1) + '. ' + oeEsc(qs[k].answer || "?") + '</span>';
+        }
+        h += '</div></div>';
+        h += '</div>';
+        return h;
+    }
+
+    function oeReadMeta() {
+        var labels = [];
+        for (var i = 0; i < oeVersionsArr.length; i++) labels.push(oeVersionsArr[i].label);
+        return {
+            title: ($("oeTitle") && $("oeTitle").value) || "Section A",
+            className: ($("oeClass") && $("oeClass").value) || "-",
+            time: ($("oeTime") && $("oeTime").value) || 0,
+            marks: ($("oeMarks") && $("oeMarks").value) || 0,
+            version: (oeVersionsArr.length > 0 && oeVersionsArr[oeVersionIdx]) ? oeVersionsArr[oeVersionIdx].label : "",
+            versionLabels: labels,
+            date: new Date().toLocaleDateString()
+        };
+    }
+
+    function oePrintTo(html, fileName) {
+        var area = $("printArea");
+        if (!area) { oeStatus("Print container missing in page.", false); return; }
+        area.innerHTML = html;
+        var oldTitle = document.title;
+        try {
+            document.title = String(fileName).replace(/[\\\/:*?"<>|]/g, "");
+            window.print();
+        } finally {
+            document.title = oldTitle;
+        }
+    }
+
+    function oePrint() {
+        if (oeGenerated.length === 0) { oeStatus("Generate a paper first.", false); return; }
+        var meta = oeReadMeta();
+        oePrintTo(oeBuildPaperHTML(meta, oeGenerated), meta.title + (meta.version ? " - Version " + meta.version : ""));
+    }
+
+    function oePrintKey() {
+        if (oeGenerated.length === 0) { oeStatus("Generate a paper first.", false); return; }
+        var meta = oeReadMeta();
+        oePrintTo(oeBuildKeyHTML(meta, oeGenerated), "Answer Key - " + meta.title + (meta.version ? " - Version " + meta.version : ""));
+    }
+
+    // Pure: OMR answer sheet in FBISE SSC-I format. Four black corner
+    // squares, the Roll No. block (printed class + section A/B/C + an
+    // FBISE-style ROLL NUMBER table of two 0-9 digit columns) high in
+    // the header with the MCQs version box beside it (candidate shades
+    // its bubbles), and a dashed column-major answer grid. OMR.gridLayout
+    // drives both this markup and the photo scanner, so they always agree.
+    // Question numbers print at 12px so the scanner's size filter ignores
+    // them. Version bubbles are never pre-filled.
+    function oeBuildOMRHTML(meta, qs) {
+        meta = meta || {};
+        qs = qs || [];
+        var labels = meta.versionLabels;
+        if (!labels || !labels.length) labels = ["A"];
+        var cls = String(meta.className || "").replace(/[^0-9]/g, "") || "9";
+        var layout = (typeof OMR !== "undefined" && OMR.gridLayout) ? OMR.gridLayout(qs.length) : { blocks: [] };
+        var h = '<div class="paper omr-sheet">';
+        h += '<div class="omr-corner omr-tl"></div>';
+        h += '<div class="omr-corner omr-tr"></div>';
+        h += '<div class="omr-corner omr-bl"></div>';
+        h += '<div class="omr-corner omr-br"></div>';
+        h += '<div class="omr-school">IMSG I-14/3 ISLAMABAD</div>';
+        h += '<div class="omr-title">' + oeEsc(meta.title || "Section A") + '</div>';
+        h += '<div class="omr-tobe">To be filled-in by the Candidate</div>';
+        h += '<div class="omr-legend">';
+        h += '<div class="omr-llabel">CORRECTLY FILLED</div>';
+        h += '<div class="omr-lbox"><span class="omr-b omr-fill omr-sm">A</span></div>';
+        h += '<div class="omr-llabel">WRONG METHOD</div>';
+        h += '<div class="omr-lrow">' +
+             '<span class="omr-lbox"><span class="omr-wm">&#10003;</span></span>' +
+             '<span class="omr-lbox"><span class="omr-wm">&#10007;</span></span>' +
+             '<span class="omr-lbox"><span class="omr-wm">&#9673;</span></span>' +
+             '<span class="omr-lbox"><span class="omr-wm">&#9680;</span></span>' +
+             '</div>';
+        h += '</div>';
+        h += '<div class="omr-rollrow"><span class="omr-rolllabel">Roll No.</span>' +
+             '<span class="omr-rollcls">' + oeEsc(cls) + '</span>' +
+             '<span class="omr-sect"><span class="omr-b">A</span><span class="omr-b">B</span><span class="omr-b">C</span></span>' +
+             '<span class="omr-rollhy">-</span>';
+        h += '<table class="omr-rolltable"><thead><tr><th colspan="2">ROLL NUMBER</th></tr></thead><tbody>';
+        for (var d = 0; d < 10; d++) {
+            h += '<tr><td><span class="omr-b">' + d + '</span></td>' +
+                 '<td><span class="omr-b">' + d + '</span></td></tr>';
+        }
+        h += '</tbody></table>';
+        h += '<div class="omr-verrow"><span class="omr-verlabel">MCQs PAPER VERSION</span><span class="omr-vbubs">';
+        for (var v = 0; v < labels.length; v++) {
+            h += '<span class="omr-b">' + oeEsc(labels[v]) + '</span>';
+        }
+        h += '</span></div></div>';
+        h += '<div class="omr-timerow"><span>Time Allowed: <u>' + oeEsc(meta.time || "") + ' Minutes</u></span>' +
+             '<span>Total Marks: ' + oeEsc(meta.marks === undefined ? "" : meta.marks) + '</span></div>';
+        h += '<div class="omr-instr">FILL ONLY ONE BUBBLE FOR EACH CORRECT ANSWER. USE BLACK BALL POINT/MARKER</div>';
+        h += '<div class="omr-banner">FOLLOW THE CORRECT SEQUENCE TO FILL-IN THE BUBLES</div>';
+        for (var bi = 0; bi < layout.blocks.length; bi++) {
+            if (bi > 0) h += '<div class="omr-banner">FOLLOW THE CORRECT SEQUENCE TO FILL-IN THE BUBLES</div>';
+            var blk = layout.blocks[bi];
+            h += '<div class="omr-grid">';
+            for (var j = 0; j < blk.cols; j++) {
+                h += '<div class="omr-col">';
+                for (var r = 0; r < blk.rows; r++) {
+                    var n = blk.start + j * blk.rows + r + 1;
+                    if (n > qs.length) break;
+                    h += '<div class="omr-cell"><span class="omr-qn">' + n + '</span>' +
+                         '<span class="omr-b">A</span><span class="omr-b">B</span>' +
+                         '<span class="omr-b">C</span><span class="omr-b">D</span></div>';
+                }
+                h += '</div>';
             }
-            h += '</div></div>';
+            h += '</div>';
         }
         h += '</div>';
         return h;
     }
 
-    function oePrint() {
+    function oePrintOMR() {
         if (oeGenerated.length === 0) { oeStatus("Generate a paper first.", false); return; }
-        var meta = {
-            title: ($("oeTitle") && $("oeTitle").value) || "Section A",
-            className: ($("oeClass") && $("oeClass").value) || "-",
-            time: ($("oeTime") && $("oeTime").value) || 0,
-            marks: ($("oeMarks") && $("oeMarks").value) || 0,
-            includeKey: $("oeKey") ? !!$("oeKey").checked : false,
-            date: new Date().toLocaleDateString()
-        };
-        var area = $("printArea");
-        if (!area) { oeStatus("Print container missing in page.", false); return; }
-        area.innerHTML = oeBuildPaperHTML(meta, oeGenerated);
-        var oldTitle = document.title;
-        try {
-            document.title = String(meta.title).replace(/[\\\/:*?"<>|]/g, "");
-            window.print();
-        } finally {
-            document.title = oldTitle;
+        var meta = oeReadMeta();
+        oePrintTo(oeBuildOMRHTML(meta, oeGenerated), "OMR Sheet - " + meta.title + (meta.version ? " - Version " + meta.version : ""));
+    }
+
+    /* ---------------- OMR photo scanning (Offline Exam) ---------------- */
+
+    function oeScanReset() {
+        oeScans = [];
+        var list = $("oeScanList");
+        if (list) list.innerHTML = "";
+    }
+
+    function oeScanSelected() {
+        var input = $("oeScanFiles");
+        if (!input || !input.files || !input.files.length) return;
+        if (oeGenerated.length === 0) {
+            oeStatus("Generate a paper first.", false);
+            input.value = "";
+            return;
         }
+        var files = [];
+        for (var i = 0; i < input.files.length; i++) files.push(input.files[i]);
+        input.value = "";
+        oeScanQueue(files, 0);
+    }
+
+    function oeScanQueue(files, idx) {
+        if (idx >= files.length) {
+            if (files.length > 0) {
+                oeStatus("Scanned " + files.length + " photo" + (files.length === 1 ? "" : "s") +
+                    ". Verify each sheet, then Save.", true);
+            }
+            return;
+        }
+        var f = files[idx];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            oeScanProcess(e.target.result, f.name, function () { oeScanQueue(files, idx + 1); });
+        };
+        reader.onerror = function () {
+            oeStatus("Could not read " + f.name + ".", false);
+            oeScanQueue(files, idx + 1);
+        };
+        reader.readAsDataURL(f);
+    }
+
+    function oeScanProcess(dataURL, fileName, done) {
+        var im = new Image();
+        im.onload = function () {
+            try {
+                var maxSide = 1600;
+                var scale = Math.min(1, maxSide / Math.max(im.width, im.height));
+                var w = Math.max(1, Math.round(im.width * scale));
+                var h = Math.max(1, Math.round(im.height * scale));
+                var cv = document.createElement("canvas");
+                cv.width = w;
+                cv.height = h;
+                var ctx = cv.getContext("2d");
+                ctx.drawImage(im, 0, 0, w, h);
+                var img = ctx.getImageData(0, 0, w, h);
+                var labels = [];
+                for (var i = 0; i < oeVersionsArr.length; i++) labels.push(oeVersionsArr[i].label);
+                var res = OMR.read(img, { qCount: oeGenerated.length, labels: labels });
+                var answers = [];
+                for (i = 0; i < oeGenerated.length; i++) {
+                    answers.push(res && res.answers && res.answers[i] !== undefined ? res.answers[i] : null);
+                }
+                var vLabel = (res && res.version) ? res.version
+                    : (oeVersionsArr[oeVersionIdx] ? oeVersionsArr[oeVersionIdx].label : "A");
+                oeScans.push({
+                    key: "scan" + (++oeScanSeq),
+                    fileName: fileName,
+                    dataURL: dataURL,
+                    res: res,
+                    roll: (res && res.rollString) ? res.rollString : "",
+                    versionLabel: vLabel,
+                    answers: answers,
+                    saved: false,
+                    attemptId: ""
+                });
+                oeScanRender();
+            } catch (e) {
+                if (typeof console !== "undefined") console.error("oeScanProcess:", e);
+                oeStatus("Could not scan " + fileName + ".", false);
+            }
+            if (done) done();
+        };
+        im.onerror = function () {
+            oeStatus("Could not load image " + fileName + ".", false);
+            if (done) done();
+        };
+        im.src = dataURL;
+    }
+
+    function oeScanByKey(key) {
+        for (var i = 0; i < oeScans.length; i++) {
+            if (oeScans[i].key === key) return oeScans[i];
+        }
+        return null;
+    }
+
+    function oeScanQuestionsFor(scan) {
+        for (var i = 0; i < oeVersionsArr.length; i++) {
+            if (oeVersionsArr[i].label === scan.versionLabel) return oeVersionsArr[i].questions;
+        }
+        return oeGenerated;
+    }
+
+    function oeScanGrade(scan) {
+        return ExamEngine.gradeDetected(oeScanQuestionsFor(scan), scan.answers);
+    }
+
+    function oeScanRoll(key, value) {
+        var scan = oeScanByKey(key);
+        if (!scan) return;
+        scan.roll = value;
+        scan.saved = false;
+    }
+
+    function oeScanVersion(key, value) {
+        var scan = oeScanByKey(key);
+        if (!scan) return;
+        scan.versionLabel = value;
+        scan.saved = false;
+        oeScanRender();
+    }
+
+    function oeScanAns(key, qi, letter) {
+        var scan = oeScanByKey(key);
+        if (!scan) return;
+        scan.answers[qi] = scan.answers[qi] === letter ? null : letter;
+        scan.saved = false;
+        oeScanRender();
+    }
+
+    function oeSlug(s) {
+        return String(s === null || s === undefined ? "" : s)
+            .replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").toLowerCase();
+    }
+
+    function oeScanSave(key) {
+        var scan = oeScanByKey(key);
+        if (!scan) return;
+        var roll = String(scan.roll || "").replace(/^\s+|\s+$/g, "");
+        if (!roll) { oeStatus("Enter the student Roll No. first.", false); return; }
+        var qs = oeScanQuestionsFor(scan);
+        if (!qs || qs.length === 0) { oeStatus("No questions to grade against.", false); return; }
+        var grade = ExamEngine.gradeDetected(qs, scan.answers);
+        var meta = oeReadMeta();
+        var attempt = oeBuildOfflineAttempt(scan, qs, grade, meta, roll);
+        var ok = false;
+        if (typeof saveAttempt === "function") ok = saveAttempt(attempt);
+        scan.roll = roll;
+        scan.saved = ok;
+        scan.attemptId = ok ? attempt.attemptId : "";
+        oeScanRender();
+        oeStatus(ok
+            ? "Saved result for " + roll + " — " + grade.score + "/" + grade.total +
+              (grade.percentage !== undefined ? " (" + grade.percentage + "%)" : "") + "."
+            : "Could not save result for " + roll + " — kept on this screen.", ok);
+    }
+
+    function oeBuildOfflineAttempt(scan, qs, grade, meta, roll) {
+        var now = new Date().toISOString();
+        var subject = qs[0] && qs[0].subject ? qs[0].subject : "General";
+        var gradeLevel = qs[0] && qs[0].grade ? qs[0].grade : 9;
+        var title = meta.title || "Offline Exam";
+        var attemptId = "offline-" + oeSlug(roll) + "-" + oeSlug(title) +
+            (scan.versionLabel ? "-" + oeSlug(scan.versionLabel) : "");
+        var attempt = {
+            attemptId: attemptId,
+            timestamp: now,
+            startedAt: now,
+            completedAt: now,
+            studentId: roll,
+            classId: "",
+            subject: subject,
+            grade: gradeLevel,
+            score: grade.score,
+            total: grade.total,
+            percentage: grade.percentage,
+            timeSpent: 0,
+            mode: "offlineExam",
+            title: title + (scan.versionLabel ? " (Version " + scan.versionLabel + ")" : ""),
+            source: "photo",
+            questions: grade.questions,
+            topicPerformance: {}
+        };
+        var t;
+        for (var i = 0; i < grade.questions.length; i++) {
+            var gq = grade.questions[i];
+            var topic = gq.topic || "General";
+            if (!attempt.topicPerformance[topic]) {
+                attempt.topicPerformance[topic] = { correct: 0, total: 0 };
+            }
+            attempt.topicPerformance[topic].total++;
+            if (gq.correct) attempt.topicPerformance[topic].correct++;
+        }
+        for (t in attempt.topicPerformance) {
+            var tp = attempt.topicPerformance[t];
+            tp.percentage = tp.total > 0
+                ? Number(((tp.correct / tp.total) * 100).toFixed(2)) : 0;
+        }
+        return attempt;
+    }
+
+    function oeScanRender() {
+        var list = $("oeScanList");
+        if (!list) return;
+        var h = "";
+        for (var s = 0; s < oeScans.length; s++) h += oeScanCardHTML(oeScans[s]);
+        list.innerHTML = h;
+    }
+
+    function oeScanCardHTML(scan) {
+        var qs = oeScanQuestionsFor(scan);
+        var grade = oeScanGrade(scan);
+        var labels = [];
+        var i, L;
+        for (i = 0; i < oeVersionsArr.length; i++) labels.push(oeVersionsArr[i].label);
+        if (labels.length === 0) labels = ["A"];
+        var res = scan.res || {};
+        var warn = res.warnings && res.warnings.length ? res.warnings.join(", ") : "";
+        var h = '<div class="oe-scan' + (scan.saved ? " saved" : "") + '">';
+        h += '<div class="oe-scan-photo"><img src="' + scan.dataURL + '" alt=""></div>';
+        h += '<div class="oe-scan-side">';
+        h += '<div class="oe-scan-head"><strong>' + oeEsc(scan.fileName) + '</strong>';
+        if (res.confidence === "low") h += ' <span class="oe-badge warn">low confidence</span>';
+        if (warn) h += ' <span class="oe-scan-warn">' + oeEsc(warn) + '</span>';
+        if (scan.saved) h += ' <span class="oe-badge ok">saved</span>';
+        h += '</div>';
+        h += '<div class="oe-scan-meta">';
+        h += '<label>Roll No. <input type="text" class="oe-scan-roll" value="' + oeEsc(scan.roll) +
+             '" oninput="oeScanRoll(\'' + scan.key + '\', this.value)"></label>';
+        h += '<label>Version <select onchange="oeScanVersion(\'' + scan.key + '\', this.value)">';
+        for (i = 0; i < labels.length; i++) {
+            h += '<option value="' + labels[i] + '"' +
+                 (labels[i] === scan.versionLabel ? " selected" : "") + '>' + labels[i] + '</option>';
+        }
+        h += '</select></label>';
+        h += '</div>';
+        h += '<div class="oe-scan-grid">';
+        for (i = 0; i < scan.answers.length; i++) {
+            var correct = qs[i] ? ExamEngine.normAnswerLetter(qs[i]) : "";
+            h += '<div class="oe-aq"><span class="oe-aqn">' + (i + 1) + '</span>';
+            for (L = 0; L < 4; L++) {
+                var let_ = "ABCD".charAt(L);
+                var on = scan.answers[i] === let_;
+                var cls = "oe-ab" + (on ? " on" : "");
+                if (on && let_ === correct) cls += " good";
+                else if (on && correct) cls += " bad";
+                else if (!on && let_ === correct) cls += " hint";
+                h += '<button type="button" class="' + cls + '" onclick="oeScanAns(\'' +
+                     scan.key + '\',' + i + ',\'' + let_ + '\')">' + let_ + '</button>';
+            }
+            h += '</div>';
+        }
+        h += '</div>';
+        h += '<div class="oe-scan-foot"><strong>Score: ' + grade.score + ' / ' + grade.total + '</strong>';
+        h += '<button type="button" class="action-btn" onclick="oeScanSave(\'' + scan.key + '\')">' +
+             (scan.saved ? "Save again" : "Save result") + '</button>';
+        h += '</div>';
+        h += '</div></div>';
+        return h;
     }
 
 
@@ -3670,16 +4129,39 @@ var UI = (function() {
         doExportCredentials();
     }
 
-    function doExportCredentials() {
-        var list = studentAccounts.slice();
-        if (list.length === 0) { alert("No students to export."); return; }
+    // Pure: credential rows for the CURRENT user's role scope.
+    // principal -> every student; classteacher -> only her class(es)
+    // (classTeacherOf, falling back to classId); anyone else -> null
+    // (not allowed). Returns the sheet rows (header + one per student).
+    function oeCredentialExportRows() {
+        var user = Auth.getUser();
+        if (!user) return null;
+        var list = studentAccounts.slice(), i, j;
+        if (user.role === "classteacher") {
+            var myClasses = (user.classTeacherOf && user.classTeacherOf.length) ? user.classTeacherOf
+                : (user.classId ? [user.classId] : []);
+            list = [];
+            for (i = 0; i < studentAccounts.length; i++) {
+                if (myClasses.indexOf(studentAccounts[i].classId) === -1) continue;
+                list.push(studentAccounts[i]);
+            }
+        } else if (user.role !== "principal") {
+            return null;
+        }
         var data = [["Student ID", "Name", "Father Name", "Class", "Roll No", "Password"]];
-        for (var i = 0; i < list.length; i++) {
+        for (i = 0; i < list.length; i++) {
             var s = list[i];
             var className = "";
-            for (var j = 0; j < classes.length; j++) { if (classes[j].id === s.classId) { className = classes[j].name; break; } }
+            for (j = 0; j < classes.length; j++) { if (classes[j].id === s.classId) { className = classes[j].name; break; } }
             data.push([s.id, s.name, s.fatherName || "", className, s.rollNo || "", s.password]);
         }
+        return data;
+    }
+
+    function doExportCredentials() {
+        var data = oeCredentialExportRows();
+        if (!data) { alert("Only Admin and Class Teachers can export student credentials."); return; }
+        if (data.length <= 1) { alert("No students to export."); return; }
         if (typeof XLSX !== "undefined") {
             var ws = XLSX.utils.aoa_to_sheet(data);
             ws["!cols"] = [{ wch: 15 }, { wch: 20 }, { wch: 20 }, { wch: 10 }, { wch: 10 }, { wch: 12 }];
@@ -4672,9 +5154,123 @@ var UI = (function() {
 
     function closeModal() {
         var ids = ["questionModal", "classModal", "assignmentModal", "examBuilderModal", "excelModal", "teacherModal", "attendanceModal", "studentModal", "studentExcelModal", "exportCredentialsModal"];
-        for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) el.classList.remove("active"); }
+        for (var i = 0; i < ids.length; i++) {
+            var el = $(ids[i]);
+            if (el) { el.classList.remove("active"); el.scrollTop = 0; }
+        }
         var overlay = $("modalOverlay");
         if (overlay) overlay.classList.remove("active");
+    }
+
+    // One-time modal behavior: ESC closes the open modal and background
+    // scrolling locks while a modal is shown. The observer covers every
+    // current and future modal without touching the open() call sites.
+    var modalChromeBound = false;
+    function bindModalChrome() {
+        if (modalChromeBound || typeof MutationObserver === "undefined") return;
+        var overlay = $("modalOverlay");
+        if (!overlay) return;
+        modalChromeBound = true;
+        document.addEventListener("keydown", function (e) {
+            if ((e.key === "Escape" || e.keyCode === 27) && overlay.classList.contains("active")) closeModal();
+        });
+        new MutationObserver(function () {
+            document.body.classList.toggle("modal-open", overlay.classList.contains("active"));
+        }).observe(overlay, { attributes: true, attributeFilter: ["class"] });
+    }
+
+    // ---------------------------------------------------------------
+    // Hash router — browser back/forward behaves like a real site.
+    // Pages: #login | #dashboard | #quiz | #result | #review
+    // Tabs:  #dashboard/<tab> (session role decides which tab set).
+    // ---------------------------------------------------------------
+    var routerTab = "";
+    var routerBound = false;
+
+    function pushTabHash(tab) {
+        if (typeof history === "undefined" || !tab) return;
+        var h = "#dashboard/" + tab;
+        if (location.hash === h) return;
+        if ((location.hash || "").indexOf("#dashboard") === 0) history.pushState(null, "", h);
+        else history.replaceState(null, "", h);
+    }
+
+    // Only accept a tab that actually exists on this role's dashboard.
+    function pickTab(dashId, tab) {
+        if (!tab) return null;
+        var dash = $(dashId);
+        if (!dash || !dash.querySelectorAll) return null;
+        var btns = dash.querySelectorAll(".dashboard-tabs .tab-btn");
+        for (var i = 0; i < btns.length; i++) {
+            var m = /Tab\('([^']+)'\)/.exec(btns[i].getAttribute("onclick") || "");
+            if (m && m[1] === tab) return tab;
+        }
+        return null;
+    }
+
+    function applyRoute(initial) {
+        if (typeof location === "undefined") return;
+        var parts = (location.hash || "").replace(/^#\/?/, "").split("/");
+        var page = parts[0] || "";
+        var tab = parts[1] || "";
+        var quizEl = $("quiz");
+        var quizActive = !!(quizEl && quizEl.style.display !== "none");
+
+        // Leaving a running quiz (Back/Forward) — ask before abandoning.
+        if (quizActive && page !== "quiz") {
+            if (!initial && typeof window !== "undefined" && window.confirm &&
+                !window.confirm("Leave the quiz? Your current attempt will not be saved.")) {
+                history.pushState(null, "", "#quiz");
+                return;
+            }
+            if (typeof QuizEngine !== "undefined" && QuizEngine.stopTimer) QuizEngine.stopTimer();
+        }
+
+        if (page === "quiz") {
+            if (quizActive) return;   // still inside the running quiz
+            page = "dashboard";       // stale entry from a finished quiz
+        }
+
+        if (page === "login") {
+            if (initial && Auth.isLoggedIn()) {
+                history.replaceState(null, "", "#dashboard");
+                page = "dashboard";
+            } else {
+                showLogin();
+                return;
+            }
+        }
+
+        if (!Auth.isLoggedIn()) { showLogin(); return; }
+
+        if (page === "result") {
+            if ($("result") && $("result").style.display === "block") return;
+            if (typeof QuizEngine !== "undefined" && QuizEngine.getQuizQuestions &&
+                QuizEngine.getQuizQuestions().length > 0 && QuizEngine.showResult) {
+                QuizEngine.showResult(false);
+                return;
+            }
+            page = "dashboard";
+        } else if (page === "review") {
+            if ($("review") && $("review").style.display === "block") return;
+            if (typeof QuizEngine !== "undefined" && QuizEngine.getQuizQuestions &&
+                QuizEngine.getQuizQuestions().length > 0 && QuizEngine.showReview) {
+                QuizEngine.showReview(false);
+                return;
+            }
+            page = "dashboard";
+        }
+
+        if (page !== "dashboard") { page = "dashboard"; tab = ""; }
+        routerTab = tab;
+        showDashboard();
+    }
+
+    function bindRouter() {
+        if (routerBound || typeof window === "undefined" || !window.history) return;
+        routerBound = true;
+        if (!location.hash && Auth.isLoggedIn()) history.replaceState(null, "", "#dashboard");
+        window.addEventListener("popstate", function () { applyRoute(false); });
     }
 
     function renderDashboard() {
@@ -4709,11 +5305,13 @@ var UI = (function() {
     }
 
     function renderDashboard(role, user) {
+        var t = routerTab;
+        routerTab = "";
         if (role === "student") {
             $("studentDashboard").style.display = "block";
             $("studentDisplayName").textContent = user ? user.name : "Student";
             $("loggedUser").textContent = user ? user.name + " (Student)" : "Student";
-            showStudentTab("practice");
+            showStudentTab(pickTab("studentDashboard", t) || "practice");
         } else if (role === "teacher") {
             $("teacherDashboard").style.display = "block";
             $("teacherDisplayName").textContent = user ? user.name : "Teacher";
@@ -4727,24 +5325,25 @@ var UI = (function() {
             }
             $("teacherSubjectDisplay").textContent = tSubs.join(", ") || "N/A";
             $("loggedUser").textContent = user ? user.name + " (Teacher)" : "Teacher";
-            showTeacherTab("classes");
+            showTeacherTab(pickTab("teacherDashboard", t) || "classes");
         } else if (role === "classteacher") {
             $("classTeacherDashboard").style.display = "block";
             $("ctDisplayName").textContent = user ? user.name : "Class Teacher";
             $("loggedUser").textContent = user ? user.name + " (Class Teacher)" : "Class Teacher";
-            showCTTab("overview");
+            showCTTab(pickTab("classTeacherDashboard", t) || "overview");
         } else if (role === "parent") {
             $("parentDashboard").style.display = "block";
             $("parentDisplayName").textContent = user ? user.name : "Parent";
             $("loggedUser").textContent = user ? user.name + " (Parent)" : "Parent";
-            showParentTab("progress");
+            showParentTab(pickTab("parentDashboard", t) || "progress");
         } else if (role === "principal") {
             $("principalDashboard").style.display = "block";
             $("principalDisplayName").textContent = user ? user.name : "Admin";
             $("loggedUser").textContent = user ? user.name + " (Admin)" : "Admin";
-            showPrincipalTab("school");
+            showPrincipalTab(pickTab("principalDashboard", t) || "school");
         }
-        history.pushState({ page: "dashboard" }, "", "#dashboard");
+        // Router-driven renders already sit on a #dashboard* hash — don't push again.
+        if ((location.hash || "").indexOf("#dashboard") !== 0) history.pushState({ page: "dashboard" }, "", "#dashboard");
         var syncBtn = $("syncBtn");
         if (syncBtn) syncBtn.style.display = "inline-block";
     }
@@ -4847,7 +5446,17 @@ var UI = (function() {
         oeMove: oeMove,
         oeDelete: oeDelete,
         oePrint: oePrint,
+        oePrintKey: oePrintKey,
+        oePrintOMR: oePrintOMR,
+        oeScanSelected: oeScanSelected,
+        oeScanRoll: oeScanRoll,
+        oeScanVersion: oeScanVersion,
+        oeScanAns: oeScanAns,
+        oeScanSave: oeScanSave,
+        oeSwitchVersion: oeSwitchVersion,
+        oeBuildKeyHTML: oeBuildKeyHTML,
         oeBuildPaperHTML: oeBuildPaperHTML,
+        oeBuildOMRHTML: oeBuildOMRHTML,
         showAssignmentStatus: showAssignmentStatus,
         hideAssignmentStatus: hideAssignmentStatus,
         loadClassAnalytics: loadClassAnalytics,
@@ -4880,6 +5489,7 @@ var UI = (function() {
         resetStudentPassword: resetStudentPassword,
         exportStudentCredentials: exportStudentCredentials,
         doExportCredentials: doExportCredentials,
+        oeCredentialExportRows: oeCredentialExportRows,
         showCreateStudentModal: showCreateStudentModal,
         updateStudentPreview: updateStudentPreview,
         editStudentAccount: editStudentAccount,
@@ -4903,7 +5513,11 @@ var UI = (function() {
         loadClassAnalytics: loadClassAnalytics,
         insightNavigate: insightNavigate,
         renderRecommendationsPanel: renderRecommendationsPanel,
-        recNavigate: recNavigate
+        recNavigate: recNavigate,
+        bindModalChrome: bindModalChrome,
+        bindRouter: bindRouter,
+        applyRoute: applyRoute,
+        pushTabHash: pushTabHash
     };
     for (var k in api) { if (typeof api[k] === "undefined") delete api[k]; }
     return api;

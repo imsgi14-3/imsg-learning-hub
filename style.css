@@ -713,6 +713,19 @@ tr:last-child td {
 
 .modal.active {
     display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* `translate` property (not `transform`) so the modalIn animation keeps working */
+    translate: -50% -50%;
+    width: min(620px, calc(100% - 40px));
+    z-index: 1001;
+    overscroll-behavior: contain;
+}
+
+/* Background must not scroll while a modal is open (toggled by bindModalChrome) */
+body.modal-open {
+    overflow: hidden;
 }
 
 .modal h3 {
@@ -1978,7 +1991,7 @@ footer {
     .panel-card { padding: 20px; }
     .quiz-card, .result-card, #review { padding: 25px 20px; margin: 20px 10px; }
     .menu button { max-width: 100%; }
-    .modal { margin: 10px; padding: 25px; }
+    .modal { padding: 25px 20px; }
     .analytics-grid { grid-template-columns: 1fr; }
     #quizOptions { grid-template-columns: 1fr; }
     .practice-options { flex-direction: column; align-items: stretch; }
@@ -2689,21 +2702,41 @@ footer {
     padding: 12px 16px;
 }
 .oe-actions .action-btn { margin: 0; }
-.oe-key {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-mid);
-    margin-left: auto;
-}
+#oeKeyBtn { margin-left: auto; }
 
+.oe-hint { font-size: 13px; color: var(--text-muted, #667); margin: 6px 0 10px; }
+.oe-scan-controls { margin-bottom: 12px; }
+.oe-scan { display: flex; gap: 14px; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 12px; background: var(--bg-card, #fff); }
+.oe-scan.saved { border-color: #16a34a; }
+.oe-scan-photo { flex: 0 0 auto; }
+.oe-scan-photo img { max-width: 220px; max-height: 300px; border: 1px solid var(--border); border-radius: 6px; display: block; }
+.oe-scan-side { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.oe-scan-head { font-size: 13px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.oe-scan-warn { font-size: 12px; color: var(--warning, #b45309); }
+.oe-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+.oe-badge.warn { background: #fef3c7; color: #92400e; }
+.oe-badge.ok { background: #dcfce7; color: #166534; }
+.oe-scan-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; }
+.oe-scan-meta label { display: flex; align-items: center; gap: 6px; }
+.oe-scan-roll { width: 120px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 5px; }
+.oe-scan-meta select { padding: 4px 6px; border: 1px solid var(--border); border-radius: 5px; }
+.oe-scan-grid { display: flex; flex-wrap: wrap; gap: 6px 10px; max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px; padding: 8px; }
+.oe-aq { display: flex; align-items: center; gap: 2px; }
+.oe-aqn { width: 20px; font-size: 11px; color: var(--text-muted, #667); text-align: right; margin-right: 2px; }
+.oe-ab { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border); background: #fff; font-size: 11px; font-weight: 700; cursor: pointer; padding: 0; line-height: 1; color: var(--text, #222); }
+.oe-ab:hover { border-color: var(--primary, #2563eb); }
+.oe-ab.on { background: var(--primary, #2563eb); border-color: var(--primary, #2563eb); color: #fff; }
+.oe-ab.good { background: #16a34a; border-color: #16a34a; color: #fff; }
+.oe-ab.bad { background: #ef4444; border-color: #ef4444; color: #fff; }
+.oe-ab.hint { border-color: #16a34a; color: #16a34a; }
+.oe-scan-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 14px; }
 @media (max-width: 768px) {
     .oe-layout { grid-template-columns: 1fr; }
     .oe-status { max-width: 100%; }
-    .oe-key { margin-left: 0; }
+    #oeKeyBtn { margin-left: 0; }
     .oe-ratio-name { width: 100%; }
+    .oe-scan { flex-direction: column; }
+    .oe-scan-photo img { max-width: 100%; }
 }
 
 
@@ -2719,35 +2752,107 @@ footer {
     line-height: 1.45;
 }
 
-.paper-head { text-align: center; border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 12px; }
+.paper-head { text-align: center; border-bottom: 2px solid #111; padding-bottom: 6px; margin-bottom: 8px; }
 .paper-school { font-weight: 700; font-size: 17px; letter-spacing: 0.5px; }
 .paper-title { font-size: 15px; font-weight: 700; margin-top: 4px; }
-.paper-meta { font-size: 12.5px; margin-top: 6px; color: #333; }
-.paper-fields { display: flex; justify-content: space-between; gap: 16px; font-size: 12.5px; margin-top: 10px; text-align: left; }
+.paper-meta { font-size: 12.5px; margin-top: 4px; color: #333; }
+.paper-fields { display: flex; justify-content: space-between; gap: 16px; font-size: 12.5px; margin-top: 6px; text-align: left; }
 
-.paper-note { font-size: 12px; font-style: italic; color: #333; margin: 10px 0 14px; }
+.paper-note { font-size: 12px; font-style: italic; color: #333; margin: 6px 0 8px; }
 
-.pq { display: flex; gap: 8px; margin-bottom: 12px; page-break-inside: avoid; break-inside: avoid; }
-.pq-n { font-weight: 700; min-width: 26px; }
-.pq-body { flex: 1; }
-.pq-t { font-weight: 600; }
-.pq-img { max-width: 260px; max-height: 160px; display: block; margin: 6px 0; }
-.pq-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px 18px; margin-top: 5px; padding-left: 4px; }
-.pq-o { font-size: 12.5px; }
+.paper-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+.paper-table th, .paper-table td { border: 1px solid #333; padding: 4px 6px; vertical-align: top; font-size: 12px; }
+.paper-table thead th { background: #f0f0f0; text-align: center; font-weight: 700; }
+.paper-table thead { display: table-header-group; }
+.paper-table tr { page-break-inside: avoid; break-inside: avoid; }
+.paper-table .pt-s { width: 26px; padding-left: 4px; padding-right: 4px; }
+.paper-table .pt-q { width: 34%; }
+.paper-table th:not(.pt-s):not(.pt-q) { width: 13%; }
+.paper-table td.pq-n { font-weight: 700; text-align: center; white-space: nowrap; padding-left: 4px; padding-right: 4px; }
+.pq-q { font-weight: 500; }
+.pq-c { text-align: center; }
+.pq-img { max-width: 240px; max-height: 120px; display: block; margin: 5px 0; }
+.ps-div td { text-align: center; font-weight: 700; background: #fff; letter-spacing: 0.5px; font-size: 12.5px; }
+.ps-label { font-weight: 700; text-align: center; background: #f7f7f7; vertical-align: middle; white-space: normal; min-width: 90px; }
+.ps-stim { background: #f7f7f7; }
+.paper-sign { display: flex; justify-content: space-between; font-weight: 600; margin: 2px 0 6px; font-size: 12.5px; }
+.paper-version { font-weight: 700; font-size: 13px; text-align: center; margin-top: 6px; letter-spacing: 0.5px; }
+.oe-versions { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+.oe-vbtn { border: 1px solid var(--border); background: #fff; border-radius: 6px; cursor: pointer; padding: 4px 12px; font-size: 12.5px; font-weight: 600; color: var(--text-mid); }
+.oe-vbtn.on { background: var(--primary); border-color: var(--primary); color: #fff; }
 
-.pq-stim { border: 1.5px solid #444; background: #f7f7f7; padding: 8px 10px; margin: 14px 0 10px; page-break-inside: avoid; break-inside: avoid; }
-.pq-stim-label { font-weight: 700; font-size: 12.5px; margin-bottom: 4px; }
-.pq-stim-text { font-size: 12.5px; color: #222; }
-
-.paper-key { page-break-before: always; break-before: page; margin-top: 8px; }
-.paper-key-title { text-align: center; font-weight: 700; font-size: 15px; margin-bottom: 12px; }
-.paper-key-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px 12px; }
+.paper-key { margin-top: 8px; }
+.paper-key-title { text-align: center; font-weight: 700; font-size: 15px; margin-bottom: 8px; }
+.paper-key-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px 10px; }
 .paper-key-item { font-size: 13px; }
+
+/* ---- OMR answer sheet (FBISE SSC-I style) ----
+   Sized for A4: the sheet fills the printable page so the four corner
+   squares map to a near-uniform scale when scanned. Bubble/row/column
+   sizes and all vertical positions are locked to the scanner's
+   thresholds in omrScanner.js (legend top-right, roll table ~0.10H-
+   0.35H with the version box centered beside it at ~0.23H, version
+   window 0.17H-0.30H, header ends ~0.47H, grid starts ~0.49H, grid
+   cut 0.45H, row pitch <= 60 canonical px, question numbers < 16px).
+   The roll block sits high so the whole sheet stays on one A4 page
+   even for 60 questions. */
+.omr-sheet { position: relative; padding: 10px 8px 20px 8px; min-height: 297mm; }
+.omr-corner { position: absolute; width: 11mm; height: 11mm; background: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.omr-tl { top: 0; left: 0; }
+.omr-tr { top: 0; right: 0; }
+.omr-bl { bottom: 0; left: 0; }
+.omr-br { bottom: 0; right: 0; }
+.omr-school { font-size: 14px; font-weight: 700; letter-spacing: 1px; text-align: center; }
+.omr-title { font-size: 26px; font-weight: 800; text-align: center; max-width: 58%; margin: 4px auto 2px; letter-spacing: 0.5px; }
+.omr-tobe { font-size: 14px; text-align: center; margin-bottom: 12px; }
+/* Legend kept in the top-right corner (above the roll/version block)
+   so its guide boxes stay outside the scanner's version window. */
+.omr-legend { position: absolute; top: 24px; right: 10px; text-align: center; }
+.omr-llabel { font-size: 9.5px; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 2px; }
+.omr-lbox { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1.5px solid #111; margin-bottom: 3px; }
+.omr-lrow { display: flex; gap: 3px; justify-content: center; }
+.omr-lrow .omr-lbox { margin-bottom: 0; width: 28px; height: 28px; }
+.omr-wm { font-size: 15px; font-weight: 700; line-height: 1; }
+/* Version box sits BESIDE the roll table, vertically centered on it.
+   Its bubbles stay in the scanner's 0.17H-0.30H version window. */
+.omr-verrow { display: flex; align-items: center; gap: 8px; align-self: center; margin-left: 8px; }
+.omr-verlabel { font-size: 14px; font-weight: 700; border: 1.5px solid #111; padding: 8px 12px; }
+.omr-vbubs { display: flex; gap: 5px; border: 1.5px solid #111; padding: 7px 8px; }
+.omr-b { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 1.5px solid #333; border-radius: 50%; font-size: 10px; font-weight: 600; color: #111; }
+.omr-sm { width: 16px; height: 16px; font-size: 8px; }
+.omr-fill { background: #000; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.omr-timerow { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin: 8px 0; }
+.omr-rollrow { display: flex; align-items: flex-start; gap: 5px; margin: 8px 0; }
+.omr-rolllabel, .omr-rollcls, .omr-rollhy { font-size: 15px; font-weight: 700; line-height: 20px; }
+.omr-sect { display: flex; gap: 3px; }
+/* Two-column 0-9 roll table with an FBISE-style ROLL NUMBER header,
+   read top-to-bottom. Digit columns hug the bubble (character width,
+   minimal padding); the header text sets the only extra width. Outer
+   frame/header/dividers are all longer than the scanner's 60px mark
+   size (or thinner than 16px), so the box is never mistaken for
+   fillable cells. */
+.omr-rolltable { border: 1.5px solid #111; border-collapse: collapse; margin-left: 6px; }
+.omr-rolltable th { font-size: 8px; font-weight: 800; letter-spacing: 0.3px; padding: 2px 5px; white-space: nowrap; border-bottom: 1.5px solid #111; }
+.omr-rolltable td { border-right: 1px solid #999; border-bottom: 1px solid #999; padding: 1px 3px; }
+.omr-rolltable td:nth-child(2n) { border-right: none; }
+.omr-rolltable tr:last-child td { border-bottom: none; }
+.omr-instr { font-size: 12px; font-weight: 700; text-decoration: underline; text-align: center; margin: 8px 0 10px; }
+.omr-banner { font-size: 12px; font-weight: 800; text-align: center; border: 3px solid #111; padding: 6px 8px; margin: 10px auto 22px; letter-spacing: 0.4px; }
+.omr-grid { display: flex; justify-content: center; gap: 5px; }
+.omr-col { display: flex; flex-direction: column; flex-shrink: 0; }
+.omr-cell { display: flex; align-items: center; gap: 3px; border: 1px dashed #555; padding: 3px; }
+.omr-qn { width: 28px; text-align: right; font-size: 12px; font-weight: 700; }
+
+/* Page margins for Print/Save-as-PDF. Top-level (not inside @media) so
+   every browser applies it. */
+@page { size: A4; margin: 15mm; }
 
 @media print {
     body > *:not(#printArea) { display: none !important; }
     #printArea { display: block !important; }
     body { background: #fff; }
     .paper { font-size: 12.5px; }
-    @page { margin: 15mm; }
+    /* Printable width is 180mm (@page margin 15mm); keep the A4 aspect
+       so the scanner's corner-square rectify scales both axes evenly. */
+    .omr-sheet { min-height: 255mm; }
 }

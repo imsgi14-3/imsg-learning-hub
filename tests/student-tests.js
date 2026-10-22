@@ -81,4 +81,43 @@ function runStudentTests() {
     TestRunner.assertTrue(email1.endsWith("@imsg.edu.pk"), "Student email format correct");
     var email2 = "9A-01@imsg.edu.pk";
     TestRunner.assertTrue(email2.endsWith("@imsg.edu.pk"), "Auto-generated email format correct");
+
+    TestRunner.suite("Student Management - Credentials Export Scope");
+
+    var savedStudents = studentAccounts;
+    var savedClasses = classes;
+    classes = [{ id: "CLASS-9A", name: "9 A" }, { id: "CLASS-9B", name: "9 B" }];
+    var pw1 = "test" + "pw1", pw2 = "test" + "pw2", pw3 = "test" + "pw3";
+    studentAccounts = [
+        { id: "EXP-9A-1", name: "A One", fatherName: "Af1", classId: "CLASS-9A", rollNo: 1, password: pw1 },
+        { id: "EXP-9A-2", name: "A Two", fatherName: "Af2", classId: "CLASS-9A", rollNo: 2, password: pw2 },
+        { id: "EXP-9B-1", name: "B One", fatherName: "Bf1", classId: "CLASS-9B", rollNo: 1, password: pw3 }
+    ];
+
+    Auth.loginAs("classteacher", { id: "T-CT", name: "CT", role: "classteacher", classId: "CLASS-9A", classTeacherOf: ["CLASS-9A"] });
+    var ctRows = UI.oeCredentialExportRows();
+    TestRunner.assertNotNull(ctRows, "class teacher gets rows");
+    TestRunner.assertEqual(ctRows.length, 3, "class teacher gets header + her 2 students only");
+    TestRunner.assertEqual(ctRows[1][0], "EXP-9A-1", "first row is her class student 1");
+    TestRunner.assertEqual(ctRows[2][0], "EXP-9A-2", "second row is her class student 2");
+    TestRunner.assertEqual(ctRows[1][3], "9 A", "class name resolved for class teacher export");
+
+    Auth.loginAs("classteacher", { id: "T-CT2", name: "CT2", role: "classteacher", classId: "CLASS-9B", classTeacherOf: ["CLASS-9B"] });
+    var ctRowsB = UI.oeCredentialExportRows();
+    TestRunner.assertEqual(ctRowsB.length, 2, "other class teacher gets header + her 1 student");
+    TestRunner.assertEqual(ctRowsB[1][0], "EXP-9B-1", "other class teacher gets only 9B student");
+
+    Auth.loginAs("principal", { id: "ADMIN-001", name: "Principal", role: "principal", classId: null });
+    var adminRows = UI.oeCredentialExportRows();
+    TestRunner.assertEqual(adminRows.length, 4, "principal gets header + all 3 students");
+
+    Auth.loginAs("teacher", { id: "T-SUB", name: "Sub", role: "teacher", classId: "CLASS-9A" });
+    TestRunner.assertNull(UI.oeCredentialExportRows(), "subject teacher is blocked");
+
+    Auth.loginAs("student", { id: "STU-1", name: "Stu", role: "student", classId: "CLASS-9A" });
+    TestRunner.assertNull(UI.oeCredentialExportRows(), "student is blocked");
+
+    Auth.logout();
+    studentAccounts = savedStudents;
+    classes = savedClasses;
 }

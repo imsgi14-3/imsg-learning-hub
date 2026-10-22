@@ -218,6 +218,16 @@
                                     <label for="oeMarks">Marks</label>
                                     <input type="number" id="oeMarks" value="30" min="1" max="100">
                                 </div>
+                                <div class="oe-field">
+                                    <label for="oeVersions">Versions</label>
+                                    <select id="oeVersions">
+                                        <option value="1" selected>1 (A)</option>
+                                        <option value="2">2 (A, B)</option>
+                                        <option value="3">3 (A, B, C)</option>
+                                        <option value="4">4 (A&ndash;D)</option>
+                                        <option value="5">5 (A&ndash;E)</option>
+                                    </select>
+                                </div>
                             </div>
                         </section>
 
@@ -272,7 +282,17 @@
                         <button type="button" class="action-btn secondary" onclick="oeCheck()">Check Feasibility</button>
                         <button type="button" class="action-btn" onclick="oeGenerate()">&#9881; Generate Paper</button>
                         <button type="button" class="action-btn" id="oePrintBtn" style="display:none;" onclick="oePrint()">&#128424; Print / Save as PDF</button>
-                        <label class="oe-key"><input type="checkbox" id="oeKey" checked> Include answer key page</label>
+                        <button type="button" class="action-btn secondary" id="oeKeyBtn" style="display:none;" onclick="oePrintKey()">&#128220; Print Answer Key</button>
+                        <button type="button" class="action-btn secondary" id="oeOmrBtn" style="display:none;" onclick="oePrintOMR()">&#9673; Print OMR Sheet</button>
+                    </section>
+
+                    <section class="chart-section oe-panel" id="oeScanPanel" style="display:none;">
+                        <h4>&#9673; Scan Filled OMR Sheets</h4>
+                        <p class="oe-hint">Upload photos of the students' filled OMR sheets. Detection is automatic &mdash; verify and correct every sheet, then Save.</p>
+                        <div class="oe-scan-controls">
+                            <input type="file" id="oeScanFiles" accept="image/*" multiple onchange="oeScanSelected()">
+                        </div>
+                        <div id="oeScanList"></div>
                     </section>
                 </div>
             </div>
@@ -850,6 +870,7 @@
     <script src="auth.js"></script>
     <script src="analytics.js"></script>
     <script src="examEngine.js"></script>
+    <script src="omrScanner.js"></script>
     <script src="ui.js"></script>
     <script src="quiz.js"></script>
     <script src="recommendations.js"></script>

@@ -90,7 +90,7 @@ var Auth = (function() {
                 document.getElementById("studentDashboard").style.display = "block";
                 document.getElementById("studentDisplayName").textContent = found.name;
                 showStudentTab("practice");
-                history.pushState({ page: "dashboard" }, "", "#dashboard");
+                if ((location.hash || "").indexOf("#dashboard") !== 0) history.pushState({ page: "dashboard" }, "", "#dashboard");
             };
             loginFirebaseAuth(email, password, loginSuccess);
         } else if (role === "teacher") {
@@ -119,7 +119,7 @@ var Auth = (function() {
                 dashboardsHide();
                 document.getElementById("teacherDashboard").style.display = "block";
                 showTeacherTab("classes");
-                history.pushState({ page: "dashboard" }, "", "#dashboard");
+                if ((location.hash || "").indexOf("#dashboard") !== 0) history.pushState({ page: "dashboard" }, "", "#dashboard");
             };
             loginFirebaseAuth(email, password, loginSuccess);
         } else if (role === "classteacher") {
@@ -150,7 +150,7 @@ var Auth = (function() {
                 dashboardsHide();
                 document.getElementById("classTeacherDashboard").style.display = "block";
                 showCTTab("overview");
-                history.pushState({ page: "dashboard" }, "", "#dashboard");
+                if ((location.hash || "").indexOf("#dashboard") !== 0) history.pushState({ page: "dashboard" }, "", "#dashboard");
             };
             loginFirebaseAuth(email, password, loginSuccess);
         } else if (role === "parent") {
@@ -173,7 +173,7 @@ var Auth = (function() {
                 dashboardsHide();
                 document.getElementById("parentDashboard").style.display = "block";
                 showParentTab("progress");
-                history.pushState({ page: "dashboard" }, "", "#dashboard");
+                if ((location.hash || "").indexOf("#dashboard") !== 0) history.pushState({ page: "dashboard" }, "", "#dashboard");
             };
             loginFirebaseAuth(email, password, loginSuccess);
         } else if (role === "principal") {
@@ -194,7 +194,7 @@ var Auth = (function() {
                 dashboardsHide();
                 document.getElementById("principalDashboard").style.display = "block";
                 showPrincipalTab("school");
-                history.pushState({ page: "dashboard" }, "", "#dashboard");
+                if ((location.hash || "").indexOf("#dashboard") !== 0) history.pushState({ page: "dashboard" }, "", "#dashboard");
             };
             loginFirebaseAuth(email, password, loginSuccess);
         }

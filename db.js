@@ -1,13 +1,13 @@
 var LocalDB = (function() {
     var DB_NAME = "IMSG_LearningHub";
-    var DB_VERSION = 1;
+    var DB_VERSION = 2;
     var db = null;
     var cache = {};
     var ready = false;
     var readyCallbacks = [];
 
     var STORES = [
-        "questions", "classes", "assignments", "teachers",
+        "questions", "classes", "assignments", "exams", "teachers",
         "attendance", "allAttempts", "conceptStats",
         "studentAccounts", "principalAccount", "deletedIds",
         "syncQueue"

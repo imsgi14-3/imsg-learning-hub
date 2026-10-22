@@ -328,7 +328,7 @@ function runExamEngineTests() {
     var scenQ2 = { id: "G2", question: "Second scenario?", options: ["p", "q", "r", "s"], answer: "C", mode: "scenario", scenario_id: "SG-1", stimulus: "Read the passage & answer.", difficulty: "medium" };
     var mediaQ = { id: "M1", question: "Identify the diagram.", options: ["A1", "B1", "C1", "D1"], answer: "D", media: "media/star01.png" };
 
-    var meta = { title: "Grade IX Computer Science <A & B> Section A", className: "9", time: 80, marks: 30, includeKey: true, date: "1/1/2026" };
+    var meta = { title: "Grade IX Computer Science <A & B> Section A", className: "9", time: 80, marks: 30, date: "1/1/2026" };
     var html = UI.oeBuildPaperHTML(meta, [straightQ, scenQ1, scenQ2, mediaQ]);
 
     TestRunner.assertType(html, "string", "builder returns a string");
@@ -339,26 +339,187 @@ function runExamEngineTests() {
     TestRunner.assert(html.indexOf("Total Marks: 30") !== -1, "marks rendered");
     TestRunner.assert(html.indexOf("(7.5 marks each)") !== -1, "per-question marks computed (30/4)");
     TestRunner.assert(html.indexOf("What is 2 + 2?") !== -1, "straight question rendered");
-    TestRunner.assert(html.indexOf("A. 3") !== -1 && html.indexOf("B. 4") !== -1, "options labelled A-D");
-    TestRunner.assert(html.indexOf("Questions 2&ndash;3 are based on the following:") !== -1, "stimulus block spans the scenario group");
+    TestRunner.assert(html.indexOf('<th class="pt-s">S #</th>') !== -1 && html.indexOf("<th>(A)</th>") !== -1 && html.indexOf("<th>(D)</th>") !== -1, "table header columns rendered");
+    TestRunner.assert(html.indexOf('<td class="pq-c">3</td>') !== -1 && html.indexOf('<td class="pq-c">4</td>') !== -1, "options rendered in A-D cells");
+    TestRunner.assert(html.indexOf("SCENARIO#1 (FOR QUESTIONS 2&ndash;3)") !== -1, "scenario label row spans the scenario group");
+    TestRunner.assert(html.indexOf("STIMULUS/SITUATION/SCENARIO BASED MCQs") !== -1, "scenario divider row rendered");
+    TestRunner.assert(html.indexOf("STIMULUS/SITUATION/SCENARIO BASED MCQs") === html.lastIndexOf("STIMULUS/SITUATION/SCENARIO BASED MCQs"), "divider rendered only once");
+    TestRunner.assert(html.indexOf("Candidate Sign.") !== -1 && html.indexOf("Invigilator Sign.") !== -1, "signature fields rendered");
+    TestRunner.assert(html.indexOf("Candidate Sign.") < html.indexOf('<table class="paper-table">'), "signature fields appear before MCQ table");
     TestRunner.assert(html.indexOf("Read the passage &amp; answer.") !== -1, "stimulus text escaped");
     TestRunner.assert(html.indexOf("Read the passage &amp; answer.") === html.lastIndexOf("Read the passage &amp; answer."), "stimulus shown once per group");
     TestRunner.assert(html.indexOf("Which option fits &lt;b&gt;best&lt;/b&gt;?") !== -1, "question text escaped");
     TestRunner.assert(html.indexOf('src="media/star01.png"') !== -1, "media image rendered");
-    TestRunner.assert(html.indexOf("Answer Key &mdash; Section A") !== -1, "answer key included when requested");
-    TestRunner.assert(html.indexOf("1. B") !== -1 && html.indexOf("4. D") !== -1, "answer key letters match order");
+    TestRunner.assert(html.indexOf("Answer Key") === -1, "answer key never part of question paper");
     TestRunner.assert(html.indexOf(">1.<") !== -1 && html.indexOf(">4.<") !== -1, "questions numbered 1..n");
 
-    var noKey = UI.oeBuildPaperHTML({ title: "T", className: "9", time: 60, marks: 10, includeKey: false }, [straightQ]);
-    TestRunner.assert(noKey.indexOf("Answer Key") === -1, "answer key omitted when unchecked");
+    TestRunner.assertType(UI.oeBuildKeyHTML, "function", "oeBuildKeyHTML exposed on UI");
+    var keyHtml = UI.oeBuildKeyHTML(meta, [straightQ, scenQ1, scenQ2, mediaQ]);
+    TestRunner.assert(keyHtml.indexOf("Answer Key &mdash; Grade IX Computer Science &lt;A &amp; B&gt; Section A") !== -1, "standalone key page titled with paper title");
+    TestRunner.assert(keyHtml.indexOf("IMSG I-14/3 ISLAMABAD") !== -1, "key page carries school header");
+    TestRunner.assert(keyHtml.indexOf("1. B") !== -1 && keyHtml.indexOf("4. D") !== -1, "answer key letters match question order");
+
+    var noKey = UI.oeBuildPaperHTML({ title: "T", className: "9", time: 60, marks: 10 }, [straightQ]);
+    TestRunner.assert(noKey.indexOf("Answer Key") === -1, "paper print omits answer key entirely");
     TestRunner.assert(noKey.indexOf("(10 marks each)") !== -1, "single question shows 10 marks each");
 
     var empty = UI.oeBuildPaperHTML(meta, []);
     TestRunner.assertType(empty, "string", "empty question list still builds");
     TestRunner.assert(empty.indexOf("Section A &mdash; 0 Multiple Choice Questions") !== -1, "empty paper reports 0 questions");
-    TestRunner.assert(empty.indexOf("Answer Key") !== -1, "empty paper can still carry a key block");
+    var emptyKey = UI.oeBuildKeyHTML(meta, []);
+    TestRunner.assertType(emptyKey, "string", "empty key page still builds");
+    TestRunner.assert(emptyKey.indexOf("Answer Key") !== -1, "key page can be built with 0 questions");
 
-    var missingFields = UI.oeBuildPaperHTML({ includeKey: true }, [{}]);
+    var missingFields = UI.oeBuildPaperHTML({}, [{}]);
     TestRunner.assert(missingFields.indexOf("paper-title\">Section A") !== -1, "missing meta falls back to defaults");
-    TestRunner.assert(missingFields.indexOf("1. ?") !== -1, "missing answer shows ? in key");
+    var missingKey = UI.oeBuildKeyHTML({}, [{}]);
+    TestRunner.assert(missingKey.indexOf("1. ?") !== -1, "missing answer shows ? in key");
+
+    // ---- Version support -------------------------------------------------
+    TestRunner.suite("Offline Exam - Versions");
+
+    var vmeta = { title: "Midterm", className: "9", time: 80, marks: 30, version: "B", date: "1/1/2026" };
+    var vhtml = UI.oeBuildPaperHTML(vmeta, [straightQ]);
+    TestRunner.assert(vhtml.indexOf("MCQs PAPER VERSION: B") !== -1, "paper header shows version letter");
+    var vkey = UI.oeBuildKeyHTML(vmeta, [straightQ]);
+    TestRunner.assert(vkey.indexOf("(Version B)") !== -1, "key page shows version letter");
+    var noVhtml = UI.oeBuildPaperHTML({ title: "T", className: "9", time: 60, marks: 10 }, [straightQ]);
+    TestRunner.assert(noVhtml.indexOf("PAPER VERSION") === -1, "no version line when version absent");
+
+    // shuffleOptions: keeps option set, remaps answer to same text, no mutation
+    var sq = { id: "VO1", question: "Q?", options: ["w1", "w2", "w3", "w4"], answer: "C" };
+    var shufOk = true, anyMoved = false, origOk = true;
+    for (var vi = 0; vi < 40; vi++) {
+        var sq2 = ExamEngine.shuffleOptions(sq);
+        if (sq2 === sq) shufOk = false;
+        if (sq.options.join(",") !== "w1,w2,w3,w4") origOk = false;
+        if (sq2.options.slice().sort().join("|") !== sq.options.slice().sort().join("|")) shufOk = false;
+        var sIdx = sq2.answer.charCodeAt(0) - 65;
+        if (sq2.options[sIdx] !== "w3") shufOk = false;
+        if (sq2.options.join(",") !== sq.options.join(",")) anyMoved = true;
+    }
+    TestRunner.assert(shufOk, "shuffleOptions preserves option set and answer text");
+    TestRunner.assert(origOk, "shuffleOptions does not mutate the original");
+    TestRunner.assert(anyMoved, "shuffleOptions actually reorders (statistical)");
+    var solo = ExamEngine.shuffleOptions({ id: "SO", options: ["only"], answer: "A" });
+    TestRunner.assertEqual(solo.answer, "A", "single-option question keeps its answer");
+    var noOpts = ExamEngine.shuffleOptions({ id: "NO" });
+    TestRunner.assert(noOpts && !noOpts.options, "missing options tolerated");
+
+    // shuffleStraightSegment: scenario suffix keeps order, straights preserved
+    function vq(id) { return { id: id, question: id, options: ["a", "b", "c", "d"], answer: "A", chapter: 1, difficulty: "easy", cognitive_level: "k", mode: "straight" }; }
+    function vg(id, gid, order) { return { id: id, question: id, options: ["a", "b", "c", "d"], answer: "A", chapter: 1, difficulty: "medium", cognitive_level: "u", mode: "scenario", scenario_id: gid, question_order: order, stimulus: "Read." }; }
+    var seg = ExamEngine.shuffleStraightSegment([vq("s1"), vq("s2"), vq("s3"), vg("g1", "G1", 1), vg("g2", "G1", 2)]);
+    TestRunner.assertEqual(seg.length, 5, "segment keeps every question");
+    TestRunner.assertEqual(seg[3].id, "g1", "scenario group stays after straights");
+    TestRunner.assertEqual(seg[4].id, "g2", "scenario internal order preserved");
+    TestRunner.assertEqual([seg[0].id, seg[1].id, seg[2].id].sort().join(","), "s1,s2,s3", "straight set preserved");
+
+    // generateVersions: exact blueprint, scenarios last, WHOLE groups, varied orders
+    var vpool = [];
+    vpool.push(makeQ("VS1", "easy", "k", "straight", "VT"));
+    vpool.push(makeQ("VS2", "easy", "k", "straight", "VT"));
+    vpool.push(makeQ("VS3", "hard", "k", "straight", "VT"));
+    vpool.push(makeQ("VS4", "easy", "u", "straight", "VT"));
+    vpool.push(makeQ("VS5", "easy", "u", "straight", "VT"));
+    vpool.push(makeQ("VS6", "medium", "u", "straight", "VT"));
+    vpool.push(makeQ("VS7", "medium", "u", "straight", "VT"));
+    vpool.push(makeQ("VS8", "easy", "a", "straight", "VT"));
+    for (var g = 1; g <= 6; g++) {
+        var comps = [["k", "easy"], ["u", "medium"], ["u", "medium"], ["a", "hard"]];
+        for (var o = 1; o <= 4; o++) {
+            vpool.push({
+                id: "VG" + g + "-" + o, question: "VG" + g + "-" + o,
+                options: ["a", "b", "c", "d"], answer: "A", chapter: 1,
+                difficulty: comps[o - 1][1], cognitive_level: comps[o - 1][0],
+                mode: "scenario", scenario_id: "SYN-G" + g,
+                question_order: o, stimulus: "Stimulus " + g
+            });
+        }
+    }
+    var vbp = {
+        total: 16,
+        chapters: [{ chapter: 1, pct: 100 }],
+        cognitive: { k: 30, u: 50, a: 20 },
+        difficulty: { easy: 40, medium: 40, hard: 20 },
+        format: { straight: 50, scenario: 50 }
+    };
+    var versions = ExamEngine.generateVersions(vbp, vpool, 3, 250);
+    TestRunner.assertNotNull(versions, "3 versions generated from synthetic pool");
+    if (versions) {
+        TestRunner.assertEqual(versions.length, 3, "3 versions returned");
+        TestRunner.assertEqual(versions[0].label + versions[1].label + versions[2].label, "ABC", "labels are A, B, C");
+        var tgt = ExamEngine.targetCounts(vbp);
+        var seqs = [];
+        for (var v = 0; v < versions.length; v++) {
+            var qsV = versions[v].questions;
+            TestRunner.assertEqual(qsV.length, 16, "version " + versions[v].label + " has exact total");
+            var cogV = { k: 0, u: 0, a: 0 }, diffV = { easy: 0, medium: 0, hard: 0 }, fmtV = { straight: 0, scenario: 0 };
+            var scenIds = {}, suffixOk = true, ansOk = true;
+            for (var qi = 0; qi < qsV.length; qi++) {
+                cogV[ExamEngine.normCognitive(qsV[qi])]++;
+                diffV[ExamEngine.normDifficulty(qsV[qi].difficulty)]++;
+                var f = ExamEngine.normFormat(qsV[qi]);
+                fmtV[f]++;
+                if (f === "scenario") {
+                    if (qi < 8) suffixOk = false;
+                    scenIds[qsV[qi].scenario_id] = (scenIds[qsV[qi].scenario_id] || 0) + 1;
+                }
+                var ai = qsV[qi].answer.charCodeAt(0) - 65;
+                if (qsV[qi].options[ai] !== "a") ansOk = false;
+            }
+            TestRunner.assert(suffixOk, "version " + versions[v].label + ": scenarios only in the last positions");
+            TestRunner.assert(ansOk, "version " + versions[v].label + ": answers align with option text after shuffle");
+            TestRunner.assertEqual(cogV.k, tgt.cognitive[0], "v" + versions[v].label + " cognitive k exact");
+            TestRunner.assertEqual(cogV.u, tgt.cognitive[1], "v" + versions[v].label + " cognitive u exact");
+            TestRunner.assertEqual(cogV.a, tgt.cognitive[2], "v" + versions[v].label + " cognitive a exact");
+            TestRunner.assertEqual(diffV.easy, tgt.difficulty[0], "v" + versions[v].label + " easy exact");
+            TestRunner.assertEqual(diffV.medium, tgt.difficulty[1], "v" + versions[v].label + " medium exact");
+            TestRunner.assertEqual(diffV.hard, tgt.difficulty[2], "v" + versions[v].label + " hard exact");
+            TestRunner.assertEqual(fmtV.straight, tgt.format[0], "v" + versions[v].label + " straight count exact");
+            TestRunner.assertEqual(fmtV.scenario, tgt.format[1], "v" + versions[v].label + " scenario count exact");
+            var gKeys = Object.keys(scenIds);
+            TestRunner.assertEqual(gKeys.length, 2, "v" + versions[v].label + ": exactly 2 scenario groups");
+            var wholeOk = true;
+            for (var gk = 0; gk < gKeys.length; gk++) if (scenIds[gKeys[gk]] !== 4) wholeOk = false;
+            TestRunner.assert(wholeOk, "v" + versions[v].label + ": every scenario group complete (4 of 4)");
+            seqs.push(qsV.map(function(x) { return x.id; }).join(","));
+        }
+        TestRunner.assert(!(seqs[0] === seqs[1] && seqs[1] === seqs[2]), "versions differ across runs (statistical)");
+    }
+
+    // ---- OMR sheet -------------------------------------------------------
+    TestRunner.suite("OMR Sheet");
+
+    var ometa = { title: "Midterm", className: "9", time: 80, marks: 30, version: "B", date: "1/1/2026", versionLabels: ["A", "B", "C"] };
+    var oQs = [
+        straightQ,
+        { id: "OG1", question: "S1", options: ["a", "b", "c", "d"], answer: "A" },
+        { id: "OG2", question: "S2", options: ["a", "b", "c", "d"], answer: "C" }
+    ];
+    var omr = UI.oeBuildOMRHTML(ometa, oQs);
+    TestRunner.assertEqual((omr.match(/class="omr-corner/g) || []).length, 4, "4 alignment corner squares");
+    TestRunner.assert(omr.indexOf('class="omr-rollcls">9<') !== -1, "class printed fixed with no options");
+    TestRunner.assertEqual((omr.match(/class="omr-sect"/g) || []).length, 1, "one section group (A, B, C)");
+    TestRunner.assertEqual((omr.match(/class="omr-rolltable"/g) || []).length, 1, "roll digits in one two-column table");
+    TestRunner.assertEqual((omr.match(/<tr>/g) || []).length, 11, "roll table has 1 header row + 10 digit rows (0-9 top to bottom)");
+    TestRunner.assertEqual((omr.match(/<td>/g) || []).length, 20, "two roll digit columns");
+    TestRunner.assertEqual((omr.match(/<th colspan="2">ROLL NUMBER<\/th>/g) || []).length, 1, "FBISE-style ROLL NUMBER header spans the digit columns");
+    TestRunner.assert(omr.indexOf('class="omr-rollrow"') < omr.indexOf('class="omr-verrow"'), "roll box sits above the version row (high on the page)");
+    TestRunner.assert(omr.indexOf('</table>') < omr.indexOf('class="omr-verrow"') && omr.indexOf('class="omr-verrow"') < omr.indexOf('</div><div class="omr-timerow"'), "version box sits beside the roll table (inside the roll row)");
+    TestRunner.assert(omr.indexOf("Question Booklet No.") === -1, "booklet number line removed");
+    TestRunner.assert(omr.indexOf("MCQs PAPER VERSION") !== -1, "version label row present");
+    TestRunner.assertEqual((omr.match(/class="omr-b("| )/g) || []).length, 39, "1 legend + 3 version + 3 section + 20 digits + 12 question bubbles");
+    TestRunner.assertEqual((omr.match(/omr-fill/g) || []).length, 1, "only the legend example is pre-shaded");
+    TestRunner.assert(omr.indexOf('omr-b omr-fill">B') === -1, "version bubbles are never pre-filled");
+    TestRunner.assertEqual((omr.match(/class="omr-qn"/g) || []).length, 3, "one number label per question");
+    TestRunner.assertEqual((omr.match(/class="omr-cell"/g) || []).length, 3, "one grid cell per question");
+    TestRunner.assert(omr.indexOf("IMSG I-14/3") !== -1, "school header present");
+    TestRunner.assert(omr.indexOf("FOLLOW THE CORRECT SEQUENCE") !== -1, "sequence banner present");
+    TestRunner.assert(omr.indexOf("CUTTING LINE") === -1, "no cutting line printed");
+
+    var omrEmpty = UI.oeBuildOMRHTML({}, []);
+    TestRunner.assertEqual((omrEmpty.match(/class="omr-b("| )/g) || []).length, 25, "empty sheet keeps legend + 1 version + roll bubbles, no question bubbles");
+    TestRunner.assert(omrEmpty.indexOf('class="omr-rollcls">9<') !== -1, "missing meta falls back to class 9");
+    TestRunner.assertEqual((omrEmpty.match(/class="omr-cell"/g) || []).length, 0, "no grid cells when no questions");
 }

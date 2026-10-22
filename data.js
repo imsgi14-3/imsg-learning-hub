@@ -1,6 +1,7 @@
 var questions = [];
 var classes = [];
 var assignments = [];
+var exams = [];
 var teachers = [];
 var attendance = [];
 var allAttempts = [];
@@ -110,6 +111,7 @@ function loadData() {
     questions = c.questions || [];
     classes = c.classes || [];
     assignments = c.assignments || [];
+    exams = c.exams || [];
     teachers = c.teachers || [];
     attendance = c.attendance || [];
     allAttempts = c.allAttempts || [];
@@ -167,6 +169,7 @@ function saveAll() {
     LocalDB.putAll("classes", classes);
     localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
     LocalDB.putAll("assignments", assignments);
+    LocalDB.putAll("exams", exams);
     LocalDB.putAll("teachers", teachers);
     LocalDB.putAll("attendance", attendance);
     LocalDB.putAll("allAttempts", allAttempts);
@@ -182,6 +185,7 @@ function saveToFirestore() {
     for (var i = 0; i < classes.length; i++) db.collection("classes").doc(classes[i].id).set(classes[i]).catch(function() {});
     for (var i = 0; i < questions.length; i++) db.collection("questions").doc(questions[i].id).set(questions[i]).catch(function() {});
     for (var i = 0; i < assignments.length; i++) db.collection("assignments").doc(assignments[i].id || ("a-" + i)).set(assignments[i]).catch(function() {});
+    for (var i = 0; i < exams.length; i++) db.collection("exams").doc(exams[i].id).set(exams[i]).catch(function() {});
     for (var i = 0; i < teachers.length; i++) db.collection("teachers").doc(teachers[i].id).set(teachers[i]).catch(function() {});
     for (var i = 0; i < allAttempts.length; i++) db.collection("attempts").doc(allAttempts[i].attemptId || allAttempts[i].timestamp || ("att-" + i)).set(allAttempts[i]).catch(function() {});
 }
@@ -190,8 +194,33 @@ function pushStudentToFirestore(student) { try { if (typeof db !== "undefined") 
 function pushTeacherToFirestore(teacher) { try { if (typeof db !== "undefined") db.collection("teachers").doc(teacher.id).set(teacher); } catch(e) { LocalDB.addToSyncQueue({ type: "teacher", action: "set", data: teacher }); } }
 function pushClassToFirestore(cls) { try { if (typeof db !== "undefined") db.collection("classes").doc(cls.id).set(cls); } catch(e) { LocalDB.addToSyncQueue({ type: "class", action: "set", data: cls }); } }
 function pushAssignmentToFirestore(a) { try { if (typeof db !== "undefined") db.collection("assignments").doc(a.id || "a-" + assignments.indexOf(a)).set(a); } catch(e) { LocalDB.addToSyncQueue({ type: "assignment", action: "set", data: a }); } }
+function pushExamToFirestore(exam) { try { if (typeof db !== "undefined") db.collection("exams").doc(exam.id).set(exam); } catch(e) { LocalDB.addToSyncQueue({ type: "exams", action: "set", data: exam }); } }
 function pushAttemptToFirestore(attempt) { try { if (typeof db !== "undefined") db.collection("attempts").doc(attempt.attemptId).set(attempt); } catch(e) { LocalDB.addToSyncQueue({ type: "attempt", action: "set", data: attempt }); } }
 function pushQuestionToFirestore(q) { try { if (typeof db !== "undefined") db.collection("questions").doc(q.id).set(q); } catch(e) { LocalDB.addToSyncQueue({ type: "question", action: "set", data: q }); } }
+// Save/replace one exam locally (IndexedDB) then push to Firestore.
+// Local write is authoritative; Firestore failure falls back to sync queue.
+function saveExam(exam) {
+    if (!exam || !exam.id) return false;
+    for (var i = 0; i < exams.length; i++) {
+        if (exams[i].id === exam.id) { exams[i] = exam; LocalDB.putAll("exams", exams); pushExamToFirestore(exam); return true; }
+    }
+    exams.push(exam);
+    LocalDB.putAll("exams", exams);
+    pushExamToFirestore(exam);
+    return true;
+}
+function saveAttempt(attempt) {
+    if (!attempt || !attempt.attemptId) return false;
+    var found = false;
+    for (var i = 0; i < allAttempts.length; i++) {
+        if (allAttempts[i].attemptId === attempt.attemptId) { allAttempts[i] = attempt; found = true; break; }
+    }
+    if (!found) allAttempts.push(attempt);
+    pushAttemptToFirestore(attempt);
+    if (typeof saveAll === "function") { saveAll(); }
+    else { try { localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts)); } catch (e) {} }
+    return true;
+}
 function deleteFromFirestore(collection, id) { try { if (typeof db !== "undefined") { db.collection(collection).doc(id).delete(); if (deletedIds.indexOf(id) === -1) deletedIds.push(id); LocalDB.putAll("deletedIds", deletedIds); db.collection("meta").doc("deletedIds").set({ ids: deletedIds }); } } catch(e) { LocalDB.addToSyncQueue({ type: collection, action: "delete", data: { id: id } }); } }
 
 function saveTeacherToFirestore(teacherObj, callback) {
@@ -208,7 +237,7 @@ function loadFromFirestore(callback) {
     var now = Date.now();
     if (now - lastFirestorePull < PULL_COOLDOWN) { if (callback) callback(); return; }
     lastFirestorePull = now;
-    var loaded = 0, total = 7;
+    var loaded = 0, total = 8;
     function done() { loaded++; if (loaded >= total && callback) callback(); }
     db.collection("meta").doc("deletedIds").get().then(function(doc) {
         if (doc.exists) {
@@ -274,6 +303,17 @@ function loadFromFirestore(callback) {
             allAttempts = [];
             for (var key in merged) allAttempts.push(merged[key]);
             localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
+        }
+        done();
+    }).catch(function() { done(); });
+    db.collection("exams").get().then(function(snap) {
+        if (snap.size > 0) {
+            var merged = {};
+            for (var i = 0; i < exams.length; i++) merged[exams[i].id] = exams[i];
+            snap.forEach(function(doc) { var d = doc.data(); if (!merged[d.id] && deletedIds.indexOf(d.id) === -1) merged[d.id] = d; });
+            exams = [];
+            for (var key in merged) exams.push(merged[key]);
+            LocalDB.putAll("exams", exams);
         }
         done();
     }).catch(function() { done(); });

@@ -762,6 +762,7 @@ var Analytics = (function() {
 
     var MODE_LABELS = {
         practice: "Practice",
+        offlineExam: "Offline Exam",
         assignment: "Assignment",
         random: "Random Quiz",
         quick: "Quick Practice",
