@@ -469,6 +469,42 @@ var UI = (function() {
         return ExamEngine.selectBalanced(pool, count, opts);
     }
 
+    // One question — or one whole scenario stimulus set — per similarity set
+    // in a generated quiz. No-op when the similarity data is not loaded.
+    function dedupeSelection(list) {
+        if (typeof Similarity === "undefined" || !Similarity) return list;
+        return Similarity.filterUnits(list);
+    }
+
+    // What the similarity filter dropped from a hand-picked list, for the
+    // preview note: pairs that no longer both appear in the kept list.
+    function resolvedSimilarPairs(before, after) {
+        if (typeof Similarity === "undefined" || !Similarity || !Similarity.isReady()) return [];
+        var kept = {};
+        for (var i = 0; i < after.length; i++) if (after[i]) kept[after[i].id] = true;
+        var pairs = Similarity.findDuplicates(before);
+        var out = [];
+        for (var p = 0; p < pairs.length; p++) {
+            if (!(kept[pairs[p].a] && kept[pairs[p].b])) out.push(pairs[p]);
+        }
+        return out;
+    }
+
+    function similarityNoteHtml(before, after) {
+        var removed = before.length - after.length;
+        if (removed <= 0) return "";
+        var resolved = resolvedSimilarPairs(before, after);
+        var h = '<div style="background:#fff7ed;border:1px solid #fdba74;border-radius:6px;padding:6px 8px;margin-bottom:6px;font-size:11px;color:#9a3412;">';
+        h += '<strong>&#9888; Similarity filter:</strong> removed ' + removed + ' similar question(s) from this list.';
+        if (resolved.length > 0) {
+            var shown = [];
+            for (var i = 0; i < resolved.length && i < 3; i++) shown.push(resolved[i].a + ' &asymp; ' + resolved[i].b);
+            h += '<br>' + shown.join('; ') + (resolved.length > 3 ? '; &hellip;' : '');
+        }
+        h += '</div>';
+        return h;
+    }
+
     function getWeakQuestions() {
         var wrongIds = {};
         for (var i = 0; i < allAttempts.length; i++) {
@@ -637,7 +673,10 @@ var UI = (function() {
         QuizEngine.startQuiz(selected, mode, subject || "all", chapter || "all", aId || "");
         QuizEngine.setTimerMinutes(timeMinutes);
         $("loginPage").style.display = "none";
-        $("studentDashboard").style.display = "none";
+        // Hide every role dashboard, not just the student one — otherwise a
+        // teacher/principal launching a quiz keeps their dashboard visible
+        // behind it. backToDashboard()/showDashboard() restore the right one.
+        dashboardsHide();
         $("quiz").style.display = "block";
         $("result").style.display = "none";
         $("review").style.display = "none";
@@ -656,7 +695,7 @@ var UI = (function() {
         }
         if (qs.length === 0) { alert("No questions available"); return; }
         if (count && qs.length > count) qs = ExamEngine.selectBalanced(qs, count);
-        else qs = shuffleArray(qs);
+        else qs = dedupeSelection(shuffleArray(qs));
         startQuizUI(qs, 20, "practice", subject, chapter);
     }
 
@@ -668,7 +707,7 @@ var UI = (function() {
             if (f === "all" || questions[i].subject === f) filtered.push(questions[i]);
         }
         if (filtered.length === 0) { alert("No questions available for this subject."); return; }
-        startQuizUI(shuffleArray(filtered), 60, "practice", f, "all");
+        startQuizUI(dedupeSelection(shuffleArray(filtered)), 60, "practice", f, "all");
     }
 
     function startAssignmentQuiz(aid) {
@@ -1084,7 +1123,7 @@ var UI = (function() {
     function deleteClass(cid) {
         if (!confirm("Delete this class?")) return;
         classes = classes.filter(function(c) { return c.id !== cid; });
-        saveAll(); deleteFromFirestore("classes", cid); renderClasses();
+        saveAll(); deleteFromFirestore("classes", cid); refreshClassViews();
     }
 
     function showCreateClassModal() {
@@ -1101,7 +1140,14 @@ var UI = (function() {
         var d = { id: cid || "CLASS-" + $("cmName").value.toUpperCase(), name: $("cmName").value, grade: parseInt($("cmGrade").value), section: $("cmSection").value, students: $("cmStudents").value.split("\n").filter(function(l) { return l.trim(); }) };
         if (cid) { for (var i = 0; i < classes.length; i++) { if (classes[i].id === cid) { classes[i] = d; break; } } }
         else classes.push(d);
-        saveAll(); pushClassToFirestore(d); closeModal(); renderClasses();
+        saveAll(); pushClassToFirestore(d); closeModal(); refreshClassViews();
+    }
+
+    // Refresh whichever classes view is active after a class is created/edited/deleted.
+    function refreshClassViews() {
+        var role = Auth.getRole();
+        if (role === "principal") renderPrincipalClasses();
+        else renderClasses();
     }
 
     function renderQuestions() {
@@ -1515,7 +1561,10 @@ var UI = (function() {
         }
         var c = $("amPreviewList");
         if (selected.length === 0) { c.innerHTML = "<p>No questions match the criteria.</p>"; return; }
+        var picked = selected;
+        selected = dedupeSelection(selected);
         var h = '<div style="font-size:12px;">';
+        h += similarityNoteHtml(picked, selected);
         for (var i = 0; i < selected.length; i++) {
             var q = selected[i];
             var txt = (q.text || q.question || "").substring(0, 80);
@@ -1622,6 +1671,12 @@ var UI = (function() {
         }
         if (selected.length === 0) { selected = autoSelectAssignmentQuestions(); fromExam = false; }
         if (selected.length === 0) { alert("No questions match the selected criteria."); return; }
+        var deduped = dedupeSelection(selected);
+        if (deduped.length !== selected.length) {
+            console.warn("Assignment " + ($("amTitleInput").value || "") + ": removed " +
+                (selected.length - deduped.length) + " similar question(s).");
+            selected = deduped;
+        }
         var sel = [];
         for (var i = 0; i < selected.length; i++) sel.push(selected[i].id);
         var bp = amReadBlueprint();

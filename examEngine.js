@@ -73,13 +73,22 @@ var ExamEngine = (function() {
         return true;
     }
 
+    // At most one question per similarity set, where a scenario stimulus set
+    // counts as a single question. The returned pool has disjoint similarity
+    // clusters, so any selection made from it is duplicate-free by
+    // construction. No-op when the similarity data has not loaded.
+    function dedupePool(pool) {
+        if (typeof Similarity === "undefined" || !Similarity) return pool;
+        return Similarity.filterUnits(pool);
+    }
+
     // Multi-dimension balanced selection with best-effort fallback.
     // opts: { targets: { difficulty, cognitive, format }, evenKey: "topic" | "chapter" | null }
     // Returns a randomized selection of min(count, pool.length) questions.
     function selectBalanced(pool, count, opts) {
         opts = opts || {};
         if (!pool || pool.length === 0 || count <= 0) return [];
-        var src = shuffle(pool);
+        var src = dedupePool(shuffle(pool));
         if (count >= src.length) return src;
         var targets = opts.targets || DEFAULT_TARGETS;
         var dims = [];
@@ -377,6 +386,18 @@ var ExamEngine = (function() {
         var selected = [];
         var remaining = pool.slice();
         var selGroups = {};
+        // Duplicate suppression: prefer questions from similarity sets that
+        // are still free, and only fall back to a conflicting one when the
+        // blueprint could not be filled otherwise (relax as last resort).
+        var sim = (typeof Similarity !== "undefined" && Similarity && Similarity.isReady()) ? Similarity.createSession() : null;
+        var simRelaxed = false;
+        function simOk(unit) { return !sim || sim.canTake(unit); }
+        function simClaim(unit) { if (sim) sim.take(unit); }
+        function simRelax() {
+            if (simRelaxed) return;
+            simRelaxed = true;
+            console.warn("ExamEngine: used a similar question set as a last resort to complete the blueprint.");
+        }
 
         function applySel(q) {
             selected.push(q);
@@ -416,6 +437,7 @@ var ExamEngine = (function() {
                 groups[gk].push(gq);
             }
             var bestKey = null, bestScore = -1;
+            var relaxKey = null, relaxScore = -1;
             for (var key in groups) {
                 var members = groups[key];
                 if (members.length === 0 || members.length > scenRem) continue;
@@ -429,16 +451,22 @@ var ExamEngine = (function() {
                     gscore += mch * 5 + mcg * 4 + mdf * 3 + Math.random() * 0.5;
                 }
                 if (!ok) continue;
-                if (gscore > bestScore) { bestScore = gscore; bestKey = key; }
+                if (simOk(members)) {
+                    if (gscore > bestScore) { bestScore = gscore; bestKey = key; }
+                } else if (gscore > relaxScore) { relaxScore = gscore; relaxKey = key; }
             }
-            if (bestKey) {
-                var pick = groups[bestKey];
+            var takeKey = bestKey;
+            if (!takeKey && relaxKey) { takeKey = relaxKey; simRelax(); }
+            if (takeKey) {
+                var pick = groups[takeKey];
                 for (var pi = 0; pi < pick.length; pi++) applySel(pick[pi]);
+                simClaim(pick);
                 scenRem -= pick.length;
                 if (!marginsStillPossible(remaining, rem)) return null;
                 continue;
             }
             var iBest = null, iScore = -1;
+            var rBest = null, rScore = -1;
             for (var ii = 0; ii < remaining.length; ii++) {
                 var iq = remaining[ii];
                 if (normFormat(iq) !== "scenario") continue;
@@ -453,10 +481,15 @@ var ExamEngine = (function() {
                 }
                 var isc = rem.chapters[iq.chapter] * 5 + rem.cognitive[normCognitive(iq)] * 4 +
                           gBonus + rem.difficulty[normDifficulty(iq.difficulty)] * 3 + Math.random();
-                if (isc > iScore) { iScore = isc; iBest = iq; }
+                if (simOk([iq])) {
+                    if (isc > iScore) { iScore = isc; iBest = iq; }
+                } else if (isc > rScore) { rScore = isc; rBest = iq; }
             }
-            if (!iBest) return null;
-            applySel(iBest);
+            var iTake = iBest;
+            if (!iTake && rBest) { iTake = rBest; simRelax(); }
+            if (!iTake) return null;
+            applySel(iTake);
+            simClaim([iTake]);
             scenRem--;
             if (!marginsStillPossible(remaining, rem)) return null;
         }
@@ -475,11 +508,17 @@ var ExamEngine = (function() {
                 var fm = rem.format[normFormat(q)];
                 if (cg === undefined || cg <= 0 || df === undefined || df <= 0 || fm === undefined || fm <= 0) continue;
                 var score = ch * 5 + cg * 4 + fm * 4 + df * 3 + Math.random();
-                candidates.push([score, q]);
+                candidates.push([score, q, simOk([q])]);
             }
             if (candidates.length === 0) return null;
             candidates.sort(function(a, b) { return b[0] - a[0]; });
-            applySel(candidates[0][1]);
+            var pick = null;
+            for (var ci = 0; ci < candidates.length; ci++) {
+                if (candidates[ci][2]) { pick = candidates[ci][1]; break; }
+            }
+            if (!pick) { pick = candidates[0][1]; simRelax(); }
+            applySel(pick);
+            simClaim([pick]);
             if (!marginsStillPossible(remaining, rem)) return null;
         }
         return selected;

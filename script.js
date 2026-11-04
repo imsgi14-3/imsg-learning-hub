@@ -1,4 +1,11 @@
 window.onload = function() {
+    // Similarity data (near-duplicate clusters) loads in parallel and never
+    // gates login or the question bank: if it fails, selection just runs
+    // without duplicate suppression.
+    if (typeof Similarity !== "undefined") {
+        var simBase = (typeof QUESTION_BANK_BASE !== "undefined" && QUESTION_BANK_BASE) ? QUESTION_BANK_BASE : "";
+        Similarity.load(simBase + "question-bank/similarity-pairs.json");
+    }
     LocalDB.open(function() {
         LocalDB.migrateFromLocalStorage();
         loadData();
