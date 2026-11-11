@@ -200,14 +200,115 @@ var ExamEngine = (function() {
         };
     }
 
+    // Joint cognitive x difficulty allocation. rows/cols are target counts
+    // keyed by cognitive level and difficulty; supply maps "k|easy" style
+    // keys to how many pool questions exist in that cell. Returns
+    // { "k|easy": n, ... } meeting BOTH margins exactly, or null when the
+    // two margins cannot be satisfied at the same time — each margin can
+    // look fine alone while, say, every hard question in the bank is
+    // Analysis. Uses a tiny max-flow; cell-edge order is randomized so
+    // repeated calls can return different valid allocations.
+    function solveJointTargets(rows, cols, supply) {
+        var rowKeys = [], colKeys = [];
+        var key, i;
+        var required = 0;
+        for (key in rows) {
+            if (Object.prototype.hasOwnProperty.call(rows, key) && rows[key] > 0) {
+                rowKeys.push(key);
+                required += rows[key];
+            }
+        }
+        for (key in cols) {
+            if (Object.prototype.hasOwnProperty.call(cols, key) && cols[key] > 0) colKeys.push(key);
+        }
+        if (required === 0) {
+            // No row demand: fine only when the columns agree.
+            var anyCol = false;
+            for (var zc = 0; zc < colKeys.length; zc++) if (cols[colKeys[zc]] > 0) anyCol = true;
+            return anyCol ? null : {};
+        }
+        // Both margins must demand the same total, otherwise no allocation
+        // can meet them exactly.
+        var colTotal = 0;
+        for (var ci = 0; ci < colKeys.length; ci++) colTotal += cols[colKeys[ci]];
+        if (colTotal !== required) return null;
+        var R = rowKeys.length, C = colKeys.length;
+        var source = 0, sink = R + C + 1, N = R + C + 2;
+        var graph = [];
+        for (i = 0; i < N; i++) graph.push([]);
+        function addEdge(from, to, cap) {
+            graph[from].push({ to: to, cap: cap, orig: cap, rev: graph[to].length });
+            graph[to].push({ to: from, cap: 0, orig: 0, rev: graph[from].length - 1 });
+        }
+        for (i = 0; i < R; i++) addEdge(source, 1 + i, rows[rowKeys[i]]);
+        for (i = 0; i < C; i++) addEdge(1 + R + i, sink, cols[colKeys[i]]);
+        var cells = [];
+        for (var r = 0; r < R; r++) {
+            for (var c = 0; c < C; c++) {
+                var cap = supply[rowKeys[r] + "|" + colKeys[c]] || 0;
+                if (cap > 0) cells.push({ r: r, c: c, cap: cap });
+            }
+        }
+        for (i = cells.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var swap = cells[i]; cells[i] = cells[j]; cells[j] = swap;
+        }
+        for (i = 0; i < cells.length; i++) addEdge(1 + cells[i].r, 1 + R + cells[i].c, cells[i].cap);
+        var flow = 0;
+        while (flow < required) {
+            var prev = [], prevEdge = [];
+            for (i = 0; i < N; i++) { prev[i] = -1; prevEdge[i] = -1; }
+            prev[source] = source;
+            var queue = [source], qi = 0;
+            while (qi < queue.length && prev[sink] === -1) {
+                var u = queue[qi++];
+                for (var ei = 0; ei < graph[u].length; ei++) {
+                    var edge = graph[u][ei];
+                    if (edge.cap > 0 && prev[edge.to] === -1) {
+                        prev[edge.to] = u;
+                        prevEdge[edge.to] = ei;
+                        queue.push(edge.to);
+                    }
+                }
+            }
+            if (prev[sink] === -1) break;
+            var bottleneck = Infinity;
+            for (var v = sink; v !== source; v = prev[v]) {
+                var pe = graph[prev[v]][prevEdge[v]];
+                if (pe.cap < bottleneck) bottleneck = pe.cap;
+            }
+            for (v = sink; v !== source; v = prev[v]) {
+                pe = graph[prev[v]][prevEdge[v]];
+                pe.cap -= bottleneck;
+                graph[pe.to][pe.rev].cap += bottleneck;
+            }
+            flow += bottleneck;
+        }
+        if (flow < required) return null;
+        var out = {};
+        for (var rr = 0; rr < R; rr++) {
+            for (var ej = 0; ej < graph[1 + rr].length; ej++) {
+                var ed = graph[1 + rr][ej];
+                if (ed.to >= 1 + R && ed.to <= R + C) {
+                    var used = ed.orig - ed.cap;
+                    if (used > 0) out[rowKeys[rr] + "|" + colKeys[ed.to - (1 + R)]] = used;
+                }
+            }
+        }
+        return out;
+    }
+
     function checkFeasibility(bp, pool) {
         var t = targetCounts(bp);
         var shortages = [];
         var byChapter = {};
+        var cellSupply = {};
         var selectedPool = [];
         for (var i = 0; i < pool.length; i++) {
             var q = pool[i];
             byChapter[q.chapter] = (byChapter[q.chapter] || 0) + 1;
+            var cellKey = normCognitive(q) + "|" + normDifficulty(q.difficulty);
+            cellSupply[cellKey] = (cellSupply[cellKey] || 0) + 1;
             selectedPool.push(q);
         }
         var cogKeys = Object.keys(bp.cognitive);
@@ -234,6 +335,49 @@ var ExamEngine = (function() {
         }
         for (var i = 0; i < fmtKeys.length; i++) {
             if ((fmtHave[fmtKeys[i]] || 0) < t.format[i]) shortages.push(fmtKeys[i] + ": need " + t.format[i] + ", selected chapters have " + (fmtHave[fmtKeys[i]] || 0));
+        }
+        // Joint cognitive x difficulty: every marginal above can pass while
+        // no single selection satisfies both ratios at once (e.g. every
+        // hard question in the bank is Analysis, but the blueprint wants
+        // hard questions at other cognitive levels too).
+        var cogDemand = {}, diffDemand = {};
+        for (var i = 0; i < cogKeys.length; i++) cogDemand[cogKeys[i]] = t.cognitive[i];
+        for (var i = 0; i < diffKeys.length; i++) diffDemand[diffKeys[i]] = t.difficulty[i];
+        var jointAlloc = solveJointTargets(cogDemand, diffDemand, cellSupply);
+        if (jointAlloc === null) {
+            shortages.push("Cognitive x difficulty combination: the selected chapters cannot satisfy the cognitive and difficulty ratios at the same time (some cognitive level has no questions at a required difficulty).");
+        } else if (shortages.length === 0) {
+            // All four marginals can pass while no single question set
+            // satisfies them together (e.g. the chapter slots only fit
+            // questions from cells the format slots cannot spare). Search
+            // for one cognitive x difficulty allocation that BOTH the
+            // remaining chapter slots and the remaining format slots can
+            // absorb; when none of the randomized candidates works, the
+            // ratios are jointly impossible.
+            var chCellSupply = {}, fmtCellSupply = {}, chFmtSupply = {};
+            for (var i = 0; i < selectedPool.length; i++) {
+                var sq = selectedPool[i];
+                var scell = normCognitive(sq) + "|" + normDifficulty(sq.difficulty);
+                var sck = String(sq.chapter) + "|" + scell;
+                chCellSupply[sck] = (chCellSupply[sck] || 0) + 1;
+                var sfk = normFormat(sq) + "|" + scell;
+                fmtCellSupply[sfk] = (fmtCellSupply[sfk] || 0) + 1;
+                var scfk = String(sq.chapter) + "|" + normFormat(sq);
+                chFmtSupply[scfk] = (chFmtSupply[scfk] || 0) + 1;
+            }
+            var chDemand = {}, fmtDemand = {};
+            for (var i = 0; i < bp.chapters.length; i++) chDemand[bp.chapters[i].chapter] = t.chapters[i];
+            for (var i = 0; i < fmtKeys.length; i++) fmtDemand[fmtKeys[i]] = t.format[i];
+            var compatible = false;
+            if (solveJointTargets(chDemand, fmtDemand, chFmtSupply) !== null) {
+                for (var i = 0; i < 60 && !compatible; i++) {
+                    var alloc = solveJointTargets(cogDemand, diffDemand, cellSupply);
+                    if (!alloc) break;
+                    if (solveJointTargets(chDemand, alloc, chCellSupply) !== null &&
+                        solveJointTargets(fmtDemand, alloc, fmtCellSupply) !== null) compatible = true;
+                }
+            }
+            if (!compatible) shortages.push("Chapter/cognitive/difficulty/format combination: the selected chapters cannot satisfy the chapter, cognitive, difficulty and format ratios at the same time.");
         }
         var fmtCog = { straight: { k: 0, u: 0, a: 0 }, scenario: { k: 0, u: 0, a: 0 } };
         for (var i = 0; i < selectedPool.length; i++) {
@@ -375,7 +519,7 @@ var ExamEngine = (function() {
     }
 
     function makePlan(bp, t, pool) {
-        var rem = { chapters: {}, cognitive: {}, difficulty: {}, format: {} };
+        var rem = { chapters: {}, cognitive: {}, difficulty: {}, format: {}, cells: null };
         for (var i = 0; i < bp.chapters.length; i++) rem.chapters[bp.chapters[i].chapter] = t.chapters[i];
         var cogKeys = Object.keys(bp.cognitive);
         var diffKeys = Object.keys(bp.difficulty);
@@ -383,6 +527,73 @@ var ExamEngine = (function() {
         for (var i = 0; i < cogKeys.length; i++) rem.cognitive[cogKeys[i]] = t.cognitive[i];
         for (var i = 0; i < diffKeys.length; i++) rem.difficulty[diffKeys[i]] = t.difficulty[i];
         for (var i = 0; i < fmtKeys.length; i++) rem.format[fmtKeys[i]] = t.format[i];
+        // Joint bookkeeping for the exact residual checks:
+        // - cellLeft: live count per cognitive|difficulty cell;
+        // - leftChCell / leftFmtCell: live count per chapter|cell and
+        //   format|cell (the couplings the greedy used to dead-end on);
+        // - chLeft/cogLeft/diffLeft/fmtLeft: marginal supply counters;
+        // - rem.cells: one cognitive x difficulty allocation of the
+        //   remaining targets that the remaining chapter and format slots
+        //   can actually absorb (re-rolled after every pick).
+        var cellLeft = {}, leftChCell = {}, leftFmtCell = {}, leftChFmt = {};
+        var chLeft = {}, cogLeft = {}, diffLeft = {}, fmtLeft = {};
+        for (var si = 0; si < pool.length; si++) {
+            var pq = pool[si];
+            var pc = normCognitive(pq), pd = normDifficulty(pq.difficulty), pf = normFormat(pq);
+            var pcKey = pc + "|" + pd;
+            cellLeft[pcKey] = (cellLeft[pcKey] || 0) + 1;
+            var pcc = String(pq.chapter) + "|" + pcKey;
+            leftChCell[pcc] = (leftChCell[pcc] || 0) + 1;
+            var pfc = pf + "|" + pcKey;
+            leftFmtCell[pfc] = (leftFmtCell[pfc] || 0) + 1;
+            var pcf = String(pq.chapter) + "|" + pf;
+            leftChFmt[pcf] = (leftChFmt[pcf] || 0) + 1;
+            chLeft[pq.chapter] = (chLeft[pq.chapter] || 0) + 1;
+            cogLeft[pc] = (cogLeft[pc] || 0) + 1;
+            diffLeft[pd] = (diffLeft[pd] || 0) + 1;
+            fmtLeft[pf] = (fmtLeft[pf] || 0) + 1;
+        }
+        var initAlloc = solveCompatibleAlloc(25);
+        if (!initAlloc) return null;
+        rem.cells = initAlloc.alloc;
+        rem.chFlow = initAlloc.chFlow;
+        rem.fmtFlow = initAlloc.fmtFlow;
+        rem.chFmtFlow = initAlloc.chFmtFlow;
+        var jointCache = {};
+
+        // Find a cognitive x difficulty allocation of the current state
+        // that the remaining chapter and format slots can absorb: the
+        // allocation pins the per-cell demands, then a chapter x cell flow
+        // and a format x cell flow must both realize them. Randomized
+        // re-rolls search the space of valid allocations. The flows are
+        // kept because a pick is trivially safe when all four (allocation,
+        // chapter flow, format flow, chapter x format flow) credit it
+        // together.
+        function solveCompatibleAlloc(rolls) {
+            var chFmtFlow = solveJointTargets(rem.chapters, rem.format, leftChFmt);
+            if (!chFmtFlow) return null;
+            for (var r = 0; r < rolls; r++) {
+                var cand = solveJointTargets(rem.cognitive, rem.difficulty, cellLeft);
+                if (!cand) return null;
+                var chFlow = solveJointTargets(rem.chapters, cand, leftChCell);
+                if (!chFlow) continue;
+                var fmtFlow = solveJointTargets(rem.format, cand, leftFmtCell);
+                if (!fmtFlow) continue;
+                return { alloc: cand, chFlow: chFlow, fmtFlow: fmtFlow, chFmtFlow: chFmtFlow };
+            }
+            return null;
+        }
+
+        // Fast counter version of the old pool scan: every remaining
+        // bucket still has supply for its remaining demand.
+        function stillPossible() {
+            var k;
+            for (k in rem.chapters) if ((chLeft[k] || 0) < rem.chapters[k]) return false;
+            for (k in rem.cognitive) if ((cogLeft[k] || 0) < rem.cognitive[k]) return false;
+            for (k in rem.difficulty) if ((diffLeft[k] || 0) < rem.difficulty[k]) return false;
+            for (k in rem.format) if ((fmtLeft[k] || 0) < rem.format[k]) return false;
+            return true;
+        }
         var selected = [];
         var remaining = pool.slice();
         var selGroups = {};
@@ -402,23 +613,103 @@ var ExamEngine = (function() {
         function applySel(q) {
             selected.push(q);
             if (q.scenario_id) selGroups[q.scenario_id] = (selGroups[q.scenario_id] || 0) + 1;
+            var qc = normCognitive(q), qd = normDifficulty(q.difficulty), qf = normFormat(q);
+            var cellKey = qc + "|" + qd;
             rem.chapters[q.chapter]--;
-            rem.cognitive[normCognitive(q)]--;
-            rem.difficulty[normDifficulty(q.difficulty)]--;
-            rem.format[normFormat(q)]--;
+            rem.cognitive[qc]--;
+            rem.difficulty[qd]--;
+            rem.format[qf]--;
+            if (rem.cells) rem.cells[cellKey] = (rem.cells[cellKey] || 0) - 1;
+            cellLeft[cellKey] = (cellLeft[cellKey] || 0) - 1;
+            var chCellKey = String(q.chapter) + "|" + cellKey;
+            leftChCell[chCellKey] = (leftChCell[chCellKey] || 0) - 1;
+            var fmtCellKey = qf + "|" + cellKey;
+            leftFmtCell[fmtCellKey] = (leftFmtCell[fmtCellKey] || 0) - 1;
+            var chFmtKey = String(q.chapter) + "|" + qf;
+            leftChFmt[chFmtKey] = (leftChFmt[chFmtKey] || 0) - 1;
+            chLeft[q.chapter] = (chLeft[q.chapter] || 0) - 1;
+            cogLeft[qc] = (cogLeft[qc] || 0) - 1;
+            diffLeft[qd] = (diffLeft[qd] || 0) - 1;
+            fmtLeft[qf] = (fmtLeft[qf] || 0) - 1;
+            jointCache = {};
+            // Keep the compatible allocation in step with the new state so
+            // the O(1) fast path in jointOk stays honest. If the
+            // randomized search misses (rare — the state is feasible by
+            // induction), clear it and jointOk falls back to exact
+            // re-solves for every candidate.
+            var sol = solveCompatibleAlloc(6);
+            if (sol) {
+                rem.cells = sol.alloc;
+                rem.chFlow = sol.chFlow;
+                rem.fmtFlow = sol.fmtFlow;
+                rem.chFmtFlow = sol.chFmtFlow;
+            } else {
+                rem.cells = null;
+                rem.chFlow = null;
+                rem.fmtFlow = null;
+                rem.chFmtFlow = null;
+            }
             var idx = remaining.indexOf(q);
             if (idx >= 0) remaining.splice(idx, 1);
+        }
+
+        // Exact check for one candidate: after taking it, does ANY
+        // completion of all four ratios still exist (cognitive x difficulty
+        // allocation that both the remaining chapter slots and the
+        // remaining format slots can absorb)? Fast path when the current
+        // allocation AND both realization flows credit this exact pick —
+        // decrementing all three together keeps every constraint
+        // satisfiable. Otherwise re-solve for the post-pick state; the
+        // result only depends on (chapter, format, cell), so it is cached
+        // until the next pick changes the state.
+        function jointOk(qc, qd, qch, qfmt) {
+            var cellKey = qc + "|" + qd;
+            var chKey = String(qch) + "|" + cellKey;
+            var fmtKey = qfmt + "|" + cellKey;
+            if (rem.cells && (rem.cells[cellKey] || 0) > 0 &&
+                rem.chFlow && (rem.chFlow[chKey] || 0) > 0 &&
+                rem.fmtFlow && (rem.fmtFlow[fmtKey] || 0) > 0 &&
+                rem.chFmtFlow && (rem.chFmtFlow[String(qch) + "|" + qfmt] || 0) > 0) return true;
+            var cacheKey = String(qch) + "|" + qfmt + "|" + cellKey;
+            if (jointCache[cacheKey] !== undefined) return jointCache[cacheKey];
+            var rows = {}, cols = {}, chDem = {}, fmtDem = {};
+            var supply = {}, chSupply = {}, fmtSupply = {}, chFmtSupply = {};
+            var k;
+            for (k in rem.cognitive) if (Object.prototype.hasOwnProperty.call(rem.cognitive, k)) rows[k] = rem.cognitive[k] - (k === qc ? 1 : 0);
+            for (k in rem.difficulty) if (Object.prototype.hasOwnProperty.call(rem.difficulty, k)) cols[k] = rem.difficulty[k] - (k === qd ? 1 : 0);
+            for (k in rem.chapters) if (Object.prototype.hasOwnProperty.call(rem.chapters, k)) chDem[k] = rem.chapters[k] - (String(k) === String(qch) ? 1 : 0);
+            for (k in rem.format) if (Object.prototype.hasOwnProperty.call(rem.format, k)) fmtDem[k] = rem.format[k] - (k === qfmt ? 1 : 0);
+            for (k in cellLeft) if (Object.prototype.hasOwnProperty.call(cellLeft, k)) supply[k] = cellLeft[k] - (k === cellKey ? 1 : 0);
+            for (k in leftChCell) if (Object.prototype.hasOwnProperty.call(leftChCell, k)) chSupply[k] = leftChCell[k] - (k === chKey ? 1 : 0);
+            for (k in leftFmtCell) if (Object.prototype.hasOwnProperty.call(leftFmtCell, k)) fmtSupply[k] = leftFmtCell[k] - (k === fmtKey ? 1 : 0);
+            for (k in leftChFmt) if (Object.prototype.hasOwnProperty.call(leftChFmt, k)) chFmtSupply[k] = leftChFmt[k] - (k === String(qch) + "|" + qfmt ? 1 : 0);
+            var ok = false;
+            // Chapter x format projection first (independent of the cell
+            // allocation — catches e.g. every straight question living in
+            // a chapter whose slots are already spent elsewhere).
+            if (solveJointTargets(chDem, fmtDem, chFmtSupply) !== null) {
+                var alloc = solveJointTargets(rows, cols, supply);
+                if (alloc) {
+                    ok = solveJointTargets(chDem, alloc, chSupply) !== null &&
+                         solveJointTargets(fmtDem, alloc, fmtSupply) !== null;
+                }
+            }
+            jointCache[cacheKey] = ok;
+            return ok;
         }
 
         function fitsAlone(q) {
             var ch = rem.chapters[q.chapter];
             if (ch === undefined || ch <= 0) return false;
-            var cg = rem.cognitive[normCognitive(q)];
+            var qc = normCognitive(q), qd = normDifficulty(q.difficulty);
+            var cg = rem.cognitive[qc];
             if (cg === undefined || cg <= 0) return false;
-            var df = rem.difficulty[normDifficulty(q.difficulty)];
+            var df = rem.difficulty[qd];
             if (df === undefined || df <= 0) return false;
-            var fm = rem.format[normFormat(q)];
-            return !(fm === undefined || fm <= 0);
+            var qf = normFormat(q);
+            var fm = rem.format[qf];
+            if (fm === undefined || fm <= 0) return false;
+            return jointOk(qc, qd, q.chapter, qf);
         }
 
         // Phase 1 — scenario questions are taken as WHOLE groups so a
@@ -441,14 +732,76 @@ var ExamEngine = (function() {
             for (var key in groups) {
                 var members = groups[key];
                 if (members.length === 0 || members.length > scenRem) continue;
-                var ok = true, gscore = 0;
+                // A whole group must fit every bucket as a unit — members
+                // can share one chapter/cognitive/difficulty/cell — so check
+                // aggregate demand, then fall back to an exact re-solve of
+                // the post-group state (cognitive x difficulty allocation
+                // plus chapter x cell and format x cell flows) when the
+                // current allocation does not credit the group.
+                var needCh = {}, needCg = {}, needDf = {}, needFmt = {};
+                var needCell = {}, needChCell = {}, needFmtCell = {}, needChFmt = {};
                 for (var mi = 0; mi < members.length; mi++) {
                     var mq = members[mi];
-                    var mch = rem.chapters[mq.chapter];
-                    var mcg = rem.cognitive[normCognitive(mq)];
-                    var mdf = rem.difficulty[normDifficulty(mq.difficulty)];
-                    if (mch === undefined || mch <= 0 || mcg === undefined || mcg <= 0 || mdf === undefined || mdf <= 0) { ok = false; break; }
-                    gscore += mch * 5 + mcg * 4 + mdf * 3 + Math.random() * 0.5;
+                    var mc = normCognitive(mq), md = normDifficulty(mq.difficulty);
+                    var mf = normFormat(mq);
+                    var mcell = mc + "|" + md;
+                    needCh[mq.chapter] = (needCh[mq.chapter] || 0) + 1;
+                    needCg[mc] = (needCg[mc] || 0) + 1;
+                    needDf[md] = (needDf[md] || 0) + 1;
+                    needFmt[mf] = (needFmt[mf] || 0) + 1;
+                    needCell[mcell] = (needCell[mcell] || 0) + 1;
+                    var mck = String(mq.chapter) + "|" + mcell;
+                    needChCell[mck] = (needChCell[mck] || 0) + 1;
+                    var mfk = mf + "|" + mcell;
+                    needFmtCell[mfk] = (needFmtCell[mfk] || 0) + 1;
+                    var mcf = String(mq.chapter) + "|" + mf;
+                    needChFmt[mcf] = (needChFmt[mcf] || 0) + 1;
+                }
+                var ok = bucketCovers(needCh, rem.chapters) && bucketCovers(needCg, rem.cognitive) &&
+                         bucketCovers(needDf, rem.difficulty) && bucketCovers(needFmt, rem.format);
+                if (ok) {
+                    var grows = {}, gcols = {}, gsupply = {};
+                    var gchDem = {}, gfmtDem = {}, gchSupply = {}, gfmtSupply = {}, gchFmtSupply = {};
+                    var jkey;
+                    for (jkey in rem.cognitive) if (Object.prototype.hasOwnProperty.call(rem.cognitive, jkey)) grows[jkey] = rem.cognitive[jkey] - (needCg[jkey] || 0);
+                    for (jkey in rem.difficulty) if (Object.prototype.hasOwnProperty.call(rem.difficulty, jkey)) gcols[jkey] = rem.difficulty[jkey] - (needDf[jkey] || 0);
+                    for (jkey in cellLeft) if (Object.prototype.hasOwnProperty.call(cellLeft, jkey)) gsupply[jkey] = cellLeft[jkey] - (needCell[jkey] || 0);
+                    for (jkey in rem.chapters) if (Object.prototype.hasOwnProperty.call(rem.chapters, jkey)) gchDem[jkey] = rem.chapters[jkey] - (needCh[jkey] || 0);
+                    for (jkey in rem.format) if (Object.prototype.hasOwnProperty.call(rem.format, jkey)) gfmtDem[jkey] = rem.format[jkey] - (needFmt[jkey] || 0);
+                    for (jkey in leftChCell) if (Object.prototype.hasOwnProperty.call(leftChCell, jkey)) gchSupply[jkey] = leftChCell[jkey] - (needChCell[jkey] || 0);
+                    for (jkey in leftFmtCell) if (Object.prototype.hasOwnProperty.call(leftFmtCell, jkey)) gfmtSupply[jkey] = leftFmtCell[jkey] - (needFmtCell[jkey] || 0);
+                    for (jkey in leftChFmt) if (Object.prototype.hasOwnProperty.call(leftChFmt, jkey)) gchFmtSupply[jkey] = leftChFmt[jkey] - (needChFmt[jkey] || 0);
+                    // Chapter x format projection first (independent of
+                    // the cell allocation), then the allocation flows.
+                    ok = solveJointTargets(gchDem, gfmtDem, gchFmtSupply) !== null;
+                }
+                if (ok) {
+                    // Prefer the current allocation minus the group (cheap
+                    // and likely to work), then randomized re-rolls.
+                    var baseAlloc = null;
+                    if (rem.cells && bucketCovers(needCell, rem.cells)) {
+                        baseAlloc = {};
+                        for (jkey in rem.cells) if (Object.prototype.hasOwnProperty.call(rem.cells, jkey)) {
+                            baseAlloc[jkey] = rem.cells[jkey] - (needCell[jkey] || 0);
+                        }
+                    }
+                    ok = false;
+                    for (var gr = 0; gr < 6 && !ok; gr++) {
+                        var gal = null;
+                        if (gr === 0 && baseAlloc) gal = baseAlloc;
+                        else gal = solveJointTargets(grows, gcols, gsupply);
+                        if (!gal) break;
+                        if (solveJointTargets(gchDem, gal, gchSupply) !== null &&
+                            solveJointTargets(gfmtDem, gal, gfmtSupply) !== null) ok = true;
+                    }
+                }
+                var gscore = 0;
+                if (ok) {
+                    for (var mi2 = 0; mi2 < members.length; mi2++) {
+                        var mq2 = members[mi2];
+                        gscore += rem.chapters[mq2.chapter] * 5 + rem.cognitive[normCognitive(mq2)] * 4 +
+                                  rem.difficulty[normDifficulty(mq2.difficulty)] * 3 + Math.random() * 0.5;
+                    }
                 }
                 if (!ok) continue;
                 if (simOk(members)) {
@@ -462,7 +815,7 @@ var ExamEngine = (function() {
                 for (var pi = 0; pi < pick.length; pi++) applySel(pick[pi]);
                 simClaim(pick);
                 scenRem -= pick.length;
-                if (!marginsStillPossible(remaining, rem)) return null;
+                if (!stillPossible()) return null;
                 continue;
             }
             var iBest = null, iScore = -1;
@@ -491,7 +844,7 @@ var ExamEngine = (function() {
             applySel(iTake);
             simClaim([iTake]);
             scenRem--;
-            if (!marginsStillPossible(remaining, rem)) return null;
+            if (!stillPossible()) return null;
         }
 
         // Phase 2 — straight questions with the original per-question
@@ -501,12 +854,11 @@ var ExamEngine = (function() {
             var candidates = [];
             for (var i = 0; i < remaining.length; i++) {
                 var q = remaining[i];
+                if (!fitsAlone(q)) continue;
                 var ch = rem.chapters[q.chapter];
-                if (ch === undefined || ch <= 0) continue;
                 var cg = rem.cognitive[normCognitive(q)];
                 var df = rem.difficulty[normDifficulty(q.difficulty)];
                 var fm = rem.format[normFormat(q)];
-                if (cg === undefined || cg <= 0 || df === undefined || df <= 0 || fm === undefined || fm <= 0) continue;
                 var score = ch * 5 + cg * 4 + fm * 4 + df * 3 + Math.random();
                 candidates.push([score, q, simOk([q])]);
             }
@@ -519,29 +871,16 @@ var ExamEngine = (function() {
             if (!pick) { pick = candidates[0][1]; simRelax(); }
             applySel(pick);
             simClaim([pick]);
-            if (!marginsStillPossible(remaining, rem)) return null;
+            if (!stillPossible()) return null;
         }
         return selected;
     }
 
-    function marginsStillPossible(pool, rem) {
-        var checks = [
-            { rem: rem.chapters, match: function(q, k) { return String(q.chapter) === String(k); } },
-            { rem: rem.cognitive, match: function(q, k) { return normCognitive(q) === k; } },
-            { rem: rem.difficulty, match: function(q, k) { return normDifficulty(q.difficulty) === k; } },
-            { rem: rem.format, match: function(q, k) { return normFormat(q) === k; } }
-        ];
-        for (var c = 0; c < checks.length; c++) {
-            var keys = Object.keys(checks[c].rem);
-            for (var i = 0; i < keys.length; i++) {
-                var need = checks[c].rem[keys[i]];
-                if (need <= 0) continue;
-                var have = 0;
-                for (var p = 0; p < pool.length; p++) {
-                    if (checks[c].match(pool[p], keys[i])) have++;
-                }
-                if (have < need) return false;
-            }
+    // True when every key's demand fits inside the credit map.
+    function bucketCovers(demand, have) {
+        for (var dk in demand) {
+            if (!Object.prototype.hasOwnProperty.call(demand, dk)) continue;
+            if ((have[dk] || 0) < demand[dk]) return false;
         }
         return true;
     }
@@ -617,6 +956,7 @@ var ExamEngine = (function() {
         selectBalanced: selectBalanced,
         validateBlueprint: validateBlueprint,
         targetCounts: targetCounts,
+        solveJointTargets: solveJointTargets,
         checkFeasibility: checkFeasibility,
         generateExamPlan: generateExamPlan
     };

@@ -280,6 +280,93 @@ function runExamEngineTests() {
         TestRunner.assertTrue(false, "Question bank not loaded for selectForBlueprint tests");
     }
 
+    TestRunner.suite("Exam Engine - Joint Ratio Coupling");
+
+    function jcQ(id, diff, cog, chapter) {
+        return { id: id, question: id, options: ["a", "b", "c", "d"], answer: "A",
+                 difficulty: diff, cognitive_level: cog, chapter: chapter, mode: "straight" };
+    }
+
+    // solveJointTargets: exact cognitive x difficulty decomposition.
+    var dec = ExamEngine.solveJointTargets({ k: 1, u: 1, a: 1 }, { easy: 2, hard: 1 },
+        { "k|easy": 1, "u|easy": 1, "a|hard": 1 });
+    TestRunner.assertNotNull(dec, "Feasible decomposition found");
+    TestRunner.assertEqual(dec["a|hard"], 1, "Decomposition fills the required cell");
+    var noDec = ExamEngine.solveJointTargets({ k: 1, u: 1, a: 1 }, { easy: 1, medium: 1, hard: 1 },
+        { "k|easy": 1, "u|easy": 1, "a|medium": 1, "a|hard": 1 });
+    TestRunner.assertEqual(noDec, null, "Joint-impossible margins return null");
+    var badDec = ExamEngine.solveJointTargets({ k: 5 }, { easy: 2 }, { "k|easy": 5 });
+    TestRunner.assertEqual(badDec, null, "Mismatched row/column totals return null");
+
+    // Marginals all pass, but no selection satisfies the cognitive and
+    // difficulty ratios at the same time.
+    var tightBp = {
+        total: 3,
+        chapters: [{ chapter: 1, pct: 100 }],
+        cognitive: { k: 34, u: 33, a: 33 },
+        difficulty: { easy: 34, medium: 33, hard: 33 },
+        format: { straight: 100, scenario: 0 }
+    };
+    var tightPool = [jcQ("J1", "easy", "k", 1), jcQ("J2", "easy", "u", 1),
+                     jcQ("J3", "medium", "a", 1), jcQ("J4", "hard", "a", 1)];
+    var tightShort = ExamEngine.checkFeasibility(tightBp, tightPool);
+    TestRunner.assertEqual(tightShort.length, 1, "Joint-only shortage reported once: " + tightShort.join("; "));
+    TestRunner.assert(tightShort[0].indexOf("Cognitive x difficulty") === 0, "Shortage names the joint combination");
+    TestRunner.assertEqual(ExamEngine.generateExamPlan(tightBp, tightPool, 50), null, "Joint-impossible blueprint generates no plan");
+
+    // Chapter x cell coupling: the last chapter slot must be filled by a
+    // u|hard question, but a marginal-only greedy spends those early and
+    // strands the final pick (the Chemistry t50 failure). The engine must
+    // never dead-end on this shape.
+    var trapBp = {
+        total: 4,
+        chapters: [{ chapter: 1, pct: 50 }, { chapter: 2, pct: 50 }],
+        cognitive: { k: 50, u: 50, a: 0 },
+        difficulty: { easy: 50, medium: 0, hard: 50 },
+        format: { straight: 100, scenario: 0 }
+    };
+    var trapPool = [jcQ("T1", "easy", "k", 1), jcQ("T2", "hard", "u", 1), jcQ("T3", "easy", "k", 1),
+                    jcQ("T4", "easy", "k", 2), jcQ("T5", "hard", "u", 2)];
+    TestRunner.assertEqual(ExamEngine.checkFeasibility(trapBp, trapPool).length, 0,
+        "Chapter-coupled blueprint is reported feasible");
+    var trapT = ExamEngine.targetCounts(trapBp);
+    var trapOkRuns = 0;
+    for (var trial = 0; trial < 30; trial++) {
+        var trapPlan = ExamEngine.generateExamPlan(trapBp, trapPool, 50);
+        if (!trapPlan || trapPlan.length !== 4) continue;
+        var tc = { 1: 0, 2: 0 }, tk = 0, tu = 0, te = 0, th = 0;
+        for (var ti = 0; ti < trapPlan.length; ti++) {
+            var tq = trapPlan[ti];
+            tc[tq.chapter]++;
+            if (ExamEngine.normCognitive(tq) === "k") tk++; else tu++;
+            if (ExamEngine.normDifficulty(tq.difficulty) === "easy") te++; else th++;
+        }
+        if (tc[1] === trapT.chapters[0] && tc[2] === trapT.chapters[1] &&
+            tk === trapT.cognitive[0] && tu === trapT.cognitive[1] &&
+            te === trapT.difficulty[0] && th === trapT.difficulty[2]) trapOkRuns++;
+    }
+    TestRunner.assertEqual(trapOkRuns, 30, "Chapter-coupled blueprint never dead-ends (30 trials with exact margins)");
+
+    // Chapter x format coupling: every straight question lives in one
+    // chapter, but the chapter slots require more straight questions than
+    // that chapter can hold. All marginals pass; the joint check must not.
+    var fmtBp = {
+        total: 4,
+        chapters: [{ chapter: 1, pct: 25 }, { chapter: 2, pct: 75 }],
+        cognitive: { k: 100, u: 0, a: 0 },
+        difficulty: { easy: 100, medium: 0, hard: 0 },
+        format: { straight: 50, scenario: 50 }
+    };
+    var fmtPool = [jcQ("F1", "easy", "k", 1), jcQ("F2", "easy", "k", 1),
+                   jcQ("F3", "easy", "k", 2), jcQ("F4", "easy", "k", 2), jcQ("F5", "easy", "k", 2)];
+    fmtPool[2].mode = "scenario";
+    fmtPool[3].mode = "scenario";
+    fmtPool[4].mode = "scenario";
+    var fmtShort = ExamEngine.checkFeasibility(fmtBp, fmtPool);
+    TestRunner.assertEqual(fmtShort.length, 1, "Chapter/format shortage reported once: " + fmtShort.join("; "));
+    TestRunner.assert(fmtShort[0].indexOf("Chapter/cognitive/difficulty/format") === 0, "Shortage names the chapter/format combination");
+    TestRunner.assertEqual(ExamEngine.generateExamPlan(fmtBp, fmtPool, 50), null, "Chapter/format-impossible blueprint generates no plan");
+
     TestRunner.suite("Exam Engine - Scenario Group Ordering");
 
     function grpQ(id, gid, order) {
