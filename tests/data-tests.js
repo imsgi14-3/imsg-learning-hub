@@ -28,6 +28,26 @@ function runPersistenceTests() {
     TestRunner.assertEqual(teachers.length, origTeachers, "Teachers loaded correctly");
     TestRunner.assertEqual(studentAccounts.length, origStudents, "Students loaded correctly");
 
+    TestRunner.suite("Persistence - Class ID Normalization");
+
+    var keptClasses = classes;
+    classes = [
+        { id: "CLASS-9A", name: "10B", grade: 10, section: "B", students: ["10B-01, Phantom"] },
+        { id: "CLASS-9B", name: "9B", grade: 9, section: "B", students: [] },
+        { id: "HOUSE-1", name: "House 1", grade: 0, section: "", students: [] }
+    ];
+    var repaired = normalizeClasses();
+    TestRunner.assertEqual(repaired, true, "Mismatched class flagged for repair");
+    TestRunner.assertEqual(classes[0].name, "9A", "Class name reset from ID");
+    TestRunner.assertEqual(classes[0].grade, 9, "Grade reset from ID");
+    TestRunner.assertEqual(classes[0].section, "A", "Section reset from ID");
+    TestRunner.assertEqual(classes[1].name, "9B", "Correct class left untouched");
+    TestRunner.assertEqual(classes[1].grade, 9, "Correct class grade left untouched");
+    TestRunner.assertEqual(classes[2].name, "House 1", "Non-matching class ID left untouched");
+    classes = keptClasses;
+    LocalDB.putAll("classes", classes);
+    localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
+
     TestRunner.suite("Persistence - Data Functions");
 
     TestRunner.assertType(saveAll, "function", "saveAll function exists");

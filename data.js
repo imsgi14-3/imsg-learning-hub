@@ -106,10 +106,41 @@ var subjectsData = {
     }
 };
 
+// A class ID is the stable identity referenced by students, teachers and
+// attempts (CLASS-9A = grade 9, section A). If an Edit Class save rewrites
+// the label of an existing class, reset it from the ID so a device holding
+// the bad cached copy self-heals: Firestore merges are local-wins, so without
+// this the wrong label would keep displaying forever. IDs that do not match
+// the CLASS-<grade><section> pattern are left untouched.
+function normalizeClasses() {
+    var changed = false;
+    for (var i = 0; i < classes.length; i++) {
+        var cl = classes[i];
+        var m = /^CLASS-(\d+)([A-Za-z]+)$/.exec(cl && cl.id ? String(cl.id) : "");
+        if (!m) continue;
+        var expectGrade = parseInt(m[1], 10);
+        var expectSection = m[2].toUpperCase();
+        var grade = parseInt(cl.grade, 10);
+        var section = String(cl.section == null ? "" : cl.section).trim().toUpperCase();
+        if (grade !== expectGrade || section !== expectSection) {
+            cl.grade = expectGrade;
+            cl.section = expectSection;
+            cl.name = expectGrade + expectSection;
+            changed = true;
+        }
+    }
+    if (changed) {
+        LocalDB.putAll("classes", classes);
+        localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
+    }
+    return changed;
+}
+
 function loadData() {
     var c = LocalDB.getCache();
     questions = c.questions || [];
     classes = c.classes || [];
+    normalizeClasses();
     assignments = c.assignments || [];
     exams = c.exams || [];
     teachers = c.teachers || [];

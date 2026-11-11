@@ -1138,7 +1138,17 @@ var UI = (function() {
         e.preventDefault();
         var cid = $("cmClassId").value;
         var d = { id: cid || "CLASS-" + $("cmName").value.toUpperCase(), name: $("cmName").value, grade: parseInt($("cmGrade").value), section: $("cmSection").value, students: $("cmStudents").value.split("\n").filter(function(l) { return l.trim(); }) };
-        if (cid) { for (var i = 0; i < classes.length; i++) { if (classes[i].id === cid) { classes[i] = d; break; } } }
+        if (cid) {
+            var old = null;
+            for (var i = 0; i < classes.length; i++) { if (classes[i].id === cid) { old = classes[i]; break; } }
+            // Changing name/grade/section rewrites an existing class everywhere
+            // it is referenced. Confirm — "meant to add a new class, edited an
+            // existing one instead" is how CLASS-9A once became "10B".
+            if (old && (old.name !== d.name || Number(old.grade) !== d.grade || String(old.section) !== d.section)) {
+                if (!confirm("Change class " + old.name + " (Grade " + old.grade + ", Section " + old.section + ")\nto " + d.name + " (Grade " + d.grade + ", Section " + d.section + ")?\n\nThis edits the existing class. To add a new class, cancel and use \"+ Add Class\".")) return;
+            }
+            for (var j = 0; j < classes.length; j++) { if (classes[j].id === cid) { classes[j] = d; break; } }
+        }
         else classes.push(d);
         saveAll(); pushClassToFirestore(d); closeModal(); refreshClassViews();
     }
