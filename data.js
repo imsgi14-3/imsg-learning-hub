@@ -209,7 +209,13 @@ function saveAll() {
     if (principalAccount) LocalDB.putAll("principalAccount", [principalAccount]);
 }
 
+// Bulk-rewrites EVERY local record to Firestore. Nothing in the normal app
+// flow calls this (the per-record push* helpers below do all writing), and a
+// stray call would burn thousands of write/delete quota units at once — so it
+// only runs when a migration explicitly opts in.
+var ALLOW_BULK_FIRESTORE_WRITE = false;
 function saveToFirestore() {
+    if (!ALLOW_BULK_FIRESTORE_WRITE) return;
     if (typeof db === "undefined") { return; }
     if (principalAccount) db.collection("teachers").doc("PRINCIPAL").set(principalAccount).catch(function() {});
     for (var i = 0; i < studentAccounts.length; i++) db.collection("students").doc(studentAccounts[i].id).set(studentAccounts[i]).catch(function() {});
@@ -242,6 +248,7 @@ function saveExam(exam) {
 }
 function saveAttempt(attempt) {
     if (!attempt || !attempt.attemptId) return false;
+    if (!attempt.id) attempt.id = attempt.attemptId; // IndexedDB keyPath is "id"
     var found = false;
     for (var i = 0; i < allAttempts.length; i++) {
         if (allAttempts[i].attemptId === attempt.attemptId) { allAttempts[i] = attempt; found = true; break; }
@@ -261,14 +268,216 @@ function saveTeacherToFirestore(teacherObj, callback) {
         .catch(function(e) { console.error("Firestore single teacher save error:", e); LocalDB.addToSyncQueue({ type: "teacher", action: "set", data: teacherObj }); if (callback) callback(false); });
 }
 
-var lastFirestorePull = 0;
-var PULL_COOLDOWN = 300000;
+// ---------------------------------------------------------------------------
+// Plan A — Firestore read budget (Spark free tier allows 50K reads/day).
+// Before login there are ZERO Firestore reads: local cache + static JSON
+// power the login page. After login each role pulls only what it needs, at
+// most once per role cooldown (persisted in localStorage, so a page reload
+// doesn't reset it), and attempts sync incrementally instead of re-reading
+// the whole collection on every load.
+// ---------------------------------------------------------------------------
+var PULL_KEY = "learningHub_lastPull";
+var QUESTIONS_PULL_KEY = "learningHub_lastQuestionsPull";
+var ASSIGNMENTS_PULL_KEY = "learningHub_lastAssignmentsPull";
+var ATTEMPTS_SYNC_KEY = "learningHub_attemptsSync";
+
+function getPullRole() {
+    if (typeof Auth !== "undefined" && Auth.getRole && Auth.getRole()) return Auth.getRole();
+    try { var s = JSON.parse(localStorage.getItem("learningHub_user")); if (s && s.role) return s.role; } catch(e) {}
+    return null;
+}
+
+function readStamp(key) {
+    try { var v = parseInt(localStorage.getItem(key), 10); return isNaN(v) ? 0 : v; } catch(e) { return 0; }
+}
+function writeStamp(key, value) {
+    try { localStorage.setItem(key, String(value)); } catch(e) {}
+}
+
+// Students/parents are local-first and rarely need fresh server data; staff
+// refresh a little more often. Tunable here without touching call sites.
+function getPullCooldown(role) {
+    if (role === "student" || role === "parent") return 45 * 60000;
+    if (role === "teacher" || role === "classteacher") return 15 * 60000;
+    if (role === "principal") return 5 * 60000;
+    return 0;
+}
+
+// The questions collection is by far the largest (3,154 docs) and changes
+// rarely, so staff read it at most once a day. The marker is written when a
+// pull starts, which also prevents retry storms.
+var QUESTIONS_PULL_COOLDOWN = 24 * 3600000;
+function questionsPullDue() {
+    if (Date.now() - readStamp(QUESTIONS_PULL_KEY) < QUESTIONS_PULL_COOLDOWN) return false;
+    writeStamp(QUESTIONS_PULL_KEY, Date.now());
+    return true;
+}
+
+// Attempts are append-only and carry an ISO `timestamp`, so after the first
+// sync a device only re-reads the window since its last successful sync
+// (a 5-minute overlap absorbs clock skew). The first sync is scoped: students
+// and parents read only their own attempts; staff read the whole (small, ~608
+// docs) collection once. Failed syncs never advance the marker.
+function attemptsSyncKey() {
+    var role = getPullRole();
+    if (role !== "student" && role !== "parent") return ATTEMPTS_SYNC_KEY;
+    var uid = "";
+    var u = (typeof Auth !== "undefined" && Auth.getUser && Auth.getUser()) || null;
+    if (!u) { try { var s = JSON.parse(localStorage.getItem("learningHub_user")); u = s ? s.user : null; } catch(e) {} }
+    if (u) uid = u.childId || u.id || "";
+    return ATTEMPTS_SYNC_KEY + "_" + (uid || "unknown");
+}
+
+function pullAttemptsIncremental(done) {
+    if (typeof db === "undefined") { done(); return; }
+    var key = attemptsSyncKey();
+    var since = null;
+    try { since = localStorage.getItem(key); } catch(e) {}
+    var ref = db.collection("attempts");
+    var query;
+    if (since) {
+        query = ref.where("timestamp", ">=", since);
+    } else if (key !== ATTEMPTS_SYNC_KEY && key !== ATTEMPTS_SYNC_KEY + "_unknown") {
+        // First sync for a student/parent on this device: own history only.
+        query = ref.where("studentId", "==", key.substring(ATTEMPTS_SYNC_KEY.length + 1));
+    } else {
+        query = ref;
+    }
+    query.get().then(function(snap) {
+        // Rebuild from EVERY local source plus the fetch. Memory may be empty
+        // on a fresh load (IndexedDB cache), so localStorage must be part of
+        // the union — a partial array must never replace valid local data.
+        var merged = {};
+        var local = [];
+        try { local = JSON.parse(localStorage.getItem(ATTEMPTS_KEY) || "[]"); } catch(e) {}
+        for (var i = 0; i < local.length; i++) merged[local[i].attemptId || local[i].timestamp || ("local-" + i)] = local[i];
+        for (var i = 0; i < allAttempts.length; i++) merged[allAttempts[i].attemptId || allAttempts[i].timestamp || ("mem-" + i)] = allAttempts[i];
+        snap.forEach(function(doc) { var d = doc.data(); var k = d.attemptId || d.timestamp || doc.id; if (!merged[k]) merged[k] = d; });
+        allAttempts = [];
+        for (var m in merged) {
+            var a = merged[m];
+            if (!a.id) a.id = a.attemptId || a.timestamp || m; // IndexedDB keyPath is "id"
+            allAttempts.push(a);
+        }
+        try { localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts)); } catch(e) {}
+        try { LocalDB.putAll("allAttempts", allAttempts); } catch(e) {}
+        try { localStorage.setItem(key, new Date(Date.now() - 300000).toISOString()); } catch(e) {}
+        done();
+    }).catch(function() { done(); });
+}
+
+// Fills in fields that older teacher records may be missing. Shared by the
+// full pull and the login-time single-document fetch.
+function normalizeTeacher(d) {
+    if (!d.subjects) d.subjects = d.subject ? [d.subject] : ["Computer Science"];
+    if (!d.classes) d.classes = d.classId ? [d.classId] : [];
+    if (!d.subject) d.subject = d.subjects[0] || "";
+    if (!d.classId) d.classId = d.classes[0] || "";
+    if (!d.classTeacherOf) d.classTeacherOf = d.isClassTeacher && d.classId ? [d.classId] : [];
+    if (!d.classSubjects) {
+        d.classSubjects = {};
+        for (var j = 0; j < d.classes.length; j++) {
+            d.classSubjects[d.classes[j]] = d.subjects.slice();
+        }
+    }
+    d.isSubjectTeacher = true;
+    return d;
+}
+
+// Targeted one-document fetch used ONLY when a login ID isn't in the local
+// cache (a new device, or an account created after this device last synced).
+// This replaces the old pre-login roster pull: a wrong or unknown ID is
+// remembered for 5 minutes and an hourly budget caps repeated misses, so
+// failed logins can't burn read quota. Returns true when a fetch was started
+// (callback runs with "ok" | "missing" | "error"), false when the caller
+// should fail normally without touching Firestore.
+var LOGIN_MISS_TTL = 300000;
+var LOGIN_MISS_BUDGET = 6;
+var LOGIN_MISS_WINDOW = 3600000;
+function pullAccountForLogin(scope, id, callback) {
+    if (typeof db === "undefined" || !id) return false;
+    var safeId = String(id).replace(/[^A-Za-z0-9_-]/g, "");
+    var missKey = "learningHub_loginMiss_" + scope + "_" + safeId;
+    var budgetKey = "learningHub_loginBudget";
+    var now = Date.now();
+    try {
+        var miss = parseInt(localStorage.getItem(missKey), 10) || 0;
+        if (miss && now - miss < LOGIN_MISS_TTL) return false;
+    } catch(e) {}
+    var budget = null;
+    try { budget = JSON.parse(localStorage.getItem(budgetKey)); } catch(e) {}
+    if (!budget || typeof budget.start !== "number" || now - budget.start > LOGIN_MISS_WINDOW) budget = { start: now, count: 0 };
+    if (budget.count >= LOGIN_MISS_BUDGET) return false;
+    budget.count++;
+    try { localStorage.setItem(budgetKey, JSON.stringify(budget)); } catch(e) {}
+    var collection = scope === "teachers" ? "teachers" : "students";
+    db.collection(collection).doc(String(id)).get().then(function(doc) {
+        if (doc.exists) {
+            var d = doc.data();
+            if (!d.id) d.id = doc.id;
+            if (collection === "teachers") {
+                if (d.id !== "PRINCIPAL" && doc.id !== "PRINCIPAL") {
+                    normalizeTeacher(d);
+                    // Merge into the stored roster: memory may be empty on a
+                    // fresh load, so writing it alone would wipe teachers this
+                    // device already knows. Union = localStorage + memory + doc.
+                    var rosterT = [];
+                    try { rosterT = JSON.parse(localStorage.getItem(TEACHERS_KEY) || "[]"); } catch(e) {}
+                    for (var i = 0; i < teachers.length; i++) {
+                        var dupT = false;
+                        for (var t = 0; t < rosterT.length; t++) { if (rosterT[t].id === teachers[i].id) { dupT = true; break; } }
+                        if (!dupT) rosterT.push(teachers[i]);
+                    }
+                    var seen = false;
+                    for (var t2 = 0; t2 < rosterT.length; t2++) { if (rosterT[t2].id === d.id) { seen = true; break; } }
+                    if (!seen) rosterT.push(d);
+                    teachers = rosterT;
+                    localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
+                    try { LocalDB.putAll("teachers", teachers); } catch(e) {}
+                }
+            } else {
+                // Same union-merge for the student roster — never overwrite it
+                // with the in-memory array, which can be empty on a fresh load.
+                var roster = [];
+                try { roster = JSON.parse(localStorage.getItem(STUDENTS_KEY) || "[]"); } catch(e) {}
+                for (var j = 0; j < studentAccounts.length; j++) {
+                    var dupS = false;
+                    for (var r = 0; r < roster.length; r++) { if (roster[r].id === studentAccounts[j].id) { dupS = true; break; } }
+                    if (!dupS) roster.push(studentAccounts[j]);
+                }
+                var seenS = false;
+                for (var r2 = 0; r2 < roster.length; r2++) { if (roster[r2].id === d.id) { seenS = true; break; } }
+                if (!seenS) roster.push(d);
+                studentAccounts = roster;
+                localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
+                try { LocalDB.putAll("studentAccounts", studentAccounts); } catch(e) {}
+            }
+            callback("ok");
+        } else {
+            try { localStorage.setItem(missKey, String(now)); } catch(e) {}
+            callback("missing");
+        }
+    }).catch(function() { callback("error"); });
+    return true;
+}
+
+// ---------------------------------------------------------------------------
+// Role-scoped pull. Never runs before login (no role) — that single change
+// removes the ~3,300 reads per page load that exhausted the free plan.
+// ---------------------------------------------------------------------------
 function loadFromFirestore(callback) {
     if (typeof db === "undefined") { if (callback) callback(); return; }
+    var role = getPullRole();
+    if (!role) { if (callback) callback(); return; }
+    var isStaff = role === "teacher" || role === "classteacher" || role === "principal";
     var now = Date.now();
-    if (now - lastFirestorePull < PULL_COOLDOWN) { if (callback) callback(); return; }
-    lastFirestorePull = now;
-    var loaded = 0, total = 8;
+    if (now - readStamp(PULL_KEY) < getPullCooldown(role)) { if (callback) callback(); return; }
+    writeStamp(PULL_KEY, now);
+    var runQuestions = isStaff && questionsPullDue();
+    var loaded = 0;
+    var total = 4; // deletedIds + classes + assignments + attempts
+    if (isStaff) total += 3; // students + teachers + exams
+    if (runQuestions) total += 1;
     function done() { loaded++; if (loaded >= total && callback) callback(); }
     db.collection("meta").doc("deletedIds").get().then(function(doc) {
         if (doc.exists) {
@@ -278,7 +487,7 @@ function loadFromFirestore(callback) {
         }
         done();
     }).catch(function() { done(); });
-    db.collection("students").get().then(function(snap) {
+    if (isStaff) db.collection("students").get().then(function(snap) {
         if (snap.size > 0) {
             var merged = {};
             for (var i = 0; i < studentAccounts.length; i++) merged[studentAccounts[i].id] = studentAccounts[i];
@@ -286,6 +495,7 @@ function loadFromFirestore(callback) {
             studentAccounts = [];
             for (var key in merged) studentAccounts.push(merged[key]);
             localStorage.setItem(STUDENTS_KEY, JSON.stringify(studentAccounts));
+            try { LocalDB.putAll("studentAccounts", studentAccounts); } catch(e) {}
         }
         done();
     }).catch(function(e) { console.error("Firestore students load error:", e); done(); });
@@ -300,7 +510,7 @@ function loadFromFirestore(callback) {
         }
         done();
     }).catch(function(e) { console.error("Firestore classes load error:", e); done(); });
-    db.collection("questions").get().then(function(snap) {
+    if (runQuestions) db.collection("questions").get().then(function(snap) {
         if (snap.size > 0) {
             var byId = {};
             for (var i = 0; i < questions.length; i++) byId[questions[i].id] = i;
@@ -313,6 +523,9 @@ function loadFromFirestore(callback) {
             });
             localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
         }
+        // Remote questions can include legacy/non-JSON records — re-run the
+        // JSON-bank cleanup so staff see the same filtered set as before Plan A.
+        if (typeof runQuestionCleanup === "function") runQuestionCleanup();
         done();
     }).catch(function(e) { console.error("Firestore questions load error:", e); done(); });
     db.collection("assignments").get().then(function(snap) {
@@ -326,18 +539,8 @@ function loadFromFirestore(callback) {
         }
         done();
     }).catch(function(e) { console.error("Firestore assignments load error:", e); done(); });
-    db.collection("attempts").get().then(function(snap) {
-        if (snap.size > 0) {
-            var merged = {};
-            for (var i = 0; i < allAttempts.length; i++) merged[allAttempts[i].attemptId || allAttempts[i].timestamp] = allAttempts[i];
-            snap.forEach(function(doc) { var d = doc.data(); var key = d.attemptId || d.timestamp || doc.id; if (!merged[key]) merged[key] = d; });
-            allAttempts = [];
-            for (var key in merged) allAttempts.push(merged[key]);
-            localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
-        }
-        done();
-    }).catch(function() { done(); });
-    db.collection("exams").get().then(function(snap) {
+    pullAttemptsIncremental(done);
+    if (isStaff) db.collection("exams").get().then(function(snap) {
         if (snap.size > 0) {
             var merged = {};
             for (var i = 0; i < exams.length; i++) merged[exams[i].id] = exams[i];
@@ -348,25 +551,14 @@ function loadFromFirestore(callback) {
         }
         done();
     }).catch(function() { done(); });
-    db.collection("teachers").get().then(function(snap) {
+    if (isStaff) db.collection("teachers").get().then(function(snap) {
         if (snap.size > 0) {
             var firestoreTeachers = [];
             snap.forEach(function(doc) {
                 var d = doc.data();
                 if (d.id === "PRINCIPAL" || doc.id === "PRINCIPAL") { if (!principalAccount || principalAccount.id !== "ADMIN-001") principalAccount = d; }
                 else {
-                    if (!d.subjects) d.subjects = d.subject ? [d.subject] : ["Computer Science"];
-                    if (!d.classes) d.classes = d.classId ? [d.classId] : [];
-                    if (!d.subject) d.subject = d.subjects[0] || "";
-                    if (!d.classId) d.classId = d.classes[0] || "";
-                    if (!d.classTeacherOf) d.classTeacherOf = d.isClassTeacher && d.classId ? [d.classId] : [];
-                    if (!d.classSubjects) {
-                        d.classSubjects = {};
-                        for (var j = 0; j < d.classes.length; j++) {
-                            d.classSubjects[d.classes[j]] = d.subjects.slice();
-                        }
-                    }
-                    d.isSubjectTeacher = true;
+                    normalizeTeacher(d);
                     if (/^T-\d+$/i.test(d.id) && d.name) {
                         var oldId = d.id;
                         d.id = generateTeacherId(d.name);
@@ -388,6 +580,7 @@ function loadFromFirestore(callback) {
             for (var id in localById) teachers.push(localById[id]);
             console.log("Merged teachers:", teachers.map(function(t) { return t.id; }));
             localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers));
+            try { LocalDB.putAll("teachers", teachers); } catch(e) {}
         }
         done();
     }).catch(function(e) { console.error("Firestore teachers load error:", e); done(); });
@@ -395,6 +588,11 @@ function loadFromFirestore(callback) {
 
 function refreshAssignmentsFromFirestore(callback) {
     if (typeof db === "undefined") { if (callback) callback(); return; }
+    // Several student tabs call this when opened. The collection is small but
+    // a 5-minute gate keeps rapid tab-switching from racking up reads; the
+    // Sync button bypasses this gate via refreshAllData instead.
+    if (Date.now() - readStamp(ASSIGNMENTS_PULL_KEY) < 300000) { if (callback) callback(); return; }
+    writeStamp(ASSIGNMENTS_PULL_KEY, Date.now());
     db.collection("assignments").get().then(function(snap) {
         assignments = [];
         snap.forEach(function(doc) { assignments.push(doc.data()); });
@@ -404,18 +602,9 @@ function refreshAssignmentsFromFirestore(callback) {
 }
 
 function refreshAttemptsFromFirestore(callback) {
-    if (typeof db === "undefined") { if (callback) callback(); return; }
-    db.collection("attempts").get().then(function(snap) {
-        if (snap.size > 0) {
-            var merged = {};
-            for (var i = 0; i < allAttempts.length; i++) merged[allAttempts[i].attemptId || allAttempts[i].timestamp] = allAttempts[i];
-            snap.forEach(function(doc) { var d = doc.data(); var key = d.attemptId || d.timestamp || doc.id; if (!merged[key]) merged[key] = d; });
-            allAttempts = [];
-            for (var key in merged) allAttempts.push(merged[key]);
-            localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
-        }
-        if (callback) callback();
-    }).catch(function() { if (callback) callback(); });
+    // Incremental: only reads attempts newer than this device's last sync
+    // (first sync is scoped — see pullAttemptsIncremental).
+    pullAttemptsIncremental(function() { if (callback) callback(); });
 }
 
 var lastRefreshTime = 0;
@@ -443,7 +632,9 @@ function refreshAllData(callback) {
 
 function refreshStudentData(callback) {
     if (typeof db === "undefined") { if (callback) callback(); return; }
-    var loaded = 0, total = 3;
+    // Plan A: students never pull the 3,154-doc questions collection — the
+    // static JSON bank + IndexedDB cache are authoritative for them.
+    var loaded = 0, total = 2;
     function done() { loaded++; if (loaded >= total && callback) callback(); }
     db.collection("classes").get().then(function(snap) {
         if (snap.size > 0) {
@@ -467,15 +658,13 @@ function refreshStudentData(callback) {
         }
         done();
     }).catch(function() { done(); });
-    db.collection("questions").get().then(function(snap) {
-        if (snap.size > 0) { var byId = {}; for (var i = 0; i < questions.length; i++) byId[questions[i].id] = i; snap.forEach(function(doc) { var q = doc.data(); if (byId[q.id] !== undefined) questions[byId[q.id]] = q; else questions.push(q); }); localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions)); }
-        done();
-    }).catch(function() { done(); });
 }
 
 function refreshTeacherData(callback) {
     if (typeof db === "undefined") { if (callback) callback(); return; }
-    var loaded = 0, total = 4;
+    // Questions (3,154 docs) sync at most once a day — see questionsPullDue().
+    var runQuestions = questionsPullDue();
+    var loaded = 0, total = runQuestions ? 4 : 3;
     function done() { loaded++; if (loaded >= total && callback) callback(); }
     db.collection("teachers").get().then(function(snap) {
         if (snap.size > 0) {
@@ -510,7 +699,7 @@ function refreshTeacherData(callback) {
         }
         done();
     }).catch(function() { done(); });
-    db.collection("questions").get().then(function(snap) {
+    if (runQuestions) db.collection("questions").get().then(function(snap) {
         if (snap.size > 0) { var byId = {}; for (var i = 0; i < questions.length; i++) byId[questions[i].id] = i; snap.forEach(function(doc) { var q = doc.data(); if (byId[q.id] !== undefined) questions[byId[q.id]] = q; else questions.push(q); }); localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions)); }
         done();
     }).catch(function() { done(); });
@@ -531,17 +720,7 @@ function refreshParentData(callback) {
         }
         done();
     }).catch(function() { done(); });
-    db.collection("attempts").get().then(function(snap) {
-        if (snap.size > 0) {
-            var merged = {};
-            for (var i = 0; i < allAttempts.length; i++) merged[allAttempts[i].attemptId || allAttempts[i].timestamp] = allAttempts[i];
-            snap.forEach(function(doc) { var d = doc.data(); var key = d.attemptId || d.timestamp || doc.id; if (!merged[key]) merged[key] = d; });
-            allAttempts = [];
-            for (var key in merged) allAttempts.push(merged[key]);
-            localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
-        }
-        done();
-    }).catch(function() { done(); });
+    pullAttemptsIncremental(done);
 }
 
 function refreshAdminData(callback) {
@@ -589,17 +768,7 @@ function refreshAdminData(callback) {
         }
         done();
     }).catch(function() { done(); });
-    db.collection("attempts").get().then(function(snap) {
-        if (snap.size > 0) {
-            var merged = {};
-            for (var i = 0; i < allAttempts.length; i++) merged[allAttempts[i].attemptId || allAttempts[i].timestamp] = allAttempts[i];
-            snap.forEach(function(doc) { var d = doc.data(); var key = d.attemptId || d.timestamp || doc.id; if (!merged[key]) merged[key] = d; });
-            allAttempts = [];
-            for (var key in merged) allAttempts.push(merged[key]);
-            localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(allAttempts));
-        }
-        done();
-    }).catch(function() { done(); });
+    pullAttemptsIncremental(done);
 }
 
 function shuffleArray(arr) {

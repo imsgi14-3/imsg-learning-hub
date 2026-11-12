@@ -9,37 +9,55 @@ window.onload = function() {
     LocalDB.open(function() {
         LocalDB.migrateFromLocalStorage();
         loadData();
-        loadFromFirestore(function() {
-            processSyncQueue();
-            if (typeof QuestionLoader !== "undefined") {
-                QuestionLoader.loadAllChapters(function(allQs) {
-                    if (allQs && allQs.length > 0) {
-                        var jsonById = {};
-                        for (var i = 0; i < allQs.length; i++) jsonById[allQs[i].id] = allQs[i];
-                        var cleaned = [];
-                        for (var i = 0; i < questions.length; i++) {
-                            if (jsonById[questions[i].id]) cleaned.push(jsonById[questions[i].id]);
-                            else if (!questions[i].subject || !questions[i].chapter) cleaned.push(questions[i]);
-                        }
-                        for (var i = 0; i < allQs.length; i++) {
-                            var found = false;
-                            for (var j = 0; j < cleaned.length; j++) { if (cleaned[j].id === allQs[i].id) { found = true; break; } }
-                            if (!found) cleaned.push(allQs[i]);
-                        }
-                        questions = cleaned;
-                    } else {
-                        console.warn("Question bank JSON did not load (" + questions.length + " questions from local cache). Serve the app over Live Server and refresh.");
-                    }
-                    Auth.restoreSession();
-                    if (Auth.isLoggedIn()) { UI.applyRoute(true); }
-                });
-            } else {
-                Auth.restoreSession();
-                if (Auth.isLoggedIn()) { UI.applyRoute(true); }
-            }
-        });
+        // Plan A: zero Firestore reads before login. Flush queued writes and
+        // load the JSON bank locally, then restore the session — the role-
+        // scoped pull happens only after login (showDashboard on restore,
+        // withPostLoginData on a fresh login).
+        processSyncQueue();
+        function finishStartup() {
+            Auth.restoreSession();
+            if (Auth.isLoggedIn()) { UI.applyRoute(true); }
+        }
+        if (typeof QuestionLoader !== "undefined") {
+            QuestionLoader.loadAllChapters(function(allQs) {
+                runQuestionCleanup(allQs);
+                finishStartup();
+            });
+        } else {
+            finishStartup();
+        }
     });
 };
+
+// Keeps the JSON-bank cleanup from commit 1a1a421 working after the startup
+// flow moved: JSON questions win by ID, only bank-missing questions without
+// subject/chapter survive, and every JSON question is added exactly once.
+// QuestionLoader caches chapters, so the post-login re-run (after a staff
+// questions pull) is effectively free. Pass nothing to load the JSON bank.
+function runQuestionCleanup(allQs) {
+    if (!allQs) {
+        if (typeof QuestionLoader === "undefined") return;
+        QuestionLoader.loadAllChapters(function(qs) { runQuestionCleanup(qs || []); });
+        return;
+    }
+    if (allQs && allQs.length > 0) {
+        var jsonById = {};
+        for (var i = 0; i < allQs.length; i++) jsonById[allQs[i].id] = allQs[i];
+        var cleaned = [];
+        for (var i = 0; i < questions.length; i++) {
+            if (jsonById[questions[i].id]) cleaned.push(jsonById[questions[i].id]);
+            else if (!questions[i].subject || !questions[i].chapter) cleaned.push(questions[i]);
+        }
+        for (var i = 0; i < allQs.length; i++) {
+            var found = false;
+            for (var j = 0; j < cleaned.length; j++) { if (cleaned[j].id === allQs[i].id) { found = true; break; } }
+            if (!found) cleaned.push(allQs[i]);
+        }
+        questions = cleaned;
+    } else {
+        console.warn("Question bank JSON did not load (" + questions.length + " questions from local cache). Serve the app over Live Server and refresh.");
+    }
+}
 
 function handleLogin(e) { Auth.handleLogin(e); }
 function handleLogout() { Auth.handleLogout(); }

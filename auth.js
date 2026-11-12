@@ -51,6 +51,46 @@ var Auth = (function() {
             });
     }
 
+    // Plan A: Firestore is only read AFTER authentication succeeds. Login
+    // renders immediately from local data; when the role-scoped pull lands we
+    // re-render once so fresh devices show server data without a reload. A
+    // slow or unreachable backend just skips the re-render — login never
+    // blocks on it.
+    function withPostLoginData() {
+        if (typeof loadFromFirestore !== "function") return;
+        loadFromFirestore(function() {
+            if (typeof UI === "undefined" || !UI.showDashboard) return;
+            var loginPage = document.getElementById("loginPage");
+            if (loginPage && loginPage.style.display !== "none") return;
+            var quiz = document.getElementById("quiz");
+            if (quiz && quiz.style.display && quiz.style.display !== "none") return;
+            var result = document.getElementById("result");
+            if (result && result.style.display && result.style.display !== "none") return;
+            UI.showDashboard();
+        });
+    }
+
+    // Plan A: account lookups verify against the local cache first. When an
+    // ID isn't found (new device, or the account was created on another
+    // device), fetch just that one account document (rate-limited — see
+    // pullAccountForLogin) and re-run the login. Returns true when the retry
+    // is in flight (caller should return), false when the caller should show
+    // its normal not-found message.
+    function retryLoginWithFetch(scope, id, e, loginMsg) {
+        if (typeof pullAccountForLogin !== "function") return false;
+        if (!pullAccountForLogin(scope, id, function(status) {
+            if (status === "error") {
+                loginMsg.style.display = "block";
+                loginMsg.textContent = "Could not reach the server. Please try again.";
+                return;
+            }
+            handleLogin(e);
+        })) return false;
+        loginMsg.style.display = "block";
+        loginMsg.textContent = "Checking account...";
+        return true;
+    }
+
     function handleLogin(e) {
         e.preventDefault();
         var role = document.getElementById("roleSelect").value;
@@ -74,7 +114,12 @@ var Auth = (function() {
             for (var i = 0; i < studentAccounts.length; i++) {
                 if (studentAccounts[i].id === id) { found = studentAccounts[i]; break; }
             }
-            if (!found) { loginMsg.style.display = "block"; loginMsg.textContent = "Student ID not found. Contact admin to create your account."; return; }
+            if (!found) {
+                if (retryLoginWithFetch("students", id, e, loginMsg)) return;
+                loginMsg.style.display = "block";
+                loginMsg.textContent = "Student ID not found. Contact admin to create your account.";
+                return;
+            }
             if (found.password !== password) { loginMsg.style.display = "block"; loginMsg.textContent = "Incorrect password."; return; }
             var email = id.toLowerCase() + "@imsg.edu.pk";
             var loginSuccess = function() {
@@ -92,7 +137,7 @@ var Auth = (function() {
                 showStudentTab("practice");
                 if ((location.hash || "").indexOf("#dashboard") !== 0) history.pushState({ page: "dashboard" }, "", "#dashboard");
             };
-            loginFirebaseAuth(email, password, loginSuccess);
+            loginFirebaseAuth(email, password, function() { loginSuccess(); withPostLoginData(); });
         } else if (role === "teacher") {
             id = document.getElementById("teacherId").value.trim().toLowerCase();
             password = document.getElementById("teacherPassword").value;
@@ -102,7 +147,13 @@ var Auth = (function() {
             for (var i = 0; i < teachers.length; i++) {
                 if (teachers[i].id === id) { teacher = teachers[i]; break; }
             }
-            if (!teacher) { loginMsg.style.display = "block"; loginMsg.textContent = "Teacher ID not found."; console.warn("Teacher not found:", id, "available:", teachers.map(function(t) { return t.id; })); return; }
+            if (!teacher) {
+                if (retryLoginWithFetch("teachers", id, e, loginMsg)) return;
+                loginMsg.style.display = "block";
+                loginMsg.textContent = "Teacher ID not found.";
+                console.warn("Teacher not found:", id, "available:", teachers.map(function(t) { return t.id; }));
+                return;
+            }
             if (teacher.password !== password) { loginMsg.style.display = "block"; loginMsg.textContent = "Incorrect password."; return; }
             var tClasses = teacher.classes || (teacher.classId ? [teacher.classId] : []);
             var tSubjects = teacher.subjects || (teacher.subject ? [teacher.subject] : []);
@@ -121,7 +172,7 @@ var Auth = (function() {
                 showTeacherTab("classes");
                 if ((location.hash || "").indexOf("#dashboard") !== 0) history.pushState({ page: "dashboard" }, "", "#dashboard");
             };
-            loginFirebaseAuth(email, password, loginSuccess);
+            loginFirebaseAuth(email, password, function() { loginSuccess(); withPostLoginData(); });
         } else if (role === "classteacher") {
             id = document.getElementById("teacherId").value.trim().toLowerCase();
             password = document.getElementById("teacherPassword").value;
@@ -131,7 +182,13 @@ var Auth = (function() {
             for (var i = 0; i < teachers.length; i++) {
                 if (teachers[i].id === id) { teacher = teachers[i]; break; }
             }
-            if (!teacher) { loginMsg.style.display = "block"; loginMsg.textContent = "Teacher ID not found."; console.warn("ClassTeacher not found:", id, "available:", teachers.map(function(t) { return t.id; })); return; }
+            if (!teacher) {
+                if (retryLoginWithFetch("teachers", id, e, loginMsg)) return;
+                loginMsg.style.display = "block";
+                loginMsg.textContent = "Teacher ID not found.";
+                console.warn("ClassTeacher not found:", id, "available:", teachers.map(function(t) { return t.id; }));
+                return;
+            }
             if (teacher.password !== password) { loginMsg.style.display = "block"; loginMsg.textContent = "Incorrect password."; return; }
             var ctOf = teacher.classTeacherOf || (teacher.isClassTeacher && teacher.classId ? [teacher.classId] : []);
             var ctClassId = ctOf.length > 0 ? ctOf[0] : (teacher.classes || [teacher.classId || ""])[0];
@@ -152,7 +209,7 @@ var Auth = (function() {
                 showCTTab("overview");
                 if ((location.hash || "").indexOf("#dashboard") !== 0) history.pushState({ page: "dashboard" }, "", "#dashboard");
             };
-            loginFirebaseAuth(email, password, loginSuccess);
+            loginFirebaseAuth(email, password, function() { loginSuccess(); withPostLoginData(); });
         } else if (role === "parent") {
             id = document.getElementById("childId").value.trim();
             password = document.getElementById("parentPassword").value;
@@ -161,7 +218,12 @@ var Auth = (function() {
             for (var i = 0; i < studentAccounts.length; i++) {
                 if (studentAccounts[i].id === id) { childStudent = studentAccounts[i]; break; }
             }
-            if (!childStudent) { loginMsg.style.display = "block"; loginMsg.textContent = "Student account not found."; return; }
+            if (!childStudent) {
+                if (retryLoginWithFetch("students", id, e, loginMsg)) return;
+                loginMsg.style.display = "block";
+                loginMsg.textContent = "Student account not found.";
+                return;
+            }
             var email = id.toLowerCase() + "@imsg.edu.pk";
             var loginSuccess = function() {
                 currentUser = { id: "PARENT-" + id, name: "Parent of " + childStudent.name, role: "parent", subject: null, childId: id, classId: childStudent.classId };
@@ -175,7 +237,7 @@ var Auth = (function() {
                 showParentTab("progress");
                 if ((location.hash || "").indexOf("#dashboard") !== 0) history.pushState({ page: "dashboard" }, "", "#dashboard");
             };
-            loginFirebaseAuth(email, password, loginSuccess);
+            loginFirebaseAuth(email, password, function() { loginSuccess(); withPostLoginData(); });
         } else if (role === "principal") {
             id = document.getElementById("principalId").value.trim().toLowerCase();
             password = document.getElementById("principalPassword").value;
@@ -196,7 +258,7 @@ var Auth = (function() {
                 showPrincipalTab("school");
                 if ((location.hash || "").indexOf("#dashboard") !== 0) history.pushState({ page: "dashboard" }, "", "#dashboard");
             };
-            loginFirebaseAuth(email, password, loginSuccess);
+            loginFirebaseAuth(email, password, function() { loginSuccess(); withPostLoginData(); });
         }
     }
 

@@ -314,6 +314,7 @@ var QuizEngine = (function() {
             var tp = attempt.topicPerformance[t];
             tp.percentage = tp.total > 0 ? Number(((tp.correct / tp.total) * 100).toFixed(2)) : 0;
         }
+        if (!attempt.id) attempt.id = attempt.attemptId; // IndexedDB keyPath is "id"
         allAttempts.push(attempt);
         try { if (typeof db !== "undefined") db.collection("attempts").doc(attempt.attemptId).set(attempt); } catch(e) {}
         var uid = user ? user.id : "unknown";

@@ -140,23 +140,47 @@
             }
         });
 
+        // The "Empty Data" / "Recent Attempts" suites assume an empty ambient
+        // attempt list. Real attempts now persist to IndexedDB (they used to
+        // be silently wiped by the missing-keyPath bug), so a run against a
+        // live profile would fail on leftover app data. Isolate the global
+        // for the duration of the run, then restore it — including shared
+        // storage — so the suite is deterministic and never leaves fixture
+        // state (or an empty list) behind for the app.
+        function isolateAmbientAttempts() {
+            var snap = allAttempts.slice();
+            allAttempts = [];
+            return snap;
+        }
+        function restoreAmbientAttempts(snap) {
+            allAttempts = snap;
+            try { LocalDB.putAll("allAttempts", snap); } catch(e) {}
+            try { localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(snap)); } catch(e) {}
+        }
+
         function runAllTests() {
             if (!appReady) { alert("Still loading, please wait..."); return; }
-            var result = TestRunner.run(function() {
-                try { runAuthTests(); } catch(e) { TestRunner.suite("Auth"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runStudentTests(); } catch(e) { TestRunner.suite("Students"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runTeacherTests(); } catch(e) { TestRunner.suite("Teachers"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runQuizTests(); } catch(e) { TestRunner.suite("Quiz"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runQuestionTests(); } catch(e) { TestRunner.suite("Questions"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runAnalyticsTests(); } catch(e) { TestRunner.suite("Analytics"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runTeacherAnalyticsFlowTests(); } catch(e) { TestRunner.suite("Teacher Analytics Flow"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runRecommendationTests(); } catch(e) { TestRunner.suite("Recommendations"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runAssignmentTests(); } catch(e) { TestRunner.suite("Assignments"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runExamEngineTests(); } catch(e) { TestRunner.suite("Exam Engine"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runSimilarityTests(); } catch(e) { TestRunner.suite("Similarity"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runOMRTests(); } catch(e) { TestRunner.suite("OMR"); TestRunner.assert(false, "CRASHED: " + e.message); }
-                try { runPersistenceTests(); } catch(e) { TestRunner.suite("Persistence"); TestRunner.assert(false, "CRASHED: " + e.message); }
-            });
+            var ambientAttempts = isolateAmbientAttempts();
+            var result;
+            try {
+                result = TestRunner.run(function() {
+                    try { runAuthTests(); } catch(e) { TestRunner.suite("Auth"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runStudentTests(); } catch(e) { TestRunner.suite("Students"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runTeacherTests(); } catch(e) { TestRunner.suite("Teachers"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runQuizTests(); } catch(e) { TestRunner.suite("Quiz"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runQuestionTests(); } catch(e) { TestRunner.suite("Questions"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runAnalyticsTests(); } catch(e) { TestRunner.suite("Analytics"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runTeacherAnalyticsFlowTests(); } catch(e) { TestRunner.suite("Teacher Analytics Flow"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runRecommendationTests(); } catch(e) { TestRunner.suite("Recommendations"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runAssignmentTests(); } catch(e) { TestRunner.suite("Assignments"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runExamEngineTests(); } catch(e) { TestRunner.suite("Exam Engine"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runSimilarityTests(); } catch(e) { TestRunner.suite("Similarity"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runOMRTests(); } catch(e) { TestRunner.suite("OMR"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                    try { runPersistenceTests(); } catch(e) { TestRunner.suite("Persistence"); TestRunner.assert(false, "CRASHED: " + e.message); }
+                });
+            } finally {
+                restoreAmbientAttempts(ambientAttempts);
+            }
             showResults(result);
         }
 
@@ -173,12 +197,18 @@
                 omr: runOMRTests,
                 persistence: runPersistenceTests
             };
-            var result = TestRunner.run(function() {
-                try { fnMap[test](); } catch(e) {
-                    TestRunner.suite(test);
-                    TestRunner.assert(false, "CRASHED: " + e.message);
-                }
-            });
+            var ambientAttempts = isolateAmbientAttempts();
+            var result;
+            try {
+                result = TestRunner.run(function() {
+                    try { fnMap[test](); } catch(e) {
+                        TestRunner.suite(test);
+                        TestRunner.assert(false, "CRASHED: " + e.message);
+                    }
+                });
+            } finally {
+                restoreAmbientAttempts(ambientAttempts);
+            }
             showResults(result);
         }
 
