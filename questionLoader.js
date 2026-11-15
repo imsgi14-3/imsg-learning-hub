@@ -52,6 +52,12 @@ var QuestionLoader = (function() {
                 var meta = chapterConfig[chapterNum] || data;
                 // Bank files may be { questions: [...] } or a bare array.
                 var qs = Array.isArray(data) ? data : (data.questions || []);
+                // Retired clone variants (Phase 3 Chemistry deduplication)
+                // stay in the JSON — reversible via tools/retire-questions.js
+                // --undo — but never enter the active pool, so every consumer
+                // below (allQuestions, chapter caches, stats, topics) sees the
+                // same deduplicated bank.
+                qs = qs.filter(function(q) { return q && !q.retired; });
                 for (var i = 0; i < qs.length; i++) {
                     if (!qs[i].subject) qs[i].subject = meta.subject;
                     if (!qs[i].grade) qs[i].grade = meta.grade;

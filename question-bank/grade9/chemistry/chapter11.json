@@ -70,7 +70,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-001",
-    "legacy_id": "CH11-MCQ-0002"
+    "legacy_id": "CH11-MCQ-0002",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0003",
@@ -107,7 +108,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-001",
-    "legacy_id": "CH11-MCQ-0003"
+    "legacy_id": "CH11-MCQ-0003",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0004",
@@ -144,7 +146,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-001",
-    "legacy_id": "CH11-MCQ-0004"
+    "legacy_id": "CH11-MCQ-0004",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0005",
@@ -181,7 +184,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-001",
-    "legacy_id": "CH11-MCQ-0005"
+    "legacy_id": "CH11-MCQ-0005",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0006",
@@ -218,7 +222,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-001",
-    "legacy_id": "CH11-MCQ-0007"
+    "legacy_id": "CH11-MCQ-0007",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0007",
@@ -255,7 +260,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-001",
-    "legacy_id": "CH11-MCQ-0008"
+    "legacy_id": "CH11-MCQ-0008",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0008",
@@ -328,7 +334,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-002",
-    "legacy_id": "CH11-MCQ-0010"
+    "legacy_id": "CH11-MCQ-0010",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0010",
@@ -365,7 +372,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-002",
-    "legacy_id": "CH11-MCQ-0011"
+    "legacy_id": "CH11-MCQ-0011",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0011",
@@ -402,7 +410,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-002",
-    "legacy_id": "CH11-MCQ-0012"
+    "legacy_id": "CH11-MCQ-0012",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0012",
@@ -439,7 +448,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-002",
-    "legacy_id": "CH11-MCQ-0013"
+    "legacy_id": "CH11-MCQ-0013",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0013",
@@ -476,7 +486,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-002",
-    "legacy_id": "CH11-MCQ-0015"
+    "legacy_id": "CH11-MCQ-0015",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0014",
@@ -513,7 +524,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-002",
-    "legacy_id": "CH11-MCQ-0016"
+    "legacy_id": "CH11-MCQ-0016",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0015",
@@ -586,7 +598,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-003",
-    "legacy_id": "CH11-MCQ-0018"
+    "legacy_id": "CH11-MCQ-0018",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0017",
@@ -623,7 +636,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-003",
-    "legacy_id": "CH11-MCQ-0019"
+    "legacy_id": "CH11-MCQ-0019",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0018",
@@ -660,7 +674,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-003",
-    "legacy_id": "CH11-MCQ-0020"
+    "legacy_id": "CH11-MCQ-0020",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0019",
@@ -697,7 +712,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-003",
-    "legacy_id": "CH11-MCQ-0021"
+    "legacy_id": "CH11-MCQ-0021",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0020",
@@ -734,7 +750,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-003",
-    "legacy_id": "CH11-MCQ-0023"
+    "legacy_id": "CH11-MCQ-0023",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0021",
@@ -771,7 +788,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-003",
-    "legacy_id": "CH11-MCQ-0024"
+    "legacy_id": "CH11-MCQ-0024",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0022",
@@ -844,7 +862,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-004",
-    "legacy_id": "CH11-MCQ-0026"
+    "legacy_id": "CH11-MCQ-0026",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0024",
@@ -881,7 +900,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-004",
-    "legacy_id": "CH11-MCQ-0027"
+    "legacy_id": "CH11-MCQ-0027",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0025",
@@ -918,7 +938,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-004",
-    "legacy_id": "CH11-MCQ-0028"
+    "legacy_id": "CH11-MCQ-0028",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0026",
@@ -955,7 +976,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-004",
-    "legacy_id": "CH11-MCQ-0029"
+    "legacy_id": "CH11-MCQ-0029",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0027",
@@ -992,7 +1014,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-004",
-    "legacy_id": "CH11-MCQ-0031"
+    "legacy_id": "CH11-MCQ-0031",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0028",
@@ -1029,7 +1052,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-004",
-    "legacy_id": "CH11-MCQ-0032"
+    "legacy_id": "CH11-MCQ-0032",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0029",
@@ -1102,7 +1126,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-005",
-    "legacy_id": "CH11-MCQ-0034"
+    "legacy_id": "CH11-MCQ-0034",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0031",
@@ -1139,7 +1164,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-005",
-    "legacy_id": "CH11-MCQ-0035"
+    "legacy_id": "CH11-MCQ-0035",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0032",
@@ -1176,7 +1202,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-005",
-    "legacy_id": "CH11-MCQ-0036"
+    "legacy_id": "CH11-MCQ-0036",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0033",
@@ -1213,7 +1240,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-005",
-    "legacy_id": "CH11-MCQ-0037"
+    "legacy_id": "CH11-MCQ-0037",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0034",
@@ -1250,7 +1278,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-005",
-    "legacy_id": "CH11-MCQ-0039"
+    "legacy_id": "CH11-MCQ-0039",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0035",
@@ -1287,7 +1316,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-005",
-    "legacy_id": "CH11-MCQ-0040"
+    "legacy_id": "CH11-MCQ-0040",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0036",
@@ -1360,7 +1390,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-006",
-    "legacy_id": "CH11-MCQ-0042"
+    "legacy_id": "CH11-MCQ-0042",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0038",
@@ -1397,7 +1428,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-006",
-    "legacy_id": "CH11-MCQ-0044"
+    "legacy_id": "CH11-MCQ-0044",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0039",
@@ -1434,7 +1466,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-006",
-    "legacy_id": "CH11-MCQ-0045"
+    "legacy_id": "CH11-MCQ-0045",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0040",
@@ -1471,7 +1504,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-006",
-    "legacy_id": "CH11-MCQ-0047"
+    "legacy_id": "CH11-MCQ-0047",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0041",
@@ -1508,7 +1542,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-006",
-    "legacy_id": "CH11-MCQ-0048"
+    "legacy_id": "CH11-MCQ-0048",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0042",
@@ -1581,7 +1616,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-007",
-    "legacy_id": "CH11-MCQ-0050"
+    "legacy_id": "CH11-MCQ-0050",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0044",
@@ -1618,7 +1654,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-007",
-    "legacy_id": "CH11-MCQ-0052"
+    "legacy_id": "CH11-MCQ-0052",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0045",
@@ -1655,7 +1692,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-007",
-    "legacy_id": "CH11-MCQ-0053"
+    "legacy_id": "CH11-MCQ-0053",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0046",
@@ -1692,7 +1730,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-007",
-    "legacy_id": "CH11-MCQ-0055"
+    "legacy_id": "CH11-MCQ-0055",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0047",
@@ -1729,7 +1768,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-007",
-    "legacy_id": "CH11-MCQ-0056"
+    "legacy_id": "CH11-MCQ-0056",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0048",
@@ -1802,7 +1842,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-008",
-    "legacy_id": "CH11-MCQ-0058"
+    "legacy_id": "CH11-MCQ-0058",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0050",
@@ -1839,7 +1880,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-008",
-    "legacy_id": "CH11-MCQ-0059"
+    "legacy_id": "CH11-MCQ-0059",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0051",
@@ -1876,7 +1918,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-008",
-    "legacy_id": "CH11-MCQ-0060"
+    "legacy_id": "CH11-MCQ-0060",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0052",
@@ -1913,7 +1956,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-008",
-    "legacy_id": "CH11-MCQ-0061"
+    "legacy_id": "CH11-MCQ-0061",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0053",
@@ -1950,7 +1994,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-008",
-    "legacy_id": "CH11-MCQ-0063"
+    "legacy_id": "CH11-MCQ-0063",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0054",
@@ -1987,7 +2032,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH11-MCQ-008",
-    "legacy_id": "CH11-MCQ-0064"
+    "legacy_id": "CH11-MCQ-0064",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0055",
@@ -2101,7 +2147,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH11-MCQ-0001",
     "concept_family_id": "CH11-AIR-COMPOSITION",
-    "legacy_id": "CH11-MCQ-0057"
+    "legacy_id": "CH11-MCQ-0057",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0058",
@@ -2215,7 +2262,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH11-MCQ-0008",
     "concept_family_id": "CH11-CARBON-DIOXIDE-SOURCE",
-    "legacy_id": "CH11-MCQ-0060"
+    "legacy_id": "CH11-MCQ-0060",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0061",
@@ -2329,7 +2377,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH11-MCQ-0015",
     "concept_family_id": "CH11-CARBON-MONOXIDE",
-    "legacy_id": "CH11-MCQ-0063"
+    "legacy_id": "CH11-MCQ-0063",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0064",
@@ -2443,7 +2492,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH11-MCQ-0042",
     "concept_family_id": "CH11-CATALYTIC-CONVERTER",
-    "legacy_id": "CH11-MCQ-0066"
+    "legacy_id": "CH11-MCQ-0066",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0067",
@@ -2557,7 +2607,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH11-MCQ-0029",
     "concept_family_id": "CH11-GREENHOUSE-GASES",
-    "legacy_id": "CH11-MCQ-0069"
+    "legacy_id": "CH11-MCQ-0069",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0070",
@@ -2671,7 +2722,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH11-MCQ-0022",
     "concept_family_id": "CH11-PARTICULATES",
-    "legacy_id": "CH11-MCQ-0072"
+    "legacy_id": "CH11-MCQ-0072",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0073",
@@ -2785,7 +2837,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH11-MCQ-0048",
     "concept_family_id": "CH11-POLLUTION-REDUCTION",
-    "legacy_id": "CH11-MCQ-0075"
+    "legacy_id": "CH11-MCQ-0075",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0076",
@@ -2861,7 +2914,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH11-MCQ-0001",
     "concept_family_id": "CH11-AIR-COMPOSITION",
-    "legacy_id": "CH11-MCQ-0085"
+    "legacy_id": "CH11-MCQ-0085",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0078",
@@ -2899,7 +2953,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH11-MCQ-0008",
     "concept_family_id": "CH11-CARBON-DIOXIDE-SOURCE",
-    "legacy_id": "CH11-MCQ-0086"
+    "legacy_id": "CH11-MCQ-0086",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0079",
@@ -2937,7 +2992,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH11-MCQ-0015",
     "concept_family_id": "CH11-CARBON-MONOXIDE",
-    "legacy_id": "CH11-MCQ-0087"
+    "legacy_id": "CH11-MCQ-0087",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0080",
@@ -2975,7 +3031,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH11-MCQ-0042",
     "concept_family_id": "CH11-CATALYTIC-CONVERTER",
-    "legacy_id": "CH11-MCQ-0088"
+    "legacy_id": "CH11-MCQ-0088",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0081",
@@ -3013,7 +3070,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH11-MCQ-0029",
     "concept_family_id": "CH11-GREENHOUSE-GASES",
-    "legacy_id": "CH11-MCQ-0089"
+    "legacy_id": "CH11-MCQ-0089",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0082",
@@ -3051,7 +3109,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH11-MCQ-0022",
     "concept_family_id": "CH11-PARTICULATES",
-    "legacy_id": "CH11-MCQ-0090"
+    "legacy_id": "CH11-MCQ-0090",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0083",
@@ -3089,7 +3148,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH11-MCQ-0048",
     "concept_family_id": "CH11-POLLUTION-REDUCTION",
-    "legacy_id": "CH11-MCQ-0091"
+    "legacy_id": "CH11-MCQ-0091",
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0084",
@@ -3127,7 +3187,8 @@
     "bank_variant": "authored-recall-v3.1-final",
     "original_seed_id": "CH11-MCQ-0036",
     "concept_family_id": "CH11-ACID-RAIN",
-    "legacy_id": null
+    "legacy_id": null,
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0085",
@@ -3165,7 +3226,8 @@
     "bank_variant": "authored-recall-v3.1-final",
     "original_seed_id": "CH11-MCQ-0001",
     "concept_family_id": "CH11-AIR-COMPOSITION",
-    "legacy_id": null
+    "legacy_id": null,
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0086",
@@ -3203,7 +3265,8 @@
     "bank_variant": "authored-recall-v3.1-final",
     "original_seed_id": "CH11-MCQ-0008",
     "concept_family_id": "CH11-CARBON-DIOXIDE-SOURCE",
-    "legacy_id": null
+    "legacy_id": null,
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0087",
@@ -3241,7 +3304,8 @@
     "bank_variant": "authored-recall-v3.1-final",
     "original_seed_id": "CH11-MCQ-0015",
     "concept_family_id": "CH11-CARBON-MONOXIDE",
-    "legacy_id": null
+    "legacy_id": null,
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0088",
@@ -3279,7 +3343,8 @@
     "bank_variant": "authored-recall-v3.1-final",
     "original_seed_id": "CH11-MCQ-0042",
     "concept_family_id": "CH11-CATALYTIC-CONVERTER",
-    "legacy_id": null
+    "legacy_id": null,
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0089",
@@ -3317,7 +3382,8 @@
     "bank_variant": "authored-recall-v3.1-final",
     "original_seed_id": "CH11-MCQ-0029",
     "concept_family_id": "CH11-GREENHOUSE-GASES",
-    "legacy_id": null
+    "legacy_id": null,
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0090",
@@ -3355,7 +3421,8 @@
     "bank_variant": "authored-recall-v3.1-final",
     "original_seed_id": "CH11-MCQ-0022",
     "concept_family_id": "CH11-PARTICULATES",
-    "legacy_id": null
+    "legacy_id": null,
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0091",
@@ -3393,7 +3460,8 @@
     "bank_variant": "authored-recall-v3.1-final",
     "original_seed_id": "CH11-MCQ-0048",
     "concept_family_id": "CH11-POLLUTION-REDUCTION",
-    "legacy_id": null
+    "legacy_id": null,
+    "retired": true
   },
   {
     "id": "CH11-MCQ-0092",

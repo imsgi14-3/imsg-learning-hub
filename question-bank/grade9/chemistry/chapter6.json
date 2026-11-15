@@ -70,7 +70,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-001",
-    "legacy_id": "CH06-MCQ-0002"
+    "legacy_id": "CH06-MCQ-0002",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0003",
@@ -107,7 +108,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-001",
-    "legacy_id": "CH06-MCQ-0003"
+    "legacy_id": "CH06-MCQ-0003",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0004",
@@ -144,7 +146,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-001",
-    "legacy_id": "CH06-MCQ-0004"
+    "legacy_id": "CH06-MCQ-0004",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0005",
@@ -181,7 +184,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-001",
-    "legacy_id": "CH06-MCQ-0005"
+    "legacy_id": "CH06-MCQ-0005",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0006",
@@ -218,7 +222,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-001",
-    "legacy_id": "CH06-MCQ-0006"
+    "legacy_id": "CH06-MCQ-0006",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0007",
@@ -255,7 +260,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-001",
-    "legacy_id": "CH06-MCQ-0007"
+    "legacy_id": "CH06-MCQ-0007",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0008",
@@ -292,7 +298,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-001",
-    "legacy_id": "CH06-MCQ-0008"
+    "legacy_id": "CH06-MCQ-0008",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0009",
@@ -365,7 +372,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-002",
-    "legacy_id": "CH06-MCQ-0010"
+    "legacy_id": "CH06-MCQ-0010",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0011",
@@ -402,7 +410,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-002",
-    "legacy_id": "CH06-MCQ-0011"
+    "legacy_id": "CH06-MCQ-0011",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0012",
@@ -439,7 +448,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-002",
-    "legacy_id": "CH06-MCQ-0012"
+    "legacy_id": "CH06-MCQ-0012",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0013",
@@ -476,7 +486,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-002",
-    "legacy_id": "CH06-MCQ-0013"
+    "legacy_id": "CH06-MCQ-0013",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0014",
@@ -513,7 +524,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-002",
-    "legacy_id": "CH06-MCQ-0015"
+    "legacy_id": "CH06-MCQ-0015",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0015",
@@ -550,7 +562,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-002",
-    "legacy_id": "CH06-MCQ-0016"
+    "legacy_id": "CH06-MCQ-0016",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0016",
@@ -623,7 +636,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-003",
-    "legacy_id": "CH06-MCQ-0018"
+    "legacy_id": "CH06-MCQ-0018",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0018",
@@ -660,7 +674,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-003",
-    "legacy_id": "CH06-MCQ-0019"
+    "legacy_id": "CH06-MCQ-0019",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0019",
@@ -697,7 +712,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-003",
-    "legacy_id": "CH06-MCQ-0020"
+    "legacy_id": "CH06-MCQ-0020",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0020",
@@ -734,7 +750,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-003",
-    "legacy_id": "CH06-MCQ-0021"
+    "legacy_id": "CH06-MCQ-0021",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0021",
@@ -771,7 +788,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-003",
-    "legacy_id": "CH06-MCQ-0022"
+    "legacy_id": "CH06-MCQ-0022",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0022",
@@ -808,7 +826,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-003",
-    "legacy_id": "CH06-MCQ-0023"
+    "legacy_id": "CH06-MCQ-0023",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0023",
@@ -845,7 +864,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-003",
-    "legacy_id": "CH06-MCQ-0024"
+    "legacy_id": "CH06-MCQ-0024",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0024",
@@ -918,7 +938,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-004",
-    "legacy_id": "CH06-MCQ-0026"
+    "legacy_id": "CH06-MCQ-0026",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0026",
@@ -955,7 +976,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-004",
-    "legacy_id": "CH06-MCQ-0027"
+    "legacy_id": "CH06-MCQ-0027",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0027",
@@ -992,7 +1014,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-004",
-    "legacy_id": "CH06-MCQ-0028"
+    "legacy_id": "CH06-MCQ-0028",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0028",
@@ -1029,7 +1052,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-004",
-    "legacy_id": "CH06-MCQ-0029"
+    "legacy_id": "CH06-MCQ-0029",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0029",
@@ -1066,7 +1090,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-004",
-    "legacy_id": "CH06-MCQ-0031"
+    "legacy_id": "CH06-MCQ-0031",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0030",
@@ -1103,7 +1128,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-004",
-    "legacy_id": "CH06-MCQ-0032"
+    "legacy_id": "CH06-MCQ-0032",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0031",
@@ -1176,7 +1202,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-005",
-    "legacy_id": "CH06-MCQ-0034"
+    "legacy_id": "CH06-MCQ-0034",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0033",
@@ -1213,7 +1240,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-005",
-    "legacy_id": "CH06-MCQ-0035"
+    "legacy_id": "CH06-MCQ-0035",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0034",
@@ -1250,7 +1278,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-005",
-    "legacy_id": "CH06-MCQ-0036"
+    "legacy_id": "CH06-MCQ-0036",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0035",
@@ -1287,7 +1316,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-005",
-    "legacy_id": "CH06-MCQ-0037"
+    "legacy_id": "CH06-MCQ-0037",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0036",
@@ -1324,7 +1354,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-005",
-    "legacy_id": "CH06-MCQ-0039"
+    "legacy_id": "CH06-MCQ-0039",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0037",
@@ -1361,7 +1392,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-005",
-    "legacy_id": "CH06-MCQ-0040"
+    "legacy_id": "CH06-MCQ-0040",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0038",
@@ -1434,7 +1466,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-006",
-    "legacy_id": "CH06-MCQ-0042"
+    "legacy_id": "CH06-MCQ-0042",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0040",
@@ -1471,7 +1504,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-006",
-    "legacy_id": "CH06-MCQ-0043"
+    "legacy_id": "CH06-MCQ-0043",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0041",
@@ -1508,7 +1542,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-006",
-    "legacy_id": "CH06-MCQ-0044"
+    "legacy_id": "CH06-MCQ-0044",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0042",
@@ -1545,7 +1580,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-006",
-    "legacy_id": "CH06-MCQ-0045"
+    "legacy_id": "CH06-MCQ-0045",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0043",
@@ -1582,7 +1618,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-006",
-    "legacy_id": "CH06-MCQ-0046"
+    "legacy_id": "CH06-MCQ-0046",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0044",
@@ -1619,7 +1656,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-006",
-    "legacy_id": "CH06-MCQ-0047"
+    "legacy_id": "CH06-MCQ-0047",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0045",
@@ -1656,7 +1694,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-006",
-    "legacy_id": "CH06-MCQ-0048"
+    "legacy_id": "CH06-MCQ-0048",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0046",
@@ -1729,7 +1768,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-007",
-    "legacy_id": "CH06-MCQ-0050"
+    "legacy_id": "CH06-MCQ-0050",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0048",
@@ -1766,7 +1806,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-007",
-    "legacy_id": "CH06-MCQ-0051"
+    "legacy_id": "CH06-MCQ-0051",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0049",
@@ -1803,7 +1844,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-007",
-    "legacy_id": "CH06-MCQ-0052"
+    "legacy_id": "CH06-MCQ-0052",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0050",
@@ -1840,7 +1882,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-007",
-    "legacy_id": "CH06-MCQ-0053"
+    "legacy_id": "CH06-MCQ-0053",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0051",
@@ -1877,7 +1920,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-007",
-    "legacy_id": "CH06-MCQ-0055"
+    "legacy_id": "CH06-MCQ-0055",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0052",
@@ -1914,7 +1958,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-007",
-    "legacy_id": "CH06-MCQ-0056"
+    "legacy_id": "CH06-MCQ-0056",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0053",
@@ -1987,7 +2032,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-008",
-    "legacy_id": "CH06-MCQ-0058"
+    "legacy_id": "CH06-MCQ-0058",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0055",
@@ -2024,7 +2070,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-008",
-    "legacy_id": "CH06-MCQ-0059"
+    "legacy_id": "CH06-MCQ-0059",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0056",
@@ -2061,7 +2108,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-008",
-    "legacy_id": "CH06-MCQ-0060"
+    "legacy_id": "CH06-MCQ-0060",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0057",
@@ -2098,7 +2146,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-008",
-    "legacy_id": "CH06-MCQ-0061"
+    "legacy_id": "CH06-MCQ-0061",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0058",
@@ -2135,7 +2184,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-008",
-    "legacy_id": "CH06-MCQ-0063"
+    "legacy_id": "CH06-MCQ-0063",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0059",
@@ -2172,7 +2222,8 @@
     "stimulus": null,
     "bank_variant": "concept-expansion",
     "original_seed_id": "CH06-MCQ-008",
-    "legacy_id": "CH06-MCQ-0064"
+    "legacy_id": "CH06-MCQ-0064",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0060",
@@ -2286,7 +2337,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH06-MCQ-0038",
     "concept_family_id": "CH06-BALANCING-EQUATIONS",
-    "legacy_id": "CH06-MCQ-0062"
+    "legacy_id": "CH06-MCQ-0062",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0063",
@@ -2400,7 +2452,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH06-MCQ-0009",
     "concept_family_id": "CH06-EMPIRICAL-FORMULA",
-    "legacy_id": "CH06-MCQ-0065"
+    "legacy_id": "CH06-MCQ-0065",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0066",
@@ -2514,7 +2567,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH06-MCQ-0053",
     "concept_family_id": "CH06-FORMULA-DEDUCTION",
-    "legacy_id": "CH06-MCQ-0068"
+    "legacy_id": "CH06-MCQ-0068",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0069",
@@ -2628,7 +2682,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH06-MCQ-0046",
     "concept_family_id": "CH06-IONIC-EQUATION",
-    "legacy_id": "CH06-MCQ-0071"
+    "legacy_id": "CH06-MCQ-0071",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0072",
@@ -2742,7 +2797,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH06-MCQ-0016",
     "concept_family_id": "CH06-MOLE",
-    "legacy_id": "CH06-MCQ-0074"
+    "legacy_id": "CH06-MCQ-0074",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0075",
@@ -2856,7 +2912,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH06-MCQ-0001",
     "concept_family_id": "CH06-MOLECULAR-FORMULA",
-    "legacy_id": "CH06-MCQ-0077"
+    "legacy_id": "CH06-MCQ-0077",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0078",
@@ -2970,7 +3027,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH06-MCQ-0024",
     "concept_family_id": "CH06-MOLES-FROM-MASS",
-    "legacy_id": "CH06-MCQ-0080"
+    "legacy_id": "CH06-MCQ-0080",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0081",
@@ -3084,7 +3142,8 @@
     "bank_variant": "authored-expansion-v3.1",
     "original_seed_id": "CH06-MCQ-0031",
     "concept_family_id": "CH06-PARTICLES-FROM-MOLES",
-    "legacy_id": "CH06-MCQ-0083"
+    "legacy_id": "CH06-MCQ-0083",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0084",
@@ -3122,7 +3181,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH06-MCQ-0038",
     "concept_family_id": "CH06-BALANCING-EQUATIONS",
-    "legacy_id": "CH06-MCQ-0096"
+    "legacy_id": "CH06-MCQ-0096",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0085",
@@ -3160,7 +3220,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH06-MCQ-0009",
     "concept_family_id": "CH06-EMPIRICAL-FORMULA",
-    "legacy_id": "CH06-MCQ-0097"
+    "legacy_id": "CH06-MCQ-0097",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0086",
@@ -3198,7 +3259,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH06-MCQ-0053",
     "concept_family_id": "CH06-FORMULA-DEDUCTION",
-    "legacy_id": "CH06-MCQ-0098"
+    "legacy_id": "CH06-MCQ-0098",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0087",
@@ -3236,7 +3298,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH06-MCQ-0046",
     "concept_family_id": "CH06-IONIC-EQUATION",
-    "legacy_id": "CH06-MCQ-0099"
+    "legacy_id": "CH06-MCQ-0099",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0088",
@@ -3274,7 +3337,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH06-MCQ-0016",
     "concept_family_id": "CH06-MOLE",
-    "legacy_id": "CH06-MCQ-0100"
+    "legacy_id": "CH06-MCQ-0100",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0089",
@@ -3312,7 +3376,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH06-MCQ-0001",
     "concept_family_id": "CH06-MOLECULAR-FORMULA",
-    "legacy_id": "CH06-MCQ-0101"
+    "legacy_id": "CH06-MCQ-0101",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0090",
@@ -3350,7 +3415,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH06-MCQ-0024",
     "concept_family_id": "CH06-MOLES-FROM-MASS",
-    "legacy_id": "CH06-MCQ-0102"
+    "legacy_id": "CH06-MCQ-0102",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0091",
@@ -3388,7 +3454,8 @@
     "bank_variant": "authored-recall-v3.1",
     "original_seed_id": "CH06-MCQ-0031",
     "concept_family_id": "CH06-PARTICLES-FROM-MOLES",
-    "legacy_id": "CH06-MCQ-0103"
+    "legacy_id": "CH06-MCQ-0103",
+    "retired": true
   },
   {
     "id": "CH06-MCQ-0092",
