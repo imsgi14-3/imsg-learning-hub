@@ -76,10 +76,74 @@ var ExamEngine = (function() {
     // At most one question per similarity set, where a scenario stimulus set
     // counts as a single question. The returned pool has disjoint similarity
     // clusters, so any selection made from it is duplicate-free by
-    // construction. No-op when the similarity data has not loaded.
+    // construction. The similarity layer degrades to a no-op when its data
+    // has not loaded; the fingerprint layer below always runs.
     function dedupePool(pool) {
-        if (typeof Similarity === "undefined" || !Similarity) return pool;
-        return Similarity.filterUnits(pool);
+        var out = pool;
+        if (typeof Similarity !== "undefined" && Similarity) out = Similarity.filterUnits(out);
+        return fingerprintDedupe(out);
+    }
+
+    // ---- Option-fingerprint dedupe ----------------------------------------
+    // Template-generated clones rephrase the stem but keep the option set and
+    // the correct answer identical. The fingerprint therefore ignores the
+    // stem on purpose: that is what lets it catch reworded copies the
+    // similarity-pairs file never saw, with no data file and no async load.
+
+    function normalizeFingerprintText(s) {
+        return String(s === undefined || s === null ? "" : s)
+            .toLowerCase()
+            .replace(/\s+/g, " ")
+            .trim()
+            .replace(/^[.,;:!?]+/, "")
+            .replace(/[.,;:!?]+$/, "");
+    }
+
+    // Sorted normalized options + the normalized text of the correct option.
+    // null when the question cannot be fingerprinted safely: no options, or
+    // an answer that resolves to none of them (kept, never guessed).
+    // Scenario questions are excluded — their members must survive as one
+    // whole stimulus set, and a shared option set across two different
+    // stimuli is not proof of duplication.
+    function fingerprintOf(q) {
+        if (!q || q.scenario_id) return null;
+        var opts = q.options;
+        if (!opts || !opts.length) return null;
+        var ansIdx = -1;
+        var raw = String(q.answer === undefined || q.answer === null ? "" : q.answer).trim();
+        if (raw.length === 1 && "ABCD".indexOf(raw.toUpperCase()) >= 0) {
+            ansIdx = "ABCD".indexOf(raw.toUpperCase());
+        }
+        if (ansIdx < 0 || ansIdx >= opts.length) {
+            for (var i = 0; i < opts.length; i++) {
+                if (normalizeFingerprintText(opts[i]) === normalizeFingerprintText(raw)) { ansIdx = i; break; }
+            }
+        }
+        if (ansIdx < 0 || ansIdx >= opts.length) return null;
+        var normOpts = [];
+        for (var j = 0; j < opts.length; j++) normOpts.push(normalizeFingerprintText(opts[j]));
+        var answerText = normOpts[ansIdx];
+        normOpts.sort();
+        return normOpts.join("\u0001") + "\u0002" + answerText;
+    }
+
+    // Keep the first question per fingerprint, drop the rest, preserve input
+    // order. Callers pass an already-shuffled list, so which clone survives
+    // is random. Never mutates the input.
+    function fingerprintDedupe(list) {
+        if (!list || list.length < 2) return list;
+        var seen = {};
+        var out = [];
+        for (var i = 0; i < list.length; i++) {
+            var q = list[i];
+            var fp = fingerprintOf(q);
+            if (fp !== null) {
+                if (seen[fp]) continue;
+                seen[fp] = true;
+            }
+            out.push(q);
+        }
+        return out;
     }
 
     // Multi-dimension balanced selection with best-effort fallback.
@@ -950,6 +1014,9 @@ var ExamEngine = (function() {
         shuffleOptions: shuffleOptions,
         shuffleStraightSegment: shuffleStraightSegment,
         generateVersions: generateVersions,
+        normalizeFingerprintText: normalizeFingerprintText,
+        fingerprintOf: fingerprintOf,
+        fingerprintDedupe: fingerprintDedupe,
         gradeDetected: gradeDetected,
         normAnswerLetter: normAnswerLetter,
         selectForBlueprint: selectForBlueprint,

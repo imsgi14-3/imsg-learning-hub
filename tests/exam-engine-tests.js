@@ -29,10 +29,96 @@ function runExamEngineTests() {
     var lrZero = ExamEngine.largestRemainder(10, [0, 0, 0]);
     TestRunner.assertEqual(lrZero[0] + lrZero[1] + lrZero[2], 0, "Zero pcts give zero shares");
 
+    TestRunner.suite("Exam Engine - Fingerprint Dedupe");
+
+    TestRunner.assertType(ExamEngine.fingerprintOf, "function", "fingerprintOf exists");
+    TestRunner.assertType(ExamEngine.fingerprintDedupe, "function", "fingerprintDedupe exists");
+    TestRunner.assertType(ExamEngine.normalizeFingerprintText, "function", "normalizeFingerprintText exists");
+
+    function fpQ(id, opts, ans, extra) {
+        var q = { id: id, question: id, options: opts, answer: ans };
+        if (extra) { for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) q[k] = extra[k]; }
+        return q;
+    }
+
+    // Only EDGE punctuation is stripped (leading/trailing); an internal
+    // comma stays, so "energy, source" and "energy source" remain distinct.
+    TestRunner.assertEqual(
+        ExamEngine.normalizeFingerprintText("  Energy, source. "),
+        "energy, source",
+        "normalizeFingerprintText lowercases, collapses spaces, strips edge punctuation only");
+
+    // Same option set + same correct answer: storage order and answer
+    // letter are irrelevant, only the answer TEXT matters.
+    var f1 = ExamEngine.fingerprintOf(fpQ("F1", ["alpha", "beta", "gamma", "delta"], "B"));
+    var f2 = ExamEngine.fingerprintOf(fpQ("F2", ["delta", "alpha", "gamma", "beta"], "D"));
+    TestRunner.assertNotNull(f1, "fingerprint computed for a normal MCQ");
+    TestRunner.assertEqual(f1, f2, "option order and answer letter do not change the fingerprint");
+    var f3 = ExamEngine.fingerprintOf(fpQ("F3", ["alpha", "beta", "gamma", "delta"], "beta"));
+    TestRunner.assertEqual(f1, f3, "text answers fingerprint the same as letters");
+
+    // Same options but a different correct answer are different questions.
+    var f4 = ExamEngine.fingerprintOf(fpQ("F4", ["alpha", "beta", "gamma", "delta"], "A"));
+    TestRunner.assertNotEqual(f1, f4, "same options with a different answer keep separate fingerprints");
+    var f5 = ExamEngine.fingerprintOf(fpQ("F5", ["alpha", "beta", "gamma", "epsilon"], "B"));
+    TestRunner.assertNotEqual(f1, f5, "different option sets never share a fingerprint");
+
+    // Questions that cannot be fingerprinted safely are always kept.
+    TestRunner.assertNull(ExamEngine.fingerprintOf(fpQ("NOOPTS", [], "A")), "no options -> no fingerprint");
+    TestRunner.assertNull(ExamEngine.fingerprintOf({ id: "NOANS", options: ["a", "b"], answer: "" }), "empty answer -> no fingerprint");
+    TestRunner.assertNull(ExamEngine.fingerprintOf({ id: "BADANS", options: ["a", "b"], answer: "zzz" }), "unresolvable answer -> no fingerprint");
+    TestRunner.assertNull(ExamEngine.fingerprintOf(fpQ("SCEN", ["alpha", "beta"], "A", { scenario_id: "SG" })), "scenario questions are never fingerprinted");
+
+    // Dedupe: first clone wins, input order preserved, input untouched,
+    // unique and scenario questions always survive.
+    var dupes = [
+        fpQ("D1", ["alpha", "beta", "gamma", "delta"], "B"),
+        fpQ("D2", ["alpha", "beta"], "A"),
+        fpQ("D3", ["delta", "gamma", "beta", "alpha"], "C"), // clone of D1 (answer text "beta")
+        fpQ("SCEN1", ["alpha", "beta", "gamma", "delta"], "B", { scenario_id: "SG" }),
+        fpQ("SCEN2", ["alpha", "beta", "gamma", "delta"], "B", { scenario_id: "SG" })
+    ];
+    var dd = ExamEngine.fingerprintDedupe(dupes);
+    TestRunner.assertArrayLength(dd, 4, "one clone removed; unique and scenario questions stay");
+    TestRunner.assertEqual(dd[0].id, "D1", "first clone survives");
+    TestRunner.assertEqual(dd[1].id, "D2", "unique question survives in place");
+    TestRunner.assertEqual(dd[2].id, "SCEN1", "scenario question survives");
+    TestRunner.assertEqual(dd[3].id, "SCEN2", "scenario members are never dropped");
+    TestRunner.assertEqual(dupes.length, 5, "fingerprintDedupe does not mutate the input");
+    var solo = [fpQ("S1", ["only"], "A")];
+    TestRunner.assertTrue(ExamEngine.fingerprintDedupe(solo) === solo, "single-question list returned as-is");
+
+    // Integration: selection can never return two fingerprint clones.
+    var clonePool = [
+        fpQ("K1", ["ka", "kb", "kc", "kd"], "A"),
+        fpQ("K2", ["kd", "kc", "kb", "ka"], "D"), // same answer text "ka" -> clone of K1
+        fpQ("U1", ["u1a", "u1b", "u1c", "u1d"], "A"),
+        fpQ("U2", ["u2a", "u2b", "u2c", "u2d"], "B"),
+        fpQ("U3", ["u3a", "u3b", "u3c", "u3d"], "C"),
+        fpQ("U4", ["u4a", "u4b", "u4c", "u4d"], "D")
+    ];
+    var cloneOkRuns = 0;
+    for (var cRun = 0; cRun < 10; cRun++) {
+        var cSel = ExamEngine.selectBalanced(clonePool, 5);
+        var hasK1 = false, hasK2 = false;
+        for (var cI = 0; cI < cSel.length; cI++) {
+            if (cSel[cI].id === "K1") hasK1 = true;
+            if (cSel[cI].id === "K2") hasK2 = true;
+        }
+        if (cSel.length === 5 && hasK1 !== hasK2) cloneOkRuns++;
+    }
+    TestRunner.assertEqual(cloneOkRuns, 10, "selectBalanced keeps exactly one variant of a clone pair (10 runs)");
+    var shrinkSel = ExamEngine.selectBalanced(clonePool, 99);
+    TestRunner.assertArrayLength(shrinkSel, 5, "over-asking shrinks to the deduped pool instead of repeating clones");
+
     TestRunner.suite("Exam Engine - Balanced Selection (exact when feasible)");
 
     function makeQ(id, diff, cog, fmt, topic) {
-        return { id: id, difficulty: diff, cognitive_level: cog, mode: fmt, topic: topic, question: id, options: ["a", "b", "c", "d"], answer: "A", chapter: 1 };
+        // Options are unique per id: identical option sets + identical
+        // answers are exactly what fingerprintDedupe() removes, and these
+        // fixtures exist to test selection, not deduplication. options[0]
+        // stays "a" because the version tests assert answer text "a".
+        return { id: id, difficulty: diff, cognitive_level: cog, mode: fmt, topic: topic, question: id, options: ["a", "b-" + id, "c-" + id, "d-" + id], answer: "A", chapter: 1 };
     }
     var synth = [];
     var diffs = ["easy", "medium", "hard"];
@@ -269,8 +355,13 @@ function runExamEngineTests() {
             format: { straight: 67, scenario: 33 }
         };
         var hugeSel = ExamEngine.selectForBlueprint(hugeAsg, asgPool, 20);
-        TestRunner.assertEqual(hugeSel.length, asgPool.length, "Infeasible total falls back to the whole pool");
+        // Fallback returns the whole pool AFTER dedupe: selectBalanced always
+        // runs dedupePool, so the infeasible-total fallback can never hand
+        // back two questions with the same option fingerprint.
+        var hugeDeduped = ExamEngine.fingerprintDedupe(asgPool).length;
+        TestRunner.assertEqual(hugeSel.length, hugeDeduped, "Infeasible total falls back to the whole (deduped) pool");
         TestRunner.assertGreaterThan(hugeSel.length, 0, "Fallback selection is non-empty");
+        TestRunner.assertLessThan(hugeSel.length, asgPool.length, "Fallback pool is deduped (clones removed)");
 
         var zeroSel = ExamEngine.selectForBlueprint({ total: 0, chapters: [{ chapter: 1, pct: 100 }], cognitive: { k: 30, u: 50, a: 20 }, difficulty: { easy: 40, medium: 40, hard: 20 }, format: { straight: 67, scenario: 33 } }, asgPool);
         TestRunner.assertEqual(zeroSel.length, 0, "Zero total returns empty selection");
@@ -283,7 +374,8 @@ function runExamEngineTests() {
     TestRunner.suite("Exam Engine - Joint Ratio Coupling");
 
     function jcQ(id, diff, cog, chapter) {
-        return { id: id, question: id, options: ["a", "b", "c", "d"], answer: "A",
+        // Unique options per id so fingerprint dedupe keeps the whole pool.
+        return { id: id, question: id, options: ["a", "b-" + id, "c-" + id, "d-" + id], answer: "A",
                  difficulty: diff, cognitive_level: cog, chapter: chapter, mode: "straight" };
     }
 

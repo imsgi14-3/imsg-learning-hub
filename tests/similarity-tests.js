@@ -111,10 +111,12 @@ function runSimilarityTests() {
     TestRunner.suite("Similarity - Selection integration");
 
     function makeSelQ(id, diff, cog, scenarioId, order) {
+        // Unique options per id: identical option sets would be collapsed by
+        // fingerprint dedupe, which these fixtures are not testing.
         var q = {
             id: id, chapter: 1, difficulty: diff, cognitive_level: cog,
             mode: scenarioId ? "scenario" : "straight",
-            topic: "T", question: id, options: ["a", "b", "c", "d"], answer: "A"
+            topic: "T", question: id, options: ["a", "b-" + id, "c-" + id, "d-" + id], answer: "A"
         };
         if (scenarioId) { q.scenario_id = scenarioId; q.question_order = order; q.stimulus = "case " + scenarioId; }
         return q;
@@ -230,5 +232,36 @@ function runSimilarityTests() {
     var plain = ExamEngine.selectBalanced(straight, 6);
     TestRunner.assertEqual(plain.length, 6, "No data: full count still selected");
     TestRunner.assertFalse(Similarity.isReady(), "Module is clean again after reset");
+    Similarity.reset();
+
+    TestRunner.suite("Similarity - Shipped pairs file");
+
+    // Load the real question-bank/similarity-pairs.json. Tests are
+    // synchronous, so use a synchronous XHR (the suite only ever runs
+    // from the local dev server, never file://).
+    var realPairs = null;
+    try {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "../question-bank/similarity-pairs.json", false);
+        xhr.send();
+        if (xhr.status >= 200 && xhr.status < 300) realPairs = JSON.parse(xhr.responseText);
+    } catch (eReal) { realPairs = null; }
+    TestRunner.assertNotNull(realPairs, "similarity-pairs.json loads through the test server");
+    if (realPairs && Array.isArray(realPairs.pairs)) {
+        Similarity.loadPairs(realPairs.pairs);
+        TestRunner.assertTrue(Similarity.isReady(), "shipped pairs activate at the default threshold");
+        // The screenshot family students reported (one quiz showing the same
+        // question at Q1/Q3/Q7/Q10/Q11) is a single option fingerprint —
+        // 0053 and 0054 must land in one active cluster.
+        TestRunner.assertNotNull(Similarity.clusterOf("CH15-MCQ-0053"), "biomolecule family is covered by the shipped pairs");
+        TestRunner.assertEqual(
+            Similarity.clusterOf("CH15-MCQ-0053"),
+            Similarity.clusterOf("CH15-MCQ-0054"),
+            "CH15-MCQ-0053 and CH15-MCQ-0054 share one cluster");
+        TestRunner.assertGreaterThan(Similarity.stats().activePairs, 500,
+            "regenerated file ships its fingerprint pairs as active (" + Similarity.stats().activePairs + ")");
+    } else {
+        TestRunner.assert(false, "similarity-pairs.json contains a pairs array");
+    }
     Similarity.reset();
 }

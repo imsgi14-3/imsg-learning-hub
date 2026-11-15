@@ -469,11 +469,14 @@ var UI = (function() {
         return ExamEngine.selectBalanced(pool, count, opts);
     }
 
-    // One question — or one whole scenario stimulus set — per similarity set
-    // in a generated quiz. No-op when the similarity data is not loaded.
+    // One question — or one whole scenario stimulus set — per similarity set,
+    // then one question per identical option fingerprint. Both layers are
+    // order-preserving no-ops when there is nothing to remove, and the
+    // fingerprint layer works even before the similarity data has loaded.
     function dedupeSelection(list) {
-        if (typeof Similarity === "undefined" || !Similarity) return list;
-        return Similarity.filterUnits(list);
+        var out = list;
+        if (typeof Similarity !== "undefined" && Similarity) out = Similarity.filterUnits(out);
+        return ExamEngine.fingerprintDedupe(out);
     }
 
     // What the similarity filter dropped from a hand-picked list, for the
