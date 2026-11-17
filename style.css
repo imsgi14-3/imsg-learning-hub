@@ -2761,19 +2761,21 @@ footer {
 .paper-note { font-size: 12px; font-style: italic; color: #333; margin: 6px 0 8px; }
 
 /* Fixed table layout so the printed width is split deterministically:
-   S# 4% / Question 44% / A-D 13% each (=100%). Auto layout let the
+   S# 4% / Question 42% / A-D 13.5% each (=100%). Auto layout let the
    scenario label's min-width (90px) inflate the S# column to ~93px and
    starved the Question column, forcing long questions to wrap into many
    lines and ballooning the paper to 13 pages for 60 MCQs. Fixed layout
-   keeps the paper near 8 pages for the same 60 questions. */
+   keeps the paper near 8 pages for the same 60 questions. Options carry
+   the extra 0.5% each because option text binds row height more often
+   than question text does (35 vs 25 of 60 rows in the median set). */
 .paper-table { width: 100%; border-collapse: collapse; margin-top: 4px; table-layout: fixed; }
 .paper-table th, .paper-table td { border: 1px solid #333; padding: 2px 4px; vertical-align: top; font-size: 11.5px; line-height: 1.25; overflow-wrap: break-word; }
 .paper-table thead th { background: #f0f0f0; text-align: center; font-weight: 700; }
 .paper-table thead { display: table-header-group; }
 .paper-table tr { page-break-inside: avoid; break-inside: avoid; }
 .paper-table .pt-s { width: 4%; }
-.paper-table .pt-q { width: 44%; }
-.paper-table th:not(.pt-s):not(.pt-q) { width: 13%; }
+.paper-table .pt-q { width: 42%; }
+.paper-table th:not(.pt-s):not(.pt-q) { width: 13.5%; }
 .paper-table td.pq-n { font-weight: 700; text-align: center; white-space: nowrap; }
 .pq-q { font-weight: 500; }
 .pq-c { text-align: center; }
