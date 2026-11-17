@@ -2199,13 +2199,15 @@ var UI = (function() {
                     dividerDone = true;
                 }
                 var stim = q.stimulus || q.scenario_stimulus || "";
-                // Label spans S#+Question so the narrow S# column can't
-                // wrap it into a tall stack; stimulus takes the 4 option
-                // columns. Keeps label+stimulus in ONE row so print never
-                // splits them across pages.
-                h += '<tr class="ps-head"><td colspan="2" class="ps-label">SCENARIO#' + scenNo +
-                     ' (FOR QUESTIONS ' + (i + 1) + '&ndash;' + j + ')</td>' +
-                     '<td colspan="4" class="ps-stim">' + oeEsc(stim) + '</td></tr>';
+                // One full-width cell (colspan=6): the scenario label sits
+                // as a block line above the statement, so the stimulus gets
+                // the entire row width instead of just the option columns.
+                // Single row also keeps label+statement together across
+                // page breaks.
+                h += '<tr class="ps-head"><td colspan="6" class="ps-stim">' +
+                     '<span class="ps-label">SCENARIO#' + scenNo +
+                     ' (FOR QUESTIONS ' + (i + 1) + '&ndash;' + j + ')</span>' +
+                     oeEsc(stim) + '</td></tr>';
                 for (; i < j; i++) { num++; h += row(qs[i], num); }
             } else {
                 i++; num++;
