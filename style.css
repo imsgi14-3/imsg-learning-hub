@@ -2807,9 +2807,10 @@ footer {
    0.12H-0.17H version window, Time/
    Marks row and the handwritten Roll No. row - five empty boxes, no
    digit bubbles - below it, header ends ~0.29H, grid starts ~0.31H,
-   grid cut 0.30H, row pitch <= 60 canonical px, question numbers
-   < 16px). The header sits high so the whole sheet stays on one A4
-   page even for 60 questions. The version window also excludes the
+   grid cut 0.30H, row pitch 65.9 canonical px - must stay <= 68, the
+   segment-split limit - question numbers < 16px). The header sits
+   high so the whole sheet stays on one A4 page even for 60
+   questions. The version window also excludes the
    legend by x (cells right of 0.8W are never version candidates), so
    the top-right guide boxes can never win the band tie-break. */
 .omr-sheet { position: relative; padding: 10px 8px 20px 8px; min-height: 297mm; }
@@ -2853,11 +2854,12 @@ footer {
 .omr-instr { font-size: 12px; font-weight: 700; text-decoration: underline; text-align: center; margin: 8px 0 10px; }
 .omr-banner { font-size: 12px; font-weight: 800; text-align: center; border: 3px solid #111; padding: 6px 8px; margin: 10px auto 22px; letter-spacing: 0.4px; }
 .omr-grid { display: flex; justify-content: center; gap: 5px; }
-.omr-col { display: flex; flex-direction: column; flex-shrink: 0; gap: 2px; }
-/* Vertical padding 3px -> 5px plus a 2px row gap: row pitch grows
-   27.3px -> 33.3px CSS (49.1 -> 59.9 scanner-canonical px, still <= the
-   60px row-pitch contract and well under the 68px segment-split limit
-   in omrScanner.js), so bubble rows print further apart. Header geometry
+.omr-col { display: flex; flex-direction: column; flex-shrink: 0; gap: 4px; }
+/* Vertical padding 3px -> 5px plus a 4px row gap: row pitch grows
+   27.3px -> 36.7px CSS (49.1 -> 65.9 scanner-canonical px, still under
+   the 68px segment-split limit in omrScanner.js), so bubble rows print
+   further apart - the 4px gap (not extra padding) puts the air between
+   the row boxes where it reads as line spacing. Header geometry
    (version window, grid cut) is untouched because the grid only grows
    downward into the empty space above the bottom markers. */
 .omr-cell { display: flex; align-items: center; gap: 3px; border: 1px dashed #555; padding: 5px 3px; }
