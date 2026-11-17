@@ -2199,9 +2199,13 @@ var UI = (function() {
                     dividerDone = true;
                 }
                 var stim = q.stimulus || q.scenario_stimulus || "";
-                h += '<tr class="ps-head"><td class="ps-label">SCENARIO#' + scenNo +
+                // Label spans S#+Question so the narrow S# column can't
+                // wrap it into a tall stack; stimulus takes the 4 option
+                // columns. Keeps label+stimulus in ONE row so print never
+                // splits them across pages.
+                h += '<tr class="ps-head"><td colspan="2" class="ps-label">SCENARIO#' + scenNo +
                      ' (FOR QUESTIONS ' + (i + 1) + '&ndash;' + j + ')</td>' +
-                     '<td colspan="5" class="ps-stim">' + oeEsc(stim) + '</td></tr>';
+                     '<td colspan="4" class="ps-stim">' + oeEsc(stim) + '</td></tr>';
                 for (; i < j; i++) { num++; h += row(qs[i], num); }
             } else {
                 i++; num++;

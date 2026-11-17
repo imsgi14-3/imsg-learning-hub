@@ -2760,20 +2760,29 @@ footer {
 
 .paper-note { font-size: 12px; font-style: italic; color: #333; margin: 6px 0 8px; }
 
-.paper-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
-.paper-table th, .paper-table td { border: 1px solid #333; padding: 4px 6px; vertical-align: top; font-size: 12px; }
+/* Fixed table layout so the printed width is split deterministically:
+   S# 4% / Question 44% / A-D 13% each (=100%). Auto layout let the
+   scenario label's min-width (90px) inflate the S# column to ~93px and
+   starved the Question column, forcing long questions to wrap into many
+   lines and ballooning the paper to 13 pages for 60 MCQs. Fixed layout +
+   the wider scenario label (ui.js spans it over S#+Question) keeps the
+   paper near 8 pages for the same 60 questions. */
+.paper-table { width: 100%; border-collapse: collapse; margin-top: 4px; table-layout: fixed; }
+.paper-table th, .paper-table td { border: 1px solid #333; padding: 2px 4px; vertical-align: top; font-size: 11.5px; line-height: 1.25; overflow-wrap: break-word; }
 .paper-table thead th { background: #f0f0f0; text-align: center; font-weight: 700; }
 .paper-table thead { display: table-header-group; }
 .paper-table tr { page-break-inside: avoid; break-inside: avoid; }
-.paper-table .pt-s { width: 26px; padding-left: 4px; padding-right: 4px; }
-.paper-table .pt-q { width: 34%; }
+.paper-table .pt-s { width: 4%; }
+.paper-table .pt-q { width: 44%; }
 .paper-table th:not(.pt-s):not(.pt-q) { width: 13%; }
-.paper-table td.pq-n { font-weight: 700; text-align: center; white-space: nowrap; padding-left: 4px; padding-right: 4px; }
+.paper-table td.pq-n { font-weight: 700; text-align: center; white-space: nowrap; }
 .pq-q { font-weight: 500; }
 .pq-c { text-align: center; }
 .pq-img { max-width: 240px; max-height: 120px; display: block; margin: 5px 0; }
 .ps-div td { text-align: center; font-weight: 700; background: #fff; letter-spacing: 0.5px; font-size: 12.5px; }
-.ps-label { font-weight: 700; text-align: center; background: #f7f7f7; vertical-align: middle; white-space: normal; min-width: 90px; }
+/* Label spans S#+Question (colspan=2 in ui.js). No min-width: it must
+   never widen the S# column again. */
+.ps-label { font-weight: 700; text-align: center; background: #f7f7f7; vertical-align: middle; white-space: normal; }
 .ps-stim { background: #f7f7f7; }
 .paper-sign { display: flex; justify-content: space-between; font-weight: 600; margin: 2px 0 6px; font-size: 12.5px; }
 .paper-version { font-weight: 700; font-size: 13px; text-align: center; margin-top: 6px; letter-spacing: 0.5px; }
