@@ -2802,8 +2802,9 @@ footer {
    Sized for A4: the sheet fills the printable page so the four corner
    squares map to a near-uniform scale when scanned. Bubble/row/column
    sizes and all vertical positions are locked to the scanner's
-   thresholds in omrScanner.js (legend top-right ~0.05H-0.13H, version
-   row centered ~0.135H inside the 0.12H-0.17H version window, Time/
+   thresholds in omrScanner.js (legend top-right, below the corner
+   marker, ~0.055H-0.15H; version row centered ~0.135H inside the
+   0.12H-0.17H version window, Time/
    Marks row and the handwritten Roll No. row - five empty boxes, no
    digit bubbles - below it, header ends ~0.29H, grid starts ~0.31H,
    grid cut 0.30H, row pitch <= 60 canonical px, question numbers
@@ -2820,10 +2821,13 @@ footer {
 .omr-school { font-size: 14px; font-weight: 700; letter-spacing: 1px; text-align: center; }
 .omr-title { font-size: 26px; font-weight: 800; text-align: center; max-width: 58%; margin: 4px auto 2px; letter-spacing: 0.5px; }
 .omr-tobe { font-size: 14px; text-align: center; margin-bottom: 12px; }
-/* Legend kept in the top-right corner. Its guide boxes sit at nearly
-   the same height as the version row, so omrScanner.js also filters
-   version candidates by x (right of 0.8W) to keep them out. */
-.omr-legend { position: absolute; top: 24px; right: 10px; text-align: center; }
+/* Legend kept in the top-right corner, but BELOW the 11mm corner
+   marker (marker bottom = 41.6px, so top starts at 48px) - at 24px the
+   "CORRECTLY FILLED" label ran under the black square. Absolutely
+   positioned, so the shift never moves the version row/grid below.
+   Its guide boxes sit below the version row's height, so omrScanner.js
+   filters version candidates by x (right of 0.8W) to keep them out. */
+.omr-legend { position: absolute; top: 48px; right: 10px; text-align: center; }
 .omr-llabel { font-size: 9.5px; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 2px; }
 .omr-lbox { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1.5px solid #111; margin-bottom: 3px; }
 .omr-lrow { display: flex; gap: 3px; justify-content: center; }
@@ -2849,8 +2853,14 @@ footer {
 .omr-instr { font-size: 12px; font-weight: 700; text-decoration: underline; text-align: center; margin: 8px 0 10px; }
 .omr-banner { font-size: 12px; font-weight: 800; text-align: center; border: 3px solid #111; padding: 6px 8px; margin: 10px auto 22px; letter-spacing: 0.4px; }
 .omr-grid { display: flex; justify-content: center; gap: 5px; }
-.omr-col { display: flex; flex-direction: column; flex-shrink: 0; }
-.omr-cell { display: flex; align-items: center; gap: 3px; border: 1px dashed #555; padding: 3px; }
+.omr-col { display: flex; flex-direction: column; flex-shrink: 0; gap: 2px; }
+/* Vertical padding 3px -> 5px plus a 2px row gap: row pitch grows
+   27.3px -> 33.3px CSS (49.1 -> 59.9 scanner-canonical px, still <= the
+   60px row-pitch contract and well under the 68px segment-split limit
+   in omrScanner.js), so bubble rows print further apart. Header geometry
+   (version window, grid cut) is untouched because the grid only grows
+   downward into the empty space above the bottom markers. */
+.omr-cell { display: flex; align-items: center; gap: 3px; border: 1px dashed #555; padding: 5px 3px; }
 .omr-qn { width: 28px; text-align: right; font-size: 12px; font-weight: 700; }
 
 /* Page margins for Print/Save-as-PDF. Top-level (not inside @media) so
