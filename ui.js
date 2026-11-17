@@ -2172,8 +2172,7 @@ var UI = (function() {
         h += '<div class="paper-title">' + oeEsc(meta.title || "Section A") + '</div>';
         h += '<div class="paper-meta">Class: ' + oeEsc(meta.className || "-") +
              ' &nbsp;|&nbsp; Time: ' + oeEsc(meta.time || "") + ' Minutes' +
-             ' &nbsp;|&nbsp; Total Marks: ' + oeEsc(meta.marks === undefined ? "" : meta.marks) +
-             ' &nbsp;|&nbsp; Date: ' + oeEsc(meta.date || "") + '</div>';
+             ' &nbsp;|&nbsp; Total Marks: ' + oeEsc(meta.marks === undefined ? "" : meta.marks) + '</div>';
         h += '<div class="paper-fields">Name: ______________________&nbsp;&nbsp; Roll No: ______________</div>';
         h += '</div>';
         if (meta.version) h += '<div class="paper-version">MCQs PAPER VERSION: ' + oeEsc(meta.version) + '</div>';
