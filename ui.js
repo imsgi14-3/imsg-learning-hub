@@ -2278,19 +2278,20 @@ var UI = (function() {
     }
 
     // Pure: OMR answer sheet in FBISE SSC-I format. Four black corner
-    // squares, the Roll No. block (printed class + section A/B/C + an
-    // FBISE-style ROLL NUMBER table of two 0-9 digit columns) high in
-    // the header with the MCQs version box beside it (candidate shades
-    // its bubbles), and a dashed column-major answer grid. OMR.gridLayout
+    // squares, a handwritten Roll No. row (five empty boxes — no digit
+    // bubbles), the MCQs version box high in the header (candidate shades
+    // its bubbles) and a dashed column-major answer grid. OMR.gridLayout
     // drives both this markup and the photo scanner, so they always agree.
     // Question numbers print at 12px so the scanner's size filter ignores
-    // them. Version bubbles are never pre-filled.
+    // them. Version bubbles are never pre-filled. Header geometry is locked
+    // to the scanner's thresholds in omrScanner.js (version window and
+    // header/grid cut), so row order matters: tobe -> version -> time ->
+    // roll boxes -> instruction -> banner -> grid.
     function oeBuildOMRHTML(meta, qs) {
         meta = meta || {};
         qs = qs || [];
         var labels = meta.versionLabels;
         if (!labels || !labels.length) labels = ["A"];
-        var cls = String(meta.className || "").replace(/[^0-9]/g, "") || "9";
         var layout = (typeof OMR !== "undefined" && OMR.gridLayout) ? OMR.gridLayout(qs.length) : { blocks: [] };
         var h = '<div class="paper omr-sheet">';
         h += '<div class="omr-corner omr-tl"></div>';
@@ -2311,23 +2312,17 @@ var UI = (function() {
              '<span class="omr-lbox"><span class="omr-wm">&#9680;</span></span>' +
              '</div>';
         h += '</div>';
-        h += '<div class="omr-rollrow"><span class="omr-rolllabel">Roll No.</span>' +
-             '<span class="omr-rollcls">' + oeEsc(cls) + '</span>' +
-             '<span class="omr-sect"><span class="omr-b">A</span><span class="omr-b">B</span><span class="omr-b">C</span></span>' +
-             '<span class="omr-rollhy">-</span>';
-        h += '<table class="omr-rolltable"><thead><tr><th colspan="2">ROLL NUMBER</th></tr></thead><tbody>';
-        for (var d = 0; d < 10; d++) {
-            h += '<tr><td><span class="omr-b">' + d + '</span></td>' +
-                 '<td><span class="omr-b">' + d + '</span></td></tr>';
-        }
-        h += '</tbody></table>';
         h += '<div class="omr-verrow"><span class="omr-verlabel">MCQs PAPER VERSION</span><span class="omr-vbubs">';
         for (var v = 0; v < labels.length; v++) {
             h += '<span class="omr-b">' + oeEsc(labels[v]) + '</span>';
         }
-        h += '</span></div></div>';
+        h += '</span></div>';
         h += '<div class="omr-timerow"><span>Time Allowed: <u>' + oeEsc(meta.time || "") + ' Minutes</u></span>' +
              '<span>Total Marks: ' + oeEsc(meta.marks === undefined ? "" : meta.marks) + '</span></div>';
+        h += '<div class="omr-rollrow"><span class="omr-rolllabel">Roll No.</span><span class="omr-rollboxes">' +
+             '<span class="omr-rbox"></span><span class="omr-rbox"></span><span class="omr-rbox"></span>' +
+             '<span class="omr-rbox"></span><span class="omr-rbox"></span>' +
+             '</span></div>';
         h += '<div class="omr-instr">FILL ONLY ONE BUBBLE FOR EACH CORRECT ANSWER. USE BLACK BALL POINT/MARKER</div>';
         h += '<div class="omr-banner">FOLLOW THE CORRECT SEQUENCE TO FILL-IN THE BUBLES</div>';
         for (var bi = 0; bi < layout.blocks.length; bi++) {

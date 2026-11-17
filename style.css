@@ -2790,12 +2790,15 @@ footer {
    Sized for A4: the sheet fills the printable page so the four corner
    squares map to a near-uniform scale when scanned. Bubble/row/column
    sizes and all vertical positions are locked to the scanner's
-   thresholds in omrScanner.js (legend top-right, roll table ~0.10H-
-   0.35H with the version box centered beside it at ~0.23H, version
-   window 0.17H-0.30H, header ends ~0.47H, grid starts ~0.49H, grid
-   cut 0.45H, row pitch <= 60 canonical px, question numbers < 16px).
-   The roll block sits high so the whole sheet stays on one A4 page
-   even for 60 questions. */
+   thresholds in omrScanner.js (legend top-right ~0.05H-0.13H, version
+   row centered ~0.135H inside the 0.12H-0.17H version window, Time/
+   Marks row and the handwritten Roll No. row - five empty boxes, no
+   digit bubbles - below it, header ends ~0.29H, grid starts ~0.31H,
+   grid cut 0.30H, row pitch <= 60 canonical px, question numbers
+   < 16px). The header sits high so the whole sheet stays on one A4
+   page even for 60 questions. The version window also excludes the
+   legend by x (cells right of 0.8W are never version candidates), so
+   the top-right guide boxes can never win the band tie-break. */
 .omr-sheet { position: relative; padding: 10px 8px 20px 8px; min-height: 297mm; }
 .omr-corner { position: absolute; width: 11mm; height: 11mm; background: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .omr-tl { top: 0; left: 0; }
@@ -2805,37 +2808,32 @@ footer {
 .omr-school { font-size: 14px; font-weight: 700; letter-spacing: 1px; text-align: center; }
 .omr-title { font-size: 26px; font-weight: 800; text-align: center; max-width: 58%; margin: 4px auto 2px; letter-spacing: 0.5px; }
 .omr-tobe { font-size: 14px; text-align: center; margin-bottom: 12px; }
-/* Legend kept in the top-right corner (above the roll/version block)
-   so its guide boxes stay outside the scanner's version window. */
+/* Legend kept in the top-right corner. Its guide boxes sit at nearly
+   the same height as the version row, so omrScanner.js also filters
+   version candidates by x (right of 0.8W) to keep them out. */
 .omr-legend { position: absolute; top: 24px; right: 10px; text-align: center; }
 .omr-llabel { font-size: 9.5px; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 2px; }
 .omr-lbox { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1.5px solid #111; margin-bottom: 3px; }
 .omr-lrow { display: flex; gap: 3px; justify-content: center; }
 .omr-lrow .omr-lbox { margin-bottom: 0; width: 28px; height: 28px; }
 .omr-wm { font-size: 15px; font-weight: 700; line-height: 1; }
-/* Version box sits BESIDE the roll table, vertically centered on it.
-   Its bubbles stay in the scanner's 0.17H-0.30H version window. */
-.omr-verrow { display: flex; align-items: center; gap: 8px; align-self: center; margin-left: 8px; }
+/* Version box: standalone centered row high in the header (bubble cy
+   must land inside the scanner's 0.12H-0.17H version window). */
+.omr-verrow { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 6px 0; }
 .omr-verlabel { font-size: 14px; font-weight: 700; border: 1.5px solid #111; padding: 8px 12px; }
 .omr-vbubs { display: flex; gap: 5px; border: 1.5px solid #111; padding: 7px 8px; }
 .omr-b { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 1.5px solid #333; border-radius: 50%; font-size: 10px; font-weight: 600; color: #111; }
 .omr-sm { width: 16px; height: 16px; font-size: 8px; }
 .omr-fill { background: #000; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .omr-timerow { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin: 8px 0; }
-.omr-rollrow { display: flex; align-items: flex-start; gap: 5px; margin: 8px 0; }
-.omr-rolllabel, .omr-rollcls, .omr-rollhy { font-size: 15px; font-weight: 700; line-height: 20px; }
-.omr-sect { display: flex; gap: 3px; }
-/* Two-column 0-9 roll table with an FBISE-style ROLL NUMBER header,
-   read top-to-bottom. Digit columns hug the bubble (character width,
-   minimal padding); the header text sets the only extra width. Outer
-   frame/header/dividers are all longer than the scanner's 60px mark
-   size (or thinner than 16px), so the box is never mistaken for
-   fillable cells. */
-.omr-rolltable { border: 1.5px solid #111; border-collapse: collapse; margin-left: 6px; }
-.omr-rolltable th { font-size: 8px; font-weight: 800; letter-spacing: 0.3px; padding: 2px 5px; white-space: nowrap; border-bottom: 1.5px solid #111; }
-.omr-rolltable td { border-right: 1px solid #999; border-bottom: 1px solid #999; padding: 1px 3px; }
-.omr-rolltable td:nth-child(2n) { border-right: none; }
-.omr-rolltable tr:last-child td { border-bottom: none; }
+.omr-rollrow { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+.omr-rolllabel { font-size: 15px; font-weight: 700; line-height: 20px; }
+/* Five empty handwriting boxes for the roll number (no digit bubbles).
+   The row must stay BELOW the scanner's version window: a 5-cell band
+   would otherwise tie with a 5-label version box. The roll is never
+   scanner-read - it is entered manually after scanning. */
+.omr-rollboxes { display: flex; gap: 7px; }
+.omr-rbox { width: 26px; height: 26px; border: 1.5px solid #111; }
 .omr-instr { font-size: 12px; font-weight: 700; text-decoration: underline; text-align: center; margin: 8px 0 10px; }
 .omr-banner { font-size: 12px; font-weight: 800; text-align: center; border: 3px solid #111; padding: 6px 8px; margin: 10px auto 22px; letter-spacing: 0.4px; }
 .omr-grid { display: flex; justify-content: center; gap: 5px; }

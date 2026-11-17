@@ -299,13 +299,14 @@ var OMR = (function() {
         }
         var cells = mergeCells(mark, 14);
         // Header/question split. The header holds the school/title rows,
-        // the legend (top-right), the ROLL NUMBER box with the version
-        // box beside it (digits end ~0.35H, version ~0.23H) and the
-        // Time/Marks/instruction/banner rows (through ~0.47H); the answer
-        // grid starts ~0.49H. The cut sits between them so roll/version
-        // bubbles are never treated as question cells; banner/word boxes
+        // the legend (top-right), the version row (~0.135H), the
+        // Time/Marks row and the handwritten Roll No. row (~0.19H-0.22H,
+        // five empty boxes, never scanner-read), then the instruction
+        // and banner rows (through ~0.29H); the answer grid starts
+        // ~0.31H. The cut sits between banner and grid so header marks
+        // are never treated as question cells; banner/word boxes
         // straddling the cut are already dropped by the 60px size filter.
-        var gridCut = rect.height * 0.45;
+        var gridCut = rect.height * 0.30;
         var headerCells = [], qCells = [];
         for (i = 0; i < cells.length; i++) {
             if (cells[i].cy < gridCut) headerCells.push(cells[i]);
@@ -395,19 +396,21 @@ var OMR = (function() {
 
         // Version row: only bubble-sized header cells (>=20px both sides,
         // so instruction/banner/roll-label text and word clusters never
-        // qualify) in the band window 0.17H-0.30H. The legend, section
-        // bubbles and title sit above the window, the Time/Marks row
-        // below it; only the ROLL NUMBER digit rows share the window and
-        // they form 2-cell bands, so the band whose cell count is
-        // closest to the number of version labels is the version box
-        // (which sits to the right of the roll table).
+        // qualify) in the band window 0.12H-0.17H (measured version
+        // bubble cy ~0.135H) AND left of 0.8W. The x-filter excludes the
+        // top-right legend guide boxes, whose row bottom (~0.1255H)
+        // overlaps the window, so they can never enter the tie-break;
+        // the Time/Marks row sits below the window and the handwritten
+        // roll boxes (~0.19H-0.22H) are far below it. The band whose
+        // cell count is closest to the number of version labels wins.
         var versionCells = [];
         if (headerCells.length) {
             var vCand = [];
             for (i = 0; i < headerCells.length; i++) {
                 var hc = headerCells[i];
                 var hw = hc.x1 - hc.x0 + 1, hh = hc.y1 - hc.y0 + 1;
-                if (hw >= 20 && hh >= 20 && hc.cy >= rect.height * 0.17 && hc.cy <= rect.height * 0.30) vCand.push(hc);
+                if (hw >= 20 && hh >= 20 && hc.cx < rect.width * 0.8 &&
+                    hc.cy >= rect.height * 0.12 && hc.cy <= rect.height * 0.17) vCand.push(hc);
             }
             var hBands = bandsOf(vCand, 13);
             var bestBand = null, bestDiff = 1e9, bestX = -1;
@@ -417,9 +420,10 @@ var OMR = (function() {
                 for (hj = 0; hj < hBands[i].cells.length; hj++) hX += hBands[i].cells[hj].cx;
                 hX = hX / hBands[i].cells.length;
                 // Closest count wins; on a count tie the RIGHTMOST band
-                // wins - the version box sits right of the roll table
-                // while digit-row bands (2 cells) sit inside it, so a
-                // 2-label version still beats a digit row.
+                // wins - the version box is the only bubble-sized mark
+                // left of 0.8W in the window (legend excluded by x, roll
+                // boxes below it), so any competing band would sit to
+                // its left anyway.
                 if (hDiff < bestDiff || (hDiff === bestDiff && hX > bestX)) {
                     bestDiff = hDiff; bestX = hX; bestBand = hBands[i];
                 }

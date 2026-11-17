@@ -56,40 +56,44 @@ function runOMRTests() {
         for (var a = 0; a < anchors.length; a++) fillRect(buf, anchors[a][0] - 33, anchors[a][1] - 33, 66, 66, 10);
 
         var i;
-        // Header noise the scanner must ignore: big title glyphs (near
-        // the top), the Roll No. section bubbles (left of the digit
-        // table, shaded on purpose to prove they are never read as the
-        // version) and the two-column 0-9 roll table (its digit rows
-        // reach ~0.30H, the top edge of the 0.17H-0.30H version window;
-        // they only form 2-cell bands, so count matching keeps them
-        // from winning). Instruction/banner glyphs (y860/y890) fall
-        // below the 0.45H grid cut but stay under the 16px mark filter.
+        // Header noise the scanner must ignore, at the new layout's
+        // measured positions (fractions of the 1754px canonical height):
+        // big title glyphs near the top, instruction/banner text rows
+        // (~0.236H / ~0.26H, both above the 0.30H grid cut but under
+        // the 16px mark filter), the legend guide boxes at top-right
+        // (x > 0.8W, deliberately drawn INSIDE the 0.12H-0.17H version
+        // window to prove the x-exclusion keeps them out of the band
+        // tie-break), the handwritten Roll No. boxes (~0.205H, five
+        // hollow squares below the window so they can never tie with a
+        // 3-label version band).
         for (i = 0; i < 12; i++) fillRect(buf, 320 + i * 26, 78, 20, 24, 70);
 
         var labels = opts.labels || ["A", "B", "C"];
-        // Version box centered beside the digit table (~0.22H), clear of
-        // the digit rows (19px away) and to their right for tie-breaks.
+        // Version bubbles: standalone centered row at ~0.135H, x
+        // 740-828 (all left of 0.8W), matching the rendered sheet.
         for (i = 0; i < labels.length; i++) {
-            var vx = 560 + i * 43;
-            if (i === opts.versionIdx) disc(buf, vx, 389, 13, 25);
-            else ring(buf, vx, 389, 13, 3, 40);
+            var vx = 740 + i * 44;
+            if (i === opts.versionIdx) disc(buf, vx, 237, 13, 25);
+            else ring(buf, vx, 237, 13, 3, 40);
         }
-        disc(buf, 200, 150, 13, 25);
-        ring(buf, 236, 150, 13, 3, 40);
-        ring(buf, 272, 150, 13, 3, 40);
-        for (i = 0; i < 10; i++) {
-            ring(buf, 340, 180 + i * 38, 13, 3, 40);
-            ring(buf, 376, 180 + i * 38, 13, 3, 40);
-        }
-        for (i = 0; i < 18; i++) fillRect(buf, 300 + i * 30, 860, 14, 14, 70);
-        for (i = 0; i < 24; i++) fillRect(buf, 260 + i * 30, 890, 14, 14, 70);
+        // Legend guide boxes: a 3-cell band inside the window but right
+        // of 0.8W - without the x-filter it would tie with (and beat,
+        // being rightmost) a 3-label version box.
+        for (i = 0; i < 3; i++) ring(buf, 1020 + i * 39, 215, 13, 3, 40);
+        // Five hollow roll boxes (~0.205H), outside the window.
+        for (i = 0; i < 5; i++) ring(buf, 164 + i * 59, 360, 13, 3, 40);
+        // Instruction/banner glyph rows.
+        for (i = 0; i < 18; i++) fillRect(buf, 300 + i * 30, 414, 14, 14, 70);
+        for (i = 0; i < 24; i++) fillRect(buf, 260 + i * 30, 470, 14, 14, 70);
 
         var N = opts.qCount | 0;
         var layout = OMR.gridLayout(N);
         var ans = opts.answers || [];
         for (var bi = 0; bi < layout.blocks.length; bi++) {
             var blk = layout.blocks[bi];
-            var y0 = 920 + (bi > 0 ? 384 + 197 : 0);
+            // Grid top ~0.313H (measured cell0 cy 0.327H); second block
+            // keeps the real sheet's 581px stack gap.
+            var y0 = 574 + (bi > 0 ? 384 + 197 : 0);
             for (var j = 0; j < blk.cols; j++) {
                 var colX = 85 + j * 220;
                 for (var r = 0; r < blk.rows; r++) {

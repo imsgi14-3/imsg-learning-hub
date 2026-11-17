@@ -678,17 +678,12 @@ function runExamEngineTests() {
     ];
     var omr = UI.oeBuildOMRHTML(ometa, oQs);
     TestRunner.assertEqual((omr.match(/class="omr-corner/g) || []).length, 4, "4 alignment corner squares");
-    TestRunner.assert(omr.indexOf('class="omr-rollcls">9<') !== -1, "class printed fixed with no options");
-    TestRunner.assertEqual((omr.match(/class="omr-sect"/g) || []).length, 1, "one section group (A, B, C)");
-    TestRunner.assertEqual((omr.match(/class="omr-rolltable"/g) || []).length, 1, "roll digits in one two-column table");
-    TestRunner.assertEqual((omr.match(/<tr>/g) || []).length, 11, "roll table has 1 header row + 10 digit rows (0-9 top to bottom)");
-    TestRunner.assertEqual((omr.match(/<td>/g) || []).length, 20, "two roll digit columns");
-    TestRunner.assertEqual((omr.match(/<th colspan="2">ROLL NUMBER<\/th>/g) || []).length, 1, "FBISE-style ROLL NUMBER header spans the digit columns");
-    TestRunner.assert(omr.indexOf('class="omr-rollrow"') < omr.indexOf('class="omr-verrow"'), "roll box sits above the version row (high on the page)");
-    TestRunner.assert(omr.indexOf('</table>') < omr.indexOf('class="omr-verrow"') && omr.indexOf('class="omr-verrow"') < omr.indexOf('</div><div class="omr-timerow"'), "version box sits beside the roll table (inside the roll row)");
+    TestRunner.assert(omr.indexOf("omr-rolltable") === -1 && omr.indexOf("omr-sect") === -1 && omr.indexOf("omr-rollcls") === -1, "roll-digit table, section bubbles and class digit removed");
+    TestRunner.assertEqual((omr.match(/class="omr-rbox"/g) || []).length, 5, "five empty handwriting boxes for the roll number");
+    TestRunner.assert(omr.indexOf('class="omr-verrow"') < omr.indexOf('class="omr-timerow"') && omr.indexOf('class="omr-timerow"') < omr.indexOf('class="omr-rollrow"'), "standalone version row sits above the Time/Marks row, which sits above the roll boxes");
     TestRunner.assert(omr.indexOf("Question Booklet No.") === -1, "booklet number line removed");
     TestRunner.assert(omr.indexOf("MCQs PAPER VERSION") !== -1, "version label row present");
-    TestRunner.assertEqual((omr.match(/class="omr-b("| )/g) || []).length, 39, "1 legend + 3 version + 3 section + 20 digits + 12 question bubbles");
+    TestRunner.assertEqual((omr.match(/class="omr-b("| )/g) || []).length, 16, "1 legend + 3 version + 12 question bubbles");
     TestRunner.assertEqual((omr.match(/omr-fill/g) || []).length, 1, "only the legend example is pre-shaded");
     TestRunner.assert(omr.indexOf('omr-b omr-fill">B') === -1, "version bubbles are never pre-filled");
     TestRunner.assertEqual((omr.match(/class="omr-qn"/g) || []).length, 3, "one number label per question");
@@ -698,7 +693,7 @@ function runExamEngineTests() {
     TestRunner.assert(omr.indexOf("CUTTING LINE") === -1, "no cutting line printed");
 
     var omrEmpty = UI.oeBuildOMRHTML({}, []);
-    TestRunner.assertEqual((omrEmpty.match(/class="omr-b("| )/g) || []).length, 25, "empty sheet keeps legend + 1 version + roll bubbles, no question bubbles");
-    TestRunner.assert(omrEmpty.indexOf('class="omr-rollcls">9<') !== -1, "missing meta falls back to class 9");
+    TestRunner.assertEqual((omrEmpty.match(/class="omr-b("| )/g) || []).length, 2, "empty sheet keeps only legend + 1 version bubble, no question bubbles");
+    TestRunner.assertEqual((omrEmpty.match(/class="omr-rbox"/g) || []).length, 5, "empty sheet still prints 5 roll boxes");
     TestRunner.assertEqual((omrEmpty.match(/class="omr-cell"/g) || []).length, 0, "no grid cells when no questions");
 }
