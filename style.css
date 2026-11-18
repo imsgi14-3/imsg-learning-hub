@@ -2736,6 +2736,7 @@ footer {
 .oe-saved-row.on { border-color: var(--primary, #2563eb); background: rgba(37,99,235,0.05); }
 .oe-saved-title { font-weight: 700; }
 .oe-saved-meta { color: var(--text-muted, #667); font-size: 12px; flex: 1; min-width: 170px; }
+.oe-saved-code { font-family: ui-monospace, Consolas, monospace; font-weight: 700; color: var(--primary, #2563eb); letter-spacing: 0.5px; }
 .oe-saved-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 
 /* Batch marks summary (one row per scanned sheet) */

@@ -538,6 +538,17 @@ function runExamEngineTests() {
     TestRunner.assert(keyHtml.indexOf("IMSG I-14/3 ISLAMABAD") !== -1, "key page carries school header");
     TestRunner.assert(keyHtml.indexOf("1. B") !== -1 && keyHtml.indexOf("4. D") !== -1, "answer key letters match question order");
 
+    // Paper code: printed so a physical pile can be matched to the saved
+    // record; the question paper itself must stay Date-free.
+    var coded = UI.oeBuildPaperHTML({ title: "T", className: "9", time: 60, marks: 10, code: "ZZ99" }, [straightQ]);
+    TestRunner.assert(coded.indexOf("Paper Code: ZZ99") !== -1, "paper header carries the paper code");
+    TestRunner.assert(coded.indexOf("Date") === -1, "question paper still carries no Date line");
+    var codedKey = UI.oeBuildKeyHTML({ title: "T", className: "9", marks: 10, date: "17/11/2026", code: "ZZ99" }, [straightQ]);
+    TestRunner.assert(codedKey.indexOf("Paper Code: ZZ99") !== -1, "key header carries the paper code");
+    TestRunner.assert(codedKey.indexOf("Date: 17/11/2026") !== -1, "key keeps its Date line");
+    var noCodeHtml = UI.oeBuildPaperHTML({ title: "T", className: "9", time: 60, marks: 10 }, [straightQ]);
+    TestRunner.assert(noCodeHtml.indexOf("Paper Code") === -1, "no code line when no code is available");
+
     var noKey = UI.oeBuildPaperHTML({ title: "T", className: "9", time: 60, marks: 10 }, [straightQ]);
     TestRunner.assert(noKey.indexOf("Answer Key") === -1, "paper print omits answer key entirely");
     TestRunner.assert(noKey.indexOf("(10 marks each)") !== -1, "single question shows 10 marks each");
@@ -736,4 +747,40 @@ function runExamEngineTests() {
     // Grading key survives the reload: questions differ per version, so
     // the restored set must be version A's (not a reshuffled regenerate).
     TestRunner.assertEqual(UI.oeState().generated, fakeQsA.length, "restored key matches the printed version A set");
+
+    // ---- Identification: date+time stamp + short paper code -------------
+    TestRunner.assertType(UI.oeStamp, "function", "oeStamp exposed on UI");
+    TestRunner.assertType(UI.oePaperCode, "function", "oePaperCode exposed on UI");
+
+    var stampTs = new Date(2026, 10, 17, 20, 53, 0).getTime(); // 17 Nov 2026, 8:53 pm local
+    TestRunner.assertEqual(UI.oeStamp(stampTs), "17/11/26 8:53 pm", "stamp carries date AND time");
+    TestRunner.assertEqual(UI.oeStamp(new Date(2026, 0, 5, 9, 4, 0).getTime()), "05/01/26 9:04 am", "stamp pads digits and uses 12-hour am/pm");
+    TestRunner.assert(/^\d{2}\/\d{2}\/\d{2} \d{1,2}:\d{2} (am|pm)$/.test(UI.oeStamp(1)), "epoch-1 stamps without crashing");
+    TestRunner.assertEqual(UI.oeStamp(undefined), "", "missing timestamp yields empty string");
+    TestRunner.assertEqual(UI.oeStamp("nope"), "", "invalid timestamp yields empty string");
+
+    TestRunner.assertEqual(UI.oePaperCode("EXAM-1763000000000-zz99"), "ZZ99", "code is the id suffix, uppercased");
+    TestRunner.assertEqual(UI.oePaperCode("EXAM-test-1"), "1", "id without a random suffix still yields a code");
+    TestRunner.assertEqual(UI.oePaperCode(""), "", "empty id yields empty code");
+    TestRunner.assertEqual(UI.oePaperCode(null), "", "null id yields empty code");
+
+    // The list must show the full stamp and the code, so two generations
+    // of the same title on the same day are distinguishable at a glance.
+    var savedLen = exams.length;
+    var renderDiv = document.createElement("div");
+    renderDiv.id = "oeSavedList";
+    document.body.appendChild(renderDiv);
+    exams.push({ id: "EXAM-1763000000000-zz99", title: "Midterm (1st gen)", className: "9B",
+                 versions: [{ label: "A", questions: fakeQsA }, { label: "B", questions: fakeQsB }],
+                 createdAt: stampTs });
+    exams.push(fakeExam); // active exam (oeCurrentExamId === fakeExam.id)
+    UI.oeRenderSaved();
+    var savedHtml = renderDiv.innerHTML;
+    TestRunner.assert(savedHtml.indexOf("17/11/26 8:53 pm") !== -1, "list shows date and time, not the date alone");
+    TestRunner.assert(savedHtml.indexOf("ZZ99") !== -1, "list shows the short paper code");
+    TestRunner.assert(savedHtml.indexOf("versions A, B") !== -1, "list shows every version");
+    TestRunner.assert(savedHtml.indexOf("\u25B6") !== -1, "loaded paper keeps the play marker");
+    TestRunner.assert(savedHtml.indexOf("viewing version A") !== -1, "loaded paper names the version on screen");
+    exams.length = savedLen;
+    document.body.removeChild(renderDiv);
 }

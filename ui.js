@@ -2065,9 +2065,34 @@ var UI = (function() {
         for (i = 0; i < oeVersionsArr.length; i++) labels.push(oeVersionsArr[i].label);
         oeRenderReview();
         oeRenderSaved();
-        oeStatus('Loaded "' + (ex.title || "paper") + '" — ' + oeGenerated.length +
+        var code = oePaperCode(ex.id);
+        oeStatus('Loaded "' + (ex.title || "paper") + '"' + (code ? " (code " + code + ")" : "") + " — " + oeGenerated.length +
                  " MCQs, version" + (labels.length > 1 ? "s " : " ") + labels.join(", ") +
                  ". Key ready — upload filled sheets to grade.", true);
+    }
+
+    // "17/11/26 8:53 pm" — local date AND time, so two generations of the
+    // same paper on the same day are still told apart. Written by hand
+    // (not toLocaleString) so the format never depends on browser locale.
+    function oeStamp(ms) {
+        var d = new Date(Number(ms));
+        if (isNaN(d.getTime())) return "";
+        function p2(n) { return (n < 10 ? "0" : "") + n; }
+        var hh = d.getHours(), ap = hh >= 12 ? "pm" : "am";
+        hh = hh % 12; if (hh === 0) hh = 12;
+        return p2(d.getDate()) + "/" + p2(d.getMonth() + 1) + "/" + p2(d.getFullYear() % 100) +
+            " " + hh + ":" + p2(d.getMinutes()) + " " + ap;
+    }
+
+    // Short paper code taken from the saved id (EXAM-<timestamp>-<4 chars>).
+    // Printed on the paper/key header so a physical pile of papers can be
+    // matched back to this exact saved record in the list below.
+    function oePaperCode(id) {
+        id = String(id === null || id === undefined ? "" : id);
+        if (!id) return "";
+        var i = id.lastIndexOf("-");
+        var s = i >= 0 ? id.slice(i + 1) : id;
+        return s ? s.toUpperCase() : "";
     }
 
     function oeRenderSaved() {
@@ -2088,13 +2113,18 @@ var UI = (function() {
                 for (var v = 0; v < ex.versions.length; v++) vLabels.push(ex.versions[v].label);
                 qCount = (ex.versions[0].questions || []).length;
             }
-            var when = ex.createdAt ? new Date(ex.createdAt).toLocaleDateString() : "";
+            var when = ex.createdAt ? oeStamp(ex.createdAt) : "";
+            var code = oePaperCode(ex.id);
             var on = ex.id === oeCurrentExamId;
+            var viewing = (on && oeVersionsArr[oeVersionIdx])
+                ? " &middot; <strong>viewing version " + oeEsc(oeVersionsArr[oeVersionIdx].label) + "</strong>"
+                : "";
             h += '<div class="oe-saved-row' + (on ? " on" : "") + '">';
             h += '<span class="oe-saved-title">' + (on ? "&#9654; " : "") + oeEsc(ex.title || "Untitled paper") + '</span>';
             h += '<span class="oe-saved-meta">Class ' + oeEsc(ex.className || "-") + " &middot; " + qCount +
                  " MCQs &middot; version" + (vLabels.length > 1 ? "s " : " ") + oeEsc(vLabels.join(", ") || "?") +
-                 (when ? " &middot; " + when : "") + '</span>';
+                 (code ? ' &middot; <span class="oe-saved-code">code ' + oeEsc(code) + "</span>" : "") +
+                 (when ? " &middot; " + when : "") + viewing + '</span>';
             h += '<span class="oe-saved-actions">';
             h += '<button type="button" class="action-btn secondary" onclick="oeLoadExam(\'' + ex.id + '\')">Load for grading</button>';
             h += '<button type="button" class="icon-btn" onclick="oeDeleteExam(\'' + ex.id + '\')" title="Delete saved paper">&times;</button>';
@@ -2158,7 +2188,10 @@ var UI = (function() {
         for (var i = 0; i < versions.length; i++) labels.push(versions[i].label);
         var msg = "Generated " + oeGenerated.length + " of " + r.pool.length + " pool questions";
         msg += versions.length > 1 ? " × " + versions.length + " versions (" + labels.join(", ") + ")" : " (version A)";
-        msg += ". Review, then Print." + (saved ? " Saved locally." : "");
+        var savedCode = saved ? oePaperCode(oeCurrentExamId) : "";
+        msg += ". Review, then Print." + (saved
+            ? " Saved locally" + (savedCode ? " (paper code " + savedCode + ")" : "") + "."
+            : "");
         oeStatus(msg, true);
         oeRenderReview();
     }
@@ -2168,6 +2201,7 @@ var UI = (function() {
         oeVersionIdx = i;
         oeGenerated = oeVersionsArr[i].questions;
         oeRenderReview();
+        oeRenderSaved();
         oeStatus("Showing version " + oeVersionsArr[i].label + " (" + oeGenerated.length + " questions). Review, then Print.", true);
     }
 
@@ -2272,7 +2306,8 @@ var UI = (function() {
         h += '<div class="paper-title">' + oeEsc(meta.title || "Section A") + '</div>';
         h += '<div class="paper-meta">Class: ' + oeEsc(meta.className || "-") +
              ' &nbsp;|&nbsp; Time: ' + oeEsc(meta.time || "") + ' Minutes' +
-             ' &nbsp;|&nbsp; Total Marks: ' + oeEsc(meta.marks === undefined ? "" : meta.marks) + '</div>';
+             ' &nbsp;|&nbsp; Total Marks: ' + oeEsc(meta.marks === undefined ? "" : meta.marks) +
+             (meta.code ? ' &nbsp;|&nbsp; Paper Code: ' + oeEsc(meta.code) : '') + '</div>';
         h += '<div class="paper-fields">Name: ______________________&nbsp;&nbsp; Roll No: ______________</div>';
         h += '</div>';
         if (meta.version) h += '<div class="paper-version">MCQs PAPER VERSION: ' + oeEsc(meta.version) + '</div>';
@@ -2330,7 +2365,8 @@ var UI = (function() {
              (meta.version ? ' (Version ' + oeEsc(meta.version) + ')' : '') + '</div>';
         h += '<div class="paper-meta">Class: ' + oeEsc(meta.className || "-") +
              ' &nbsp;|&nbsp; Total Marks: ' + oeEsc(meta.marks === undefined ? "" : meta.marks) +
-             ' &nbsp;|&nbsp; Date: ' + oeEsc(meta.date || "") + '</div>';
+             ' &nbsp;|&nbsp; Date: ' + oeEsc(meta.date || "") +
+             (meta.code ? ' &nbsp;|&nbsp; Paper Code: ' + oeEsc(meta.code) : '') + '</div>';
         h += '</div>';
         h += '<div class="paper-note">Examiner copy &mdash; do not distribute with question papers.</div>';
         h += '<div class="paper-key">';
@@ -2353,6 +2389,7 @@ var UI = (function() {
             marks: ($("oeMarks") && $("oeMarks").value) || 0,
             version: (oeVersionsArr.length > 0 && oeVersionsArr[oeVersionIdx]) ? oeVersionsArr[oeVersionIdx].label : "",
             versionLabels: labels,
+            code: oePaperCode(oeCurrentExamId),
             date: new Date().toLocaleDateString()
         };
     }
@@ -5822,6 +5859,8 @@ var UI = (function() {
         oeScanRemove: oeScanRemove,
         oeScanClear: oeScanClear,
         oeLoadExam: oeLoadExam,
+        oeStamp: oeStamp,
+        oePaperCode: oePaperCode,
         oeDeleteExam: oeDeleteExam,
         oeRenderSaved: oeRenderSaved,
         oeApplyExam: oeApplyExam,
