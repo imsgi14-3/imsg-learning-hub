@@ -246,6 +246,18 @@ function saveExam(exam) {
     pushExamToFirestore(exam);
     return true;
 }
+// Remove one saved exam (mirror of saveExam): local splice first so the
+// UI updates even if Firestore is unreachable; the Firestore delete
+// falls back to the sync queue inside deleteFromFirestore.
+function deleteExam(id) {
+    if (!id) return false;
+    for (var i = 0; i < exams.length; i++) {
+        if (exams[i].id === id) { exams.splice(i, 1); break; }
+    }
+    LocalDB.putAll("exams", exams);
+    deleteFromFirestore("exams", id);
+    return true;
+}
 function saveAttempt(attempt) {
     if (!attempt || !attempt.attemptId) return false;
     if (!attempt.id) attempt.id = attempt.attemptId; // IndexedDB keyPath is "id"

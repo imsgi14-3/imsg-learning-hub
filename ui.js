@@ -1915,6 +1915,7 @@ var UI = (function() {
     var oeScanSeq = 0;
     var oeVersionIdx = 0;
     var oeBound = false;
+    var oeCurrentExamId = ""; // saved exam (exams store) the current paper/key came from
 
     function oeStatus(msg, ok) { ebSetStatus(msg, ok, "oe"); }
 
@@ -1987,6 +1988,7 @@ var UI = (function() {
                 tab.addEventListener("change", oeLiveUpdate);
             }
         }
+        oeRenderSaved(); // refresh saved-papers list each time the tab opens
         if (sel.options.length > 0) return; // tab DOM persists; init once
         var subs = ebTeacherSubjects();
         var h = "";
@@ -2017,6 +2019,103 @@ var UI = (function() {
         return r.ok;
     }
 
+    // ---------------------------------------------------------------
+    // Saved papers (the stored answer key). Generate saves automatically;
+    // this list loads a saved paper back after a reload so scanning can
+    // grade against the EXACT key that was printed (regenerating would
+    // reshuffle questions and never match the printed sheets).
+    // ---------------------------------------------------------------
+
+    // Snapshot of Offline Exam state (used by tests).
+    function oeState() {
+        return {
+            generated: oeGenerated.length,
+            versions: oeVersionsArr.length,
+            versionIdx: oeVersionIdx,
+            scans: oeScans.length,
+            currentExamId: oeCurrentExamId
+        };
+    }
+
+    // Restore a saved exam's paper + key into working state. Only the
+    // meta inputs that exist are touched, so tests can drive it directly.
+    function oeApplyExam(exam) {
+        if (!exam || !exam.versions || !exam.versions.length) return false;
+        oeVersionsArr = exam.versions;
+        oeVersionIdx = 0;
+        oeGenerated = exam.versions[0].questions || [];
+        oeCurrentExamId = exam.id || "";
+        var t = $("oeTitle"), c = $("oeClass"), tm = $("oeTime"), mk = $("oeMarks");
+        if (t && exam.title) t.value = exam.title;
+        if (c && exam.className) c.value = exam.className;
+        if (tm && exam.time) tm.value = exam.time;
+        if (mk && exam.marks) mk.value = exam.marks;
+        oeScanReset();
+        return true;
+    }
+
+    function oeLoadExam(id) {
+        var ex = null, i;
+        for (i = 0; i < (typeof exams !== "undefined" ? exams.length : 0); i++) {
+            if (exams[i].id === id) { ex = exams[i]; break; }
+        }
+        if (!ex) { oeStatus("Saved paper not found — it may have been deleted.", false); return; }
+        if (!oeApplyExam(ex)) { oeStatus("That saved paper has no versions to grade against.", false); return; }
+        var labels = [];
+        for (i = 0; i < oeVersionsArr.length; i++) labels.push(oeVersionsArr[i].label);
+        oeRenderReview();
+        oeRenderSaved();
+        oeStatus('Loaded "' + (ex.title || "paper") + '" — ' + oeGenerated.length +
+                 " MCQs, version" + (labels.length > 1 ? "s " : " ") + labels.join(", ") +
+                 ". Key ready — upload filled sheets to grade.", true);
+    }
+
+    function oeRenderSaved() {
+        var box = $("oeSavedList");
+        if (!box) return;
+        var list = [];
+        for (var i = 0; i < (typeof exams !== "undefined" ? exams.length : 0); i++) list.push(exams[i]);
+        list.sort(function (a, b) { return (b.createdAt || 0) - (a.createdAt || 0); });
+        if (!list.length) {
+            box.innerHTML = '<p class="oe-hint">No saved papers yet. Every Generate stores its paper + key here automatically.</p>';
+            return;
+        }
+        var h = "";
+        for (i = 0; i < list.length; i++) {
+            var ex = list[i];
+            var qCount = 0, vLabels = [];
+            if (ex.versions && ex.versions.length) {
+                for (var v = 0; v < ex.versions.length; v++) vLabels.push(ex.versions[v].label);
+                qCount = (ex.versions[0].questions || []).length;
+            }
+            var when = ex.createdAt ? new Date(ex.createdAt).toLocaleDateString() : "";
+            var on = ex.id === oeCurrentExamId;
+            h += '<div class="oe-saved-row' + (on ? " on" : "") + '">';
+            h += '<span class="oe-saved-title">' + (on ? "&#9654; " : "") + oeEsc(ex.title || "Untitled paper") + '</span>';
+            h += '<span class="oe-saved-meta">Class ' + oeEsc(ex.className || "-") + " &middot; " + qCount +
+                 " MCQs &middot; version" + (vLabels.length > 1 ? "s " : " ") + oeEsc(vLabels.join(", ") || "?") +
+                 (when ? " &middot; " + when : "") + '</span>';
+            h += '<span class="oe-saved-actions">';
+            h += '<button type="button" class="action-btn secondary" onclick="oeLoadExam(\'' + ex.id + '\')">Load for grading</button>';
+            h += '<button type="button" class="icon-btn" onclick="oeDeleteExam(\'' + ex.id + '\')" title="Delete saved paper">&times;</button>';
+            h += '</span></div>';
+        }
+        box.innerHTML = h;
+    }
+
+    function oeDeleteExam(id) {
+        var ex = null;
+        for (var i = 0; i < (typeof exams !== "undefined" ? exams.length : 0); i++) {
+            if (exams[i].id === id) { ex = exams[i]; break; }
+        }
+        if (!ex) { oeRenderSaved(); return; }
+        if (!confirm('Delete saved paper "' + (ex.title || id) + '"?\n\nResults already saved from it are NOT affected.')) return;
+        if (typeof deleteExam === "function") deleteExam(id);
+        if (oeCurrentExamId === id) oeCurrentExamId = "";
+        oeRenderSaved();
+        oeStatus("Saved paper deleted. The paper open in the editor is unaffected.", true);
+    }
+
     // Persist the generated exam (all versions, full question snapshots)
     // to IndexedDB + Firestore. Save failure never blocks printing — the
     // in-memory paper stays usable either way.
@@ -2035,7 +2134,7 @@ var UI = (function() {
                 versions: oeVersionsArr,
                 createdAt: Date.now()
             };
-            if (typeof saveExam === "function") { saveExam(exam); return true; }
+            if (typeof saveExam === "function") { saveExam(exam); oeCurrentExamId = exam.id; return true; }
         } catch (e) { if (typeof console !== "undefined") console.error("oeSaveExam:", e); }
         return false;
     }
@@ -2054,6 +2153,7 @@ var UI = (function() {
         oeGenerated = versions[0].questions;
         oeScanReset();
         var saved = oeSaveExam(r.bp);
+        oeRenderSaved();
         var labels = [];
         for (var i = 0; i < versions.length; i++) labels.push(versions[i].label);
         var msg = "Generated " + oeGenerated.length + " of " + r.pool.length + " pool questions";
@@ -2359,6 +2459,23 @@ var UI = (function() {
 
     /* ---------------- OMR photo scanning (Offline Exam) ---------------- */
 
+    // Rolls are auto-assigned in UPLOAD ORDER from the class label, e.g.
+    // class "9B" -> 9B-01, 9B-02, ... Students handwrite the same ID in
+    // the OMR roll boxes (five boxes fit "9B-01" exactly). Order is the
+    // contract: if a sheet was uploaded out of order, fix its Roll No.
+    // field before saving. cls is optional so tests can pass it directly.
+    function oeRollPrefix(cls) {
+        if (cls === undefined) cls = ($("oeClass") && $("oeClass").value) || "";
+        cls = String(cls).trim().replace(/\s+/g, "").replace(/-+$/, "");
+        if (!cls || cls === "-") return "";
+        return cls + "-";
+    }
+
+    function oeRollForIndex(idx, cls) {
+        var n = (idx | 0) + 1;
+        return oeRollPrefix(cls) + (n < 10 ? "0" + n : String(n));
+    }
+
     function oeScanReset() {
         oeScans = [];
         var list = $("oeScanList");
@@ -2369,7 +2486,7 @@ var UI = (function() {
         var input = $("oeScanFiles");
         if (!input || !input.files || !input.files.length) return;
         if (oeGenerated.length === 0) {
-            oeStatus("Generate a paper first.", false);
+            oeStatus("Generate a paper or load a saved one first.", false);
             input.value = "";
             return;
         }
@@ -2379,24 +2496,121 @@ var UI = (function() {
         oeScanQueue(files, 0);
     }
 
+    // Lazy-load pdf.js from CDN the first time a PDF is picked. If it
+    // cannot load (offline / CDN down) the batch skips PDFs with a clear
+    // message instead of failing the whole upload — photos still work.
+    var oePdfState = 0; // 0 idle, 1 loading, 2 ready, 3 failed
+    var oePdfCbs = [];
+    function oePdfFlush() {
+        var ok = oePdfState === 2;
+        var cbs = oePdfCbs;
+        oePdfCbs = [];
+        for (var i = 0; i < cbs.length; i++) cbs[i](ok);
+    }
+    function oeEnsurePdf(cb) {
+        if (typeof pdfjsLib !== "undefined") { cb(true); return; }
+        if (oePdfState === 3) { cb(false); return; }
+        oePdfCbs.push(cb);
+        if (oePdfState === 1) return;
+        oePdfState = 1;
+        var s = document.createElement("script");
+        s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+        s.onload = function () {
+            if (typeof pdfjsLib !== "undefined") {
+                pdfjsLib.GlobalWorkerOptions.workerSrc =
+                    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+                oePdfState = 2;
+            } else {
+                oePdfState = 3;
+            }
+            oePdfFlush();
+        };
+        s.onerror = function () { oePdfState = 3; oePdfFlush(); };
+        document.head.appendChild(s);
+        setTimeout(function () { if (oePdfState === 1) { oePdfState = 3; oePdfFlush(); } }, 15000);
+    }
+
     function oeScanQueue(files, idx) {
         if (idx >= files.length) {
             if (files.length > 0) {
-                oeStatus("Scanned " + files.length + " photo" + (files.length === 1 ? "" : "s") +
-                    ". Verify each sheet, then Save.", true);
+                oeStatus("Scanned " + files.length + " file" + (files.length === 1 ? "" : "s") +
+                    ". Rolls are assigned in upload order — verify each sheet, then Save" +
+                    (oeScans.length > 1 ? " (or Save all)." : "."), true);
             }
             return;
         }
         var f = files[idx];
+        var next = function () { oeScanQueue(files, idx + 1); };
+        if (f.type === "application/pdf" || /\.pdf$/i.test(f.name || "")) {
+            oeScanPdf(f, next);
+            return;
+        }
         var reader = new FileReader();
         reader.onload = function (e) {
-            oeScanProcess(e.target.result, f.name, function () { oeScanQueue(files, idx + 1); });
+            oeScanProcess(e.target.result, f.name, next);
         };
         reader.onerror = function () {
             oeStatus("Could not read " + f.name + ".", false);
-            oeScanQueue(files, idx + 1);
+            next();
         };
         reader.readAsDataURL(f);
+    }
+
+    // One PDF = one batch: every page is rendered (in page order, so roll
+    // order holds) and fed through the same image scan path.
+    function oeScanPdf(file, done) {
+        oeEnsurePdf(function (ok) {
+            if (!ok) {
+                oeStatus("PDF support could not load (offline?). Upload photos (JPG/PNG) of the sheets instead — " +
+                    file.name + " skipped.", false);
+                if (done) done();
+                return;
+            }
+            var reader = new FileReader();
+            reader.onerror = function () {
+                oeStatus("Could not read " + file.name + ".", false);
+                if (done) done();
+            };
+            reader.onload = function (e) {
+                // pdf.js wants a TypedArray — a raw ArrayBuffer is rejected
+                // with "Invalid PDF binary data".
+                var data = new Uint8Array(e.target.result);
+                pdfjsLib.getDocument({ data: data }).promise.then(function (pdf) {
+                    var pageNo = 0;
+                    var nextPage = function () {
+                        pageNo++;
+                        if (pageNo > pdf.numPages) { if (done) done(); return; }
+                        pdf.getPage(pageNo).then(function (page) {
+                            var base = page.getViewport({ scale: 1 });
+                            var scale = Math.min(1, 1600 / Math.max(base.width, base.height));
+                            var vp = page.getViewport({ scale: scale });
+                            var cv = document.createElement("canvas");
+                            cv.width = Math.max(1, Math.round(vp.width));
+                            cv.height = Math.max(1, Math.round(vp.height));
+                            var ctx = cv.getContext("2d");
+                            ctx.fillStyle = "#fff";
+                            ctx.fillRect(0, 0, cv.width, cv.height);
+                            page.render({ canvasContext: ctx, viewport: vp }).promise.then(function () {
+                                oeScanProcess(cv.toDataURL("image/jpeg", 0.9), file.name + " p." + pageNo, nextPage);
+                            }, function (err) {
+                                if (typeof console !== "undefined") console.error("oeScanPdf render:", err);
+                                oeStatus("Could not render page " + pageNo + " of " + file.name + ".", false);
+                                nextPage();
+                            });
+                        }, function (err) {
+                            if (typeof console !== "undefined") console.error("oeScanPdf page:", err);
+                            nextPage();
+                        });
+                    };
+                    nextPage();
+                }, function (err) {
+                    if (typeof console !== "undefined") console.error("oeScanPdf open:", err);
+                    oeStatus("Could not open PDF " + file.name + " — try exporting it as photos instead.", false);
+                    if (done) done();
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        });
     }
 
     function oeScanProcess(dataURL, fileName, done) {
@@ -2427,7 +2641,9 @@ var UI = (function() {
                     fileName: fileName,
                     dataURL: dataURL,
                     res: res,
-                    roll: (res && res.rollString) ? res.rollString : "",
+                    // Handwritten roll boxes are never scanner-read; assign
+                    // in upload order (9B-01, 9B-02, ...) — teacher can fix.
+                    roll: (res && res.rollString) ? res.rollString : oeRollForIndex(oeScans.length),
                     versionLabel: vLabel,
                     answers: answers,
                     saved: false,
@@ -2452,6 +2668,22 @@ var UI = (function() {
             if (oeScans[i].key === key) return oeScans[i];
         }
         return null;
+    }
+
+    // Remove one scanned sheet (cover page, unusable photo). Rolls are
+    // fixed at upload time and NOT renumbered, so a saved student's roll
+    // can never silently shift to another sheet.
+    function oeScanRemove(key) {
+        for (var i = 0; i < oeScans.length; i++) {
+            if (oeScans[i].key === key) { oeScans.splice(i, 1); break; }
+        }
+        oeScanRender();
+    }
+
+    function oeScanClear() {
+        oeScanReset();
+        oeScanRender();
+        oeStatus("Cleared the scanned sheets from this screen. Results already saved are not affected.", true);
     }
 
     function oeScanQuestionsFor(scan) {
@@ -2493,13 +2725,13 @@ var UI = (function() {
             .replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").toLowerCase();
     }
 
-    function oeScanSave(key) {
-        var scan = oeScanByKey(key);
-        if (!scan) return;
+    // Grade one scan against its version's key and persist it as an
+    // attempt. Shared by the per-sheet Save button and Save all.
+    function oeScanPersist(scan) {
         var roll = String(scan.roll || "").replace(/^\s+|\s+$/g, "");
-        if (!roll) { oeStatus("Enter the student Roll No. first.", false); return; }
+        if (!roll) return { ok: false, msg: "Enter the student Roll No. first." };
         var qs = oeScanQuestionsFor(scan);
-        if (!qs || qs.length === 0) { oeStatus("No questions to grade against.", false); return; }
+        if (!qs || qs.length === 0) return { ok: false, msg: "No questions to grade against." };
         var grade = ExamEngine.gradeDetected(qs, scan.answers);
         var meta = oeReadMeta();
         var attempt = oeBuildOfflineAttempt(scan, qs, grade, meta, roll);
@@ -2508,11 +2740,37 @@ var UI = (function() {
         scan.roll = roll;
         scan.saved = ok;
         scan.attemptId = ok ? attempt.attemptId : "";
+        return ok
+            ? { ok: true, grade: grade, msg: "Saved result for " + roll + " — " + grade.score + "/" + grade.total +
+                (grade.percentage !== undefined ? " (" + grade.percentage + "%)" : "") + "." }
+            : { ok: false, grade: grade, msg: "Could not save result for " + roll + " — kept on this screen." };
+    }
+
+    function oeScanSave(key) {
+        var scan = oeScanByKey(key);
+        if (!scan) return;
+        var r = oeScanPersist(scan);
         oeScanRender();
-        oeStatus(ok
-            ? "Saved result for " + roll + " — " + grade.score + "/" + grade.total +
-              (grade.percentage !== undefined ? " (" + grade.percentage + "%)" : "") + "."
-            : "Could not save result for " + roll + " — kept on this screen.", ok);
+        oeStatus(r.msg, r.ok);
+    }
+
+    // Batch save: every not-yet-saved sheet (rolls are auto-assigned, so
+    // all of them have one). Failures are counted and reported, never
+    // silent — the failed sheets stay on screen for another try.
+    function oeSaveAll() {
+        var saved = 0, failed = 0, skipped = 0, i;
+        for (i = 0; i < oeScans.length; i++) {
+            if (oeScans[i].saved) { skipped++; continue; }
+            var r = oeScanPersist(oeScans[i]);
+            if (r.ok) saved++; else failed++;
+        }
+        oeScanRender();
+        if (failed === 0) {
+            oeStatus("Saved " + saved + " result" + (saved === 1 ? "" : "s") +
+                (skipped ? " (" + skipped + " already saved)" : "") + ".", true);
+        } else {
+            oeStatus("Saved " + saved + ", failed " + failed + " — check each sheet's Roll No., then try again.", false);
+        }
     }
 
     function oeBuildOfflineAttempt(scan, qs, grade, meta, roll) {
@@ -2565,6 +2823,43 @@ var UI = (function() {
         var h = "";
         for (var s = 0; s < oeScans.length; s++) h += oeScanCardHTML(oeScans[s]);
         list.innerHTML = h;
+        oeScanSummaryRender();
+    }
+
+    // Batch marks table: one row per scanned sheet — the "gives marks of
+    // each student" view. Recomputed live from the per-sheet grades.
+    function oeScanSummaryRender() {
+        var box = $("oeScanSummary");
+        if (!box) return;
+        if (!oeScans.length) { box.innerHTML = ""; return; }
+        var unsaved = 0;
+        var h = '<div class="oe-summary"><h5>Marks summary</h5>';
+        h += '<div class="oe-summary-scroll"><table class="oe-summary-table">' +
+             '<thead><tr><th>#</th><th>Sheet</th><th>Roll No.</th><th>Ver.</th><th>Score</th><th>%</th><th>Status</th></tr></thead><tbody>';
+        for (var i = 0; i < oeScans.length; i++) {
+            var sc = oeScans[i];
+            var grade = oeScanGrade(sc);
+            if (!sc.saved) unsaved++;
+            h += "<tr>";
+            h += "<td>" + (i + 1) + "</td>";
+            h += "<td>" + oeEsc(sc.fileName) + "</td>";
+            h += "<td>" + oeEsc(sc.roll || "—") + "</td>";
+            h += "<td>" + oeEsc(sc.versionLabel || "?") + "</td>";
+            h += "<td>" + grade.score + "/" + grade.total + "</td>";
+            h += "<td>" + (grade.percentage !== undefined ? grade.percentage : 0) + "</td>";
+            h += "<td>" + (sc.saved
+                ? '<span class="oe-badge ok">saved</span>'
+                : '<span class="oe-badge">pending</span>') + "</td>";
+            h += "</tr>";
+        }
+        h += "</tbody></table></div>";
+        if (unsaved > 0) {
+            h += '<div class="oe-summary-foot"><button type="button" class="action-btn" onclick="oeSaveAll()">' +
+                 "&#128190; Save all (" + unsaved + " pending)</button>" +
+                 '<span class="oe-hint">Rolls follow upload order &mdash; fix any sheet out of order before saving.</span></div>';
+        }
+        h += "</div>";
+        box.innerHTML = h;
     }
 
     function oeScanCardHTML(scan) {
@@ -2580,6 +2875,8 @@ var UI = (function() {
         h += '<div class="oe-scan-photo"><img src="' + scan.dataURL + '" alt=""></div>';
         h += '<div class="oe-scan-side">';
         h += '<div class="oe-scan-head"><strong>' + oeEsc(scan.fileName) + '</strong>';
+        h += ' <button type="button" class="icon-btn" onclick="oeScanRemove(\'' + scan.key +
+             '\')" title="Remove this sheet">&times;</button>';
         if (res.confidence === "low") h += ' <span class="oe-badge warn">low confidence</span>';
         if (warn) h += ' <span class="oe-scan-warn">' + oeEsc(warn) + '</span>';
         if (scan.saved) h += ' <span class="oe-badge ok">saved</span>';
@@ -5521,6 +5818,15 @@ var UI = (function() {
         oeScanVersion: oeScanVersion,
         oeScanAns: oeScanAns,
         oeScanSave: oeScanSave,
+        oeSaveAll: oeSaveAll,
+        oeScanRemove: oeScanRemove,
+        oeScanClear: oeScanClear,
+        oeLoadExam: oeLoadExam,
+        oeDeleteExam: oeDeleteExam,
+        oeRenderSaved: oeRenderSaved,
+        oeApplyExam: oeApplyExam,
+        oeState: oeState,
+        oeRollForIndex: oeRollForIndex,
         oeSwitchVersion: oeSwitchVersion,
         oeBuildKeyHTML: oeBuildKeyHTML,
         oeBuildPaperHTML: oeBuildPaperHTML,

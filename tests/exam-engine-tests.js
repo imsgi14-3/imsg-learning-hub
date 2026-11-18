@@ -696,4 +696,44 @@ function runExamEngineTests() {
     TestRunner.assertEqual((omrEmpty.match(/class="omr-b("| )/g) || []).length, 2, "empty sheet keeps only legend + 1 version bubble, no question bubbles");
     TestRunner.assertEqual((omrEmpty.match(/class="omr-rbox"/g) || []).length, 5, "empty sheet still prints 5 roll boxes");
     TestRunner.assertEqual((omrEmpty.match(/class="omr-cell"/g) || []).length, 0, "no grid cells when no questions");
+
+    // ---- Saved papers (stored key) + upload-order roll assignment ----
+    TestRunner.suite("Offline Exam - Saved Papers & Rolls");
+
+    TestRunner.assertType(UI.oeLoadExam, "function", "oeLoadExam exposed on UI");
+    TestRunner.assertType(UI.oeApplyExam, "function", "oeApplyExam exposed on UI");
+    TestRunner.assertType(UI.oeSaveAll, "function", "oeSaveAll exposed on UI");
+    TestRunner.assertType(UI.oeRollForIndex, "function", "oeRollForIndex exposed on UI");
+    TestRunner.assertType(deleteExam, "function", "deleteExam exists in data layer");
+
+    // Rolls auto-assigned in upload order from the class label (9B-01...)
+    TestRunner.assertEqual(UI.oeRollForIndex(0, "9B"), "9B-01", "first sheet of 9B is 9B-01");
+    TestRunner.assertEqual(UI.oeRollForIndex(1, "9B"), "9B-02", "second sheet is 9B-02");
+    TestRunner.assertEqual(UI.oeRollForIndex(9, "9B"), "9B-10", "tenth sheet pads to 9B-10");
+    TestRunner.assertEqual(UI.oeRollForIndex(0, "9"), "9-01", "class label 9 -> 9-01");
+    TestRunner.assertEqual(UI.oeRollForIndex(0, " 9B "), "9B-01", "class label is trimmed");
+    TestRunner.assertEqual(UI.oeRollForIndex(0, "9B-"), "9B-01", "trailing dash in label is not doubled");
+    TestRunner.assertEqual(UI.oeRollForIndex(0, "-"), "01", "empty label falls back to plain number");
+    TestRunner.assertEqual(UI.oeRollForIndex(0), "01", "missing oeClass element falls back to plain number");
+
+    // Saved exam round-trip: apply restores paper + key without DOM
+    var fakeQsA = [{ id: "QA1", question: "a", options: ["1", "2", "3", "4"], answer: "A" },
+                   { id: "QA2", question: "b", options: ["1", "2", "3", "4"], answer: "C" }];
+    var fakeQsB = [{ id: "QB1", question: "c", options: ["1", "2", "3", "4"], answer: "B" },
+                   { id: "QB2", question: "d", options: ["1", "2", "3", "4"], answer: "D" }];
+    var fakeExam = { id: "EXAM-test-1", title: "Midterm", className: "9B", time: 80, marks: 30,
+                     versions: [{ label: "A", questions: fakeQsA }, { label: "B", questions: fakeQsB }],
+                     createdAt: 1 };
+    TestRunner.assertTrue(UI.oeApplyExam(fakeExam), "applying a saved exam succeeds");
+    var oeSt = UI.oeState();
+    TestRunner.assertEqual(oeSt.generated, 2, "paper restored from saved key");
+    TestRunner.assertEqual(oeSt.versions, 2, "both versions restored");
+    TestRunner.assertEqual(oeSt.versionIdx, 0, "loads on version A");
+    TestRunner.assertEqual(oeSt.currentExamId, "EXAM-test-1", "current exam id tracked");
+    TestRunner.assertTrue(UI.oeApplyExam(null) === false, "null exam rejected");
+    TestRunner.assertTrue(UI.oeApplyExam({ id: "x" }) === false, "exam without versions rejected");
+
+    // Grading key survives the reload: questions differ per version, so
+    // the restored set must be version A's (not a reshuffled regenerate).
+    TestRunner.assertEqual(UI.oeState().generated, fakeQsA.length, "restored key matches the printed version A set");
 }

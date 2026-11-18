@@ -126,6 +126,11 @@ function oeScanRoll(key, value) { UI.oeScanRoll(key, value); }
 function oeScanVersion(key, value) { UI.oeScanVersion(key, value); }
 function oeScanAns(key, qi, letter) { UI.oeScanAns(key, qi, letter); }
 function oeScanSave(key) { UI.oeScanSave(key); }
+function oeSaveAll() { UI.oeSaveAll(); }
+function oeScanRemove(key) { UI.oeScanRemove(key); }
+function oeScanClear() { UI.oeScanClear(); }
+function oeLoadExam(id) { UI.oeLoadExam(id); }
+function oeDeleteExam(id) { UI.oeDeleteExam(id); }
 function oeSwitchVersion(i) { UI.oeSwitchVersion(i); }
 function editAssignment(i) { UI.editAssignment(i); }
 function deleteAssignment(i) { UI.deleteAssignment(i); }

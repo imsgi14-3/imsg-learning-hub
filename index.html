@@ -286,12 +286,19 @@
                         <button type="button" class="action-btn secondary" id="oeOmrBtn" style="display:none;" onclick="oePrintOMR()">&#9673; Print OMR Sheet</button>
                     </section>
 
+                    <section class="chart-section oe-panel" id="oeSavedPanel">
+                        <h4>&#128218; Saved Papers <span class="oe-hint">paper + answer key stored for grading</span></h4>
+                        <div id="oeSavedList"></div>
+                    </section>
+
                     <section class="chart-section oe-panel" id="oeScanPanel" style="display:none;">
-                        <h4>&#9673; Scan Filled OMR Sheets</h4>
-                        <p class="oe-hint">Upload photos of the students' filled OMR sheets. Detection is automatic &mdash; verify and correct every sheet, then Save.</p>
+                        <h4>&#9673; Scan &amp; Grade OMR Sheets</h4>
+                        <p class="oe-hint">Upload photos or a PDF of the filled sheets (one sheet per page, <strong>in roll order</strong>: 9B-01, 9B-02, &hellip;). Rolls are auto-assigned in that order &mdash; verify each sheet against its photo, correct if needed, then Save (or Save all). Marks appear in the summary table and are stored as student results.</p>
                         <div class="oe-scan-controls">
-                            <input type="file" id="oeScanFiles" accept="image/*" multiple onchange="oeScanSelected()">
+                            <input type="file" id="oeScanFiles" accept="image/*,application/pdf" multiple onchange="oeScanSelected()">
+                            <button type="button" class="action-btn secondary" onclick="oeScanClear()">Clear scanned sheets</button>
                         </div>
+                        <div id="oeScanSummary"></div>
                         <div id="oeScanList"></div>
                     </section>
                 </div>

@@ -2730,6 +2730,23 @@ footer {
 .oe-ab.bad { background: #ef4444; border-color: #ef4444; color: #fff; }
 .oe-ab.hint { border-color: #16a34a; color: #16a34a; }
 .oe-scan-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 14px; }
+
+/* Saved papers: stored paper + answer key, loadable for grading */
+.oe-saved-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; font-size: 13px; background: var(--bg-card, #fff); }
+.oe-saved-row.on { border-color: var(--primary, #2563eb); background: rgba(37,99,235,0.05); }
+.oe-saved-title { font-weight: 700; }
+.oe-saved-meta { color: var(--text-muted, #667); font-size: 12px; flex: 1; min-width: 170px; }
+.oe-saved-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+
+/* Batch marks summary (one row per scanned sheet) */
+.oe-summary { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; background: var(--bg-card, #fff); }
+.oe-summary h5 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-muted, #667); }
+.oe-summary-scroll { max-height: 240px; overflow-y: auto; }
+.oe-summary-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.oe-summary-table th, .oe-summary-table td { padding: 5px 8px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+.oe-summary-table th { position: sticky; top: 0; background: var(--bg-card, #fff); font-size: 11px; text-transform: uppercase; color: var(--text-muted, #667); }
+.oe-summary-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+.oe-summary-foot .oe-hint { margin: 0; }
 @media (max-width: 768px) {
     .oe-layout { grid-template-columns: 1fr; }
     .oe-status { max-width: 100%; }
